@@ -1,0 +1,17 @@
+Package: strataG
+Type: Package
+Title: Summaries and Population Structure Analyses of Genetic Data
+Description: A toolkit for analyzing stratified population genetic data.
+Version: 0.9.9
+Date: 2015-05-12
+Author: Eric Archer
+Maintainer: Eric Archer <eric.archer@noaa.gov>
+Imports:
+    adegenet,
+    ape,
+    apex,
+    parallel,
+    pegas,
+    reshape2,
+    swfscMisc
+License: GNU General Public License
