@@ -1,0 +1,122 @@
+setClassUnion("multiOrNULL", c("multidna", "NULL"))
+
+#' @title gtypes Class
+#' @description An S4 class storing multi-allelic locus or sequence data along
+#'   with a current stratification and option stratification schemes.
+#' 
+#' @aliases gtypes
+#'
+#' @rdname gtypes
+#'
+#' @slot loci a data.frame containing the allelic data as one column per locus.
+#'   Alleles are on multiple rows per column with samples listed in the same
+#'   order for each allele. rownames are sample names plus allele number
+#'   formatted as 12345.1 and 12345.2 where 12345 is the sample name and 1 and
+#'   2 are the first and second alleles. colnames are unique locus names.
+#' @slot sequences a \linkS4class{multidna} object, which is a list of
+#'   \code{\link{DNAbin}} objects.
+#' @slot ploidy integer representing the ploidy of the data. There are
+#'   ploidy * the number of samples rows in 'loci'.
+#' @slot strata a factor or vector that can be coerced as to a factor as long 
+#'   as the number of samples representing the current stratification scheme.
+#' @slot schemes a data.frame with stratification schemes in each column.
+#'   Sample names are in the rownames and must match the first part of the
+#'   sample names (rownames) of the 'loci' slot. Each column is a factor.
+#' @slot description a label for the object (optional).
+#' @slot other a slot to carry other related information - unused in package
+#'   analyses (optional).
+#'
+#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#'
+#' @examples
+#'
+#' #--- create a diploid (microsatellite) gtypes object
+#' data(dolph.msats)
+#' data(dolph.strata)
+#' strata.schemes <- dolph.strata[, c("broad", "fine")]
+#' rownames(strata.schemes) <- dolph.strata$id
+#' msats <- new("gtypes", gen.data = dolph.msats[, -1], ploidy = 2,
+#'              ind.names = dolph.msats[, 1], schemes = strata.schemes)
+#' msats
+#'
+#' #--- create a haploid sequence (mtDNA) gtypes object
+#' data(dolph.seqs)
+#' dloop.haps <- cbind(dLoop = dolph.strata$id)
+#' rownames(dloop.haps) <- dolph.strata$id
+#' dloop <- new("gtypes", gen.data = dloop.haps, ploidy = 1, 
+#'              schemes = strata.schemes, sequences = dolph.seqs, 
+#'              strata = "fine")
+#' dloop <- labelHaplotypes(dloop, "Hap.")
+#' dloop$gtypes
+#'
+#' @import adegenet ape apex
+#' @importFrom methods setClass
+#' @export
+
+setClass(
+  Class = "gtypes",
+  slots = c(loci = "data.frameOrNULL", sequences = "multiOrNULL",
+            ploidy = "integer", strata = "factorOrNULL",
+            schemes = "data.frameOrNULL", description = "charOrNULL", 
+            other = "ANY"
+  ),
+  prototype = prototype(loci = NULL, sequences = NULL, ploidy = 0L, 
+                        strata = NULL, schemes = NULL, 
+                        description = NULL, other = NULL
+  ),
+  validity = function(object) {
+    # check that all columns in loci are factors
+    loci.are.factors <- sapply(object@loci, is, class2 = "factor")
+    if(!all(loci.are.factors)) {
+      cat("all columns in the 'loci' slot are not factors\n")
+      return(FALSE)
+    }
+    
+    if(!is.null(object@sequences)) {
+      # check that length of sequences equals number of columns in loci
+      num.seqs <- length(object@sequences@dna)
+      if(num.seqs > 0 & num.seqs != ncol(object@loci)) {
+        cat("the number of sets of sequences is not equal to the number of loci\n")
+        return(FALSE)
+      }
+    
+      # check that sequence haplotype labels can be found
+      locus.good <- sapply(colnames(object@loci), function(x) {
+        haps <- unique(as.character(object@loci[, x]))
+        seqs <- rownames(object@sequences@dna[[x]])
+        all(haps %in% seqs)
+      })
+      if(!all(locus.good)) {
+        bad.loci <- paste(colnames(object@loci)[!locus.good], collapse = ", ")
+        cat("haplotypes are missing in", bad.loci, "\n")
+        return(FALSE)
+      }
+    }
+    
+    # check that ploidy is compatible with loci
+    if(nrow(object@loci) %% object@ploidy != 0) {
+      cat("number of alleles is not an even multiple of 'ploidy'\n")
+      return(FALSE)
+    }
+    
+    # check that strata is same length as number of individuals
+    if(!is.null(object@strata)) {
+      if((nrow(object@loci) / object@ploidy) != length(object@strata)) {
+        cat("length of 'strata' slot is not equal to number of individuals\n")
+        return(FALSE)
+      }
+    }
+    
+    # check that some individuals are in strata schemes
+    if(!is.null(object@schemes)) {
+      ids <- rownames(object@loci)[1:(nrow(object@loci) / object@ploidy)]
+      ids <- substr(ids, 1, nchar(ids) - 2)
+      if(length(intersect(ids, rownames(object@schemes))) == 0) {
+        cat("no sample ids from the 'loci' slot are in stratification schemes\n")
+        return(FALSE)
+      }
+    }
+    
+    TRUE
+  }
+)
