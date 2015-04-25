@@ -7,7 +7,7 @@
 \usage{
 \S4method{initialize}{gtypes}(.Object, gen.data, ploidy, ind.names = NULL,
   sequences = NULL, strata = NULL, schemes = NULL, description = NULL,
-  other = NULL)
+  other = NULL, remove.sequences = FALSE)
 }
 \arguments{
 \item{.Object}{the object skeleton, automatically generated when
@@ -30,6 +30,9 @@ sequences represented by each locus.}
 \item{description}{an optional description for the object.}
 
 \item{other}{other optional information to include.}
+
+\item{remove.sequences}{logical. If \code{TRUE} any sequences not referenced
+  in selected samples will not be in the returned object.}
 }
 \description{
 Create a new \linkS4class{gtypes} object using

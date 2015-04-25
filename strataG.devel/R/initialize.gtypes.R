@@ -16,6 +16,8 @@
 #' @param schemes an optional data.frame of stratification schemes.
 #' @param description an optional description for the object.
 #' @param other other optional information to include.
+#' @param remove.sequences logical. If \code{TRUE} any sequences not referenced 
+#'   in selected samples will not be in the returned object.
 #'
 #' @details
 #' For multi-allele loci, the \code{gen.data} argument should be 
@@ -42,7 +44,8 @@
 setMethod("initialize", "gtypes", 
           function(.Object, gen.data, ploidy, ind.names = NULL,
                    sequences = NULL, strata = NULL, schemes = NULL, 
-                   description = NULL, other = NULL) {
+                   description = NULL, other = NULL, 
+                   remove.sequences = FALSE) {
   
   if(is.null(gen.data) | is.null(ploidy)) return(.Object)
             
@@ -55,7 +58,7 @@ setMethod("initialize", "gtypes",
   # check ploidy
   ploidy <- as.integer(ploidy)
   if(ncol(gen.data) %% ploidy != 0) {
-    stop("the number of columns in 'gen.data' is not a multiple of 'ploidy'.")
+    stop("the number of columns in 'gen.data' is not a multiple of 'ploidy'")
   }
   
   # check ind.names
@@ -114,24 +117,9 @@ setMethod("initialize", "gtypes",
   
   # check sequences
   if(!is.null(sequences)) {
-    # if it is a list, it can be a list of character vectors or DNAbin
-    if(class(sequences)[1] == "list") {
-      sequences <- switch(
-        class(sequences[[1]])[1],
-        character = as.DNAbin(sequences),
-        DNAbin = new("multidna", sequences)
-      )
-    }
-    # otherwise it has to be a DNAbin, multidna, or character matrix
-    sequences <- switch(
-      class(sequences)[1],
-      DNAbin = new("multidna", list(sequences)),
-      multidna = sequences,
-      matrix = new("multidna", list(as.DNAbin(sequences))),
-      stop("'sequences' cannot be converted to a 'multidna' object")
-    )
+    sequences <- as.multidna(sequences)
     if(length(sequences) != ncol(loci)) {
-      stop("the number of sets of sequences is not equal to the number of loci")
+      stop("the number of genes in 'sequences' is not equal to the number of loci")
     }
     names(sequences@dna) <- colnames(loci)
   }
@@ -144,6 +132,7 @@ setMethod("initialize", "gtypes",
   g@schemes <- schemes
   g@description <- description
   g@other <- other
+  if(remove.sequences) g <- removeSequences(g)
   stratify(g, strata)
 })
          

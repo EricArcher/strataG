@@ -13,16 +13,20 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
 #' @examples
-#' #data(dolph.strata)
-#' #data(dolph.msats)
-#'
-#' #strata <- dolph.strata
-#' #rownames(strata) <- strata$id
-#' #msats <- create.gtypes(dolph.msats[, -1], ind.names = dolph.msats[, 1], strata = strata)
-#'
-#' #alleleFreqs(msats.fine)
-#' #alleleFreqs(msats.fine, TRUE)
-#'
+#' data(dolph.msats)
+#' data(dolph.strata)
+#' strata.schemes <- dolph.strata[, c("broad", "fine")]
+#' rownames(strata.schemes) <- dolph.strata$id
+#' msats <- new("gtypes", gen.data = dolph.msats[, -1], ploidy = 2,
+#'              ind.names = dolph.msats[, 1], schemes = strata.schemes,
+#'              strata = "fine")
+#' 
+#' f <- alleleFreqs(msats)
+#' f[[1]]
+#' 
+#' f.pop <- alleleFreqs(msats, TRUE)
+#' f.pop[[1]]
+#' 
 #' @export
 
 alleleFreqs <- function(g, by.strata = FALSE) {

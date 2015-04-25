@@ -1,0 +1,52 @@
+#' @title Compiles and Formats Allele Frequencies
+#' @description Format allele frequencies to for a set of ids and loci 
+#' 
+#' @param x a matrix or data.frame where first column is sample id and 
+#'   second colum is locus name.
+#' @param g a \linkS4class{gtypes} object.
+#' 
+#' @return data.frame of original samples, loci, and formatted alleles and 
+#'   frequencies.
+#' 
+#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' 
+#' @examples
+#' data(dolph.msats)
+#' data(dolph.strata)
+#' msats <- new("gtypes", gen.data = dolph.msats[, -1], ploidy = 2,
+#'              ind.names = dolph.msats[, 1])
+#' 
+#' x <- cbind(
+#'  ids = sample(indNames(msats), 10, rep = TRUE),
+#'  loci = sample(locNames(msats), 10, rep = TRUE)
+#' )
+#' alleleFreqFormat(x, msats)
+#' 
+#' @export
+#'
+alleleFreqFormat <- function(x, g) {
+  if(!(is.data.frame(x) | is.matrix(x))) {
+    stop("'x' must be a data.frame or matrix")
+  }
+  if(ncol(x) != 2) stop("'x' must have two columns")
+  x <- as.matrix(x)
+  
+  freqs <- alleleFreqs(g)
+  fmtd <- rep(as.character(NA), nrow(x))
+  for(i in 1:length(fmtd)) {
+    id <- x[i, 1]
+    locus <- x[i, 2]
+    # skip (leave as NA) if either id or locus can't be found
+    if(!(id %in% indNames(g) | locus %in% locNames(g))) next
+    # get genotype of this id at this locus
+    gt <- genotype(id, locus, g)
+    # if the genotype is NA skip and leave format as NA
+    if(any(is.na(gt))) next
+    # get frequency and round
+    f <- round(freqs[[locus]][gt, "prop"], 3)
+    f <- paste(gt, " (", format(f, nsmall = 3), ")", sep = "")
+    # return a single frequency if homozygote
+    fmtd[i] <- if(length(unique(gt)) == 1) f[1] else paste(f, collapse = " / ")
+  }
+  cbind(x, allele.freqs = fmtd)
+}

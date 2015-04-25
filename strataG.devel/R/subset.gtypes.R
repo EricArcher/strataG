@@ -7,6 +7,8 @@
 #'   to select.
 #' @param ids a character vector designating which individuals to select.
 #' @param loci a character vector designating which loci to select.
+#' @param remove.sequences logical. If \code{TRUE} any sequences not referenced 
+#'   in selected samples will not be in the returned object.
 #' @param ... optional arguments passed through generic (ignored).
 #' 
 #' @return a \linkS4class{gtypes} object containing only individuals and loci
@@ -19,7 +21,8 @@
 #' @export
 #' 
 setMethod("subset", "gtypes",  
-  function(x, strata = NULL, ids = NULL, loci = NULL, ...) {
+  function(x, strata = NULL, ids = NULL, loci = NULL, 
+           remove.sequences = FALSE, ...) {
     # check that ids can be found
     x.ids <- indNames(x)
     if(!is.null(ids)) {
@@ -62,10 +65,9 @@ setMethod("subset", "gtypes",
       loci[loci %in% x.loci]
     } else x.loci
     
-    
-    id.rows <- sub("\\.[[:digit:]]*$", "", rownames(x@loci))
-    x@loci <- x@loci[id.rows %in% ids, loci, drop = FALSE]
+    x@loci <- x@loci[idRows(ids, x), loci, drop = FALSE]
     x@strata <- droplevels(x@strata[ids])
+    if(remove.sequences) x <- removeSequences(x)
     x
 })
 

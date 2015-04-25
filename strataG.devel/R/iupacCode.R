@@ -13,7 +13,7 @@
 #' @seealso \code{\link{validIupacCodes}}
 #'
 #' @export
-
+#' 
 iupacCode <- function(bases, ignore.gaps = FALSE) {
   bases <- as.character(bases)
   if(ignore.gaps) bases <- bases[!bases %in% c("-", ".")]

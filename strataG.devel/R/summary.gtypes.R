@@ -51,7 +51,8 @@ setMethod("summary", "gtypes",
       do.call(rbind, sapply(x@sequences@dna, function(dna) {
         dna.len <- unlist(lapply(dna, length))
         len.range <- range(dna.len)
-        result <- data.frame(min.length = len.range[1], 
+        result <- data.frame(num.seqs = nrow(dna),
+                             min.length = len.range[1], 
                              mean.length = round(mean(dna.len)), 
                              max.length = len.range[2]
         )

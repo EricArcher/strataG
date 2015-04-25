@@ -6,7 +6,8 @@
 \alias{subset,gtypes-method}
 \title{Subset gtypes}
 \usage{
-\S4method{subset}{gtypes}(x, strata = NULL, ids = NULL, loci = NULL, ...)
+\S4method{subset}{gtypes}(x, strata = NULL, ids = NULL, loci = NULL,
+  remove.sequences = FALSE, ...)
 }
 \arguments{
 \item{x}{a \linkS4class{gtypes} object.}
@@ -17,6 +18,9 @@ to select.}
 \item{ids}{a character vector designating which individuals to select.}
 
 \item{loci}{a character vector designating which loci to select.}
+
+\item{remove.sequences}{logical. If \code{TRUE} any sequences not referenced
+in selected samples will not be in the returned object.}
 
 \item{...}{optional arguments passed through generic (ignored).}
 }

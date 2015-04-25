@@ -4,13 +4,16 @@
 \alias{strataSplit}
 \title{Split Strata}
 \usage{
-strataSplit(g, strata = NULL)
+strataSplit(g, strata = NULL, remove.sequences = FALSE)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
 \item{strata}{a character vector giving a subset of strata to select.
-  If \code{NULL} then a list with all strata is created.}
+If \code{NULL} then a list with all strata is created.}
+
+\item{remove.sequences}{logical. If \code{TRUE} any sequences not referenced
+  in selected samples will not be in the returned object.}
 }
 \value{
 A named list where each element is a \code{gtypes} object

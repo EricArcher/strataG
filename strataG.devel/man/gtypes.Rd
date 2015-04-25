@@ -46,15 +46,16 @@ msats <- new("gtypes", gen.data = dolph.msats[, -1], ploidy = 2,
              ind.names = dolph.msats[, 1], schemes = strata.schemes)
 msats
 
-#--- create a haploid sequence (mtDNA) gtypes object
+#--- create a haploid sequence (mtDNA) gtypes object and label haplotypes
 data(dolph.seqs)
 dloop.haps <- cbind(dLoop = dolph.strata$id)
 rownames(dloop.haps) <- dolph.strata$id
 dloop <- new("gtypes", gen.data = dloop.haps, ploidy = 1,
              schemes = strata.schemes, sequences = dolph.seqs,
              strata = "fine")
-dloop <- labelHaplotypes(dloop, "Hap.")
-dloop$gtypes
+dloop
+dloop <- labelHaplotypes(dloop, "Hap.")$gtypes
+dloop
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
