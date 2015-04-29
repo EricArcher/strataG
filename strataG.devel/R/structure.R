@@ -11,6 +11,7 @@
 #' @param delete.files logical. Delete all files when STRUCTURE is finished?
 #' @param num.cores number of CPU cores to use. Value is passed to 
 #'   \code{\link[parallel]{mclapply}}.
+#' @param exec name of executable for STRUCTURE. Defaults to "structure".
 #' @param ... arguments to be passed to \code{structure.write}.
 #' @param maxpops number of groups.
 #' @param burnin number of iterations for MCMC burnin.
@@ -65,7 +66,7 @@
 #'   population structure using multilocus genotype data. Genetics 155:945-959.\cr 
 #'   \url{http://pritchardlab.stanford.edu/structure.html}
 #' 
-#' @seealso \code{\link{structure.plot}}, \code{\link{structure.evanno}}, 
+#' @seealso \code{\link{structurePlot}}, \code{\link{structureEvanno}}, 
 #'   \code{\link{clumpp}} 
 #' 
 #' @examples
@@ -92,13 +93,14 @@
 #' @export
 #' 
 structureRun <- function(g, k.range = NULL, num.k.rep = 1, label = NULL, 
-                          delete.files = TRUE, num.cores = 1, ...) {
+                         delete.files = TRUE, num.cores = 1, 
+                         exec = "structure", ...) {
   
   if(!ploidy(g) > 1) stop("'g' must have a ploidy > 1")
   
   # setup folder
   if(is.null(label)) label <- paste(description(g), "structureRun", sep = ".")
-  label <- gsub(" ", ".", label)
+  label <- gsub("[[:punct:]|[:space:]]", ".", label)
   unlink(label, recursive = TRUE, force = TRUE)
   dir.create(label)
   if(!file_test("-d", label)) {
@@ -114,7 +116,7 @@ structureRun <- function(g, k.range = NULL, num.k.rep = 1, label = NULL,
   out.files <- mclapply(rownames(rep.df), function(x) {
     sw.out <- structureWrite(g, label = x, maxpops = rep.df[x, "k"], ...)
     files <- sw.out$files
-    cmd <- paste("structure -m ", files["mainparams"], 
+    cmd <- paste(exec, " -m ", files["mainparams"], 
                  " -e ", files["extraparams"], 
                  " -i ", files["data"], 
                  " -o ", files["out"], 
@@ -163,7 +165,7 @@ structureWrite <- function(g, label = NULL, maxpops = nlevels(strata(g)),
                            gensback = 2, migrprior = 0.05,
                            pfrompopflagonly = TRUE, popflag = NULL, ...) {
   
-  if(!ploidy(g) > 1) stop("'g' must have a ploidy > 1")
+  if(ploidy(g) != 2) stop("'g' must be diploid")
   
   # check parameters
   if(!is.null(pop.prior)) {
@@ -188,14 +190,15 @@ structureWrite <- function(g, label = NULL, maxpops = nlevels(strata(g)),
                        paste(label, "extraparams", sep = "_"))
   
   # write data
-  write(locNames(g), collapse = " "), file = in.file)
+  write(paste(locNames(g), collapse = " "), file = in.file)
   popdata <- as.numeric(strata(g))
   
-  locus.data <- g@loci
-  locus.data[is.na(locus.data)] <- -9
   for(i in 1:nInd(g)) {
-    alleles <- paste(locus.data[i, ], collapse = " ")
-    write(paste(indNames(g)[i], popdata[i], popflag[i], loci), 
+    id <- indNames(g)[i]
+    loci <- c(as.matrix(genotype(id, locNames(g), g)))
+    loci[is.na(loci)] <- -9
+    loci <- paste(loci, collapse = " ")
+    write(paste(id, popdata[i], popflag[i], loci), 
           file = in.file, append = TRUE
     )
   }
@@ -270,12 +273,12 @@ structureWrite <- function(g, label = NULL, maxpops = nlevels(strata(g)),
   invisible(list(
     files = c(data = in.file, mainparams = main.file, 
               extraparams = extra.file, out = out.file),
-    pops = levels(pop.fac)
+    pops = levels(strata(g))
   ))
 }
 
 
-#' @rdname structureRun
+#' @rdname structure
 #' @export
 #' 
 structureRead <- function(file, pops = NULL) {
@@ -323,7 +326,7 @@ structureRead <- function(file, pops = NULL) {
   # Create table of population assignments for lines without population priors
   no.prior <- if(length(prior.lines) < length(tbl.txt)) {
     no.prior.q.txt <- if(length(prior.lines) == 0) tbl.txt else tbl.txt[-prior.lines]
-    structure.parse.q.mat(no.prior.q.txt, pops)
+    structureParseQmat(no.prior.q.txt, pops)
   } else NULL
   
   # Return just this base table if MAXPOPS = 1
@@ -337,7 +340,7 @@ structureRead <- function(file, pops = NULL) {
     prior.txt <- strsplit(tbl.txt[prior.lines], "[|]")
     # Get base table
     prior.q.txt <- unlist(lapply(prior.txt, function(x) x[1]))
-    df <- structure.parse.q.mat(prior.q.txt, pops)
+    df <- structureParseQmat(prior.q.txt, pops)
     # Parse ancestry assignments into matrix
     prior.anc <- lapply(prior.txt, function(x) {
       anc.mat <- matrix(NA, nrow = maxpops, ncol = gensback + 1)
