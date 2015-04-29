@@ -97,7 +97,9 @@ setMethod("initialize", "gtypes",
   
   # check description
   if(is.null(description)) {
-    description <- paste("gtypes created on", date())
+    description <- paste(
+      "gtypes created on", format(Sys.time(), "%Y-%m-%d %H:%M:%S")
+    )
   }
   
   # format loci

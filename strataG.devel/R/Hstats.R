@@ -1,29 +1,18 @@
-#' @title Heterozygosity estimates: Ho, Hs, and Ht
-#'
-#' @description Calculate overall heterozygosity (Ho), expected 
-#'   heterozygosity in subpopulations (Hs), and expected total 
-#'   heterozygosity (Ht)
-#'
-#' @param g a \code{gtypes} object
-#'
-#' @return matrix of Ho, Hs, and Ht (rows) for each locus (columns)
-#'
-#' @author Eric Archer <eric.archer@@noaa.gov>
-#'
-#' @references Nei, M. and R.K. Chesser. 1983. Estimation of fixation 
-#'   indices and gene diversities. Ann. Hum. Genet. 47:253-259.
-#'
+#' @rdname popStructStat
 #' @importFrom swfscMisc harmonic.mean
 #' @export
-
-Hstats <- function(g) {
-  #stopifnot.gtypes(g, "diploid")
-
+#' 
+Hstats <- function(g, strata = NULL) {
+  strata <- if(is.null(strata)) {
+    rep(g@strata, g@ploidy) 
+  } else {
+    rep(rep(strata, length.out = nInd(g)), g@ploidy)
+  }
+  
   nloc <- ncol(g@loci)
   result <- matrix(0, nrow = 3, ncol = nloc)
   rownames(result) <- c("Ho", "Hs", "Ht")
   colnames(result) <- colnames(g@loci)
-  strata <- rep(g@strata, g@ploidy)
   for(i in 1:nloc) {
     ## Estimate Ho (frequency of all heterozygotes): Equation 5, page 254
     locus <- g@loci[, i]

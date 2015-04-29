@@ -14,6 +14,6 @@
 genotype <- function(ids, loci, g) {
   if(!all(ids %in% indNames(g))) stop("some 'ids' not found in g")
   if(!all(loci %in% locNames(g))) stop("some 'loci' not found in g")
-  g@loci[idRows(ids, g), loci]
+  g@loci[idRows(ids, rownames(g@loci)), loci]
 }
   

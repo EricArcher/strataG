@@ -7,7 +7,7 @@ Date: 2015-05-12
 Author: Eric Archer
 Maintainer: Eric Archer <eric.archer@noaa.gov>
 Depends: R (>= 3.1.3)
-Imports: adegenet, ape, apex, methods, swfscMisc
+Imports: adegenet, ape, apex, methods, pegas, swfscMisc
 LazyData: true
 License: GNU General Public License
 Suggests: knitr

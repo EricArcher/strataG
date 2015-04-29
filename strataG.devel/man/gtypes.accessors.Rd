@@ -86,7 +86,7 @@ seqNames(x, ...)
 
 sequences(x, ...)
 
-\S4method{sequences}{gtypes}(x, ...)
+\S4method{sequences}{gtypes}(x, seqName = NULL, ...)
 
 description(x, ...)
 
@@ -98,6 +98,9 @@ description(x, ...)
 \item{...}{other arguments passed from generics (ignored).}
 
 \item{value}{value being assigned by accessor.}
+
+\item{seqName}{the name (or number) of a set of sequences from the
+\code{@sequences} slot to return.}
 }
 \description{
 Accessors for slots in \linkS4class{gtypes} objects.

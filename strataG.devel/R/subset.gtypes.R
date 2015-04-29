@@ -65,7 +65,7 @@ setMethod("subset", "gtypes",
       loci[loci %in% x.loci]
     } else x.loci
     
-    x@loci <- x@loci[idRows(ids, x), loci, drop = FALSE]
+    x@loci <- x@loci[idRows(ids, rownames(x@loci)), loci, drop = FALSE]
     x@strata <- droplevels(x@strata[ids])
     if(remove.sequences) x <- removeSequences(x)
     x

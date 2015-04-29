@@ -4,12 +4,13 @@
 \alias{idRows}
 \title{ID Rows}
 \usage{
-idRows(ids, g)
+idRows(ids, rowNames)
 }
 \arguments{
 \item{ids}{character vector of sample ids.}
 
-\item{g}{a \linkS4class{gtypes} object.}
+\item{rowNames}{a vector of rownames from the \code{@loci} slot of a
+  \linkS4class{gtypes} object.}
 }
 \value{
 a vector of row numbers in \code{g@loci} where data for \code{ids}

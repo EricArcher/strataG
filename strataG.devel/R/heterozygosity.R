@@ -1,4 +1,5 @@
-#' @title Observed Heterozygosity 
+#' @name heterozygosity
+#' @title Observed and Expected Heterozygosity 
 #' @description Calculate observed heterozygosity for diploid data.
 #' 
 #' @param g a \linkS4class{gtypes} object.
@@ -23,4 +24,13 @@ obsvdHet <- function(g) {
     is.homozgt <- apply(locus.mat, 1, function(x) length(unique(x)) == 1)
     1 - (sum(is.homozgt) / nrow(locus.mat))
   })
+}
+
+
+#' @rdname heterozygosity
+#' @importFrom swfscMisc diversity
+#' @export
+#' 
+exptdHet <- function(g) {
+  apply(g@loci, 2, diversity)
 }

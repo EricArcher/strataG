@@ -12,3 +12,4 @@ vignettes/*.pdf
 *.Rproj
 test haps.R
 *.Rcheck/
+old code

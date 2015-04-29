@@ -35,7 +35,7 @@ setMethod("summary", "gtypes",
         c(num.samples = nInd(g),
           num.missing = mean(numMissing(g)),
           num.haps = mean(numAlleles(g)), 
-          hap.div = mean(obsvdHet(g)),
+          hap.div = mean(exptdHet(g)),
           pct.unique.haps = mean(pctUniqueHaps(g))
         )
       } else {

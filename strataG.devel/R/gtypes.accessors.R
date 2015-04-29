@@ -3,6 +3,8 @@
 #' @description Accessors for slots in \linkS4class{gtypes} objects.
 #' 
 #' @param x a \linkS4class{gtypes} object.
+#' @param seqName the name (or number) of a set of sequences from the 
+#'   \code{@@sequences} slot to return.
 #' @param ... other arguments passed from generics (ignored).
 #' @param value value being assigned by accessor.
 #' 
@@ -75,7 +77,7 @@ setGeneric("strata<-", function(x, value) standardGeneric("strata<-"))
 setMethod("strata<-", "gtypes", function(x, value) {
   strata <- factor(rep(value, length.out = nInd(x)))
   names(strata) <- indNames(x)
-  x@strata <- strata
+  x@strata <- droplevels(strata)
   validObject(x)
   x
 })
@@ -114,7 +116,13 @@ setGeneric("sequences", function(x, ...) standardGeneric("sequences"))
 #' @aliases sequences,gtypes
 #' @rdname gtypes.accessors
 #' @export
-setMethod("sequences", "gtypes", function(x, ...) x@sequences)
+setMethod("sequences", "gtypes", function(x, seqName = NULL, ...) {
+  if(is.null(seqName)) {
+    x@sequences
+  } else {
+    x@sequences@dna[[seqName]]
+  }
+})
 
 #' @rdname gtypes.accessors
 #' @export
