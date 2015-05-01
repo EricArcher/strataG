@@ -13,7 +13,7 @@
 #' 
 #' @export
 #' 
-write.gtypes <- function(g, label = NULL, folder = NULL, as.frequency = FALSE) {
+writeGtypes <- function(g, label = NULL, folder = NULL, as.frequency = FALSE) {
   desc <- description(g)
   label <- if(!is.null(label)) {
     label 
@@ -22,18 +22,26 @@ write.gtypes <- function(g, label = NULL, folder = NULL, as.frequency = FALSE) {
   } else "strataG.gtypes"
   fname <- paste(label, ".csv", sep = "")
   if(!is.null(folder)) fname <- file.path(folder, fname)
-  csv.file <- if(ploidy(g) == 1 & as.frequency) {
+  
+  g.mat <- if(ploidy(g) == 1 & as.frequency) {
     x <- as.frequency(g) 
     x <- data.frame(haplotype = rownames(x), cbind(x))
     rownames(x) <- NULL
     x
   } else as.matrix(g)
-  csv.file <- cbind(id = rownames(csv.file), strata = strata(g), csv.file)
-  write.csv(csv.file, file = fname, row.names = FALSE)
+  g.mat <- cbind(id = rownames(g.mat), strata = strata(g), g.mat)
+  write.csv(g.mat, file = fname, row.names = FALSE)
+  
+  out.files <- fname
+  
   dna <- sequences(g)
   if(!is.null(dna)) {
     fname <- paste(label, ".fasta", sep = "")
     if(!is.null(folder)) fname <- file.path(folder, fname)
-    write.fasta(dna, fname)
+    write.dna(dna, file = fname, format = "fasta", nbcol = -1, 
+              colsep = "", indent = 0, blocksep = 0)
+    out.files <- c(out.files, fname)
   }
+  
+  invisible(out.files)
 }
