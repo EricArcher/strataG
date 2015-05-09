@@ -2,7 +2,7 @@
 #' @title STRUCTURE
 #' @description Run STRUCTURE to assess group membership of samples.
 #' 
-#' @param g a \code{\link{gtypes}} object.
+#' @param g a \linkS4class{gtypes} object.
 #' @param k.range vector of values to for \code{maxpop} in multiple runs. 
 #'   If set to \code{NULL}, a single STRUCTURE run is conducted with 
 #'   \code{maxpops} groups. If specified, do not also specify \code{maxpops}.
@@ -66,7 +66,7 @@
 #'   population structure using multilocus genotype data. Genetics 155:945-959.\cr 
 #'   \url{http://pritchardlab.stanford.edu/structure.html}
 #' 
-#' @seealso \code{\link{structurePlot}}, \code{\link{structureEvanno}}, 
+#' @seealso \code{\link{structurePlot}}, \code{\link{evanno}}, 
 #'   \code{\link{clumpp}} 
 #' 
 #' @examples
@@ -75,14 +75,14 @@
 #' data(dolph.msats)
 #' 
 #' # Run STRUCTURE
-#' #sr <- structure.run(msats, k.range = 1:6, num.k.rep = 10)
+#' #sr <- structure(msats, k.range = 1:6, num.k.rep = 10)
 #' 
 #' # Calculate Evanno metrics
-#' #evno <- structure.evanno(sr)
+#' #evno <- evanno(sr)
 #' #print(evno)
 #' 
 #' # Run CLUMPP to combine runs for K = 2
-#' #clumpp <- clumpp.run(sr, k = 3)
+#' #clumpp <- clumpp(sr, k = 3)
 #' #print(clumpp)
 #' 
 #' # Plot CLUMPP results
@@ -114,7 +114,7 @@ structureRun <- function(g, k.range = NULL, num.k.rep = 1, label = NULL,
   
   rownames(rep.df) <- paste(label, ".k", rep.df$k, ".r", rep.df$rep, sep = "")
   out.files <- mclapply(rownames(rep.df), function(x) {
-    sw.out <- structureWrite(g, label = x, maxpops = rep.df[x, "k"], ...)
+    sw.out <- write.structure(g, label = x, maxpops = rep.df[x, "k"], ...)
     files <- sw.out$files
     cmd <- paste(exec, " -m ", files["mainparams"], 
                  " -e ", files["extraparams"], 
@@ -131,7 +131,7 @@ structureRun <- function(g, k.range = NULL, num.k.rep = 1, label = NULL,
     }
     
     files["out"] <- paste(files["out"], "_f", sep = "")
-    result <- structureRead(files["out"], sw.out$pops)
+    result <- read.structure(files["out"], sw.out$pops)
     
     if(file.exists("seed.txt")) file.remove("seed.txt")
     files <- if(delete.files) NULL else files
@@ -158,7 +158,7 @@ structureRun <- function(g, k.range = NULL, num.k.rep = 1, label = NULL,
 #' @rdname structure
 #' @export
 #' 
-structureWrite <- function(g, label = NULL, maxpops = nlevels(strata(g)), 
+write.structure <- function(g, label = NULL, maxpops = nlevels(strata(g)), 
                            burnin = 1000, numreps = 1000, noadmix = TRUE, 
                            freqscorr = FALSE, randomize = TRUE, seed = 0, 
                            pop.prior = NULL, locpriorinit = 1, maxlocprior = 20, 
@@ -281,7 +281,7 @@ structureWrite <- function(g, label = NULL, maxpops = nlevels(strata(g)),
 #' @rdname structure
 #' @export
 #' 
-structureRead <- function(file, pops = NULL) {
+read.structure <- function(file, pops = NULL) {
   if(!file.exists(file)) {
     stop(paste("the file '", file, "' can't be found.", sep = ""))
   }

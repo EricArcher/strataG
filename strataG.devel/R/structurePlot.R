@@ -1,6 +1,6 @@
 #' @title Plot STRUCTURE Results
-#' @description Plot Q-matrix from a call to \code{\link{structureRun}} or 
-#'   \code{\link{clumppRun}}.
+#' @description Plot Q-matrix from a call to \code{\link{structure}} or 
+#'   \code{\link{clumpp}}.
 #' 
 #' @param q.mat matrix or data.frame of assignment probabilities.
 #' @param pop.col column number identifying original population designations.

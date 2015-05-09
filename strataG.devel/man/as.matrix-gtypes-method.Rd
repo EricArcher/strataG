@@ -4,7 +4,7 @@
 \name{as.matrix,gtypes-method}
 \alias{as.matrix,gtypes}
 \alias{as.matrix,gtypes-method}
-\title{Convert gtypes to matrix or data.frame}
+\title{Convert gtypes to matrix}
 \usage{
 \S4method{as.matrix}{gtypes}(x, one.col = FALSE, sep = "/", ...)
 }
@@ -24,7 +24,7 @@ A \code{matrix} or \code{data.frame} with one row per sample.
 }
 \description{
 Convert genotypic data in the \code{@loci} slot of a
-  \linkS4class{gtypes} object to a \code{matrix} or \code{data.frame}.
+  \linkS4class{gtypes} object to a \code{matrix}.
 }
 \author{
 Eric Archer \email{eric.archer@noa.gov}

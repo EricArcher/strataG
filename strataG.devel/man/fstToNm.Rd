@@ -4,12 +4,12 @@
 \alias{fstToNm}
 \title{Nm from Fst}
 \usage{
-fstToNm(fst, diploid = TRUE)
+fstToNm(fst, ploidy)
 }
 \arguments{
 \item{fst}{estimate of Fst between populations.}
 
-\item{diploid}{logical. Is Fst from diploid (TRUE) or haploid (FALSE) data?}
+\item{ploidy}{ploidy of locus Fst is from.}
 }
 \description{
 Calculate Nm for a given value of Fst.

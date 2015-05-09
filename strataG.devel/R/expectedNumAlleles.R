@@ -31,13 +31,25 @@
 #'
 exptdNumAlleles <- function(n, theta, ploidy) {
   n <- trunc(n)
-  if(n < 1) stop("'n' must be greater than 1")
-  if(theta <= 0) stop("'theta' must be greater than 0")
   ploidy <- trunc(ploidy)
-  if(ploidy < 1) stop("'ploidy must be greater than 1")
-
+  result <- c(num.alleles = NA, var.num.alleles = NA)
+ 
+  if(n < 1) {
+    warning("'n' must be greater than 1. NA returned")
+    return(result)
+  }
+  if(theta <= 0) {
+    warning("'theta' must be greater than 0. NA returned")
+    return(result)
+  }
+  if(ploidy < 1) {
+    warning("'ploidy must be greater than 1. NA returned")
+    return(result)
+  }
+  
   denom <- theta + 1:(ploidy * n - 1)
-  e.k <- 1 + sum(theta / denom)
-  var.e.k <- e.k - 1 - sum(theta ^ 2 / denom ^ 2)
-  c(num.alleles = e.k, var.num.alleles = var.e.k)
+  result["num.alleles"] <- 1 + sum(theta / denom)
+  var.term <- 1 - sum(theta ^ 2 / denom ^ 2)
+  result["var.num.alleles"] <- result["num.alleles"] - var.term
+  result
 }

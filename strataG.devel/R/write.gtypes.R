@@ -13,15 +13,16 @@
 #' 
 #' @export
 #' 
-writeGtypes <- function(g, label = NULL, folder = NULL, as.frequency = FALSE) {
+write.gtypes <- function(g, label = NULL, folder = NULL, as.frequency = FALSE) {
   desc <- description(g)
   label <- if(!is.null(label)) {
     label 
   } else if(!is.null(desc)) {
     desc 
   } else "strataG.gtypes"
-  fname <- paste(label, ".csv", sep = "")
-  if(!is.null(folder)) fname <- file.path(folder, fname)
+  label <- gsub("[[:punct:]]", ".", label)
+  out.files <- paste(label, ".csv", sep = "")
+  if(!is.null(folder)) out.files <- file.path(folder, out.files)
   
   g.mat <- if(ploidy(g) == 1 & as.frequency) {
     x <- as.frequency(g) 
@@ -30,17 +31,16 @@ writeGtypes <- function(g, label = NULL, folder = NULL, as.frequency = FALSE) {
     x
   } else as.matrix(g)
   g.mat <- cbind(id = rownames(g.mat), strata = strata(g), g.mat)
-  write.csv(g.mat, file = fname, row.names = FALSE)
+  write.csv(g.mat, file = out.files, row.names = FALSE)
   
-  out.files <- fname
-  
-  dna <- sequences(g)
-  if(!is.null(dna)) {
-    fname <- paste(label, ".fasta", sep = "")
-    if(!is.null(folder)) fname <- file.path(folder, fname)
-    write.dna(dna, file = fname, format = "fasta", nbcol = -1, 
-              colsep = "", indent = 0, blocksep = 0)
-    out.files <- c(out.files, fname)
+  if(!is.null(sequences(g))) {
+    for(x in seqNames(g)) {
+      fname <- paste(label, x, "fasta", sep = ".")
+      if(!is.null(folder)) fname <- file.path(folder, fname)
+      write.dna(sequences(g, x), file = fname, format = "fasta", nbcol = -1, 
+                colsep = "", indent = 0, blocksep = 0)
+      out.files <- c(out.files, fname)
+    }
   }
   
   invisible(out.files)

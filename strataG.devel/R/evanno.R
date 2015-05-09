@@ -2,7 +2,7 @@
 #' @description Calculate first and second order rates of changes of LnPr(K) 
 #'   from STRUCTURE results based on Evanno et al. 2005.
 #' 
-#' @param sr output from a call to \code{\link{structureRun}}.
+#' @param sr output from a call to \code{\link{structure}}.
 #' @param plot logical. Generate a plot of Evanno metrics.
 #' 
 #' @return a data.frame with Evanno log-likelihood metrics for each value of K.
@@ -17,7 +17,7 @@
 #' 
 #' @export
 #' 
-structureEvanno <- function(sr, plot = TRUE) {
+evanno <- function(sr, plot = TRUE) {
   if(!"structure.result" %in% class(sr)) {
     stop("'sr' is not a result from 'structure.run'.")
   }

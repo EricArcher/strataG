@@ -1,6 +1,6 @@
-#' @title Convert gtypes to matrix or data.frame
+#' @title Convert gtypes to matrix
 #' @description Convert genotypic data in the \code{@@loci} slot of a 
-#'   \linkS4class{gtypes} object to a \code{matrix} or \code{data.frame}.
+#'   \linkS4class{gtypes} object to a \code{matrix}.
 #'   
 #' @param x a \linkS4class{gtypes} object.
 #' @param one.col logical. If \code{TRUE}, then result has one column per 
@@ -12,12 +12,11 @@
 #' @return A \code{matrix} or \code{data.frame} with one row per sample.
 #' 
 #' @author Eric Archer \email{eric.archer@@noa.gov}
-#'
+#' 
 #' @aliases as.matrix,gtypes
 #' @export
 #' 
-setMethod("as.matrix", "gtypes",
-  function(x, one.col = FALSE, sep = "/", ...) {
+setMethod("as.matrix", "gtypes", function(x, one.col = FALSE, sep = "/", ...) {
   # create matrix identifying which rows (columns) each sample (row) is in 
   #   in the @loci slot
   id.mat <- matrix(1:nrow(x@loci), ncol = ploidy(x))

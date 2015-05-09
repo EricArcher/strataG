@@ -1,7 +1,7 @@
 #' @title Run CLUMPP
 #' @description Run CLUMPP to aggregate multiple STRUCTURE runs.
 #' 
-#' @param sr result from \code{\link{structureRun}} or folder name containing 
+#' @param sr result from \code{\link{structure}} or folder name containing 
 #'   STRUCTURE output files.
 #' @param k choice of \emph{k} in \code{sr} to combine.
 #' @param align.algorithm algorithm to be used for aligning the runs. Can be 

@@ -2,12 +2,12 @@
 #' @description Calculate Nm for a given value of Fst.
 #'
 #' @param fst estimate of Fst between populations.
-#' @param diploid logical. Is Fst from diploid (TRUE) or haploid (FALSE) data?
+#' @param ploidy ploidy of locus Fst is from.
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
 #' @export
-
-fstToNm <- function(fst, diploid = TRUE) {
-  ((1 / fst) - 1) / ifelse(diploid, 4, 2)
+#' 
+fstToNm <- function(fst, ploidy) {
+  ((1 / fst) - 1) / (ploidy * 2)
 }

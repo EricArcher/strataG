@@ -5,11 +5,12 @@
 #' @param dispersal migration rate in terms of probability of an individual 
 #'   migrating in a generation.
 #' @param gen.time number of generations since ancestral population.
+#' @param ploidy ploidy of the locus
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @export
 #' 
-wrightFst <- function(Ne, dispersal, gen.time) {
-  1 / (4 * Ne * dispersal * gen.time + 1)
+wrightFst <- function(Ne, dispersal, gen.time, ploidy) {
+  1 / (2 * ploidy * Ne * dispersal * gen.time + 1)
 }

@@ -43,8 +43,8 @@ invisibly, a list containing:
  }
 }
 \description{
-Plot Q-matrix from a call to \code{\link{structureRun}} or
-  \code{\link{clumppRun}}.
+Plot Q-matrix from a call to \code{\link{structure}} or
+  \code{\link{clumpp}}.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

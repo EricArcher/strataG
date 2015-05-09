@@ -4,7 +4,7 @@
 \alias{wrightFst}
 \title{Wright's Fst}
 \usage{
-wrightFst(Ne, dispersal, gen.time)
+wrightFst(Ne, dispersal, gen.time, ploidy)
 }
 \arguments{
 \item{Ne}{Effective population size.}
@@ -13,6 +13,8 @@ wrightFst(Ne, dispersal, gen.time)
 migrating in a generation.}
 
 \item{gen.time}{number of generations since ancestral population.}
+
+\item{ploidy}{ploidy of the locus}
 }
 \description{
 Calcualte Wright's Fst from Ne, dispersal, and generation time.
