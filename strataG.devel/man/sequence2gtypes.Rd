@@ -2,7 +2,7 @@
 % Please edit documentation in R/sequence2gtypes.R
 \name{sequence2gtypes}
 \alias{sequence2gtypes}
-\title{Convert Sequences to gtypes}
+\title{Convert sequences to gtypes}
 \usage{
 sequence2gtypes(x, strata = NULL, seq.names = NULL, description = NULL,
   other = NULL)

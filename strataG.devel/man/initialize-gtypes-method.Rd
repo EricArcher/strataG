@@ -20,8 +20,8 @@ at each locus. See below for more details.}
 
 \item{ind.names}{an optional vector of individual sample names.}
 
-\item{sequences}{an optional \linkS4class{multidna} object containing
-sequences represented by each locus.}
+\item{sequences}{an optional \linkS4class{multidna}
+object containing sequences represented by each locus.}
 
 \item{strata}{an optional stratification scheme from \code{schemes}.}
 

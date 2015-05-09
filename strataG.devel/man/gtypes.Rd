@@ -18,8 +18,7 @@ order for each allele. rownames are sample names plus allele number
 formatted as 12345.1 and 12345.2 where 12345 is the sample name and 1 and
 2 are the first and second alleles. colnames are unique locus names.}
 
-\item{\code{sequences}}{a \linkS4class{multidna} object, which is a list of
-\code{\link{DNAbin}} objects.}
+\item{\code{sequences}}{a \linkS4class{multidna} object.}
 
 \item{\code{ploidy}}{integer representing the ploidy of the data. There are
 ploidy * the number of samples rows in 'loci'.}

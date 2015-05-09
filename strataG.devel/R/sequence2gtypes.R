@@ -1,4 +1,4 @@
-#' @title Convert Sequences to gtypes
+#' @title Convert sequences to gtypes
 #' @description Load sequence data into a \linkS4class{gtypes} object. 
 #' 
 #' @param x DNA sequences as a character matrix, a \code{\link{DNAbin}} object, 
@@ -23,44 +23,31 @@
 #'   description = "dLoop: fine-scale stratification")
 #' 
 #' @export
-
+#' 
 sequence2gtypes <- function(x, strata = NULL, seq.names = NULL, 
                             description = NULL, other = NULL) {
   # convert sequences
-  # if it is a list, it can be a list of character vectors or DNAbin
-  if(class(x)[1] == "list") {
-    x <- switch(
-      class(x[[1]])[1],
-      character = as.DNAbin(x),
-      DNAbin = new("multidna", x)
-    )
-  }
-  # otherwise it has to be a DNAbin, multidna, or character matrix
-  sequences <- switch(
-    class(x)[1],
-    DNAbin = new("multidna", list(x)),
-    multidna = x,
-    matrix = new("multidna", list(as.DNAbin(x))),
-    stop("'sequences' cannot be converted to a 'multidna' object")
-  )
+  x <- as.multidna(x)
+  
+  # check seq.names
   if(!is.null(seq.names)) {
-    if(length(seq.names) != length(sequences@dna)) {
+    if(length(seq.names) != length(x@dna)) {
       stop("length of 'seq.names' is not equal to number of genes")
     }
-    names(sequences@dna) <- seq.names
+    names(x@dna) <- seq.names
   }
   
   # create gen.data data.frame
-  ind.names <- sequences@labels
-  gen.data <- do.call(data.frame, lapply(sequences@dna, function(dna) {
+  ind.names <- x@labels
+  gen.data <- do.call(data.frame, lapply(x@dna, function(dna) {
     x.labels <- labels(dna)
     factor(x.labels[match(ind.names, x.labels)])
   }))
-  colnames(gen.data) <- labels(sequences@dna)
+  colnames(gen.data) <- labels(x@dna)
   rownames(gen.data) <- ind.names
   
   # return new gtypes object
   new("gtypes", gen.data = gen.data, ploidy = 1, strata = strata,
-      sequences = sequences, description = description, other = other
+      sequences = x, description = description, other = other
   )
 }

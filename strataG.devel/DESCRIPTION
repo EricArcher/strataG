@@ -6,7 +6,7 @@ Version: 0.9.9
 Date: 2015-05-12
 Author: Eric Archer
 Maintainer: Eric Archer <eric.archer@noaa.gov>
-Depends: R (>= 3.1.3)
+Depends: R (>= 3.2.0)
 Imports: adegenet, ape, apex, methods, pegas, reshape2, swfscMisc
 LazyData: true
 License: GNU General Public License

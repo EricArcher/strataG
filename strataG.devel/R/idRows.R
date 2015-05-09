@@ -14,5 +14,5 @@
 idRows <- function(ids, rowNames) {
   ids <- as.character(ids)
   id.rows <- sub("\\.[[:digit:]]*$", "", rowNames)
-  unlist(sapply(ids, function(x) which(id.rows == x)))
+  t(unlist(sapply(ids, function(x) which(id.rows == x))))
 }

@@ -16,8 +16,7 @@
 #' 
 strataSplit <- function(g, strata = NULL, remove.sequences = FALSE) {
   if(is.null(strata)) strata <- strataNames(g)
-  if(!is.null(strata)) g <- subset(g, strata)
   sapply(strata, function(st) {
-    subset(g, st, remove.sequences = remove.sequences)
+    subset(g, strata = st, remove.sequences = remove.sequences)
   }, simplify = FALSE)
 }

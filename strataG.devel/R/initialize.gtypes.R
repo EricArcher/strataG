@@ -10,8 +10,8 @@
 #'   at each locus. See below for more details.
 #' @param ploidy ploidy of the loci.
 #' @param ind.names an optional vector of individual sample names.
-#' @param sequences an optional \linkS4class{multidna} object containing 
-#'   sequences represented by each locus.
+#' @param sequences an optional \linkS4class{multidna} 
+#'   object containing sequences represented by each locus.
 #' @param strata an optional stratification scheme from \code{schemes}.
 #' @param schemes an optional data.frame of stratification schemes.
 #' @param description an optional description for the object.

@@ -34,7 +34,7 @@ setMethod("nStrata", "gtypes", function(x, ...) nlevels(x@strata))
 #' @export
 setMethod("indNames", "gtypes", function(x, ...) {
   ids <- rownames(x@loci)[1:(nrow(x@loci) / x@ploidy)]
-  substr(ids, 1, nchar(ids) - 2)
+  unique(substr(ids, 1, nchar(ids) - 2))
 })
 
 #' @aliases locNames,gtypes

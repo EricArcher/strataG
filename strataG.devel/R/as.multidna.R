@@ -22,15 +22,18 @@ as.multidna <- function(x) {
   }
   
   # a DNAbin
-  if(inherits(x, "DNAbin")) return(new("multidna", list(x)))
+  if(inherits(x, "DNAbin")) return(new("multidna", list(as.matrix(x))))
   
   # character matrix or list of character vectors
   if(is.character(x) | (is.list(x) & is.character(x[[1]]))) {
-    return(new("multidna", list(as.DNAbin(x))))
+    return(new("multidna", list(as.matrix(as.DNAbin(x)))))
   }
   
   # list of DNAbin
-  if(is.list(x) & inherits(x[[1]], "DNAbin")) return(new("multidna", x))
+  if(is.list(x) & inherits(x[[1]], "DNAbin")) {
+    x <- lapply(x, as.matrix)
+    return(new("multidna", x))
+  }
   
   stop("'x' must be a valid set of sequences")
 }

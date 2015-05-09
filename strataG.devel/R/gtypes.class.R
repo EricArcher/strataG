@@ -1,4 +1,4 @@
-setClassUnion("multiOrNULL", c("multidna", "NULL"))
+setClassUnion("dnaSequences", c("multidna", "NULL"))
 
 #' @title gtypes Class
 #' @description An S4 class storing multi-allelic locus or sequence data along
@@ -13,8 +13,7 @@ setClassUnion("multiOrNULL", c("multidna", "NULL"))
 #'   order for each allele. rownames are sample names plus allele number
 #'   formatted as 12345.1 and 12345.2 where 12345 is the sample name and 1 and
 #'   2 are the first and second alleles. colnames are unique locus names.
-#' @slot sequences a \linkS4class{multidna} object, which is a list of
-#'   \code{\link{DNAbin}} objects.
+#' @slot sequences a \linkS4class{multidna} object.
 #' @slot ploidy integer representing the ploidy of the data. There are
 #'   ploidy * the number of samples rows in 'loci'.
 #' @slot strata a factor or vector that can be coerced as to a factor as long 
@@ -56,7 +55,7 @@ setClassUnion("multiOrNULL", c("multidna", "NULL"))
 
 setClass(
   Class = "gtypes",
-  slots = c(loci = "data.frameOrNULL", sequences = "multiOrNULL",
+  slots = c(loci = "data.frameOrNULL", sequences = "dnaSequences",
             ploidy = "integer", strata = "factorOrNULL",
             schemes = "data.frameOrNULL", description = "charOrNULL", 
             other = "ANY"
@@ -73,14 +72,15 @@ setClass(
       return(FALSE)
     }
     
-    if(!is.null(object@sequences)) {
+    # check sequences
+    if(!is.null(object@sequences)) {  
       # check that length of sequences equals number of columns in loci
       num.seqs <- length(object@sequences@dna)
       if(num.seqs > 0 & num.seqs != ncol(object@loci)) {
         cat("the number of sets of sequences is not equal to the number of loci\n")
         return(FALSE)
       }
-    
+      
       # check that sequence haplotype labels can be found
       locus.good <- sapply(colnames(object@loci), function(x) {
         haps <- unique(as.character(object@loci[, x]))
@@ -99,6 +99,10 @@ setClass(
       cat("number of alleles is not an even multiple of 'ploidy'\n")
       return(FALSE)
     }
+    if(object@ploidy != 1 & !is.null(object@sequences)) {
+      cat("sequences can't be present unless object is haploid (ploidy = 1)\n")
+      return(FALSE)
+    }
     
     # check that strata is same length as number of individuals
     if(!is.null(object@strata)) {
@@ -108,7 +112,7 @@ setClass(
       }
     }
     
-    # check that some individuals are in strata schemes
+    # check that at least some individuals are in strata schemes
     if(!is.null(object@schemes)) {
       ids <- rownames(object@loci)[1:(nrow(object@loci) / object@ploidy)]
       ids <- substr(ids, 1, nchar(ids) - 2)
