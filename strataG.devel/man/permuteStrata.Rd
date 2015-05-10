@@ -9,6 +9,9 @@ permuteStrata(g)
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 }
+\value{
+a \linkS4class{gtypes} object with the strata randomly permuted.
+}
 \description{
 Permute the strata slot within a \linkS4class{gtypes} object.
 }
@@ -19,6 +22,7 @@ msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats,
   all.y = TRUE, description = date())
 msats <- df2gtypes(msats.merge, ploidy = 2)
 summary(msats)
+
 ran.msats <- permuteStrata(msats)
 summary(ran.msats)
 }

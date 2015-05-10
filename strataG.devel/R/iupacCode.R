@@ -11,6 +11,11 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
 #' @seealso \code{\link{validIupacCodes}}
+#' 
+#' @examples
+#' iupacCode(c("a", "a", "g"))
+#' 
+#' iupacCode(c("t", "c", "g"))
 #'
 #' @export
 #' 

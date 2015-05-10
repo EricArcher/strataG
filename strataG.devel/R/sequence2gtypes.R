@@ -1,4 +1,4 @@
-#' @title Convert sequences to gtypes
+#' @title Convert Sequences To \code{gtypes}
 #' @description Load sequence data into a \linkS4class{gtypes} object. 
 #' 
 #' @param x DNA sequences as a character matrix, a \code{\link{DNAbin}} object, 

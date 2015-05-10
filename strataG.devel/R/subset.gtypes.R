@@ -17,6 +17,23 @@
 #'   
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @examples
+#' data(dolph.msats)
+#' data(dolph.strata)
+#' msats.merge <- merge(dolph.strata[, c("ids", "broad")], dolph.msats, all.y = TRUE)
+#' msats <- df2gtypes(msats.merge, ploidy = 2)
+#' 
+#' # just Coastal genotypes
+#' msats.coastal <- subset(msats, strata = "Coastal")
+#' msats.coastal
+#' 
+#' # pick 10 random offshore samples and the first two loci
+#' msats.offshore <- subset(msats, strata = "Offshore")
+#' ran.ids <- sample(indNames(msats.offshore), 10)
+#' loc2 <- locNames(msats.offshore)[1:2]
+#' msats.offshore <- subset(msats.offshore, ids = ran.ids, loci = loc2)
+#' msats.offshore
+#' 
 #' @aliases subset,gtypes
 #' @export
 #' 
@@ -66,6 +83,7 @@ setMethod("subset", "gtypes",
     } else x.loci
     
     x@loci <- x@loci[idRows(ids, rownames(x@loci)), loci, drop = FALSE]
+    x@loci <- droplevels(x@loci)
     x@strata <- droplevels(x@strata[ids])
     if(remove.sequences) x <- removeSequences(x)
     x

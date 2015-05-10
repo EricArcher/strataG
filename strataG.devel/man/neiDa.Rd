@@ -4,18 +4,24 @@
 \alias{neiDa}
 \title{Nei's Da}
 \usage{
-neiDa(g, na.rm = FALSE)
+neiDa(g)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
-
-\item{na.rm}{logical. Delete loci which have missing data for every sample in a stratum?}
 }
 \description{
 Calcuate frequency-based Nei's Da for haploid or diploid data.
 }
 \details{
 Returns Nei's Da for each pair of strata.
+}
+\examples{
+data(dolph.msats)
+data(dolph.strata)
+msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
+msats <- df2gtypes(msats.merge, ploidy = 2)
+
+neiDa(msats)
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

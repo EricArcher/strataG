@@ -1,5 +1,5 @@
 #' @title Split Strata
-#' @description Return a list of gtypes for each strata
+#' @description Return a list of \code{gtypes} for each stratum.
 #' 
 #' @param g a \linkS4class{gtypes} object.
 #' @param strata a character vector giving a subset of strata to select. 

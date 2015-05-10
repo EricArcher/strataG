@@ -2,7 +2,7 @@
 % Please edit documentation in R/write.gtypes.R
 \name{write.gtypes}
 \alias{write.gtypes}
-\title{Write gtypes}
+\title{Write \code{gtypes}}
 \usage{
 write.gtypes(g, label = NULL, folder = NULL, as.frequency = FALSE)
 }
@@ -12,14 +12,14 @@ write.gtypes(g, label = NULL, folder = NULL, as.frequency = FALSE)
 \item{label}{label for filename(s). Default is the gtypes description
 if present.}
 
-\item{folder}{folder where file(s) should be written to. If NULL, files
-are written to current working directory.}
+\item{folder}{folder where file(s) should be written to. If \code{NULL},
+files are written to current working directory.}
 
 \item{as.frequency}{logical indicating if haploid data should be output
   as frequency tables.}
 }
 \description{
-Write a \code{\link{gtypes}} object to file(s).
+Write a \linkS4class{gtypes} object to file(s).
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

@@ -7,19 +7,25 @@
 variableSites(x, bases = c("a", "c", "g", "t", "-"))
 }
 \arguments{
-\item{x}{a \code{\link{gtypes}} object with sequences, a list of sequences, or a consensus sequence.
-Sequences must be aligned.}
+\item{x}{a \linkS4class{gtypes} object with sequences,
+a \code{\link[ape]{DNAbin}} object, or a list of sequences.}
 
 \item{bases}{character vector of bases to consider.}
 }
 \value{
 A list with: \tabular{ll}{
-  \code{site} \tab a list of sequences composed of variable sites. \cr
+  \code{site} \tab a a \code{\link[ape]{DNAbin}} object composed
+    of variable sites. \cr
   \code{site.freqs} \tab a matrix of base pair frequencies by site. \cr
 }
 }
 \description{
 Identify variable sites among sequences.
+}
+\examples{
+data(dolph.haps)
+
+variableSites(dolph.haps)
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

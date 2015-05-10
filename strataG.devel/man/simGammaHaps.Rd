@@ -2,7 +2,7 @@
 % Please edit documentation in R/simGammaHaps.R
 \name{simGammaHaps}
 \alias{simGammaHaps}
-\title{Simulates Haplotypes}
+\title{Simulate Haplotypes}
 \usage{
 simGammaHaps(pop.size, num.haps, shape, scale, return.freq = TRUE,
   plot = TRUE)
@@ -12,9 +12,7 @@ simGammaHaps(pop.size, num.haps, shape, scale, return.freq = TRUE,
 
 \item{num.haps}{number of haplotypes to generate.}
 
-\item{shape}{shape parameter of Gamma distribution.}
-
-\item{scale}{scale parameter of Gamma distribution.}
+\item{shape,scale}{parameters of Gamma distribution (see \code{\link{dgamma}}).}
 
 \item{return.freq}{logical. Return frequency table of haplotypes? If \code{FALSE} return vector of haplotypes.}
 
@@ -33,8 +31,5 @@ print(haps)
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
-}
-\seealso{
-\code{\link{dgamma}}
 }
 

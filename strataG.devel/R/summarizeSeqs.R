@@ -9,6 +9,12 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @examples
+#' library(apex)
+#' data(woodmouse)
+#' 
+#' summarizeSeqs(woodmouse)
+#' 
 #' @export
 #' 
 summarizeSeqs <- function(x) {

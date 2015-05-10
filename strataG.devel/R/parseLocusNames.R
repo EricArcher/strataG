@@ -1,3 +1,4 @@
+#' @name parseLocusNames
 #' @title Parse Locus Names
 #' @description Parse locus names from a matrix where alleles are in
 #'   consecutive columns.
@@ -11,8 +12,8 @@
 #' @return A vector of the root locus names.
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
-
-parseLocusNames <- function(locus.names, ploidy) {
+#' 
+.parseLocusNames <- function(locus.names, ploidy) {
   if(ploidy == 1) return(locus.names)
   loc.i <- matrix(1:length(locus.names), nrow = ploidy)
   apply(loc.i, 2, function(i) {

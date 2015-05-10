@@ -17,6 +17,15 @@ Nucleotide diversity by site.
 \description{
 Calculate nucleotide diversity for set of haplotypes.
 }
+\examples{
+data(dolph.strata)
+data(dolph.seqs)
+strata <- dolph.strata$fine
+names(strata) <- dolph.strata$ids
+dloop <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop")
+
+nucleotideDiversity(dloop)
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

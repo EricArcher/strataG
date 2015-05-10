@@ -6,8 +6,10 @@
 #' @param ploidy number of number of columns in \code{x} storing alleles
 #'   at each locus.
 #' @param id.col column name or number where individual sample ids are stored.
+#'   If \code{NULL} then rownames are used. If there are no rownames, then 
+#'   samples are labelled with consecutive numbers.
 #' @param strata.col column name or number where stratification is stored. If 
-#'   NULL then all samples are in one (default) stratum.
+#'   \code{NULL} then all samples are in one (default) stratum.
 #' @param loc.col column number of first allele of first locus.
 #' @param sequences a list, matrix, \code{\link{DNAbin}}, or 
 #'   \linkS4class{multidna} object containing sequences. 
@@ -35,8 +37,7 @@
 #' #--- create a diploid (microsatellite) gtypes object
 #' data(dolph.msats)
 #' data(dolph.strata)
-#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, 
-#'   all.y = TRUE)
+#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
 #' msats.fine <- df2gtypes(msats.merge, ploidy = 2)
 #' 
 #' #' #--- create a haploid sequence (mtDNA) gtypes object
@@ -55,8 +56,14 @@ df2gtypes <- function(x, ploidy, id.col = 1, strata.col = 2, loc.col = 3,
     stop("'x' must be a matrix or data.frame")
   }
   
-  # extract locus and strata information
-  rownames(x) <- x[, id.col]
+  # extract id, strata, and locus information
+  rownames(x) <- if(is.null(id.col)) {
+    if(is.null(rownames(x))) {
+      1:nrow(x) 
+    } else {
+      rownames(x)
+    }
+  } else x[, id.col]
   strata <- if(is.null(strata.col)) NULL else x[, strata.col]
   gen.data <- x[, loc.col:ncol(x), drop = FALSE]
   

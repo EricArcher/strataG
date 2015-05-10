@@ -3,8 +3,7 @@
 #' @description Read and write FASTA formatted files of sequences.
 #' 
 #' @param file a FASTA-formatted file of sequences.
-#' @param x a list of DNA sequences or a haploid \code{\link{gtypes}} object 
-#'   with sequences. 
+#' @param x a list or a matrix of DNA sequences (see \code{\link[ape]{write.dna}}).
 #' 
 #' @return from \code{read.fasta}, a list of DNA sequences.
 #' 

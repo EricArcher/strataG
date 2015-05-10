@@ -14,10 +14,13 @@
 #' 
 #' @author Eric Archer <eric.archer@@noaa.gov>
 #' 
+#' @seealso \code{\link{fixedSites}}, \code{\link{variableSites}}
+#' 
 #' @export
 #' 
-fixedDifferences <- function(g, count.indels = T, consec.indels.as.one = T, 
-                              bases = c("a", "c", "g", "t", "-")) {  
+fixedDifferences <- function(g, count.indels = TRUE, 
+                             consec.indels.as.one = TRUE, 
+                             bases = c("a", "c", "g", "t", "-")) {  
   # get fixed sites for each strata
   strata.gtypes <- strataSplit(g, remove.sequences = TRUE)
   fixed.sites <- sapply(strata.gtypes, function(strata) {
@@ -27,13 +30,14 @@ fixedDifferences <- function(g, count.indels = T, consec.indels.as.one = T,
   # for each pair of strata, return matrix of sites with fixed differences
   # fixed differences are sites which aren't variable in a strata and 
   #   different between strata
-  strata.pairs <- combn(names(strata.gtypes), 2)
-  pair.fixed.diff <- lapply(1:ncol(strata.pairs), function(p) {
-    fixed.1 <- fixed.sites[[strata.pairs[1, p]]]
-    fixed.2 <- fixed.sites[[strata.pairs[2, p]]]
+  strata.pairs <- as.matrix(.strataPairs(g))
+  pair.fixed.diff <- lapply(1:nrow(strata.pairs), function(p) {
+    sp <- strata.pairs[p, ]
+    fixed.1 <- fixed.sites[[sp[1]]]
+    fixed.2 <- fixed.sites[[sp[2]]]
     shared.sites <- intersect(names(fixed.1), names(fixed.2))
     seq.mat <- rbind(fixed.1[shared.sites], fixed.2[shared.sites])
-    rownames(seq.mat) <- strata.pairs[, p]
+    rownames(seq.mat) <- sp
     if(ncol(seq.mat) == 0) return(list(sites = seq.mat, num.fixed = 0))
     
     # count fixed nucleotides (don't count sites with indels)
@@ -68,14 +72,11 @@ fixedDifferences <- function(g, count.indels = T, consec.indels.as.one = T,
   
   # compile sites with fixed differences
   sites <- lapply(pair.fixed.diff, function(x) x$sites)
-  names(sites) <- apply(strata.pairs, 2, function(x) {
-    paste(x, collapse = " v. ")
-  })
+  names(sites) <- apply(strata.pairs, 1, paste, collapse = " v. ")
   
   # count number of fixed differencs between pairs
   num.fixed <- sapply(pair.fixed.diff, function(x) x$num.fixed)
-  strata.pairs <- data.frame(t(strata.pairs), num.fixed)
-  colnames(strata.pairs) <- c("strata.1", "strata.2", "num.fixed")
+  strata.pairs <- cbind(data.frame(strata.pairs), num.fixed = num.fixed)
   
   list(sites = sites, num.fixed = strata.pairs)
 }

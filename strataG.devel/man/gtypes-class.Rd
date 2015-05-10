@@ -4,7 +4,7 @@
 \name{gtypes-class}
 \alias{gtypes}
 \alias{gtypes-class}
-\title{gtypes Class}
+\title{\code{gtypes} Class}
 \description{
 An S4 class storing multi-allelic locus or sequence data along
   with a current stratification and option stratification schemes.
@@ -58,5 +58,10 @@ dloop
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
+}
+\seealso{
+\code{\link{df2gtypes}}, \code{\link{sequence2gtypes}},
+  \code{\link{genind2gtypes}}, \code{\link{gtypes.accessors}},
+  \code{\link{initialize.gtypes}}
 }
 

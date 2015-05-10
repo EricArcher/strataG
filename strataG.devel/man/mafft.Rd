@@ -9,7 +9,7 @@ mafft(x, run.label = "align.mafft", delete.output = TRUE, op = 3,
   opts = "--auto")
 }
 \arguments{
-\item{x}{a \code{\link{gtypes}} object with aligned sequences or a list of aligned DNA sequences.}
+\item{x}{a list or a matrix of DNA sequences (see \code{\link[ape]{write.dna}}).}
 
 \item{run.label}{label for output alignment FASTA file.}
 
@@ -23,24 +23,27 @@ mafft(x, run.label = "align.mafft", delete.output = TRUE, op = 3,
 
 \item{quiet}{logical. Run MAFFT quietly?}
 
-\item{num.cores}{number of cores to be used. Passed to MAFFT argument \code{--thread}.}
+\item{num.cores}{number of cores to be used. Passed to MAFFT argument
+\code{--thread}.}
 
 \item{opts}{character string other options to provide to command line.}
 }
 \value{
-list of aligned sequences
+a \code{\link[ape]{DNAbin}} object with aligned sequences.
 }
 \description{
-MAFFT Alignment
+Align a set of sequences using the MAFFT executable.
 }
 \note{
-Formats and executes a call to the executable \code{mafft}, assuming that is installed
-  on the system and available at the command line.
+Formats and executes a call to the executable \code{mafft},
+  assuming that is installed on the system and available at the command line.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
 \references{
-MAFFT is available at: \url{http://mafft.cbrc.jp/alignment/software}
+Katoh, M., Kuma, M. 2002. MAFFT: a novel method for rapid multiple sequence
+  alignment based on fast Fourier transform. Nucleic Acids Res. 30:3059-3066.\cr
+  Available at: \url{http://mafft.cbrc.jp/alignment/software}
 }
 

@@ -3,9 +3,9 @@
 #' @description Calculate proportion of alleles and number of loci shared 
 #'   between pairs of individuals or strata.
 #' 
-#' @param g a \code{\link{gtypes}} object.
+#' @param g a \linkS4class{gtypes} object.
 #' @param type a character vector determining type of pairwise comparsion. Can 
-#'   be "ids" for individuals or "strata" for strata.
+#'   be "strata" for strata or "ids" for individuals.
 #' @param smry a character vector determining type of summary for 
 #'   \code{sharedAlleles}. "which" returns the names of the alleles shared. 
 #'   "num" returns the number of alleles shared.
@@ -13,17 +13,26 @@
 #' @param num.cores number of CPU cores to use. Value is passed to 
 #'   \code{\link[parallel]{mclapply}}.
 #' 
-#' @return matrix summary of pairwise shared loci.
+#' @return data.frame summary of pairwise shared loci.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @examples
+#' data(dolph.msats)
+#' data(dolph.strata)
+#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
+#' msats <- df2gtypes(msats.merge, ploidy = 2)
+#' 
+#' propSharedLoci(msats)
+#' 
+#' sharedAlleles(msats)
+#' 
 #' @export
 #' 
-propSharedLoci <- function(g, type = "strata", num.cores = 1) {
+propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = 1) {
+  type <- match.arg(type)
   type.pairs <- if(type == "strata") {
-    st.vec <- levels(strata(g))
-    if(length(st.vec) < 2) stop("'g' must have at least two strata")
-    t(combn(st.vec, 2))
+    as.matrix(.strataPairs(g))
   } else {
     id.vec <- indNames(g)
     if(length(id.vec) < 2) stop("'g' must have at least two individuals")
@@ -94,8 +103,8 @@ sharedAlleles <- function(g, smry = "num") {
 #' 
 propSharedIds <- function(ids, g) {
   sapply(locNames(g), function(x) {
-    g1 <- genotype(ids[1], x, g)
-    g2 <- genotype(ids[2], x, g)
+    g1 <- loci(g, ids[1], x)
+    g2 <- loci(g, ids[2], x)
     sum(g1 %in% g2) + sum(g2 %in% g1)
   }) / (2 * ploidy(g))
 }

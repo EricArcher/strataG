@@ -14,9 +14,9 @@
 #' @examples
 #' data(dolph.msats)
 #' data(dolph.strata)
-#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, 
-#'   all.y = TRUE)
+#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
 #' msats <- df2gtypes(msats.merge, ploidy = 2)
+#' 
 #' summarizeLoci(msats)
 #' 
 #' @export
@@ -24,11 +24,12 @@
 summarizeLoci <- function(g, by.strata = FALSE, ...) {
   summary.stats <- function(x) {
     n.genotyped <- nInd(x) - numMissing(x)
-    result <- cbind(
+    cbind(
       num.genotyped = n.genotyped,
       pct.genotyped = n.genotyped / nInd(x),
       num.alleles = numAlleles(x),
       allelic.richness = allelicRichness(x),
+      pct.unique.alleles = pctUniqueAlleles(x),
       expected.heterozygosity = exptdHet(x),
       observed.heterozygosity = obsvdHet(x),
       theta = theta(x)

@@ -27,6 +27,12 @@ a vector of the sequence names that are have the greatest mean
 Finds the set of sequences that have the greatest mean
   pairwise distance and smallest variance of pairwise distances.
 }
+\examples{
+library(ape)
+data(dolph.haps)
+
+mostDistantSequences(as.DNAbin(dolph.haps))
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

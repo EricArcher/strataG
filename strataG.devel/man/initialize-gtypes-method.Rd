@@ -3,7 +3,8 @@
 \docType{methods}
 \name{initialize,gtypes-method}
 \alias{initialize,gtypes-method}
-\title{gtypes Constructor}
+\alias{initialize.gtypes}
+\title{\code{gtypes} Constructor}
 \usage{
 \S4method{initialize}{gtypes}(.Object, gen.data, ploidy, ind.names = NULL,
   sequences = NULL, strata = NULL, schemes = NULL, description = NULL,

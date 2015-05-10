@@ -4,7 +4,7 @@
 \alias{fixedDifferences}
 \title{Fixed Differences}
 \usage{
-fixedDifferences(g, count.indels = T, consec.indels.as.one = T,
+fixedDifferences(g, count.indels = TRUE, consec.indels.as.one = TRUE,
   bases = c("a", "c", "g", "t", "-"))
 }
 \arguments{
@@ -28,5 +28,8 @@ Summarize fixed base pair differences between strata.
 }
 \author{
 Eric Archer <eric.archer@noaa.gov>
+}
+\seealso{
+\code{\link{fixedSites}}, \code{\link{variableSites}}
 }
 

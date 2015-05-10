@@ -1,22 +1,38 @@
-#' @name qaqcSummary
-#' 
-#' @title QA/QC Summaries
+#' @title Quality Assurance/Quality Control
+#' @description Conducts a suite of QA/QC tests. Summarizes missing data and 
+#'   homozygosity by individual and locus, and looks for duplicate genotypes 
+#'   (see \code{\link{dupGenotypes}}). For sequence data, identifies low 
+#'   frequency substitutions (see \code{\link{lowFreqSubs}}), and computes 
+#'   haplotype likelihoods (see \code{\link{haplotypeLikelihoods}}).
 #' 
 #' @param g a \linkS4class{gtypes} object.
 #' @param label optional label for output folder and prefix for files.
 #' @param ... optional arguments to pass on to summary functions.
 #' 
+#' @return Files are written for by-sample and by-locus summaries, and duplicate 
+#'   genotypes if any are found. If sequences are present, files are written 
+#'   identifying low frequency substitutions and haplotype likelihoods.\cr
+#'   The return value is a list with the following elements:
+#'   
+#'   \tabular{ll}{
+#'      \code{by.sample} \tab data.frame of by-sample summaries.\cr
+#'      \code{by.locus} \tab data.frame of by-locus summaries.\cr
+#'      \code{dup.df} \tab data.frame identifying potential duplicates.\cr
+#'      \code{by.seq} \tab list of low frequency substitutions and haplotype 
+#'        likelihoods for each gene.\cr
+#'    }
+#' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @export
 #' 
-qaqcSummary <- function(g, label = NULL, ...) {
+qaqc <- function(g, label = NULL, ...) {
   cat("\n")
   cat(format(Sys.time()), ": Individual summaries\n")
   num.loc <- nLoc(g)
   by.sample <- do.call(rbind, lapply(indNames(g), function(id) {
     smry <- sapply(locNames(g), function(loc) {
-      gt <- genotype(id, loc, g)
+      gt <- loci(g, id, loc)
       missing <- any(is.na(gt))
       hmzgs <- if(missing) NA else length(unique(gt)) == 1
       c(missing = missing, hmzgs = hmzgs)

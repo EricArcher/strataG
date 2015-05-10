@@ -2,24 +2,21 @@
 #' @description Calculate allele frequencies for each locus.
 #'
 #' @param g a \linkS4class{gtypes} object.
-#' @param by.strata if \code{TRUE} every element in the return list is a three
-#'   dimensional array where the third dimension contains frequencies and
-#'   proportions for each stratum.
+#' @param by.strata logical. If \code{TRUE} every element in the return list is 
+#'   a three dimensional array where the third dimension contains frequencies 
+#'   and proportions for each stratum.
 #'
 #' @return A list of allele frequencies for each locus. Each element is a
-#'   data.frame with frequencies by count (freq) and proportion (prop) of
-#'   each allele.
+#'   matrix or array with frequencies by count (\code{freq}) and 
+#'   proportion (\code{prop}) of each allele.
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
 #' @examples
 #' data(dolph.msats)
 #' data(dolph.strata)
-#' strata.schemes <- dolph.strata[, c("broad", "fine")]
-#' rownames(strata.schemes) <- dolph.strata$id
-#' msats <- new("gtypes", gen.data = dolph.msats[, -1], ploidy = 2,
-#'              ind.names = dolph.msats[, 1], schemes = strata.schemes,
-#'              strata = "fine")
+#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
+#' msats <- df2gtypes(msats.merge, ploidy = 2)
 #' 
 #' f <- alleleFreqs(msats)
 #' f[[1]]

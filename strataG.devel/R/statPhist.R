@@ -1,7 +1,8 @@
 #' @rdname popStructStat
 #' @export
 #' 
-statPhist <- function(g, hap.dist = NULL, pairwise.deletion = TRUE, ...)  {
+statPhist <- function(g, hap.dist = NULL, model = "K80", gamma = FALSE, 
+                      pairwise.deletion = TRUE, ...)  {
   if(ploidy(g) != 1) return(c(PHIst = NA))
   stat.name <- "PHIst"
   
@@ -20,13 +21,16 @@ statPhist <- function(g, hap.dist = NULL, pairwise.deletion = TRUE, ...)  {
     stat.name <- "Fst"
   } else {
     hap.dist <- dist.dna(
-      g@sequences@dna[[1]], pairwise.deletion = pairwise.deletion, ...
+      g@sequences@dna[[1]], model = model, gamma = gamma, 
+      pairwise.deletion = pairwise.deletion
     )
   }
   if(!is.matrix(hap.dist)) hap.dist <- as.matrix(hap.dist)
   
   # Extract summary values
   strata.hap.freq <- table(g@loci[, 1], g@strata, useNA = "no")
+  haps <- rownames(strata.hap.freq)
+  hap.dist <- hap.dist[haps, haps, drop = FALSE]
   strata.freq <- colSums(strata.hap.freq)
   num.strata <- length(strata.freq)
   num.samples <- sum(strata.freq)
@@ -43,6 +47,8 @@ statPhist <- function(g, hap.dist = NULL, pairwise.deletion = TRUE, ...)  {
   ssd.ap <- sum(sapply(1:nrow(pairs), function(i) {
     st <- unlist(pairs[i, ])
     freq.prod <- outer(strata.hap.freq[, st[1]], strata.hap.freq[, st[2]])
+    row.haps <- rownames(freq.prod)
+    col.haps <- colnames(freq.prod)
     sum(freq.prod * hap.dist)
   })) / sum(2 * strata.freq)
   ssd.ap <- ssd.ap - ssd.wp

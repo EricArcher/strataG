@@ -32,7 +32,19 @@ For \code{isTi} and \code{isTv} a logical identifying whether
   the \code{b1} to \code{b2} is a transition or transversion.
 }
 \description{
-Calculate transition/transversion ratio. Test substitution type of two bases.
+Calculate transition/transversion ratio. Test substitution
+  type of two bases.
+}
+\examples{
+data(dolph.seqs)
+
+TiTvRatio(dolph.seqs)
+
+subType("a", "c")
+
+isTi("a", "c")
+
+isTv("a", "c")
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

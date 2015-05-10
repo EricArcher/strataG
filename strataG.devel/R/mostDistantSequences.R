@@ -15,14 +15,20 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @examples
+#' library(ape)
+#' data(dolph.haps)
+#' 
+#' mostDistantSequences(as.DNAbin(dolph.haps))
+#' 
 #' @export
 #' 
 mostDistantSequences <- function(x, num.seqs = NULL, model = "raw", 
-                                   pairwise.deletion = TRUE) {  
+                                 pairwise.deletion = TRUE) {  
   if(!inherits(x, "DNAbin")) stop("'x' must be a DNAbin object")
   x <- as.matrix(x)
-  if(num.seqs > nrow(x)) stop(paste("'num.seqs' must be <=", nrow(x)))
   if(is.null(num.seqs)) num.seqs <- nrow(x)
+  if(num.seqs > nrow(x)) stop(paste("'num.seqs' must be <=", nrow(x)))
   
   # calculate distance between sequences
   seq.dist <- dist.dna(

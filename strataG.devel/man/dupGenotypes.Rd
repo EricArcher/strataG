@@ -18,7 +18,7 @@ individuals must share to be considered duplicate individuals.}
 \value{
 a data.frame with the following columns:
 \tabular{ll}{
-  \code{id1, id2} \tab sample ids.\cr
+  \code{ids.1, ids.2} \tab sample ids.\cr
   \code{strata1, strata2} \tab sample strata.\cr
   \code{num.loci.genotyped} \tab number of loci genotyped for both
     samples.\cr
@@ -29,7 +29,7 @@ a data.frame with the following columns:
 }
 }
 \description{
-Duplicate Genotypes
+Identify duplicate or very similar genotypes.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

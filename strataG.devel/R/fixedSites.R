@@ -10,6 +10,11 @@
 #' 
 #' @author Eric Archer <eric.archer@@noaa.gov>
 #' 
+#' @examples
+#' data(dolph.haps)
+#' 
+#' fixedSites(dolph.haps)
+#' 
 #' @seealso \code{\link{variableSites}}
 #' 
 #' @export

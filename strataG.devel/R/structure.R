@@ -73,20 +73,22 @@
 #' \dontrun{
 #' data(dolph.strata)
 #' data(dolph.msats)
+#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
+#' msats <- df2gtypes(msats.merge, ploidy = 2)
 #' 
 #' # Run STRUCTURE
-#' #sr <- structure(msats, k.range = 1:6, num.k.rep = 10)
+#' sr <- structureRun(msats, k.range = 1:4, num.k.rep = 10)
 #' 
 #' # Calculate Evanno metrics
-#' #evno <- evanno(sr)
-#' #print(evno)
+#' evno <- evanno(sr)
+#' evno
 #' 
 #' # Run CLUMPP to combine runs for K = 2
-#' #clumpp <- clumpp(sr, k = 3)
-#' #print(clumpp)
+#' clumpp <- clumpp(sr, k = 3)
+#' clumpp
 #' 
 #' # Plot CLUMPP results
-#' #structure.plot(clumpp)
+#' structurePlot(clumpp)
 #' }
 #' 
 #' @importFrom parallel mclapply
@@ -114,7 +116,7 @@ structureRun <- function(g, k.range = NULL, num.k.rep = 1, label = NULL,
   
   rownames(rep.df) <- paste(label, ".k", rep.df$k, ".r", rep.df$rep, sep = "")
   out.files <- mclapply(rownames(rep.df), function(x) {
-    sw.out <- write.structure(g, label = x, maxpops = rep.df[x, "k"], ...)
+    sw.out <- structureWrite(g, label = x, maxpops = rep.df[x, "k"], ...)
     files <- sw.out$files
     cmd <- paste(exec, " -m ", files["mainparams"], 
                  " -e ", files["extraparams"], 
@@ -131,7 +133,7 @@ structureRun <- function(g, k.range = NULL, num.k.rep = 1, label = NULL,
     }
     
     files["out"] <- paste(files["out"], "_f", sep = "")
-    result <- read.structure(files["out"], sw.out$pops)
+    result <- structureRead(files["out"], sw.out$pops)
     
     if(file.exists("seed.txt")) file.remove("seed.txt")
     files <- if(delete.files) NULL else files
@@ -158,7 +160,7 @@ structureRun <- function(g, k.range = NULL, num.k.rep = 1, label = NULL,
 #' @rdname structure
 #' @export
 #' 
-write.structure <- function(g, label = NULL, maxpops = nlevels(strata(g)), 
+structureWrite <- function(g, label = NULL, maxpops = nlevels(strata(g)), 
                            burnin = 1000, numreps = 1000, noadmix = TRUE, 
                            freqscorr = FALSE, randomize = TRUE, seed = 0, 
                            pop.prior = NULL, locpriorinit = 1, maxlocprior = 20, 
@@ -195,7 +197,7 @@ write.structure <- function(g, label = NULL, maxpops = nlevels(strata(g)),
   
   for(i in 1:nInd(g)) {
     id <- indNames(g)[i]
-    loci <- c(as.matrix(genotype(id, locNames(g), g)))
+    loci <- c(as.matrix(loci(g, id, locNames(g))))
     loci[is.na(loci)] <- -9
     loci <- paste(loci, collapse = " ")
     write(paste(id, popdata[i], popflag[i], loci), 
@@ -281,7 +283,7 @@ write.structure <- function(g, label = NULL, maxpops = nlevels(strata(g)),
 #' @rdname structure
 #' @export
 #' 
-read.structure <- function(file, pops = NULL) {
+structureRead <- function(file, pops = NULL) {
   if(!file.exists(file)) {
     stop(paste("the file '", file, "' can't be found.", sep = ""))
   }
@@ -326,7 +328,7 @@ read.structure <- function(file, pops = NULL) {
   # Create table of population assignments for lines without population priors
   no.prior <- if(length(prior.lines) < length(tbl.txt)) {
     no.prior.q.txt <- if(length(prior.lines) == 0) tbl.txt else tbl.txt[-prior.lines]
-    structureParseQmat(no.prior.q.txt, pops)
+    .structureParseQmat(no.prior.q.txt, pops)
   } else NULL
   
   # Return just this base table if MAXPOPS = 1
@@ -340,7 +342,7 @@ read.structure <- function(file, pops = NULL) {
     prior.txt <- strsplit(tbl.txt[prior.lines], "[|]")
     # Get base table
     prior.q.txt <- unlist(lapply(prior.txt, function(x) x[1]))
-    df <- structureParseQmat(prior.q.txt, pops)
+    df <- .structureParseQmat(prior.q.txt, pops)
     # Parse ancestry assignments into matrix
     prior.anc <- lapply(prior.txt, function(x) {
       anc.mat <- matrix(NA, nrow = maxpops, ncol = gensback + 1)
@@ -385,4 +387,34 @@ read.structure <- function(file, pops = NULL) {
   prior.anc <- if(is.null(has.prior)) NULL else has.prior$prior.anc
   
   list(summary = smry, q.mat = q.mat, prior.anc = prior.anc)
+}
+
+
+# Internal file used by 'stucture' and 'clumpp' to parse output files
+# q.mat.txt: character vector of Q matrix from STRUCTURE output file.
+# pops: vector of population labels to be used in place of numbers in STRUCTURE file.
+#   
+.structureParseQmat <- function(q.mat.txt, pops) {
+  q.mat.txt <- sub("[*]+", "", q.mat.txt)
+  q.mat.txt <- sub("[(]", "", q.mat.txt)
+  q.mat.txt <- sub("[)]", "", q.mat.txt)
+  q.mat.txt <- sub("[|][ ]+$", "", q.mat.txt)
+  
+  # Parse population assignment portion of table to create single-line 
+  #   data.frame
+  do.call(rbind, lapply(q.mat.txt, function(x) {
+    # Split on spaces and remove empty spaces and colons
+    x <- strsplit(x, " ")[[1]]
+    x <- x[!x %in% c("", ":")]
+    p <- as.numeric(x[4])
+    
+    df <- data.frame(row = as.numeric(x[1]), id = x[2], 
+                     pct.miss = as.numeric(x[3]), 
+                     orig.pop = if(is.null(pops)) p else pops[p], 
+                     stringsAsFactors = FALSE
+    )
+    pop.prob <- as.data.frame(rbind(as.numeric(x[-(1:4)])))
+    colnames(pop.prob) <- paste("prob", 1:ncol(pop.prob), sep = ".")
+    cbind(df, pop.prob) 
+  }))
 }

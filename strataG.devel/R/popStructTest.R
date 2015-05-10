@@ -49,35 +49,32 @@
 #' @examples
 #' data(dolph.msats)
 #' data(dolph.strata)
-#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, 
-#'   all.y = TRUE)
+#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
 #' msats <- df2gtypes(msats.merge, ploidy = 2)
 #' 
 #' # Conduct an overall Chi-squared test
-#' ovl <- overallTest(msats, nrep = 10, 
+#' ovl <- overallTest(msats, nrep = 5, 
 #'   stat.list = statList("chi2"), quietly = FALSE
 #' )
 #' 
 #' # Conduct a pairwise test for Gst
-#' pws <- pairwiseTest(msats, nrep = 10, 
+#' pws <- pairwiseTest(msats, nrep = 5, 
 #'   stat.list = list(statGst), quietly = FALSE
 #' )
 #' 
 #' # Conduct both overall and pairwise tests for Fst and F'st
-#' full <- popStructTest(msats, nrep = 10, stats = "fst")
+#' full <- popStructTest(msats, nrep = 5, stats = "fst")
 #' print(full$overall)
 #' print(full$pairwise)
 #' 
 #' @export
 #' 
-popStructTest <- function(g, nrep = 100, stats = "all", type = "both", 
+popStructTest <- function(g, nrep = 100, stats = "all", 
+                          type = c("both", "overall", "pairwise"),
                           keep.null = FALSE, quietly = FALSE, num.cores = 1, 
                           write.output = FALSE, ...) {
   # check arguments
-  type <- tolower(type)
-  if(!type %in% c("overall", "pairwise", "both")) {
-    stop("'type' can only be 'overall', 'pairwise', or 'both'")
-  }
+  type <- match.arg(type)
   stat.list <- statList(stats)
   
   # conduct overall test
@@ -133,9 +130,7 @@ overallTest <- function(g, nrep = 100, stat.list = statList("all"),
   
   if(!quietly) cat(
     cat("\n<<<", description(g), ">>>\n"),
-    format(Sys.time()), ": Overall test :", 
-    nrep, "permutations for", length(stat.list), 
-    ifelse(length(stat.list) == 1, "statistic", "statistics"), "\n"
+    format(Sys.time()), ": Overall test :", nrep, "permutations\n"
   )
   
   # calculate list of observed values for each population structure function
@@ -147,10 +142,17 @@ overallTest <- function(g, nrep = 100, stat.list = statList("all"),
     result[i, "estimate"] <- x
     rownames(result)[i] <- names(x)
   }
+  
+  # remove results and stats where estimate is NA
+  to.remove <- which(apply(result, 1, function(x) is.na(x["estimate"])))
+  if(length(to.remove) > 0) {
+    result <- result[-to.remove, , drop = FALSE]
+    stat.list <- stat.list[-to.remove]
+  }    
     
   # conduct permutation test
   null.dist <- NULL
-  if(nrep > 0) {
+  if(nrep > 0 & length(stat.list) > 0) {
     st <- strata(g)  
     # calculate matrix of null distributions
     null.dist <- do.call(rbind, mclapply(1:nrep, function(i) {
@@ -189,22 +191,15 @@ overallTest <- function(g, nrep = 100, stat.list = statList("all"),
 #' @export
 #' 
 pairwiseTest <- function(g, nrep = 100, stat.list = statList("all"), 
-                         keep.null = FALSE, quietly = TRUE,
-                         num.cores = 1, ...) {  
-  # create strata pairs
-  num.strata <- nStrata(g)
-  if(num.strata < 2) stop("'g' has less than 2 strata")
-  strata.vec <- sort(unique(as.character(strata(g))))
-  strata.pairs <- t(combn(strata.vec, 2))
-  strata.pairs <- as.data.frame(strata.pairs, stringsAsFactors = FALSE)
-  colnames(strata.pairs) <- c("strata.1", "strata.2")
-  
+                         keep.null = FALSE, quietly = FALSE,
+                         num.cores = 1, ...) { 
   if(!quietly) cat(
     cat("\n<<<", description(g), ">>>\n"),
-    format(Sys.time()), ": Pairwise tests :", 
-    nrep, "permutations for", length(stat.list), 
-    ifelse(length(stat.list) == 1, "statistic", "statistics"), "\n"
+    format(Sys.time()), ": Pairwise tests :", nrep, "permutations\n"
   )
+  
+  # create strata pairs
+  strata.pairs <- .strataPairs(g)
   
   # run permutation test on all pairwise gtypes subsets
   pair.list <- vector("list", length = nrow(strata.pairs))
@@ -244,8 +239,9 @@ pairwiseTest <- function(g, nrep = 100, stat.list = statList("all"),
   
   # create pairwise matrices - upper right is estimate, lower left is p-value
   stat.cols <- seq(6, ncol(result), 2)
-  mat <- matrix(nrow = num.strata, ncol = num.strata, 
-    dimnames = list(strata.vec, strata.vec)
+  strata <- sort(levels(strata(g)))
+  mat <- matrix(nrow = length(strata), ncol = length(strata), 
+    dimnames = list(strata, strata)
   )
   pair.mat <- lapply(stat.cols, function(i) {
     for(j in 1:nrow(result)) {

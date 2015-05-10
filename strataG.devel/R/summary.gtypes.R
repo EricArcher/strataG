@@ -15,6 +15,8 @@
 #'     by strata.\cr
 #'   \code{strata.smry} \tab a by-strata data.frame summarizing haplotypes 
 #'     or loci.\cr
+#'   \code{locus.smry} \tab a data.frame summarizing each locus for 
+#'     non-haploid objects, \code{NULL} for haploid objects.\cr
 #'   \code{seq.smry} \tab a summary of the sequence length and base 
 #'     frequencies.\cr
 #' }
@@ -31,22 +33,20 @@ setMethod("summary", "gtypes",
     smry$allele.freqs <- alleleFreqs(x, by.strata = TRUE)
     
     smry$strata.smry <- t(sapply(strataSplit(x), function(g) {
-      if(g@ploidy == 1) {
-        c(num.samples = nInd(g),
-          num.missing = mean(numMissing(g)),
-          num.haps = mean(numAlleles(g)), 
-          hap.div = mean(exptdHet(g)),
-          pct.unique.haps = mean(pctUniqueHaps(g))
-        )
-      } else {
-        c(num.samples = nInd(g),
-          num.missing = mean(numMissing(g)),
-          allelic.richness = mean(allelicRichness(g)),
-          heterozygosity = mean(obsvdHet(g))
-        )
-      }
+      c(num.samples = nInd(g),
+        num.missing = mean(numMissing(g)),
+        num.alleles = mean(numAlleles(g)),
+        pct.unique.alleles = mean(pctUniqueAlleles(g)),
+        heterozygosity = if(ploidy(g) == 1) {
+          mean(exptdHet(g))
+        } else {
+          mean(obsvdHet(g))
+        }
+      )
     }))
   
+    smry$locus.smry <- if(ploidy(x) > 1) summarizeLoci(x) else NULL
+    
     smry$seq.smry <- if(!is.null(x@sequences)) {
       do.call(rbind, sapply(x@sequences@dna, function(dna) {
         dna.len <- unlist(lapply(dna, length))
@@ -85,6 +85,10 @@ print.gtypeSummary <- function(x, ... ) {
   cat(names(x$allele.freqs), sep = ", ")
   cat("\n\nStrata summary:\n")
   print(x$strata.smry)
+  if(!is.null(x$locus.smry)) {
+    cat("\nLocus summary:\n")
+    print(x$locus.smry)
+  }
   if(!is.null(x$seq.smry)) {
     cat("\nSequence summary:\n")
     print(x$seq.smry)

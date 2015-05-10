@@ -19,6 +19,11 @@ a character representing the correct IUPAC code.
 \description{
 Calculate the correct IUPAC code for a vector of nucleotides.
 }
+\examples{
+iupacCode(c("a", "a", "g"))
+
+iupacCode(c("t", "c", "g"))
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

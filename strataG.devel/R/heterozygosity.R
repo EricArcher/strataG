@@ -6,15 +6,14 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \code{\link{exptdHet}}
-#' 
 #' @examples
 #' data(dolph.msats)
 #' data(dolph.strata)
-#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, 
-#'   all.y = TRUE)
-#' msats.g <- df2gtypes(msats.merge, ploidy = 2)
-#' obsvdHet(msats.g)
+#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats,  all.y = TRUE)
+#' msats <- df2gtypes(msats.merge, ploidy = 2)
+#' 
+#' obsvdHet(msats)
+#' exptdHet(msats)
 #' 
 #' @export
 #' 

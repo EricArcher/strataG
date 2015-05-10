@@ -13,8 +13,7 @@ write.fasta(x, file = "sequences.fasta")
 \arguments{
 \item{file}{a FASTA-formatted file of sequences.}
 
-\item{x}{a list of DNA sequences or a haploid \code{\link{gtypes}} object
-  with sequences.}
+\item{x}{a list or a matrix of DNA sequences (see \code{\link[ape]{write.dna}}).}
 }
 \value{
 from \code{read.fasta}, a list of DNA sequences.

@@ -39,8 +39,9 @@ Fits a Gamma distribution to the pairwise distances of haplotypes
   observed values.
 }
 \examples{
-data(dolph.haps)
 library(ape)
+data(dolph.haps)
+
 haplotypeLikelihoods(as.DNAbin(dolph.haps))
 }
 \author{

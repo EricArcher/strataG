@@ -4,7 +4,7 @@
 \name{as.matrix,gtypes-method}
 \alias{as.matrix,gtypes}
 \alias{as.matrix,gtypes-method}
-\title{Convert gtypes to matrix}
+\title{Convert \code{gtypes} To \code{matrix}}
 \usage{
 \S4method{as.matrix}{gtypes}(x, one.col = FALSE, sep = "/", ...)
 }

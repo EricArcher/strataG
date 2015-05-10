@@ -7,10 +7,10 @@
 trimNs(x)
 }
 \arguments{
-\item{x}{a list of DNA sequences.}
+\item{x}{a \code{\link[ape]{DNAbin}} object.}
 }
 \value{
-a list of DNA sequences.
+sequences with beginning and trailing N's removed.
 }
 \description{
 Removes N's from beginning and end of sequences.

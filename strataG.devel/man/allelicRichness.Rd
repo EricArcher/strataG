@@ -9,8 +9,21 @@ allelicRichness(g)
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 }
+\value{
+the allelic richness of each locus calculated as the number of
+  alleles divided by the number of samples without missing data at
+  that locus.
+}
 \description{
 Calculate allelic richness for each locus.
+}
+\examples{
+data(dolph.msats)
+data(dolph.strata)
+msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
+msats <- df2gtypes(msats.merge, ploidy = 2)
+
+allelicRichness(msats)
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

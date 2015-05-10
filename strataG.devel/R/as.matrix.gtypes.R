@@ -1,4 +1,4 @@
-#' @title Convert gtypes to matrix
+#' @title Convert \code{gtypes} To \code{matrix}
 #' @description Convert genotypic data in the \code{@@loci} slot of a 
 #'   \linkS4class{gtypes} object to a \code{matrix}.
 #'   

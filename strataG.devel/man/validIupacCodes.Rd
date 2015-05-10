@@ -15,6 +15,13 @@ character vector of valid IUPAC codes for \code{bases}.
 \description{
 Get all possible valid IUPAC codes.
 }
+\examples{
+validIupacCodes(c("c", "t", "c", "c"))
+
+validIupacCodes(c("c", "y", "c", "c"))
+
+validIupacCodes(c("a", "g", "t", "a"))
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

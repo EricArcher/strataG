@@ -41,7 +41,7 @@ statGstPrime <- function(g, strata = NULL, prime.type = "nei", ...) {
 #' @export
 #' 
 statGstDblPrime <- function(g, strata = NULL, ...) {
-  if(ploidy(g) == 1) return('G\'\'st' = NA)
+  if(ploidy(g) == 1) return(c('G\'\'st' = NA))
   hets <- Hstats(g, strata)  
   Hs <- mean(hets["Hs", ], na.rm = TRUE)
   Ht <- mean(hets["Ht", ], na.rm = TRUE)

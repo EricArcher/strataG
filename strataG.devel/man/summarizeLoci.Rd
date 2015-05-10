@@ -24,9 +24,9 @@ Compile standard by-locus summaries.
 \examples{
 data(dolph.msats)
 data(dolph.strata)
-msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats,
-  all.y = TRUE)
+msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
 msats <- df2gtypes(msats.merge, ploidy = 2)
+
 summarizeLoci(msats)
 }
 \author{

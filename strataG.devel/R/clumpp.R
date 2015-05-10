@@ -35,7 +35,7 @@
 #' @aliases clumpp
 #' @export
 #' 
-clumppRun <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
+clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
                       greedy.option = "ran.order", repeats = 100, 
                       order.by.run = 0, label = NULL, delete.files = TRUE) {
   
@@ -148,7 +148,7 @@ clumppRun <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
                out.file, "'.", sep = ""))
   }
   out.txt <- scan(out.file, "character", sep = "\n", quiet = TRUE)
-  q.mat <- structureParseQmat(out.txt, pops)
+  q.mat <- .structureParseQmat(out.txt, pops)
   q.mat$id <- ids[as.numeric(q.mat$id)]
   q.mat$row <- NULL
   

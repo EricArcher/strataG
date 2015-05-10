@@ -7,17 +7,17 @@
 \alias{sharedLoci}
 \title{Shared Loci}
 \usage{
-propSharedLoci(g, type = "strata", num.cores = 1)
+propSharedLoci(g, type = c("strata", "ids"), num.cores = 1)
 
 sharedAlleles(g, smry = "num")
 
 propSharedIds(ids, g)
 }
 \arguments{
-\item{g}{a \code{\link{gtypes}} object.}
+\item{g}{a \linkS4class{gtypes} object.}
 
 \item{type}{a character vector determining type of pairwise comparsion. Can
-be "ids" for individuals or "strata" for strata.}
+be "strata" for strata or "ids" for individuals.}
 
 \item{num.cores}{number of CPU cores to use. Value is passed to
   \code{\link[parallel]{mclapply}}.}
@@ -29,11 +29,21 @@ be "ids" for individuals or "strata" for strata.}
 \item{ids}{character vector of two sample ids to compare.}
 }
 \value{
-matrix summary of pairwise shared loci.
+data.frame summary of pairwise shared loci.
 }
 \description{
 Calculate proportion of alleles and number of loci shared
   between pairs of individuals or strata.
+}
+\examples{
+data(dolph.msats)
+data(dolph.strata)
+msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
+msats <- df2gtypes(msats.merge, ploidy = 2)
+
+propSharedLoci(msats)
+
+sharedAlleles(msats)
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

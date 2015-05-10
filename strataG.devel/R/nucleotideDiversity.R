@@ -8,6 +8,15 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @examples
+#' data(dolph.strata)
+#' data(dolph.seqs)
+#' strata <- dolph.strata$fine
+#' names(strata) <- dolph.strata$ids
+#' dloop <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop")
+#' 
+#' nucleotideDiversity(dloop)
+#' 
 #' @export
 #' 
 nucleotideDiversity <- function(x, bases = c("a", "c", "g", "t")) {

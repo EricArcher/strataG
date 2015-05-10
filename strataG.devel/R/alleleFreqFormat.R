@@ -13,12 +13,12 @@
 #' @examples
 #' data(dolph.msats)
 #' data(dolph.strata)
-#' msats <- new("gtypes", gen.data = dolph.msats[, -1], ploidy = 2,
-#'              ind.names = dolph.msats[, 1])
+#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
+#' msats <- df2gtypes(msats.merge, ploidy = 2)
 #' 
 #' x <- cbind(
-#'  ids = sample(indNames(msats), 10, rep = TRUE),
-#'  loci = sample(locNames(msats), 10, rep = TRUE)
+#'  id = sample(indNames(msats), 10, rep = TRUE),
+#'  locus = sample(locNames(msats), 10, rep = TRUE)
 #' )
 #' alleleFreqFormat(x, msats)
 #' 
@@ -39,7 +39,7 @@ alleleFreqFormat <- function(x, g) {
     # skip (leave as NA) if either id or locus can't be found
     if(!(id %in% indNames(g) | locus %in% locNames(g))) next
     # get genotype of this id at this locus
-    gt <- genotype(id, locus, g)
+    gt <- unlist(loci(g, id, locus))
     # if the genotype is NA skip and leave format as NA
     if(any(is.na(gt))) next
     # get frequency and round

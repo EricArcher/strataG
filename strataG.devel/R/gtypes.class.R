@@ -1,12 +1,8 @@
 setClassUnion("dnaSequences", c("multidna", "NULL"))
 
-#' @title gtypes Class
+#' @title \code{gtypes} Class
 #' @description An S4 class storing multi-allelic locus or sequence data along
 #'   with a current stratification and option stratification schemes.
-#' 
-#' @aliases gtypes
-#'
-#' @rdname gtypes
 #'
 #' @slot loci a data.frame containing the allelic data as one column per locus.
 #'   Alleles are on multiple rows per column with samples listed in the same
@@ -27,6 +23,9 @@ setClassUnion("dnaSequences", c("multidna", "NULL"))
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
+#' @seealso \code{\link{df2gtypes}}, \code{\link{sequence2gtypes}},
+#'   \code{\link{genind2gtypes}}, \code{\link{gtypes.accessors}},
+#'   \code{\link{initialize.gtypes}}
 #' @examples
 #'
 #' #--- create a diploid (microsatellite) gtypes object
@@ -49,10 +48,11 @@ setClassUnion("dnaSequences", c("multidna", "NULL"))
 #' dloop <- labelHaplotypes(dloop, "Hap.")$gtypes
 #' dloop
 #'
+#' @aliases gtypes
 #' @import adegenet ape apex
 #' @importFrom methods setClass
 #' @export
-
+#' 
 setClass(
   Class = "gtypes",
   slots = c(loci = "data.frameOrNULL", sequences = "dnaSequences",

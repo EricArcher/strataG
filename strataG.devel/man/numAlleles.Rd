@@ -15,6 +15,14 @@ vector of number of alleles per locus.
 \description{
 Return the number of alleles for each locus.
 }
+\examples{
+data(dolph.msats)
+data(dolph.strata)
+msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
+msats <- df2gtypes(msats.merge, ploidy = 2)
+
+numAlleles(msats)
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

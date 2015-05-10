@@ -14,6 +14,7 @@
 #' @examples
 #' data(dolph.haps)
 #' library(ape)
+#' 
 #' lowFreqSubs(as.DNAbin(dolph.haps))
 #' 
 #' @export

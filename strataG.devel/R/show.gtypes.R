@@ -5,6 +5,7 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
+#' @aliases show.gtypes
 #' @importFrom methods setMethod
 #' 
 setMethod("show", "gtypes", function(object) {

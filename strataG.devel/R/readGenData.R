@@ -11,7 +11,7 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
 #' @export
-
+#' 
 readGenData <- function(file,
                           na.strings = c(NA, "NA", "", " ", "?", "."),
                           ...) {

@@ -2,7 +2,7 @@
 % Please edit documentation in R/idRows.R
 \name{idRows}
 \alias{idRows}
-\title{ID Rows}
+\title{\code{gtypes} ID Rows}
 \usage{
 idRows(ids, rowNames)
 }
@@ -19,6 +19,15 @@ a vector of row numbers in \code{g@loci} where data for \code{ids}
 \description{
 Return row numbers of \code{@loci} slot for a set of
   sample ids.
+}
+\examples{
+data(dolph.msats)
+data(dolph.strata)
+msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
+msats <- df2gtypes(msats.merge, ploidy = 2)
+
+ran.ids <- sample(indNames(msats), 5)
+idRows(ran.ids, rownames(loci(msats)))
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

@@ -27,6 +27,8 @@ a list with the following elements:
     by strata.\cr
   \code{strata.smry} \tab a by-strata data.frame summarizing haplotypes
     or loci.\cr
+  \code{locus.smry} \tab a data.frame summarizing each locus for
+    non-haploid objects, \code{NULL} for haploid objects.\cr
   \code{seq.smry} \tab a summary of the sequence length and base
     frequencies.\cr
 }

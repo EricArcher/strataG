@@ -25,8 +25,9 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
 #' @examples
-#' data(dolph.haps)
 #' library(ape)
+#' data(dolph.haps)
+#' 
 #' haplotypeLikelihoods(as.DNAbin(dolph.haps))
 #' 
 #' @export

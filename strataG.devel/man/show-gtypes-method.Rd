@@ -3,6 +3,7 @@
 \docType{methods}
 \name{show,gtypes-method}
 \alias{show,gtypes-method}
+\alias{show.gtypes}
 \title{Show a gtypes object}
 \usage{
 \S4method{show}{gtypes}(object)

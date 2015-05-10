@@ -17,6 +17,12 @@ a matrix listing the start and end positions of each sequence
 \description{
 Summaries for each sequence.
 }
+\examples{
+library(apex)
+data(woodmouse)
+
+summarizeSeqs(woodmouse)
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

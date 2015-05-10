@@ -25,6 +25,7 @@ Check nucleotide sites for low frequency substitutions.
 \examples{
 data(dolph.haps)
 library(ape)
+
 lowFreqSubs(as.DNAbin(dolph.haps))
 }
 \author{

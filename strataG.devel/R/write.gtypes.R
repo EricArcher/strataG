@@ -1,11 +1,11 @@
-#' @title Write gtypes
-#' @description Write a \code{\link{gtypes}} object to file(s).
+#' @title Write \code{gtypes}
+#' @description Write a \linkS4class{gtypes} object to file(s).
 #' 
 #' @param g a \linkS4class{gtypes} object.
 #' @param label label for filename(s). Default is the gtypes description 
 #'   if present.
-#' @param folder folder where file(s) should be written to. If NULL, files 
-#'   are written to current working directory.
+#' @param folder folder where file(s) should be written to. If \code{NULL}, 
+#'   files are written to current working directory.
 #' @param as.frequency logical indicating if haploid data should be output 
 #'   as frequency tables.
 #' 

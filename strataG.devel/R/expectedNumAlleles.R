@@ -35,7 +35,7 @@ exptdNumAlleles <- function(n, theta, ploidy) {
   result <- c(num.alleles = NA, var.num.alleles = NA)
  
   if(n < 1) {
-    warning("'n' must be greater than 1. NA returned")
+    warning("'n' must be 1 or greater. NA returned")
     return(result)
   }
   if(theta <= 0) {
@@ -43,7 +43,7 @@ exptdNumAlleles <- function(n, theta, ploidy) {
     return(result)
   }
   if(ploidy < 1) {
-    warning("'ploidy must be greater than 1. NA returned")
+    warning("'ploidy' must be 1 or greater. NA returned")
     return(result)
   }
   

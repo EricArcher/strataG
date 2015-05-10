@@ -28,6 +28,19 @@ If \code{scheme} is a vector or factor and has names, then the
   samples in \code{g} or values in \code{scheme} will be recycled as
   necessary.
 }
+\examples{
+data(dolph.msats)
+data(dolph.strata)
+strata.schemes <- dolph.strata[, c("broad", "fine")]
+rownames(strata.schemes) <- dolph.strata$id
+msats <- new("gtypes", gen.data = dolph.msats[, -1], ploidy = 2,
+             ind.names = dolph.msats[, 1], schemes = strata.schemes)
+msats <- stratify(msats, "fine")
+msats
+
+msats <- stratify(msats, "broad")
+msats
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

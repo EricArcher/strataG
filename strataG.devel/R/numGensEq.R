@@ -9,7 +9,7 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
 #' @export
-
+#' 
 numGensEq <- function(fst, Ne, gen.time) {
   term1 <- log(1 - fst)
   term2 <- 1 - (1 / (2 * Ne))

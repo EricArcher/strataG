@@ -2,7 +2,7 @@
 #' @description Calculate Nei's dA between strata, and distributions of 
 #'   between- and within-strata nucleotide divergence (sequence distance).
 #' 
-#' @param g a \code{\link{gtypes}} object.
+#' @param g a \linkS4class{gtypes} object.
 #' @param probs a numeric vector of probabilities of the pairwise distance 
 #'   distributions with values in \code{0:1}.
 #' @param ... arguments passed to \code{\link[ape]{dist.dna}} such as 
@@ -16,9 +16,20 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @examples
+#' data(dolph.strata)
+#' data(dolph.seqs)
+#' strata <- dolph.strata$fine
+#' names(strata) <- dolph.strata$ids
+#' dloop <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop")
+#' 
+#' nucleotideDivergence(dloop)
+#' 
+#' @aliases dA
 #' @export
 #' 
 nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1), ...) { 
+  if(ploidy(g) > 1) stop("'g' must be haploid")
   if(is.null(g@sequences)) stop("'g' must have sequences")
   
   pair.dist.summary <- function(hap1, hap2, d) {
@@ -29,9 +40,8 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1), ...) {
     c(mean = mean(pws.dist, na.rm = TRUE), dist.quant)
   }
   
+  st.pairs <- as.matrix(.strataPairs(g))
   st <- strata(g)
-  st.vec <- levels(st)
-  st.pairs <- t(combn(st.vec, 2))
   hap.dist <- lapply(g@sequences@dna, dist.dna, as.matrix = TRUE, ...)
   
   result <- lapply(1:ncol(g@loci), function(i) {
@@ -48,7 +58,6 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1), ...) {
       c(dA = unname(dA), btwn)
     }))
     between.dist <- data.frame(st.pairs, between.dist, stringsAsFactors = FALSE)
-    colnames(between.dist)[1:2] <- c("strata.1", "strata.2")  
     
     list(within = within.dist, between = between.dist) 
   })

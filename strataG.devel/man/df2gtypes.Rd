@@ -13,10 +13,12 @@ df2gtypes(x, ploidy, id.col = 1, strata.col = 2, loc.col = 3,
 \item{ploidy}{number of number of columns in \code{x} storing alleles
 at each locus.}
 
-\item{id.col}{column name or number where individual sample ids are stored.}
+\item{id.col}{column name or number where individual sample ids are stored.
+If \code{NULL} then rownames are used. If there are no rownames, then
+samples are labelled with consecutive numbers.}
 
 \item{strata.col}{column name or number where stratification is stored. If
-NULL then all samples are in one (default) stratum.}
+\code{NULL} then all samples are in one (default) stratum.}
 
 \item{loc.col}{column number of first allele of first locus.}
 
@@ -51,8 +53,7 @@ same names as column names in \code{x} from \code{loc.col} to the end.
 #--- create a diploid (microsatellite) gtypes object
 data(dolph.msats)
 data(dolph.strata)
-msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats,
-  all.y = TRUE)
+msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
 msats.fine <- df2gtypes(msats.merge, ploidy = 2)
 
 #' #--- create a haploid sequence (mtDNA) gtypes object

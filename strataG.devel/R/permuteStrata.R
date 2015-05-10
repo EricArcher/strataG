@@ -3,6 +3,8 @@
 #' 
 #' @param g a \linkS4class{gtypes} object.
 #' 
+#' @return a \linkS4class{gtypes} object with the strata randomly permuted.
+#' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @examples
@@ -12,11 +14,12 @@
 #'   all.y = TRUE, description = date())
 #' msats <- df2gtypes(msats.merge, ploidy = 2)
 #' summary(msats)
+#' 
 #' ran.msats <- permuteStrata(msats)
 #' summary(ran.msats)
 #'
 #' @export
-
+#' 
 permuteStrata <- function(g) {
   strata <- g@strata
   no.nas <- strata[!is.na(strata)]

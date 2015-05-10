@@ -33,6 +33,23 @@ a \linkS4class{gtypes} object containing only individuals and loci
 Return subsets of a gtypes object based on specified
   strata, individuals, or loci.
 }
+\examples{
+data(dolph.msats)
+data(dolph.strata)
+msats.merge <- merge(dolph.strata[, c("ids", "broad")], dolph.msats, all.y = TRUE)
+msats <- df2gtypes(msats.merge, ploidy = 2)
+
+# just Coastal genotypes
+msats.coastal <- subset(msats, strata = "Coastal")
+msats.coastal
+
+# pick 10 random offshore samples and the first two loci
+msats.offshore <- subset(msats, strata = "Offshore")
+ran.ids <- sample(indNames(msats.offshore), 10)
+loc2 <- locNames(msats.offshore)[1:2]
+msats.offshore <- subset(msats.offshore, ids = ran.ids, loci = loc2)
+msats.offshore
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

@@ -2,6 +2,7 @@
 % Please edit documentation in R/gtypes.accessors.R
 \docType{class}
 \name{gtypes.accessors}
+\alias{accessors}
 \alias{description}
 \alias{description,gtypes}
 \alias{description,gtypes-method}
@@ -10,6 +11,9 @@
 \alias{indNames,gtypes-method}
 \alias{locNames,gtypes}
 \alias{locNames,gtypes-method}
+\alias{loci}
+\alias{loci,gtypes}
+\alias{loci,gtypes-method}
 \alias{nInd,gtypes}
 \alias{nInd,gtypes-method}
 \alias{nLoc,gtypes}
@@ -42,7 +46,7 @@
 \alias{strataNames}
 \alias{strataNames,gtypes}
 \alias{strataNames,gtypes-method}
-\title{gtypes Accessors}
+\title{\code{gtypes} Accessors}
 \usage{
 \S4method{nInd}{gtypes}(x, ...)
 
@@ -80,6 +84,10 @@ schemes(x) <- value
 
 \S4method{schemes}{gtypes}(x) <- value
 
+loci(x, ...)
+
+\S4method{loci}{gtypes}(x, ids = NULL, loci = NULL)
+
 seqNames(x, ...)
 
 \S4method{seqNames}{gtypes}(x, ...)
@@ -99,8 +107,30 @@ description(x, ...)
 
 \item{value}{value being assigned by accessor.}
 
+\item{ids}{vector of individual ids.}
+
+\item{loci}{vecor of loci.}
+
 \item{seqName}{the name (or number) of a set of sequences from the
 \code{@sequences} slot to return.}
+}
+\value{
+\tabular{ll}{
+  \code{nInd} \tab number of individuals/samples.\cr
+  \code{nLoc} \tab number of loci.\cr
+  \code{nStrata} \tab number of strata.\cr
+  \code{indNames} \tab vector of individual/sample names.\cr
+  \code{locNames} \tab vector of locus names.\cr
+  \code{strataNames} \tab vector of strata names for current scheme.\cr
+  \code{ploidy} \tab number of alleles at each locus.\cr
+  \code{other} \tab contents of \code{@other} slot.\cr
+  \code{strata} \tab return or modify the current stratification.\cr
+  \code{schemes} \tab return or modify the current stratification schemes.\cr
+  \code{seqNames} \tab return the names of each set of sequences.\cr
+  \code{sequences} \tab return the \linkS4class{multidna} object in
+    the \code{@sequences} slot.\cr
+  \code{description} \tab return the object's description.\cr
+}
 }
 \description{
 Accessors for slots in \linkS4class{gtypes} objects.

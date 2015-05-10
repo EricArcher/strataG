@@ -1,5 +1,4 @@
-#' @title gtypes Constructor
-#' 
+#' @title \code{gtypes} Constructor
 #' @description Create a new \linkS4class{gtypes} object using 
 #'   \code{new("gtypes", ...)}, where '\code{...}' are arguments 
 #'   documented below.
@@ -39,6 +38,7 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
+#' @aliases initialize.gtypes
 #' @importFrom methods setMethod
 #' 
 setMethod("initialize", "gtypes", 
@@ -111,7 +111,7 @@ setMethod("initialize", "gtypes",
     # return generic names if no colnames assigned
     nums <- formatC(1:ncol(loci), digits = floor(log10(n.loc)), flag = "0")
     paste("Locus", nums, sep = "_")
-  } else parseLocusNames(colnames(gen.data), ploidy)
+  } else .parseLocusNames(colnames(gen.data), ploidy)
   row.ids <- rep(rownames(gen.data), ploidy)
   row.nums <- rep(1:ploidy, each = nrow(gen.data))
   rownames(loci) <- paste(row.ids, row.nums, sep = ".")

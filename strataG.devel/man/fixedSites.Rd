@@ -19,6 +19,11 @@ a vector of fixed sites. Element names are site positions in the
 \description{
 Identify fixed sites among sequences.
 }
+\examples{
+data(dolph.haps)
+
+fixedSites(dolph.haps)
+}
 \author{
 Eric Archer <eric.archer@noaa.gov>
 }

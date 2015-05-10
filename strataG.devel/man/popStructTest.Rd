@@ -7,15 +7,15 @@
 \alias{statList}
 \title{Population Differentiation Tests}
 \usage{
-popStructTest(g, nrep = 100, stats = "all", type = "both",
-  keep.null = FALSE, quietly = FALSE, num.cores = 1,
+popStructTest(g, nrep = 100, stats = "all", type = c("both", "overall",
+  "pairwise"), keep.null = FALSE, quietly = FALSE, num.cores = 1,
   write.output = FALSE, ...)
 
 overallTest(g, nrep = 100, stat.list = statList("all"), keep.null = FALSE,
   quietly = FALSE, num.cores = 1, ...)
 
 pairwiseTest(g, nrep = 100, stat.list = statList("all"),
-  keep.null = FALSE, quietly = TRUE, num.cores = 1, ...)
+  keep.null = FALSE, quietly = FALSE, num.cores = 1, ...)
 
 statList(stats = "all")
 }
@@ -77,22 +77,21 @@ Conduct overall and/or pairwise tests of
 \examples{
 data(dolph.msats)
 data(dolph.strata)
-msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats,
-  all.y = TRUE)
+msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
 msats <- df2gtypes(msats.merge, ploidy = 2)
 
 # Conduct an overall Chi-squared test
-ovl <- overallTest(msats, nrep = 10,
+ovl <- overallTest(msats, nrep = 5,
   stat.list = statList("chi2"), quietly = FALSE
 )
 
 # Conduct a pairwise test for Gst
-pws <- pairwiseTest(msats, nrep = 10,
+pws <- pairwiseTest(msats, nrep = 5,
   stat.list = list(statGst), quietly = FALSE
 )
 
 # Conduct both overall and pairwise tests for Fst and F'st
-full <- popStructTest(msats, nrep = 10, stats = "fst")
+full <- popStructTest(msats, nrep = 5, stats = "fst")
 print(full$overall)
 print(full$pairwise)
 }

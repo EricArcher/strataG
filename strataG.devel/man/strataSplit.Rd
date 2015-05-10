@@ -20,7 +20,7 @@ A named list where each element is a \code{gtypes} object
   for a single stratum in \code{g}.
 }
 \description{
-Return a list of gtypes for each strata
+Return a list of \code{gtypes} for each stratum.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

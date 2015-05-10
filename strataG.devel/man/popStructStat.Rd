@@ -29,13 +29,15 @@ statGstDblPrime(g, strata = NULL, ...)
 
 statJostD(g, strata = NULL, ...)
 
-statPhist(g, hap.dist = NULL, pairwise.deletion = TRUE, ...)
+statPhist(g, hap.dist = NULL, model = "K80", gamma = FALSE,
+  pairwise.deletion = TRUE, ...)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
 \item{strata}{an optional alternative stratification vector to use in place
-of the stratification in \code{g}.}
+of the stratification in \code{g}. If \code{NULL} stratification is taken
+from \code{g}.}
 
 \item{...}{optional arguments passed to or from other functions.}
 
@@ -43,8 +45,11 @@ of the stratification in \code{g}.}
 
 \item{hap.dist}{matrix of pairwise distances between haplotypes.}
 
-\item{pairwise.deletion}{logical. Do pairwise deletion of sites with
-missing data. See \code{\link[ape]{dist.dna}}.}
+\item{model,gamma,pairwise.deletion}{parameters passed to
+\code{\link[ape]{dist.dna}}.}
+}
+\value{
+the named statistic estimate.
 }
 \description{
 Population Structure statistics

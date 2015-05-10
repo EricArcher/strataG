@@ -22,12 +22,12 @@ Format allele frequencies to for a set of ids and loci
 \examples{
 data(dolph.msats)
 data(dolph.strata)
-msats <- new("gtypes", gen.data = dolph.msats[, -1], ploidy = 2,
-             ind.names = dolph.msats[, 1])
+msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
+msats <- df2gtypes(msats.merge, ploidy = 2)
 
 x <- cbind(
- ids = sample(indNames(msats), 10, rep = TRUE),
- loci = sample(locNames(msats), 10, rep = TRUE)
+ id = sample(indNames(msats), 10, rep = TRUE),
+ locus = sample(locNames(msats), 10, rep = TRUE)
 )
 alleleFreqFormat(x, msats)
 }

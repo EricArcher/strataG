@@ -1,6 +1,7 @@
 #' @name TiTvRatio
 #' @title Transition / Transversion Ratio
-#' @description Calculate transition/transversion ratio. Test substitution type of two bases.
+#' @description Calculate transition/transversion ratio. Test substitution 
+#'   type of two bases.
 #' 
 #' @param x sequence of DNA.
 #' @param b1,b2 two bases to be compared.
@@ -16,6 +17,17 @@
 #'   the \code{b1} to \code{b2} is a transition or transversion.
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' 
+#' @examples
+#' data(dolph.seqs)
+#' 
+#' TiTvRatio(dolph.seqs)
+#' 
+#' subType("a", "c")
+#' 
+#' isTi("a", "c")
+#' 
+#' isTv("a", "c")
 #' 
 #' @export
 #' 
