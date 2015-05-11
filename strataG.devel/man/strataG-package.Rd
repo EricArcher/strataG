@@ -4,7 +4,8 @@
 \name{strataG-package}
 \alias{strataG-package}
 \alias{strataG.devel}
-\title{Summaries and population structure analyses of haplotypic and genotypic data}
+\title{Summaries and population structure analyses of DNA sequence genotypic
+  data}
 \description{
 strataG.devel
 }

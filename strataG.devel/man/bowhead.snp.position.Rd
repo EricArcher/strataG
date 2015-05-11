@@ -12,7 +12,12 @@ data(bowhead.snp.position)
 Bowhead Whale SNP Genotype Groups
 }
 \references{
-Morin et al.
+Morin, P.A., Archer, F.I., Pease, V.L., Hancock-Hanser,
+  B.L., Robertson, K.M., Huebinger, R.M., Martien, K.K., Bickham,
+  J.W., George, J.C., Postma, L.D., Taylor, B.L., 2012. Empirical comparison
+  of single nucleotide polymorphisms and microsatellites for population and
+  demographic analyses of bowhead whales.
+  Endangered Species Research 19, 129-147.
 }
 \keyword{datasets}
 

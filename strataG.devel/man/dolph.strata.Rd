@@ -9,10 +9,14 @@
 data(dolph.strata)
 }
 \description{
-Assignment of samples to one of two stratifications and mtDNA haplotype designations
+Assignment of samples to either broad-scale or fine-scale
+  stratifications and mtDNA haplotype designations
 }
 \references{
-Lowther et al.
+Lowther-Thieleking J.L., F.I. Archer, A.R. Lang, and
+  D.W. Weller. 2015. Genetic variation of coastal and offshore bottlenose
+  dolphins, Tursiops truncatus, in the eastern North Pacific Ocean.
+  Marine Mammal Science 31:1-20
 }
 \keyword{datasets}
 

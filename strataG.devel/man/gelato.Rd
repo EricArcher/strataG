@@ -43,10 +43,22 @@ A list with the following elements:
 Run a GELATo test to evaluate assignment likelihoods of
   groups of samples.
 }
+\examples{
+data(dolph.msats)
+data(dolph.strata)
+msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
+msats <- df2gtypes(msats.merge, ploidy = 2)
+
+gelato.fine <- gelato(msats, unk = "Offshore.South", nrep = 10)
+
+gelatoPlot(gelato.fine, "Offshore.South")
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
 \references{
-O'Corry-Crowe et. al. XXXX
+O'Corry-Crowe, G., W. Lucey, F.I. Archer, and B. Mahoney. 2015.
+  The genetic ecology and population origins of the beluga whales of
+  Yakutat Bay. Marine Fisheries Review.
 }
 

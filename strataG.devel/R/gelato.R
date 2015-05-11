@@ -24,9 +24,21 @@
 #'   \code{likelihoods} \tab a list of likelihoods.\cr
 #' }
 #' 
-#' @references O'Corry-Crowe et. al. XXXX
+#' @references O'Corry-Crowe, G., W. Lucey, F.I. Archer, and B. Mahoney. 2015. 
+#'   The genetic ecology and population origins of the beluga whales of 
+#'   Yakutat Bay. Marine Fisheries Review. 
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' 
+#' @examples
+#' data(dolph.msats)
+#' data(dolph.strata)
+#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
+#' msats <- df2gtypes(msats.merge, ploidy = 2)
+#' 
+#' gelato.fine <- gelato(msats, unk = "Offshore.South", nrep = 10)
+#' 
+#' gelatoPlot(gelato.fine, "Offshore.South")
 #' 
 #' @importFrom parallel mclapply
 #' @export
@@ -44,8 +56,9 @@ gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5,
   # loop through every unknown strata
   result <- sapply(unknown.strata, function(unknown) {
     unknown.gtypes <- subset(g, strata = unknown)
-    unknown.n <- nInd(unknown.gtypes)
     unknown.mat <- as.matrix(unknown.gtypes)
+    unknown.mat <- cbind(strata = unknown, unknown.mat)
+    unknown.n <- nInd(unknown.gtypes)
     
     # loop through each known population and calculate distribution
     #   of Fst and log-likelihood of membership
@@ -55,26 +68,30 @@ gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5,
         fst.dist <- do.call(rbind, mclapply(1:nrep, function(i) {
           # select samples to self assign
           ran.sample <- sample(indNames(known.gtypes), unknown.n)
+          
           # extract gtypes of base known strata
           known.to.keep <- setdiff(indNames(known.gtypes), ran.sample)
           known.sample <- subset(known.gtypes, ids = known.to.keep)
+          
           # gtypes for observed Fst
           known.mat <- as.matrix(known.sample)
+          known.mat <- cbind(strata = known, known.mat)
           obs.gtypes <- df2gtypes(rbind(known.mat, unknown.mat), ploidy = 2,
+                                  id.col = NULL, strata.col = 1, loc.col = 2,
                                   sequences = sequences(g))
+
           # gtypes for null Fst
-          null.gtypes <- known.gtypes
-          st <- as.character(strata(null.gtypes))
-          st[ran.sample] <- rep("<gelato.unknown>", length(ran.sample))
-          names(st) <- names(strata(null.gtypes))
-          strata(null.gtypes) <- factor(st)
+          st <- as.character(strata(known.gtypes))
+          names(st) <- names(strata(known.gtypes))
+          st[ran.sample] <- "<gelato.unknown>"
+          null.gtypes <- stratify(known.gtypes, st)
           
           c(obs = unname(statFst(obs.gtypes)), 
             null = unname(statFst(null.gtypes))
           )
         }, mc.cores = num.cores))
         fst.dist <- fst.dist[apply(fst.dist, 1, function(x) all(!is.na(x))), ]
-        
+
         if(nrow(fst.dist) < 2) {
           NULL
         } else {
@@ -104,7 +121,6 @@ gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5,
       if(is.null(x)) NA else x$log.Lik.smry["median"]
     })
     
-    print(log.Lik)
     lik <- exp(log.Lik - max(log.Lik, na.rm = T))
     assign.prob <- lik / sum(lik, na.rm = T) 
     names(assign.prob) <- knowns
@@ -144,8 +160,8 @@ gelatoPlot <- function(gelato.result, unknown, main = NULL) {
     obs.max <- max(hist(known.lik$fst.dist[, "obs"], plot = F)$density)
     lik.mean <- known.lik$norm.coefs["mean"]
     lik.sd <- known.lik$norm.coefs["sd"]
-    lik <- dnorm(lik.mean, lik.mean, lik.sd)
-    ylim <- range(pretty(c(0, null.max, obs.max, lik)))
+    norm.lik <- dnorm(lik.mean, lik.mean, lik.sd)
+    ylim <- range(pretty(c(0, null.max, obs.max, norm.lik)))
     hist(known.lik$fst.dist[, "null"], breaks = 10, freq = FALSE, 
          xlim = xlim, ylim = ylim, xlab = "", ylab = "", main = "", 
          col = "red", xaxt = "n")

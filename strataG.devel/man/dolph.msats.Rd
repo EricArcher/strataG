@@ -12,7 +12,10 @@ data(dolph.msats)
 Genotypes for 15 microsatellite loci
 }
 \references{
-Lowther et al.
+Lowther-Thieleking J.L., F.I. Archer, A.R. Lang, and
+  D.W. Weller. 2015. Genetic variation of coastal and offshore bottlenose
+  dolphins, Tursiops truncatus, in the eastern North Pacific Ocean.
+  Marine Mammal Science 31:1-20
 }
 \keyword{datasets}
 
