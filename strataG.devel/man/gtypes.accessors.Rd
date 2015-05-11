@@ -126,6 +126,8 @@ description(x, ...)
   \code{other} \tab contents of \code{@other} slot.\cr
   \code{strata} \tab return or modify the current stratification.\cr
   \code{schemes} \tab return or modify the current stratification schemes.\cr
+  \code{loci} \tab return a data.frame of the alleles for the specified ids
+    and loci.\cr
   \code{seqNames} \tab return the names of each set of sequences.\cr
   \code{sequences} \tab return the \linkS4class{multidna} object in
     the \code{@sequences} slot.\cr

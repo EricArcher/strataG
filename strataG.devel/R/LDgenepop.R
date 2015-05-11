@@ -12,7 +12,7 @@
 #' @export
 #' 
 LDgenepop <- function(g, show.output = FALSE, delete.files = TRUE, 
-                       label = "linkage.genepop", ...) {
+                      label = "linkage.genepop", ...) {
   
   # Run Genepop
   g <- stratify(g, rep("1", nInd(g)))

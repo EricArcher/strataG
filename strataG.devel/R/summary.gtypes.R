@@ -87,7 +87,7 @@ print.gtypeSummary <- function(x, ... ) {
   print(x$strata.smry)
   if(!is.null(x$locus.smry)) {
     cat("\nLocus summary:\n")
-    print(x$locus.smry)
+    print(x$locus.smry[, c(1, 3, 5, 7)])
   }
   if(!is.null(x$seq.smry)) {
     cat("\nSequence summary:\n")
