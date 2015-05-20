@@ -4,6 +4,7 @@
 \name{subset,gtypes-method}
 \alias{subset,gtypes}
 \alias{subset,gtypes-method}
+\alias{subset.gtypes}
 \title{Subset gtypes}
 \usage{
 \S4method{subset}{gtypes}(x, strata = NULL, ids = NULL, loci = NULL,

@@ -23,7 +23,7 @@ genind2gtypes <- function(x) {
             id.col = NULL,
             strata.col = if(has.pop) 1 else NULL,
             loc.col = if(has.pop) 2 else 1,
-            other = other(obj)
+            other = other(x)
   )  
 }
 

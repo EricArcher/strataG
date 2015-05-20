@@ -34,7 +34,7 @@
 #' msats.offshore <- subset(msats.offshore, ids = ran.ids, loci = loc2)
 #' msats.offshore
 #' 
-#' @aliases subset,gtypes
+#' @aliases subset,gtypes subset.gtypes
 #' @export
 #' 
 setMethod("subset", "gtypes",  
