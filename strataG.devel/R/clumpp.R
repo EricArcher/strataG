@@ -27,7 +27,10 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @references Available at 
+#' @references Mattias Jakobsson and Noah A. Rosenberg. 2007. CLUMPP: a cluster 
+#'   matching and permutation program for dealing with label switching and 
+#'   multimodality in analysis of population structure. 
+#'   Bioinformatics 23(14):1801-1806. Available at 
 #'   \url{http://web.stanford.edu/group/rosenberglab/clumppDownload.html}
 #' 
 #' @seealso \code{\link{structure}}
