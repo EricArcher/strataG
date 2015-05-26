@@ -10,7 +10,7 @@
 \usage{
 read.mega(file)
 
-write.mega(g, file, title = NULL, line.width = 60)
+write.mega(g, file = NULL, title = NULL, line.width = 60, locus = 1)
 }
 \arguments{
 \item{file}{a MEGA-formatted file of sequences.}
@@ -20,6 +20,8 @@ write.mega(g, file, title = NULL, line.width = 60)
 \item{title}{title for data in file.}
 
 \item{line.width}{width of sequence lines.}
+
+\item{locus}{number or name of locus to write.}
 }
 \value{
 for \code{read.mega}, a list of:

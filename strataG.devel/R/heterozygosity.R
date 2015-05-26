@@ -18,8 +18,8 @@
 #' @export
 #' 
 obsvdHet <- function(g) {
-  apply(g@loci, 2, function(locus) {
-    locus.mat <- na.omit(matrix(locus, ncol = g@ploidy))
+  apply(loci(g), 2, function(locus) {
+    locus.mat <- na.omit(matrix(locus, ncol = ploidy(g)))
     is.homozgt <- apply(locus.mat, 1, function(x) length(unique(x)) == 1)
     1 - (sum(is.homozgt) / nrow(locus.mat))
   })
@@ -31,5 +31,5 @@ obsvdHet <- function(g) {
 #' @export
 #' 
 exptdHet <- function(g) {
-  apply(g@loci, 2, diversity)
+  apply(loci(g), 2, swfscMisc::diversity)
 }

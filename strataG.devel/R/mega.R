@@ -6,6 +6,7 @@
 #' @param g a \linkS4class{gtypes} object.
 #' @param title title for data in file.
 #' @param line.width width of sequence lines.
+#' @param locus number or name of locus to write.
 #' 
 #' @return for \code{read.mega}, a list of:
 #' \tabular{ll}{
@@ -38,10 +39,14 @@ read.mega <- function(file) {
 #' @rdname mega
 #' @export
 #' 
-write.mega <- function(g, file, title = NULL, line.width = 60) {
-  
+write.mega <- function(g, file = NULL, title = NULL, line.width = 60, locus = 1) {
+  if(is.null(file)) {
+    file <- paste(description(g), ".meg", sep = "")
+    file <- gsub("[[:punct:]]", ".", file)
+  }
   if(is.null(title)) title <- description(g)
-  dna <- as.character(as.matrix(sequences(g)[[1]]))
+  dna <- sequences(g, seqNames(g)[locus])
+  dna <- as.character(as.matrix(dna))
   
   write("#MEGA", file)
   write(paste("title:", title, sep = ""), file, append = TRUE)

@@ -12,14 +12,14 @@
 trimNs <- function(x) {
   if(!inherits(x, "DNAbin")) stop("'x' must be a DNAbin object")
   
-  dna <- as.character(as.matrix(x))
-  result <- lapply(1:nrow(dna), function(i) {
-    seq.vec <- paste(dna[i, ], collapse = "")
+  dna <- as.character(as.list(x))
+  result <- lapply(1:length(dna), function(i) {
+    seq.vec <- paste(dna[[i]], collapse = "")
     start <- gregexpr("^[n]+", seq.vec)[[1]]
     end <- gregexpr("[n]+$", seq.vec)[[1]]
     start <- ifelse(start == -1, 1, attr(start, "match.length") + 1)
-    end <- ifelse(end == -1, nchar(seq.vec), end)
-    dna[i, start:end]
+    end <- ifelse(end == -1, nchar(seq.vec), end - 1)
+    dna[[i]][start:end]
   })
   
   as.DNAbin(result)

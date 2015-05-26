@@ -22,8 +22,9 @@
 fixedSites <- function(x, bases = c("a", "c", "g", "t", "-")) {
   x <- as.multidna(x)
   bases <- tolower(bases)
-  result <- lapply(x@dna, function(dna) {
-    dna <- as.character(dna)
+  
+  result <- lapply(getSequences(x, simplify = FALSE), function(dna) {
+    dna <- as.character(as.matrix(dna))
     is.fixed <- apply(dna, 2, function(site) {
       site <- site[site %in% bases]
       length(unique(site)) == 1
@@ -40,7 +41,7 @@ fixedSites <- function(x, bases = c("a", "c", "g", "t", "-")) {
   if(length(result) == 1) {
     result[[1]]
   } else {
-    names(result) <- names(x@dna)
+    names(result) <- getSequenceNames(x)
     result
   }
 }

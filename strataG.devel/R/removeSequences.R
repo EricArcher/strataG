@@ -9,11 +9,11 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 removeSequences <- function(g) {
-  new.list <- lapply(colnames(g@loci), function(x) {
-    haps <- unique(as.character(g@loci[[x]]))
-    g@sequences@dna[[x]][haps, ]
+  new.list <- lapply(locNames(g), function(x) {
+    haps <- unique(as.character(loci(g)[[x]]))
+    sequences(g, x)[haps, ]
   })
-  names(new.list) <- colnames(g@loci)
+  names(new.list) <- locNames(g)
   g@sequences <- new("multidna", new.list)
   g
 }

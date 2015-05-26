@@ -62,7 +62,8 @@ mostDistantSequences <- function(x, num.seqs = NULL, model = "raw",
       c(mean = m, var = v)
     })))
     mean.var <- cbind(mean.var, euc.dist = euc.dist[rownames(mean.var)])
-    ord <- order(mean.var$mean, -mean.var$var, mean.var$euc.dist, decreasing = TRUE)
+    ord <- order(mean.var$mean, -mean.var$var, mean.var$euc.dist, 
+                 decreasing = TRUE)
     mean.var <- mean.var[ord, ]
     ids[i] <- rownames(mean.var)[1]
   }

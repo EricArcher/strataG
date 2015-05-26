@@ -15,7 +15,8 @@ A named vector with the estimate for \code{D} and
   the \code{p.value} that it is different from 0.
 }
 \description{
-Calculate Tajima's D for a set of sequences to test for selection.
+Calculate Tajima's D for a set of sequences to test
+  for selection.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

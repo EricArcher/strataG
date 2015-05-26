@@ -7,10 +7,11 @@
 #' @param label character string to use to label GENEPOP files.
 #' @param ... arguments to be passed to \code{\link{genepop}}.
 #'  
-#' @note Assumes that the the command line version of GENEPOP v.4 is properly installed and available on the command line,
-#'   so it is executable from any directory. On PC's, this requires having it in a folder in 
-#'   the PATH environmental variable. On Macs, the executable should be installed in a folder 
-#'   like \code{/usr/local/bin} 
+#' @note Assumes that the the command line version of GENEPOP v.4 is properly 
+#'   installed and available on the command line, so it is executable from 
+#'   any directory. On PC's, this requires having it in a folder in the PATH 
+#'   environmental variable. On Macs, the executable should be installed in a 
+#'   folder like \code{/usr/local/bin} 
 #'   
 #' @return a vector of MCMC p-values for each locus.
 #' 

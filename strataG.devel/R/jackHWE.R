@@ -1,6 +1,7 @@
 #' @name jackHWE
 #' @title Hardy-Weinberg Equlibrium Jackknife
-#' @description Test influence of samples on Hardy-Weinberg equilibrium via jackknife.
+#' @description Test influence of samples on Hardy-Weinberg equilibrium via 
+#'   jackknife.
 #' 
 #' @param g a \linkS4class{gtypes} object.
 #' @param exclude.num Number of samples to exclude at a time.
@@ -10,30 +11,37 @@
 #' @param jack.result result from run of \code{jackHWE}.
 #' @param alpha critical value to determine if exclusion is "influential".
 #' @param x result from a call to \code{jackInfluential}.
-#' @param main main title for influential sample plots from \code{plot.jack.influential}.
+#' @param main main title for influential sample plots from 
+#'   \code{plot.jack.influential}.
 #' 
 #' @details \tabular{ll}{
-#'   \code{jack.hwe} \tab performs a HWE jackknife where all combinations of \code{exclude.num} samples 
-#'     are left out and HWE is recalculated.\cr
-#'   \code{jack.influential} \tab calculates odds.ratios between jackknife HWE and observed HWE and identifies
-#'     "influential" samples. Samples are "influential" if the observed HWE p-value is < \code{alpha},
-#'     but is > \code{alpha} when the samples are not present.\cr
-#'   \code{plot.jack.influential} \tab creates a cumulative frequency plot of all odds-ratios from \code{jack.influential}. 
-#'     A vertical dashed line marks the smallest influential exclusion.\cr
+#'   \code{jack.hwe} \tab performs a HWE jackknife where all combinations 
+#'     of \code{exclude.num} samples are left out and HWE is recalculated.\cr
+#'   \code{jack.influential} \tab calculates odds.ratios between jackknife 
+#'     HWE and observed HWE and identifies "influential" samples. Samples 
+#'     are "influential" if the observed HWE p-value is < \code{alpha}, but 
+#'     is > \code{alpha} when the samples are not present.\cr
+#'   \code{plot.jack.influential} \tab creates a cumulative frequency plot 
+#'     of all odds-ratios from \code{jack.influential}. A vertical dashed 
+#'     line marks the smallest influential exclusion.\cr
 #' }
 #' 
 #' @return \code{jack.hwe} returns a list with:
 #' \item{obs}{a named vector of HWE p-values for each locus.}
-#' \item{jack}{a \code{data.frame} of HWE p-values where each row is an exclusion and columns are loci.}
+#' \item{jack}{a \code{data.frame} of HWE p-values where each row is an 
+#'   exclusion and columns are loci.}
 #' \item{gtypes}{the original \code{gtypes} object.}\cr
 #' \code{jack.influential} returns a list with:
 #' \item{influential}{a \code{data.frame} of influential exclusions.}
-#' \item{allele.freqs}{a \code{data.frame} listing the allele frequencies of influential exclusions.}
-#' \item{odds.ratio}{a \code{matrix} of odds ratios between exclusions (rows) and loci (columns).}
+#' \item{allele.freqs}{a \code{data.frame} listing the allele frequencies of 
+#'   influential exclusions.}
+#' \item{odds.ratio}{a \code{matrix} of odds ratios between exclusions (rows) 
+#'   and loci (columns).}
 #' 
-#' @references Morin, P.A., R.G. LeDuc, F.I. Archer, K.K. Martien, R. Huebinger, J.W. Bickham,
-#'   and B.L. Taylor. 2009. Significant deviations from Hardy-Weinberg equilibirum caused
-#'   by low levesl of microsatellite genotyping errors. Molecular Ecology Resources 9:498-504.
+#' @references Morin, P.A., R.G. LeDuc, F.I. Archer, K.K. Martien, 
+#'   R. Huebinger, J.W. Bickham, and B.L. Taylor. 2009. Significant deviations 
+#'   from Hardy-Weinberg equilibirum caused by low levels of microsatellite 
+#'   genotyping errors. Molecular Ecology Resources 9:498-504.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 

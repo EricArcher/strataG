@@ -27,10 +27,11 @@ a vector of MCMC p-values for each locus.
 Calculate Hardy-Weinberg equilibrium p-values using GENEPOP.
 }
 \note{
-Assumes that the the command line version of GENEPOP v.4 is properly installed and available on the command line,
-  so it is executable from any directory. On PC's, this requires having it in a folder in
-  the PATH environmental variable. On Macs, the executable should be installed in a folder
-  like \code{/usr/local/bin}
+Assumes that the the command line version of GENEPOP v.4 is properly
+  installed and available on the command line, so it is executable from
+  any directory. On PC's, this requires having it in a folder in the PATH
+  environmental variable. On Macs, the executable should be installed in a
+  folder like \code{/usr/local/bin}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

@@ -44,7 +44,7 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1), ...) {
   st <- strata(g)
   hap.dist <- lapply(g@sequences@dna, dist.dna, as.matrix = TRUE, ...)
   
-  result <- lapply(1:ncol(g@loci), function(i) {
+  result <- lapply(1:nLoc(g), function(i) {
     within.dist <- do.call(rbind, tapply(1:nrow(g@loci), st, function(r) {
       pair.dist.summary(g@loci[r, i], g@loci[r, i], hap.dist[[i]])
     }))

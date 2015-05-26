@@ -18,8 +18,8 @@ aligned DNA sequences.}
 A character vector of the consensus sequence.
 }
 \description{
-Return a consensus sequence from set of aligned sequences, introducing IUPAC ambiguity
-  codes where necessary.
+Return a consensus sequence from set of aligned sequences,
+  introducing IUPAC ambiguity codes where necessary.
 }
 \examples{
 data(dolph.seqs)

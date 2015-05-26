@@ -1,0 +1,21 @@
+---
+title: "QA/QC"
+author: "Eric Archer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{QA/QC}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+Quality of genotypes and sequences can be assessed with several functions. For genotypic data, by-locus summaries can be conducted with the _summarizeLoci_ function, which will also produce summeries for each strata:
+
+
+
+dupGenotypes
+haplotypeLikelihoods
+LDgenepop
+lowFreqSubs
+qaqc
+summarizeLoci
+summarizeSeqs

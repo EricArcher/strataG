@@ -90,7 +90,8 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
   # get pairwise distances and set all non-0 distances to 1
   hap.dist <- dist.dna(x[no.ns, ], model = "N", pairwise.deletion = TRUE)
   hap.dist <- if(use.indels) {
-    hap.dist + dist.dna(x[no.ns, ], model = "indelblock", pairwise.deletion = TRUE)
+    hap.dist + dist.dna(x[no.ns, ], model = "indelblock", 
+                        pairwise.deletion = TRUE)
   } else hap.dist
   hap.dist <- as.matrix(hap.dist)
   hap.dist[hap.dist > 0] <- 1
@@ -127,7 +128,8 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
     haps.and.ns <- rbind(hap.seqs, with.ns.seqs)
     hap.dist <- dist.dna(haps.and.ns, model = "N", pairwise.deletion = TRUE)
     hap.dist <- if(use.indels) {
-      hap.dist + dist.dna(haps.and.ns, model = "indelblock", pairwise.deletion = TRUE)
+      hap.dist + dist.dna(haps.and.ns, model = "indelblock", 
+                          pairwise.deletion = TRUE)
     } else hap.dist
     hap.dist <- as.matrix(hap.dist)[rownames(with.ns.seqs), rownames(hap.seqs)]
     

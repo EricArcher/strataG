@@ -12,7 +12,8 @@ fstToNm(fst, ploidy)
 \item{ploidy}{ploidy of locus Fst is from.}
 }
 \description{
-Calculate Nm for a given value of Fst.
+Calculate Nm (number of migrants per generation) for a
+  given value of Fst.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

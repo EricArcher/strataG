@@ -21,10 +21,10 @@
 #' @export
 #' 
 permuteStrata <- function(g) {
-  strata <- g@strata
-  no.nas <- strata[!is.na(strata)]
+  st <- strata(g)
+  no.nas <- st[!is.na(st)]
   no.na.sample <- sample(as.character(no.nas))
   names(no.na.sample) <- names(no.nas)
-  g@strata <- factor(no.na.sample[names(strata)])
+  strata(g) <- factor(no.na.sample[names(st)])
   g
 }

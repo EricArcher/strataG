@@ -1,0 +1,10 @@
+---
+title: "Running PHASE in strataG"
+author: "Eric Archer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Running PHASE in strataG"}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---

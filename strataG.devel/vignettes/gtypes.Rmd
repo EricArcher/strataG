@@ -1,10 +1,10 @@
 ---
-title: "Creating and Manipulating gtypes in strataG"
+title: "Creating and Manipulating gtypes Objects"
 author: "Eric Archer"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Creating and Manipulating gtypes Objects in strataG}
+  %\VignetteIndexEntry{Creating and Manipulating gtypes Objects}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -175,3 +175,6 @@ ran.msats <- permuteStrata(msats)
 summary(ran.msats)$strata.smry
 ```
 NOTE: Only samples assigned to strata are permuted with _permuteStrata_. Those not assigned (NAs) remain unassigned.
+
+## Exporting
+

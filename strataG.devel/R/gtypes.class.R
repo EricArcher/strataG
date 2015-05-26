@@ -114,9 +114,7 @@ setClass(
     
     # check that at least some individuals are in strata schemes
     if(!is.null(object@schemes)) {
-      ids <- rownames(object@loci)[1:(nrow(object@loci) / object@ploidy)]
-      ids <- substr(ids, 1, nchar(ids) - 2)
-      if(length(intersect(ids, rownames(object@schemes))) == 0) {
+      if(length(intersect(indNames(object), rownames(object@schemes))) == 0) {
         cat("no sample ids from the 'loci' slot are in stratification schemes\n")
         return(FALSE)
       }

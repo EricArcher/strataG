@@ -167,7 +167,8 @@ fastsimcoal <- function(num.pops, Ne, sample.size = NULL,
       colnames(collapsed.loci) <- paste("Locus", 1:ncol(collapsed.loci), 
                                         sep = ".")
       rownames(collapsed.loci) <- pop.data[, 2]
-      df2gtypes(pop.data, ploidy = 2, id.col = 2, strata.col = 1, description = label)
+      df2gtypes(pop.data, ploidy = 2, id.col = 2, strata.col = 1, 
+                description = label)
     }
   })
   names(fs.gtypes) <- basename(arl.files)

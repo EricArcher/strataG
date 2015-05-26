@@ -10,17 +10,21 @@ fixedDifferences(g, count.indels = TRUE, consec.indels.as.one = TRUE,
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
-\item{count.indels}{logical. Count indels when evaluating sites for fixed differences?}
+\item{count.indels}{logical. Count indels when evaluating sites for fixed
+differences?}
 
-\item{consec.indels.as.one}{logical. If \code{count.indels} is TRUE, count consecutive indels as a a single indel?}
+\item{consec.indels.as.one}{logical. If \code{count.indels} is TRUE, count
+consecutive indels as a a single indel?}
 
 \item{bases}{a character vector of valid bases to consider.}
 }
 \value{
 a list with components:
 \tabular{ll}{
-  \code{sites} \tab list of sites with fixed differences for each pair of strata \cr
-  \code{num.fixed} \tab data.frame of number of sites fixed between each pair of strata \cr
+  \code{sites} \tab list of sites with fixed differences for each pair of
+    strata \cr
+  \code{num.fixed} \tab data.frame of number of sites fixed between each
+    pair of strata \cr
 }
 }
 \description{

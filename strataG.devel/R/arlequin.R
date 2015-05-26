@@ -81,9 +81,10 @@ write.arlequin <- function(g, file = "gtypes.prj", title = "gtypes from R",
     write("[[HaplotypeDefinition]]", file = file, append = TRUE)
     write("HaplListName=\"Haplotypes\"", file = file, append = TRUE)
     write("HaplList={", file = file, append = TRUE)
-    dna <- as.character(as.matrix(sequences(g)[[locus]]))
+    dna <- as.character(as.matrix(sequences(g, locus)))
     for(x in rownames(dna)) {
-      write(paste(x, dna[x, ]), file = file, append = TRUE)
+      x.seq <- paste(dna[x, ], collapse = "")
+      write(paste(x, x.seq), file = file, append = TRUE)
     }
     write("}", file = file, append = TRUE)
   }

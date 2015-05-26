@@ -1,6 +1,6 @@
 #' @title Consensus Sequence
-#' @description Return a consensus sequence from set of aligned sequences, introducing IUPAC ambiguity
-#'   codes where necessary.
+#' @description Return a consensus sequence from set of aligned sequences, 
+#'   introducing IUPAC ambiguity codes where necessary.
 #' 
 #' @param x a \linkS4class{gtypes} object with aligned sequences or a list of 
 #'   aligned DNA sequences.
@@ -21,14 +21,15 @@
 createConsensus <- function(x, ignore.gaps = FALSE) { 
   x <- as.multidna(x)
   
-  result <- lapply(x@dna, function(dna) {
-    apply(as.character(dna), 2, iupacCode, ignore.gaps = ignore.gaps)
+  result <- lapply(getSequences(x, simplify = FALSE), function(dna) {
+    dna <- as.character(as.matrix(dna))
+    apply(dna, 2, iupacCode, ignore.gaps = ignore.gaps)
   })
   
   if(length(result) == 1) {
     result[[1]]
   } else {
-    names(result) <- names(x@dna)
+    names(result) <- locusNames(x)
     result
   }
 }
