@@ -10,9 +10,9 @@
 
 <meta name="author" content="Eric Archer" />
 
-<meta name="date" content="2015-05-24" />
+<meta name="date" content="2015-05-28" />
 
-<title>Running Tests of Population Structure</title>
+<title>Tests of Population Structure</title>
 
 
 
@@ -52,19 +52,16 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 
 <div id="header">
-<h1 class="title">Running Tests of Population Structure</h1>
+<h1 class="title">Tests of Population Structure</h1>
 <h4 class="author"><em>Eric Archer</em></h4>
-<h4 class="date"><em>2015-05-24</em></h4>
+<h4 class="date"><em>2015-05-28</em></h4>
 </div>
 
 
 <p>Given some sample microsatellite data:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">digits =</span> <span class="dv">2</span>)
-<span class="kw">library</span>(strataG.devel)</code></pre>
-<pre><code>## Loading required package: apex
-## Loading required package: ape
-## Loading required package: phangorn</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(dolph.strata)
+<span class="kw">library</span>(strataG.devel)
+<span class="kw">data</span>(dolph.strata)
 <span class="kw">data</span>(dolph.msats)
 msats.merge &lt;-<span class="st"> </span><span class="kw">merge</span>(dolph.strata, dolph.msats, <span class="dt">all.y =</span> <span class="ot">TRUE</span>, <span class="dt">description =</span> <span class="kw">date</span>())
 msats &lt;-<span class="st"> </span><span class="kw">df2gtypes</span>(msats.merge, <span class="dt">ploidy =</span> <span class="dv">2</span>, <span class="dt">id.col =</span> <span class="dv">1</span>, <span class="dt">strata.col =</span> <span class="dv">3</span>, <span class="dt">loc.col =</span> <span class="dv">5</span>)
@@ -84,15 +81,15 @@ msats &lt;-<span class="st"> </span><span class="kw">subset</span>(msats, <span 
 <pre class="sourceCode r"><code class="sourceCode r">ran.strata &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span>:<span class="dv">3</span>, <span class="dt">size =</span> <span class="kw">nInd</span>(msats), <span class="dt">replace =</span> <span class="ot">TRUE</span>)
 <span class="kw">statFst</span>(msats, ran.strata)</code></pre>
 <pre><code>##    Fst 
-## 0.0087</code></pre>
+## 0.0065</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">statGst</span>(msats, ran.strata)</code></pre>
-<pre><code>##   Gst 
-## 0.002</code></pre>
+<pre><code>##     Gst 
+## 0.00084</code></pre>
 <p>Permutation tests can be conducted in an “overall” manner which addreses the question of whether or not there is significant stratification in all samples given the specified stratification scheme, or in a “pairwise” manner, which tests differentiation between all pairs of strata. The overall test can be run via <em>overallTest</em>, like this:</p>
 <pre class="sourceCode r"><code class="sourceCode r">ovl &lt;-<span class="st"> </span><span class="kw">overallTest</span>(msats, <span class="dt">nrep =</span> <span class="dv">100</span>)</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2015-05-24 14:35:46 &gt;&gt;&gt;
-##  2015-05-24 14:35:46 : Overall test : 100 permutations
+## &lt;&lt;&lt; gtypes created on 2015-05-28 16:03:32 &gt;&gt;&gt;
+##  2015-05-28 16:03:32 : Overall test : 100 permutations
 ## 
 ##                 N
 ## Coastal        68
@@ -109,10 +106,10 @@ msats &lt;-<span class="st"> </span><span class="kw">subset</span>(msats, <span 
 ## G'st     0.122 0.0099
 ## G''st    0.481 0.0099</code></pre>
 <p>This conducts tests for all available statistics. Tests for specified statistics can be conducted by listing them in the ‘stat.list’ argument:</p>
-<pre class="sourceCode r"><code class="sourceCode r">ovl &lt;-<span class="st"> </span><span class="kw">overallTest</span>(msats, <span class="dt">stat.list =</span> <span class="kw">c</span>(statFst, statChi2), <span class="dt">nrep =</span> <span class="dv">100</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">ovl &lt;-<span class="st"> </span><span class="kw">overallTest</span>(msats, <span class="dt">stats =</span> <span class="kw">c</span>(statFst, statChi2), <span class="dt">nrep =</span> <span class="dv">100</span>)</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2015-05-24 14:35:46 &gt;&gt;&gt;
-##  2015-05-24 14:35:52 : Overall test : 100 permutations
+## &lt;&lt;&lt; gtypes created on 2015-05-28 16:03:32 &gt;&gt;&gt;
+##  2015-05-28 16:03:39 : Overall test : 100 permutations
 ## 
 ##                 N
 ## Coastal        68
@@ -124,23 +121,27 @@ msats &lt;-<span class="st"> </span><span class="kw">subset</span>(msats, <span 
 ## Fst      0.17 0.0099
 ## Chi2   592.12 0.0099</code></pre>
 <p>Pairwise tests are conducted with <em>pairwiseTest</em> in a similar fashion:</p>
-<pre class="sourceCode r"><code class="sourceCode r">pws &lt;-<span class="st"> </span><span class="kw">pairwiseTest</span>(msats, <span class="dt">stat.list =</span> <span class="kw">c</span>(statFstPrime, statGst), <span class="dt">nrep =</span> <span class="dv">100</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">pws &lt;-<span class="st"> </span><span class="kw">pairwiseTest</span>(msats, <span class="dt">stats =</span> <span class="kw">c</span>(statFstPrime, statGst), <span class="dt">nrep =</span> <span class="dv">100</span>)</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2015-05-24 14:35:46 &gt;&gt;&gt;
-##  2015-05-24 14:35:53 : Pairwise tests : 100 permutations
-##    2015-05-24 14:35:53 : Coastal v. Offshore.North 
-##    2015-05-24 14:35:56 : Coastal v. Offshore.South 
-##    2015-05-24 14:35:58 : Offshore.North v. Offshore.South 
+## &lt;&lt;&lt; gtypes created on 2015-05-28 16:03:32 &gt;&gt;&gt;
+##  2015-05-28 16:03:40 : Pairwise tests : 100 permutations
+##    2015-05-28 16:03:40 : Coastal v. Offshore.North 
+##    2015-05-28 16:03:46 : Coastal v. Offshore.South 
+##    2015-05-28 16:03:51 : Offshore.North v. Offshore.South 
 ## 
 ## Population structure results:
-##                                   pair.label   F'st F'st.p.val    Gst
-## 1        Coastal (68) v. Offshore.North (40)  0.581     0.0099  0.097
-## 2        Coastal (68) v. Offshore.South (18)  0.662     0.0099  0.108
-## 3 Offshore.North (40) v. Offshore.South (18) -0.014     0.6337 -0.012
-##   Gst.p.val
-## 1    0.0099
-## 2    0.0099
-## 3    0.6238</code></pre>
+##                                   pair.label Chi2 Chi2.p.val       D
+## 1        Coastal (68) v. Offshore.North (40)  391     0.0099 0.47523
+## 2        Coastal (68) v. Offshore.South (18)  344     0.0099 0.54194
+## 3 Offshore.North (40) v. Offshore.South (18)   71     0.3366 0.00042
+##   D.p.val     Fst Fst.p.val   F'st F'st.p.val    Gst Gst.p.val   G'st
+## 1  0.0099  0.1979    0.0099  0.581     0.0099  0.097    0.0099  0.177
+## 2  0.0099  0.2429    0.0099  0.662     0.0099  0.108    0.0099  0.195
+## 3  0.6238 -0.0016    0.6238 -0.014     0.6337 -0.012    0.6139 -0.024
+##   G'st.p.val G''st G''st.p.val
+## 1     0.0099  0.55      0.0099
+## 2     0.0099  0.61      0.0099
+## 3     0.6139 -0.21      0.6535</code></pre>
 <p>The result of a pairwise test contains both a data.frame formatted for each pairwise comparison and pairwise matrices for each statistic with p-values in the lower left and statistic estimates in the upper right.</p>
 <pre class="sourceCode r"><code class="sourceCode r">pws</code></pre>
 <pre><code>## $result
@@ -148,12 +149,34 @@ msats &lt;-<span class="st"> </span><span class="kw">subset</span>(msats, <span 
 ## 1        Coastal (68) v. Offshore.North (40)        Coastal Offshore.North
 ## 2        Coastal (68) v. Offshore.South (18)        Coastal Offshore.South
 ## 3 Offshore.North (40) v. Offshore.South (18) Offshore.North Offshore.South
-##   n.1 n.2   F'st F'st.p.val    Gst Gst.p.val
-## 1  68  40  0.581     0.0099  0.097    0.0099
-## 2  68  18  0.662     0.0099  0.108    0.0099
-## 3  40  18 -0.014     0.6337 -0.012    0.6238
+##   n.1 n.2 Chi2 Chi2.p.val       D D.p.val     Fst Fst.p.val   F'st
+## 1  68  40  391     0.0099 0.47523  0.0099  0.1979    0.0099  0.581
+## 2  68  18  344     0.0099 0.54194  0.0099  0.2429    0.0099  0.662
+## 3  40  18   71     0.3366 0.00042  0.6238 -0.0016    0.6238 -0.014
+##   F'st.p.val    Gst Gst.p.val   G'st G'st.p.val G''st G''st.p.val
+## 1     0.0099  0.097    0.0099  0.177     0.0099  0.55      0.0099
+## 2     0.0099  0.108    0.0099  0.195     0.0099  0.61      0.0099
+## 3     0.6337 -0.012    0.6139 -0.024     0.6139 -0.21      0.6535
 ## 
 ## $pair.mat
+## $pair.mat$Chi2
+##                Coastal Offshore.North Offshore.South
+## Coastal             NA         390.68            344
+## Offshore.North  0.0099             NA             71
+## Offshore.South  0.0099           0.34             NA
+## 
+## $pair.mat$D
+##                Coastal Offshore.North Offshore.South
+## Coastal             NA           0.48        0.54194
+## Offshore.North  0.0099             NA        0.00042
+## Offshore.South  0.0099           0.62             NA
+## 
+## $pair.mat$Fst
+##                Coastal Offshore.North Offshore.South
+## Coastal             NA           0.20         0.2429
+## Offshore.North  0.0099             NA        -0.0016
+## Offshore.South  0.0099           0.62             NA
+## 
 ## $pair.mat$`F'st`
 ##                Coastal Offshore.North Offshore.South
 ## Coastal             NA           0.58          0.662
@@ -164,13 +187,25 @@ msats &lt;-<span class="st"> </span><span class="kw">subset</span>(msats, <span 
 ##                Coastal Offshore.North Offshore.South
 ## Coastal             NA          0.097          0.108
 ## Offshore.North  0.0099             NA         -0.012
-## Offshore.South  0.0099          0.624             NA
+## Offshore.South  0.0099          0.614             NA
+## 
+## $pair.mat$`G'st`
+##                Coastal Offshore.North Offshore.South
+## Coastal             NA           0.18          0.195
+## Offshore.North  0.0099             NA         -0.024
+## Offshore.South  0.0099           0.61             NA
+## 
+## $pair.mat$`G''st`
+##                Coastal Offshore.North Offshore.South
+## Coastal             NA           0.55           0.61
+## Offshore.North  0.0099             NA          -0.21
+## Offshore.South  0.0099           0.65             NA
 ## 
 ## 
 ## $null.dist
 ## NULL</code></pre>
 <p>Both overall and pairwise tests can be conducted at once with <em>popStructTest</em>:</p>
-<pre class="sourceCode r"><code class="sourceCode r">popStruct &lt;-<span class="st"> </span><span class="kw">popStructTest</span>(msats, <span class="dt">stat.list =</span> <span class="kw">c</span>(statFst, statFstPrime), <span class="dt">nrep =</span> <span class="dv">100</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
+<pre class="sourceCode r"><code class="sourceCode r">popStruct &lt;-<span class="st"> </span><span class="kw">popStructTest</span>(msats, <span class="dt">stats =</span> <span class="kw">c</span>(statFst, statFstPrime), <span class="dt">nrep =</span> <span class="dv">100</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
 popStruct</code></pre>
 <pre><code>## $overall
 ## $overall$strata.freq
@@ -193,23 +228,57 @@ popStruct</code></pre>
 ## 1        Coastal (68) v. Offshore.North (40)        Coastal Offshore.North
 ## 2        Coastal (68) v. Offshore.South (18)        Coastal Offshore.South
 ## 3 Offshore.North (40) v. Offshore.South (18) Offshore.North Offshore.South
-##   n.1 n.2     Fst Fst.p.val   F'st F'st.p.val
-## 1  68  40  0.1979    0.0099  0.581     0.0099
-## 2  68  18  0.2429    0.0099  0.662     0.0099
-## 3  40  18 -0.0016    0.5446 -0.014     0.5446
+##   n.1 n.2 Chi2 Chi2.p.val       D D.p.val     Fst Fst.p.val   F'st
+## 1  68  40  391     0.0099 0.47523  0.0099  0.1979    0.0099  0.581
+## 2  68  18  344     0.0099 0.54194  0.0099  0.2429    0.0099  0.662
+## 3  40  18   71     0.3663 0.00042  0.5248 -0.0016    0.5941 -0.014
+##   F'st.p.val    Gst Gst.p.val   G'st G'st.p.val G''st G''st.p.val
+## 1     0.0099  0.097    0.0099  0.177     0.0099  0.55      0.0099
+## 2     0.0099  0.108    0.0099  0.195     0.0099  0.61      0.0099
+## 3     0.5941 -0.012    0.5941 -0.024     0.5941 -0.21      0.6139
 ## 
 ## $pairwise$pair.mat
+## $pairwise$pair.mat$Chi2
+##                Coastal Offshore.North Offshore.South
+## Coastal             NA         390.68            344
+## Offshore.North  0.0099             NA             71
+## Offshore.South  0.0099           0.37             NA
+## 
+## $pairwise$pair.mat$D
+##                Coastal Offshore.North Offshore.South
+## Coastal             NA           0.48        0.54194
+## Offshore.North  0.0099             NA        0.00042
+## Offshore.South  0.0099           0.52             NA
+## 
 ## $pairwise$pair.mat$Fst
 ##                Coastal Offshore.North Offshore.South
 ## Coastal             NA           0.20         0.2429
 ## Offshore.North  0.0099             NA        -0.0016
-## Offshore.South  0.0099           0.54             NA
+## Offshore.South  0.0099           0.59             NA
 ## 
 ## $pairwise$pair.mat$`F'st`
 ##                Coastal Offshore.North Offshore.South
 ## Coastal             NA           0.58          0.662
 ## Offshore.North  0.0099             NA         -0.014
-## Offshore.South  0.0099           0.54             NA
+## Offshore.South  0.0099           0.59             NA
+## 
+## $pairwise$pair.mat$Gst
+##                Coastal Offshore.North Offshore.South
+## Coastal             NA          0.097          0.108
+## Offshore.North  0.0099             NA         -0.012
+## Offshore.South  0.0099          0.594             NA
+## 
+## $pairwise$pair.mat$`G'st`
+##                Coastal Offshore.North Offshore.South
+## Coastal             NA           0.18          0.195
+## Offshore.North  0.0099             NA         -0.024
+## Offshore.South  0.0099           0.59             NA
+## 
+## $pairwise$pair.mat$`G''st`
+##                Coastal Offshore.North Offshore.South
+## Coastal             NA           0.55           0.61
+## Offshore.North  0.0099             NA          -0.21
+## Offshore.South  0.0099           0.61             NA
 ## 
 ## 
 ## $pairwise$null.dist

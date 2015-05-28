@@ -9,4 +9,5 @@
 *.Rproj
 test haps.R
 *.Rcheck/
-old code
+inst/doc
+.RData

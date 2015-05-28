@@ -10,7 +10,7 @@
 
 <meta name="author" content="Eric Archer" />
 
-<meta name="date" content="2015-05-23" />
+<meta name="date" content="2015-05-28" />
 
 <title>By-Locus Summaries</title>
 
@@ -54,17 +54,14 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="header">
 <h1 class="title">By-Locus Summaries</h1>
 <h4 class="author"><em>Eric Archer</em></h4>
-<h4 class="date"><em>2015-05-23</em></h4>
+<h4 class="date"><em>2015-05-28</em></h4>
 </div>
 
 
 <p>There are several by-locus summary functions available for <em>gtypes</em> objects. Given some sample microsatellite data:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">digits =</span> <span class="dv">2</span>)
-<span class="kw">library</span>(strataG.devel)</code></pre>
-<pre><code>## Loading required package: apex
-## Loading required package: ape
-## Loading required package: phangorn</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(dolph.strata)
+<span class="kw">library</span>(strataG.devel)
+<span class="kw">data</span>(dolph.strata)
 <span class="kw">data</span>(dolph.msats)
 msats.merge &lt;-<span class="st"> </span><span class="kw">merge</span>(dolph.strata, dolph.msats, <span class="dt">all.y =</span> <span class="ot">TRUE</span>, <span class="dt">description =</span> <span class="kw">date</span>())
 msats &lt;-<span class="st"> </span><span class="kw">df2gtypes</span>(msats.merge, <span class="dt">ploidy =</span> <span class="dv">2</span>, <span class="dt">id.col =</span> <span class="dv">1</span>, <span class="dt">strata.col =</span> <span class="dv">3</span>, <span class="dt">loc.col =</span> <span class="dv">5</span>)
@@ -104,7 +101,7 @@ msats &lt;-<span class="st"> </span><span class="kw">subset</span>(msats, <span 
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">theta</span>(msats)</code></pre>
 <pre><code>## D11t D17t   D8 EV37 
 ## 0.56 0.54 0.50 0.62</code></pre>
-<p>These measures are all calculated in the <em>summarizeLoci</em> function and returned as a matrix. This function also allows you to calculate the measures for each stratum separately:</p>
+<p>These measures are all calculated in the <em>summarizeLoci</em> function and returned as a matrix. This function also allows you to calculate the measures for each stratum separately, which returns a list for each stratum:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarizeLoci</span>(msats)</code></pre>
 <pre><code>##      num.genotyped pct.genotyped num.alleles allelic.richness
 ## D11t           125          0.99          13            0.096
