@@ -36,6 +36,19 @@ NULL
 NULL
 
 #' @docType data
+#' @name msats.g
+#' @title Dolphin Microsatellite gtypes Object
+#' @description Genotypes for 15 microsatellite loci
+#' @usage data(msats.g)
+#' @format A \linkS4class{gtypes} object of 126 samples and 15 loci
+#' @references Lowther-Thieleking J.L., F.I. Archer, A.R. Lang, and 
+#'   D.W. Weller. 2015. Genetic variation of coastal and offshore bottlenose 
+#'   dolphins, Tursiops truncatus, in the eastern North Pacific Ocean. 
+#'   Marine Mammal Science 31:1-20
+#' @keywords datasets
+NULL
+
+#' @docType data
 #' @name dolph.seqs
 #' @title Dolphin mtDNA Sequences
 #' @usage data(dolph.seqs)
@@ -52,6 +65,18 @@ NULL
 #' @title Dolphin mtDNA Haplotype Sequences
 #' @usage data(dolph.haps)
 #' @format A list of 33 aligned sequences
+#' @references Lowther-Thieleking J.L., F.I. Archer, A.R. Lang, and 
+#'   D.W. Weller. 2015. Genetic variation of coastal and offshore bottlenose 
+#'   dolphins, Tursiops truncatus, in the eastern North Pacific Ocean. 
+#'   Marine Mammal Science 31:1-20
+#' @keywords datasets
+NULL
+
+#' @docType data
+#' @name dloop.g
+#' @title Dolphin dLoop gtypes Object
+#' @usage data(dloop.g)
+#' @format A \linkS4class{gtypes} object of 126 samples and 33 haplotypes.
 #' @references Lowther-Thieleking J.L., F.I. Archer, A.R. Lang, and 
 #'   D.W. Weller. 2015. Genetic variation of coastal and offshore bottlenose 
 #'   dolphins, Tursiops truncatus, in the eastern North Pacific Ocean. 

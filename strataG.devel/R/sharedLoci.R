@@ -52,7 +52,7 @@ propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = 1) {
   } else {
     do.call(rbind, mclapply(1:nrow(type.pairs), function(i) {
       propSharedIds(type.pairs[i, ], g)
-    }))
+    }, mc.cores = num.cores))
   }
   
   shared.summary <- do.call(rbind, mclapply(1:nrow(shared), function(i) {  
@@ -103,8 +103,8 @@ sharedAlleles <- function(g, smry = "num") {
 #' 
 propSharedIds <- function(ids, g) {
   sapply(locNames(g), function(x) {
-    g1 <- loci(g, ids[1], x)
-    g2 <- loci(g, ids[2], x)
+    g1 <- unlist(loci(g, ids[1], x))
+    g2 <- unlist(loci(g, ids[2], x))
     sum(g1 %in% g2) + sum(g2 %in% g1)
   }) / (2 * ploidy(g))
 }

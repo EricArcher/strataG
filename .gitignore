@@ -5,9 +5,6 @@
 *-Ex.R
 # RStudio files
 .Rproj.user/
-# produced vignettes
-vignettes/*.html
-vignettes/*.pdf
 .Rproj.user
 *.Rproj
 test haps.R
