@@ -9,10 +9,7 @@
 #'   the \code{p.value} that it is different from 0.
 #' 
 #' @references Tajima, F. 1989. Statistical method for testing the neutral 
-#'   mutation hypothesis by DNA polymorphism. Genetics 123:585-595.\cr
-#'   Fu, Y-X. 1997. Statistical tests of neutrality of mutations against 
-#'   population growth, hitchiking and background selection. 
-#'   Genetics 147:915-925.
+#'   mutation hypothesis by DNA polymorphism. Genetics 123:585-595.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
@@ -24,32 +21,16 @@ tajimasD <- function(x) {
   result <- do.call(rbind, lapply(getSequences(x, simplify = FALSE), function(dna) {
     dna <- as.matrix(dna)
     num.sites <- ncol(dna)
-    
-    # calculate mean pairwise difference   
-    mean.pws.diff <- function(dna.seq) {   
-      pws.diff <- dist.dna(dna.seq, model = "N", 
-                           pairwise.deletion = TRUE, as.matrix = TRUE)
-      pws.diff <- pws.diff[lower.tri(pws.diff)]
-      mean(pws.diff)
-    }
-    
-    # calculate number of segregating sites
-    calc.num.seg.sites <- function(dna.seq) {
-      dna.seq <- as.character(dna.seq)
-      seg.sites <- apply(dna.seq, 1, unique)
-      sum(sapply(1:length(seg.sites), function(i) {
-        ifelse(length(seg.sites[[i]]) > 1, 1, 0)
-      }))
-    }
-    
-    pi <- mean.pws.diff(dna)
-    S <- calc.num.seg.sites(dna) # number segregating sites
+   
+    pws.diff <- dist.dna(dna, model = "N", pairwise.deletion = TRUE, as.matrix = TRUE)
+    pi <- mean(pws.diff[lower.tri(pws.diff)])
+    S <- ncol(variableSites(dna)$site.freqs) # number segregating sites
     n <- nrow(dna) # number individuals
     
     # now for all the pieces...
-    x <- 1:(n-1) # common vector used
-    a1 <- sum(1 / x)
-    a2 <- sum(1 / x ^ 2)
+    n.vec <- 1:(n-1) # common vector used
+    a1 <- sum(1 / n.vec)
+    a2 <- sum(1 / n.vec ^ 2)
     b1 <- (n + 1) / (3 * (n - 1))
     b2 <- 2 * (n ^ 2 + n + 3) / (9 * n * (n - 1))
     c1 <- b1 - 1 / a1
@@ -58,7 +39,7 @@ tajimasD <- function(x) {
     e2 <- c2 / (a1 ^ 2 + a2)
     
     # which allows you to calculate D!
-    D_obs <- (pi - S / a1) / (e1 * S + e2 * S * (S - 1)) ^ (1 / 2)
+    D_obs <- (pi - S / a1) / sqrt(e1 * S + e2 * S * (S - 1))
     
     # making life easier:
     D.to.x <- function(D, Dmin, Dmax) (D - Dmin) / (Dmax - Dmin) # conversion 1
@@ -89,15 +70,9 @@ tajimasD <- function(x) {
     
     # important probabilities 
     # D negative: intregrate from Dmin to D, D positive: integrate from D to Dmax
-    if(D_obs < 0) {
-      from <- DMin
-      to <- D_obs
-    } else {
-      from <- D_obs
-      to <- DMax
-    } 
-    prob <- integrate(beta.D, from, to, alpha = Alpha, beta = Beta, 
-                      Dmin = DMin, Dmax = DMax)
+    prob <- integrate(beta.D, lower = ifelse(D_obs < 0, DMin, D_obs),
+                      upper = ifelse(D_obs < 0, D_obs, DMax), 
+                      alpha = Alpha, beta = Beta, Dmin = DMin, Dmax = DMax)
     
     c(D = D_obs, p.value = prob$value)
   }))

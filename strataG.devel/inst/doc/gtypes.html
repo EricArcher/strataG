@@ -10,7 +10,7 @@
 
 <meta name="author" content="Eric Archer" />
 
-<meta name="date" content="2015-05-28" />
+<meta name="date" content="2015-05-29" />
 
 <title>Creating and Manipulating gtypes Objects</title>
 
@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="header">
 <h1 class="title">Creating and Manipulating gtypes Objects</h1>
 <h4 class="author"><em>Eric Archer</em></h4>
-<h4 class="date"><em>2015-05-28</em></h4>
+<h4 class="date"><em>2015-05-29</em></h4>
 </div>
 
 
@@ -186,7 +186,7 @@ obj</code></pre>
 gi.g &lt;-<span class="st"> </span><span class="kw">genind2gtypes</span>(obj)
 gi.g</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2015-05-28 16:09:44 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2015-05-29 10:52:52 &gt;&gt;&gt;
 ## 
 ## Contents: 4 samples, 3 loci, 1 stratum
 ## 
@@ -234,7 +234,7 @@ gi.g</code></pre>
 <p>Printing the contents of a <em>gtypes</em> object shows an abbreviated summary, like this:</p>
 <pre class="sourceCode r"><code class="sourceCode r">msats.fine</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2015-05-28 16:09:44 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2015-05-29 10:52:52 &gt;&gt;&gt;
 ## 
 ## Contents: 126 samples, 15 loci, 3 strata
 ## 
@@ -374,7 +374,7 @@ gi.g</code></pre>
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : chr [1:15] &quot;D11t&quot; &quot;D17t&quot; &quot;D8&quot; &quot;EV37&quot; ...
 ##   .. ..$ : chr [1:8] &quot;num.genotyped&quot; &quot;pct.genotyped&quot; &quot;num.alleles&quot; &quot;allelic.richness&quot; ...
-##  - attr(*, &quot;description&quot;)= chr &quot;gtypes created on 2015-05-28 16:09:44&quot;
+##  - attr(*, &quot;description&quot;)= chr &quot;gtypes created on 2015-05-29 10:52:52&quot;
 ##  - attr(*, &quot;class&quot;)= chr [1:2] &quot;gtypeSummary&quot; &quot;list&quot;</code></pre>
 <p>For just the by-locus summary statistics:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarizeLoci</span>(msats.fine)</code></pre>
@@ -434,8 +434,8 @@ gi.g</code></pre>
 <span class="kw">strata</span>(msats) &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;Pop1&quot;</span>, <span class="st">&quot;Pop2&quot;</span>), <span class="kw">nInd</span>(msats), <span class="dt">rep =</span> <span class="ot">TRUE</span>)
 <span class="kw">summary</span>(msats)$strata.smry</code></pre>
 <pre><code>##      num.samples num.missing num.alleles pct.unique.alleles heterozygosity
-## Pop1          67        0.73          12               0.18           0.68
-## Pop2          59        1.13          12               0.21           0.65</code></pre>
+## Pop1          56        1.20          11               0.19           0.68
+## Pop2          70        0.67          12               0.19           0.66</code></pre>
 <p>or, if there is a stratification scheme data.frame in the @schemes slot, you can use the <em>stratify</em> function to choose a stratification scheme:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># choose &quot;broad&quot; stratification scheme</span>
 msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <span class="st">&quot;broad&quot;</span>)
@@ -451,7 +451,7 @@ msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <spa
 <p>NOTE: Filling or changing the @schemes slot does not affect the current stratification of the samples. You must then select a new stratification scheme or fill the @strata slot as above.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stratify</span>(dloop, <span class="st">&quot;fine&quot;</span>)</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2015-05-28 16:09:44 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2015-05-29 10:52:52 &gt;&gt;&gt;
 ## 
 ## Contents: 126 samples, 1 locus, 3 strata
 ## 
@@ -477,11 +477,11 @@ x[<span class="kw">sample</span>(<span class="kw">indNames</span>(msats), <span 
 <span class="kw">strata</span>(msats) &lt;-<span class="st"> </span>x
 <span class="kw">summary</span>(msats)$strata.smry</code></pre>
 <pre><code>##          num.samples num.missing num.alleles pct.unique.alleles
-## Coastal           63        0.67         4.6              0.065
-## Offshore          53        1.13        12.7              0.159
+## Coastal           62         0.6         4.5              0.055
+## Offshore          54         1.1        12.9              0.177
 ##          heterozygosity
-## Coastal            0.55
-## Offshore           0.81</code></pre>
+## Coastal            0.56
+## Offshore           0.80</code></pre>
 <p>You can also randomly permute the current stratification scheme using the <em>permuteStrata</em> function like this:</p>
 <pre class="sourceCode r"><code class="sourceCode r">msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <span class="st">&quot;fine&quot;</span>)
 
@@ -499,13 +499,13 @@ x[<span class="kw">sample</span>(<span class="kw">indNames</span>(msats), <span 
 ran.msats &lt;-<span class="st"> </span><span class="kw">permuteStrata</span>(msats)
 <span class="kw">summary</span>(ran.msats)$strata.smry</code></pre>
 <pre><code>##                num.samples num.missing num.alleles pct.unique.alleles
-## Coastal                 68        0.93        11.9               0.19
-## Offshore.North          40        0.67        10.3               0.22
-## Offshore.South          18        0.27         8.2               0.28
+## Coastal                 68        1.00        12.1               0.19
+## Offshore.North          40        0.87        10.6               0.19
+## Offshore.South          18        0.00         7.4               0.30
 ##                heterozygosity
-## Coastal                  0.67
-## Offshore.North           0.67
-## Offshore.South           0.63</code></pre>
+## Coastal                  0.64
+## Offshore.North           0.69
+## Offshore.South           0.69</code></pre>
 <p>NOTE: Only samples assigned to strata are permuted with <em>permuteStrata</em>. Those not assigned (NAs) remain unassigned.</p>
 </div>
 <div id="exporting" class="section level2">

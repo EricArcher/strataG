@@ -10,7 +10,7 @@
 
 <meta name="author" content="Eric Archer" />
 
-<meta name="date" content="2015-05-28" />
+<meta name="date" content="2015-05-29" />
 
 <title>Working With Sequences</title>
 
@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="header">
 <h1 class="title">Working With Sequences</h1>
 <h4 class="author"><em>Eric Archer</em></h4>
-<h4 class="date"><em>2015-05-28</em></h4>
+<h4 class="date"><em>2015-05-29</em></h4>
 </div>
 
 
@@ -67,31 +67,31 @@ i &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">
 j &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span>:<span class="dv">10</span>, <span class="dv">1</span>)
 x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;n&quot;</span>, i), dolph.seqs[[<span class="dv">1</span>]], <span class="kw">rep</span>(<span class="st">&quot;n&quot;</span>, j))
 x</code></pre>
-<pre><code>##   [1] &quot;n&quot; &quot;n&quot; &quot;n&quot; &quot;n&quot; &quot;n&quot; &quot;n&quot; &quot;g&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;-&quot; &quot;g&quot; &quot;c&quot; &quot;t&quot; &quot;t&quot;
-##  [18] &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;g&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;g&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot;
-##  [35] &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;g&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;g&quot; &quot;t&quot;
-##  [52] &quot;c&quot; &quot;a&quot; &quot;g&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;g&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot;
-##  [69] &quot;t&quot; &quot;g&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot;
-##  [86] &quot;a&quot; &quot;c&quot; &quot;t&quot; &quot;g&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot;
-## [103] &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;g&quot; &quot;t&quot; &quot;g&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot;
-## [120] &quot;g&quot; &quot;c&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;g&quot; &quot;t&quot; &quot;c&quot; &quot;-&quot; &quot;t&quot; &quot;c&quot;
-## [137] &quot;t&quot; &quot;c&quot; &quot;c&quot; &quot;t&quot; &quot;t&quot; &quot;g&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot;
-## [154] &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;g&quot; &quot;c&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;g&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot;
-## [171] &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;g&quot; &quot;t&quot; &quot;g&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot;
-## [188] &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;c&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;g&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;g&quot; &quot;t&quot;
-## [205] &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;g&quot; &quot;c&quot; &quot;c&quot; &quot;c&quot; &quot;g&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot;
-## [222] &quot;a&quot; &quot;t&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot;
-## [239] &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;g&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;g&quot; &quot;c&quot;
-## [256] &quot;t&quot; &quot;c&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;c&quot; &quot;t&quot;
-## [273] &quot;c&quot; &quot;c&quot; &quot;c&quot; &quot;c&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;c&quot; &quot;a&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot; &quot;c&quot;
-## [290] &quot;t&quot; &quot;c&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;c&quot; &quot;c&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;g&quot; &quot;g&quot;
-## [307] &quot;t&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot; &quot;t&quot; &quot;c&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;g&quot; &quot;a&quot; &quot;t&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot;
-## [324] &quot;g&quot; &quot;a&quot; &quot;g&quot; &quot;c&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;t&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;g&quot; &quot;c&quot;
-## [341] &quot;c&quot; &quot;g&quot; &quot;c&quot; &quot;g&quot; &quot;t&quot; &quot;g&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;c&quot; &quot;c&quot; &quot;a&quot; &quot;g&quot; &quot;c&quot; &quot;a&quot; &quot;a&quot; &quot;c&quot;
-## [358] &quot;c&quot; &quot;c&quot; &quot;g&quot; &quot;c&quot; &quot;t&quot; &quot;c&quot; &quot;g&quot; &quot;g&quot; &quot;c&quot; &quot;a&quot; &quot;g&quot; &quot;g&quot; &quot;g&quot; &quot;a&quot; &quot;t&quot; &quot;c&quot; &quot;c&quot;
-## [375] &quot;c&quot; &quot;t&quot; &quot;c&quot; &quot;t&quot; &quot;t&quot; &quot;c&quot; &quot;t&quot; &quot;c&quot; &quot;g&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot; &quot;c&quot; &quot;g&quot; &quot;g&quot; &quot;g&quot; &quot;c&quot;
-## [392] &quot;c&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;c&quot; &quot;t&quot; &quot;c&quot; &quot;g&quot; &quot;t&quot; &quot;g&quot; &quot;g&quot; &quot;g&quot; &quot;g&quot; &quot;g&quot; &quot;t&quot;
-## [409] &quot;n&quot; &quot;n&quot; &quot;n&quot; &quot;n&quot;</code></pre>
+<pre><code>##   [1] &quot;n&quot; &quot;n&quot; &quot;n&quot; &quot;n&quot; &quot;n&quot; &quot;n&quot; &quot;n&quot; &quot;g&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;-&quot; &quot;g&quot; &quot;c&quot; &quot;t&quot;
+##  [18] &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;g&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;g&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot;
+##  [35] &quot;a&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;g&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;g&quot;
+##  [52] &quot;t&quot; &quot;c&quot; &quot;a&quot; &quot;g&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;g&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;t&quot;
+##  [69] &quot;t&quot; &quot;t&quot; &quot;g&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot;
+##  [86] &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;t&quot; &quot;g&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot;
+## [103] &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;g&quot; &quot;t&quot; &quot;g&quot; &quot;c&quot; &quot;a&quot;
+## [120] &quot;t&quot; &quot;g&quot; &quot;c&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;g&quot; &quot;t&quot; &quot;c&quot; &quot;-&quot; &quot;t&quot;
+## [137] &quot;c&quot; &quot;t&quot; &quot;c&quot; &quot;c&quot; &quot;t&quot; &quot;t&quot; &quot;g&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;c&quot; &quot;a&quot;
+## [154] &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;g&quot; &quot;c&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;g&quot; &quot;t&quot; &quot;a&quot;
+## [171] &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;g&quot; &quot;t&quot; &quot;g&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot;
+## [188] &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;c&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;g&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;g&quot;
+## [205] &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;g&quot; &quot;c&quot; &quot;c&quot; &quot;c&quot; &quot;g&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;t&quot;
+## [222] &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot;
+## [239] &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;g&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;g&quot;
+## [256] &quot;c&quot; &quot;t&quot; &quot;c&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;c&quot;
+## [273] &quot;t&quot; &quot;c&quot; &quot;c&quot; &quot;c&quot; &quot;c&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;c&quot; &quot;a&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;t&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot;
+## [290] &quot;c&quot; &quot;t&quot; &quot;c&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;c&quot; &quot;c&quot; &quot;c&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;g&quot;
+## [307] &quot;g&quot; &quot;t&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot; &quot;t&quot; &quot;c&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;g&quot; &quot;a&quot; &quot;t&quot; &quot;c&quot; &quot;a&quot;
+## [324] &quot;c&quot; &quot;g&quot; &quot;a&quot; &quot;g&quot; &quot;c&quot; &quot;t&quot; &quot;t&quot; &quot;a&quot; &quot;a&quot; &quot;t&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;g&quot;
+## [341] &quot;c&quot; &quot;c&quot; &quot;g&quot; &quot;c&quot; &quot;g&quot; &quot;t&quot; &quot;g&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;c&quot; &quot;c&quot; &quot;a&quot; &quot;g&quot; &quot;c&quot; &quot;a&quot; &quot;a&quot;
+## [358] &quot;c&quot; &quot;c&quot; &quot;c&quot; &quot;g&quot; &quot;c&quot; &quot;t&quot; &quot;c&quot; &quot;g&quot; &quot;g&quot; &quot;c&quot; &quot;a&quot; &quot;g&quot; &quot;g&quot; &quot;g&quot; &quot;a&quot; &quot;t&quot; &quot;c&quot;
+## [375] &quot;c&quot; &quot;c&quot; &quot;t&quot; &quot;c&quot; &quot;t&quot; &quot;t&quot; &quot;c&quot; &quot;t&quot; &quot;c&quot; &quot;g&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot; &quot;c&quot; &quot;g&quot; &quot;g&quot; &quot;g&quot;
+## [392] &quot;c&quot; &quot;c&quot; &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;c&quot; &quot;t&quot; &quot;c&quot; &quot;g&quot; &quot;t&quot; &quot;g&quot; &quot;g&quot; &quot;g&quot; &quot;g&quot; &quot;g&quot;
+## [409] &quot;t&quot; &quot;n&quot; &quot;n&quot;</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r">x.trimmed &lt;-<span class="st"> </span><span class="kw">trimNs</span>(<span class="kw">as.DNAbin</span>(x))
 <span class="kw">as.character</span>(<span class="kw">as.list</span>(x.trimmed))</code></pre>
 <pre><code>## [[1]]
@@ -385,7 +385,7 @@ dloop &lt;-<span class="st"> </span><span class="kw">labelHaplotypes</span>(dloo
 <pre><code>## [1] &quot;74962&quot; &quot;6290&quot;  &quot;74963&quot; &quot;18652&quot; &quot;50746&quot;</code></pre>
 <p>The other function selects the most representative sequences by first clustering the sequences and selecting the sequences closest to the center of each cluster:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mostRepresentativeSequences</span>(x, <span class="dt">num.seqs =</span> <span class="dv">5</span>)</code></pre>
-<pre><code>## [1] &quot;6153&quot;  &quot;18655&quot; &quot;26305&quot; &quot;50746&quot; &quot;78064&quot;</code></pre>
+<pre><code>## [1] &quot;23793&quot; &quot;25185&quot; &quot;26305&quot; &quot;41578&quot; &quot;41819&quot;</code></pre>
 
 
 

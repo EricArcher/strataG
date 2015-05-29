@@ -23,9 +23,6 @@ Eric Archer \email{eric.archer@noaa.gov}
 }
 \references{
 Tajima, F. 1989. Statistical method for testing the neutral
-  mutation hypothesis by DNA polymorphism. Genetics 123:585-595.\cr
-  Fu, Y-X. 1997. Statistical tests of neutrality of mutations against
-  population growth, hitchiking and background selection.
-  Genetics 147:915-925.
+  mutation hypothesis by DNA polymorphism. Genetics 123:585-595.
 }
 

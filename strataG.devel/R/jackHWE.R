@@ -1,4 +1,3 @@
-#' @name jackHWE
 #' @title Hardy-Weinberg Equlibrium Jackknife
 #' @description Test influence of samples on Hardy-Weinberg equilibrium via 
 #'   jackknife.
@@ -145,6 +144,7 @@ jackInfluential <- function(jack.result, alpha = 0.05) {
 
 
 #' @rdname jackHWE
+#' @method plot jack.influential
 #' @export
 #' 
 plot.jack.influential <- function(x, main = "", ...) {
