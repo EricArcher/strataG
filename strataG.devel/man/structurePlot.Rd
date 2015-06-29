@@ -5,7 +5,7 @@
 \title{Plot STRUCTURE Results}
 \usage{
 structurePlot(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
-  label.pops = TRUE, col = NULL, horiz = T, ...)
+  label.pops = TRUE, col = NULL, horiz = TRUE, legend = TRUE, ...)
 }
 \arguments{
 \item{q.mat}{matrix or data.frame of assignment probabilities.}
@@ -28,6 +28,8 @@ customize their format.}
 \item{col}{colors to use for each group.}
 
 \item{horiz}{logical. Plot horizontal bars?}
+
+\item{legend}{logical. Include a legend?}
 
 \item{...}{optional arguments to be passed to
   \code{\link[graphics]{barplot}}.}

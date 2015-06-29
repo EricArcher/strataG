@@ -16,6 +16,7 @@
 #'   customize their format.
 #' @param col colors to use for each group.
 #' @param horiz logical. Plot horizontal bars?
+#' @param legend logical. Include a legend?
 #' @param ... optional arguments to be passed to 
 #'   \code{\link[graphics]{barplot}}.
 #' 
@@ -35,7 +36,8 @@
 #' @export
 #' 
 structurePlot <- function(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE, 
-                          label.pops = TRUE, col = NULL, horiz = T, ...) {  
+                          label.pops = TRUE, col = NULL, horiz = TRUE,
+                          legend = TRUE, ...) {  
   # sort q.mat within strata by probability
   prob.cols <- prob.col:ncol(q.mat)
   if(sort.probs) {
@@ -56,21 +58,36 @@ structurePlot <- function(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
   # create barplot
   if(is.null(col)) col <- rainbow(length(prob.cols))
   mai <- par("mai")
+  mai[1] = 0.7
+  mai[3] = 0.2
   if(horiz) {
     mai[2] <- max(strwidth(unique(q.mat[, pop.col]), "inches")) + 0.4
-  } 
+  }
+  mai[4] <- if(legend) {
+    text.width <- max(strwidth(colnames(q.mat)[prob.cols], "inches"))
+    text.width + 0.8
+  } else 0.5
   op <- par(mai = mai, las = 1)
-  bp <- barplot(assign.mat, axisnames = FALSE, col = col, horiz = horiz, ...)
-  side <- if(horiz) 2 else 1
+  if(legend) par(xpd = TRUE)
+  bp <- barplot(assign.mat, axes = FALSE, axisnames = FALSE, col = col, horiz = horiz, ...)
+  prob.side <- if(horiz) 1 else 2
+  pop.side <- if(horiz) 2 else 1
   tx <- tapply(bp, q.mat[, pop.col], min) + 0.1
   tx <- c(tx - tx[1], max(bp) + tx[1])
-  axis(side, at = tx, labels = FALSE)
+  axis(prob.side, pos = min(tx) - 1.5)
+  axis(pop.side, at = tx, pos = -0.005, labels = FALSE)
   if(label.pops) {
-    lbl.x <- sapply(1:(length(tx) - 1), 
+    lbl.x <- sapply(1:(length(tx) - 1),
                     function(i) tx[i] + (tx[i + 1] - tx[i]) / 2
     )
     names(lbl.x) <- names(tx)[1:(length(tx) - 1)]
-    mtext(names(lbl.x), side = side, at = lbl.x, line = 1)
+    mtext(names(lbl.x), side = pop.side, at = lbl.x, line = 1)
+  }
+  if(legend) {
+    x <- if(horiz) par("usr")[2] else max(tx)
+    y <- if(horiz) max(tx) else par("usr")[4]
+    legend(x, y, colnames(q.mat)[prob.cols],
+           fill = col)
   }
   par(op)
   invisible(list(q.mat = q.mat, bar.centers = bp, pop.ticks = tx))

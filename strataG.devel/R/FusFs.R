@@ -22,12 +22,11 @@ FusFs <- function(x) {
     
     pws.diff <- dist.dna(dna, model = "N", pairwise.deletion = TRUE, as.matrix = TRUE)
     theta.pi <- mean(pws.diff[lower.tri(pws.diff)])
-    S <- ncol(variableSites(dna)$site.freqs) # number segregating sites
-    n <- nrow(dna) # number individuals
     
     Sn.theta.n <- prod(theta.pi - 0:(ncol(dna) + 1))
     
     s.prime <- 1
+    
     log(s.prime / (1 - s.prime))
   }))
   
