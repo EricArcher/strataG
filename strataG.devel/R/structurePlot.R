@@ -37,23 +37,20 @@
 #' 
 structurePlot <- function(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE, 
                           label.pops = TRUE, col = NULL, horiz = TRUE,
-                          legend = TRUE, ...) {  
+                          legend = TRUE, ...) {    
   # sort q.mat within strata by probability
   prob.cols <- prob.col:ncol(q.mat)
-  if(sort.probs) {
+  q.mat <- q.mat[order(q.mat[, pop.col]), ]
+  if(sort.probs) {      
     q.mat <- do.call(rbind, by(q.mat, list(q.mat[, pop.col]), function(x) {
-      prob.median <- sapply(prob.cols, function(i) median(x[, i]))
-      pop.order <- prob.cols[order(prob.median, decreasing = TRUE)]
-      order.list <- lapply(pop.order, function(i) x[, i])
-      order.list$decreasing = TRUE
-      x[do.call(order, order.list), ]
+      prob.list <- lapply(prob.cols, function(i) x[, i])
+      x[do.call(order, prob.list), ]
     }, simplify = FALSE))
   }
-  q.mat <- q.mat[order(q.mat[, pop.col]), ]
   
   # make sure probs sum to 1 and get matrix
   q.mat[, prob.cols] <- prop.table(as.matrix(q.mat[, prob.cols]), 1)
-  assign.mat <- t(q.mat[, prob.cols])
+  assign.mat <- t(q.mat[, prob.cols])  
   
   # create barplot
   if(is.null(col)) col <- rainbow(length(prob.cols))

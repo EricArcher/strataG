@@ -197,7 +197,8 @@ structureWrite <- function(g, label = NULL, maxpops = nlevels(strata(g)),
   
   for(i in 1:nInd(g)) {
     id <- indNames(g)[i]
-    loci <- c(as.matrix(loci(g, id, locNames(g))))
+    loci <- loci(g, id, locNames(g))
+    loci <- c(as.matrix(sapply(loci, as.numeric)))
     loci[is.na(loci)] <- -9
     loci <- paste(loci, collapse = " ")
     write(paste(id, popdata[i], popflag[i], loci), 

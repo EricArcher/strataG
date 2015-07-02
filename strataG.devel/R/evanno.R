@@ -67,13 +67,14 @@ evanno <- function(sr, plot = TRUE) {
       ylim <- if(is.null(sd)) {
         range(y, na.rm = TRUE) 
       } else {
+        sd[is.na(sd)] <- 0
         range(c(y, y + sd, y - sd), na.rm = TRUE)
-      }
+      }     
       plot(result$k, y, xlim = xlim, ylim = ylim, type = "b", 
            xlab = "K", ylab = ylab, axes = F, 
            bty = "l", pch = 19, bg = "black")
       if(!is.null(sd)) segments(result$k, y + sd, result$k, y - sd)
-      axis(1, at = xticks)
+      axis(1, at = xticks[-1])
       axis(2)
       box(bty = "l")
     }
@@ -81,7 +82,12 @@ evanno <- function(sr, plot = TRUE) {
     plot.func(result$mean.ln.k, "mean LnP(K)", sd = result$sd.ln.k)
     plot.func(result$ln.pk, "LnP'(K)")
     plot.func(result$ln.ppk, "LnP''(K)")
-    plot.func(result$delta.k, "Delta(K)")
+    if(!all(is.na(result$delta.k))) {
+      plot.func(result$delta.k, "Delta(K)")
+    } else {
+      plot(0, type = "n", ann = FALSE, axes = FALSE)
+      text(mean(par("usr")[1:2]), mean(par("usr")[3:4]), "N/A")
+    }
     
     layout(matrix(1))
     par(op)
