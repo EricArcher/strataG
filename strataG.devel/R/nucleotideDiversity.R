@@ -17,6 +17,7 @@
 #' 
 #' nucleotideDiversity(dloop)
 #' 
+#' @importFrom swfscMisc diversity
 #' @export
 #' 
 nucleotideDiversity <- function(x, bases = c("a", "c", "g", "t")) {

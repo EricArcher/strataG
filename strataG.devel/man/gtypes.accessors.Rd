@@ -37,7 +37,6 @@
 \alias{sequences}
 \alias{sequences,gtypes}
 \alias{sequences,gtypes-method}
-\alias{strata}
 \alias{strata,gtypes}
 \alias{strata,gtypes-method}
 \alias{strata<-}
@@ -68,9 +67,7 @@ strataNames(x, ...)
 
 \S4method{other}{gtypes}(x, ...)
 
-strata(x, ...)
-
-\S4method{strata}{gtypes}(x, ...)
+\S4method{strata}{gtypes}(x)
 
 strata(x) <- value
 

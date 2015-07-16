@@ -86,12 +86,9 @@ setMethod("ploidy", "gtypes", function(x, ...) x@ploidy)
 setMethod("other", "gtypes", function(x, ...) x@other)
 
 #' @rdname gtypes.accessors
-#' @export
-setGeneric("strata", function(x, ...) standardGeneric("strata"))
-#' @rdname gtypes.accessors
 #' @aliases strata,gtypes
 #' @export
-setMethod("strata", "gtypes", function(x, ...) x@strata)
+setMethod("strata", "gtypes", function(x) x@strata)
 
 #' @rdname gtypes.accessors
 #' @export

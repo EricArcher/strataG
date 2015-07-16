@@ -60,6 +60,9 @@ setMethod("initialize", "gtypes",
   if(ncol(gen.data) %% ploidy != 0) {
     stop("the number of columns in 'gen.data' is not a multiple of 'ploidy'")
   }
+  if(ploidy > 1 & !is.null(sequences)) {
+    stop("'sequences' can't be present if 'ploidy' is greater than 1")
+  }
   
   # check ind.names
   ind.names <- if(!is.null(ind.names)) {
@@ -120,7 +123,7 @@ setMethod("initialize", "gtypes",
   # check sequences
   if(!is.null(sequences)) {
     sequences <- as.multidna(sequences)
-    if(length(sequences) != ncol(loci)) {
+    if(getNumLoci(sequences) != ncol(loci)) {
       stop("the number of genes in 'sequences' is not equal to the number of loci")
     }
     names(sequences@dna) <- colnames(loci)
