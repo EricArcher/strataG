@@ -103,7 +103,7 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
   # rename haplotypes
   hap.labels <- if(!is.null(prefix)) {
     # use prefix+number if prefix given
-    # sort based on freuency first
+    # sort based on frequency first
     hap.order <- as.numeric(names(sort(table(hap.code), decreasing = TRUE)))
     hap.nums <- zero.pad(1:length(hap.order))  
     names(hap.order) <- paste(prefix, hap.nums, sep = "")
@@ -183,18 +183,21 @@ labelHaplotypes.gtypes <- function(x, ...) {
     stop("'x' is not haploid or does not have any sequences")
   }
   
-  # label for each gene
-  new.haps <- lapply(sequences(x)@dna, labelHaplotypes, ...)
-  names(new.haps) <- seqNames(x)
+  # label haplotypes for each gene
+  new.haps <- lapply(
+    getSequences(sequences(x), simplify = FALSE), labelHaplotypes, ...
+  )
 
   # create haplotype matrix
   hap.mat <- do.call(cbind, lapply(new.haps, function(x) x$haps))
-  colnames(hap.mat) <- names(new.haps)
-  hap.mat <- cbind(ids = rownames(hap.mat), 
-                   strata = strata(x)[rownames(hap.mat)],
-                   hap.mat
-   )
-
+  #colnames(hap.mat) <- names(new.haps)
+  hap.mat <- cbind(
+    ids = rownames(hap.mat), 
+    strata = as.character(strata(x)[rownames(hap.mat)]),
+    hap.mat
+  )
+  hap.mat <- hap.mat[!is.na(hap.mat[, "strata"]), ]
+  
   # collect sequences
   hap.seqs <- lapply(new.haps, function(x) x$hap.seqs)
   names(hap.seqs) <- names(new.haps)
