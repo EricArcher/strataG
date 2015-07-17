@@ -241,7 +241,7 @@ pairwiseTest <- function(g, nrep = 100, stats = "all",
   }))
   rownames(result) <- NULL
   
-  # create pairwise matrices - upper right is estimate, lower left is p-value
+  # create pairwise matrices - lower left is estimate, upper right is p-value 
   stat.cols <- seq(6, ncol(result), 2)
   strata <- sort(levels(strata(g)))
   mat <- matrix(nrow = length(strata), ncol = length(strata), 
@@ -251,8 +251,8 @@ pairwiseTest <- function(g, nrep = 100, stats = "all",
     for(j in 1:nrow(result)) {
       strata.1 <- result$strata.1[j]
       strata.2 <- result$strata.2[j]
-      mat[strata.1, strata.2] <- result[j, i]
-      mat[strata.2, strata.1] <- result[j, i + 1]
+      mat[strata.2, strata.1] <- result[j, i]
+      mat[strata.1, strata.2] <- result[j, i + 1]
     }
     mat
   })
