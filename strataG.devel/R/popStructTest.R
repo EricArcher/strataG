@@ -76,12 +76,11 @@ popStructTest <- function(g, nrep = 100, stats = "all",
                           write.output = FALSE, ...) {
   # check arguments
   type <- match.arg(type)
-  stat.list <- statList(stats)
     
   # conduct overall test
   overall <- NULL
   if(type %in% c("both", "overall")) {
-    overall <- overallTest(g = g, nrep = nrep, stats = stat.list, 
+    overall <- overallTest(g = g, nrep = nrep, stats = stats, 
       keep.null = keep.null, num.cores = num.cores, quietly = quietly, ...
     )    
   }
@@ -89,7 +88,7 @@ popStructTest <- function(g, nrep = 100, stats = "all",
   # conduct pairwise test
   pairwise <- NULL
   if(type %in% c("both", "pairwise") & nStrata(g) > 2) {
-    pairwise <- pairwiseTest(g = g, nrep = nrep, stats = stat.list, 
+    pairwise <- pairwiseTest(g = g, nrep = nrep, stats = stats, 
       keep.null = keep.null, num.cores = num.cores, quietly = quietly, ...
     )
   }
@@ -153,7 +152,7 @@ overallTest <- function(g, nrep = 100, stats = "all",
     result <- result[-to.remove, , drop = FALSE]
     stat.list <- stat.list[-to.remove]
   }    
-    
+  
   # conduct permutation test
   null.dist <- NULL
   if(nrep > 0 & length(stat.list) > 0) {
@@ -198,8 +197,6 @@ pairwiseTest <- function(g, nrep = 100, stats = "all",
                          keep.null = FALSE, quietly = FALSE,
                          num.cores = 1, ...) { 
   
-  stat.list <- statList(stats)
-  
   if(!quietly) cat(
     cat("\n<<<", description(g), ">>>\n"),
     format(Sys.time()), ": Pairwise tests :", nrep, "permutations\n"
@@ -218,7 +215,7 @@ pairwiseTest <- function(g, nrep = 100, stats = "all",
     }
     
     pair.list[[i]] <- overallTest(g = subset(g, strata = pair), nrep = nrep,
-      stat.list = stat.list, keep.null = keep.null, quietly = TRUE, 
+      stats = stats, keep.null = keep.null, quietly = TRUE, 
       num.cores = num.cores, ...
     )
   }

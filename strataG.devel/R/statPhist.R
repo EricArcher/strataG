@@ -1,8 +1,8 @@
 #' @rdname popStructStat
 #' @export
 #' 
-statPhist <- function(g, hap.dist = NULL, model = "K80", gamma = FALSE, 
-                      pairwise.deletion = TRUE, ...)  {
+statPhist <- function(g, strata = NULL, hap.dist = NULL, model = "K80", 
+                      gamma = FALSE, pairwise.deletion = TRUE, ...)  {
   if(ploidy(g) != 1) return(c(PHIst = NA))
   stat.name <- "PHIst"
   
@@ -27,8 +27,12 @@ statPhist <- function(g, hap.dist = NULL, model = "K80", gamma = FALSE,
   }
   if(!is.matrix(hap.dist)) hap.dist <- as.matrix(hap.dist)
   
+  strata <- if(!is.null(strata)) {
+    rep(strata, length.out = nInd(g)) 
+  } else strata(g)
+  
   # Extract summary values
-  strata.hap.freq <- table(g@loci[, 1], g@strata, useNA = "no")
+  strata.hap.freq <- table(g@loci[, 1], strata, useNA = "no")
   haps <- rownames(strata.hap.freq)
   hap.dist <- hap.dist[haps, haps, drop = FALSE]
   strata.freq <- colSums(strata.hap.freq)
