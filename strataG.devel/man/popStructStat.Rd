@@ -29,8 +29,8 @@ statGstDblPrime(g, strata = NULL, ...)
 
 statJostD(g, strata = NULL, ...)
 
-statPhist(g, hap.dist = NULL, model = "K80", gamma = FALSE,
-  pairwise.deletion = TRUE, ...)
+statPhist(g, strata = NULL, hap.dist = NULL, model = "K80",
+  gamma = FALSE, pairwise.deletion = TRUE, ...)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
