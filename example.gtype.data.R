@@ -1,5 +1,5 @@
 rm(list = ls())
-library(strataG.devel)
+library(strataGdevel)
 data(dolph.strata)
 data(dolph.msats)
 

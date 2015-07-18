@@ -1,0 +1,109 @@
+---
+title: "Working With Sequences"
+author: "Eric Archer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{3. Working With Sequences}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+There are several functions for working with sequence data in strataG. They will either take a haploid _gtypes_ object that contains sequences or some format that can be converted to a _DNAbin_ (in the _ape_ package), or _multidna_ (in the _apex_ package) object.
+
+Leading and trailing N's can be removed from all sequences like this:
+```{r}
+library(strataG.devel)
+data(dolph.seqs)
+
+i <- sample(1:10, 1)
+j <- sample(1:10, 1)
+x <- c(rep("n", i), dolph.seqs[[1]], rep("n", j))
+x
+x.trimmed <- trimNs(as.DNAbin(x))
+as.character(as.list(x.trimmed))
+```
+
+Base frequencies for a sequence are calculated with the _baseFreqs_ function:
+```{r}
+bf <- baseFreqs(dolph.seqs)
+bf$site.freqs[, 1:8]
+bf$base.freqs
+```
+
+One can also identify which sites are fixed and which are variable:
+```{r}
+fs <- fixedSites(dolph.seqs)
+fs[1:20]
+
+vs <- variableSites(dolph.seqs)
+vs
+```
+
+Both functions take an optional set of bases to consider when evaluating whether a site is fixed or variable. For _fixedSites_, the function will only count those sites that are fixed in the listed _bases_ argument. For _variableSites_ the site is considered variable if it has those bases and is not fixed for them:
+```{r}
+fs <- fixedSites(dolph.seqs, bases = c("c", "t"))
+fs[1:20]
+
+vs <- variableSites(dolph.seqs, bases = c("c", "t"))
+vs
+```
+
+There are also functions to compare bases against IUPAC ambiguity codes. One can calculate the appropriate IUPAC code for a vector of nucleotides:
+```{r}
+iupacCode(c("c", "t", "t", "c", "c"))
+iupacCode(c("c", "t", "a", "c", "c"))
+iupacCode(c("g", "t", "a", "c", "c"))
+```
+
+One can also calculate all IUPAC codes that apply to a vector of nucleotides:
+```{r}
+validIupacCodes(c("c", "t", "t", "c", "c"))
+validIupacCodes(c("c", "t", "a", "c", "c"))
+validIupacCodes(c("g", "t", "a", "c", "c"))
+```
+
+A consensus sequence can also be easily generated:
+```{r}
+createConsensus(dolph.seqs)
+```
+
+Nucleotide diversity for each site is calculaed with:
+```{r}
+nucleotideDiversity(dolph.seqs)
+```
+
+For a stratified _gtypes_ object, one can calculate net nucleotide divergence (Nei's dA), and distributions of between- and within-strata divergence:
+```{r}
+# create gtypes
+data(dolph.seqs)
+data(dolph.strata)
+dloop.haps <- cbind(dLoop = dolph.strata$id)
+rownames(dloop.haps) <- dolph.strata$id
+strata.schemes <- dolph.strata[, c("broad", "fine")]
+rownames(strata.schemes) <- dolph.strata$id
+dloop <- new("gtypes", gen.data = dloop.haps, ploidy = 1,
+             schemes = strata.schemes, sequences = dolph.seqs,
+             strata = "fine")
+dloop <- labelHaplotypes(dloop, "Hap.")$gtypes
+
+# calculate divergence
+nucleotideDivergence(dloop)
+```
+
+For stratified _gtypes_, one can also identify fixed differences between strata:
+```{r}
+
+fixedDifferences(dloop)
+```
+
+Two functions have been provided to select a subset of representative sequences. The first selects the most distant sequences in order to capture the full distribution of variation. For example:
+```{r}
+x <- as.DNAbin(dolph.seqs)
+mostDistantSequences(x, num.seqs = 5)
+```
+
+The other function selects the most representative sequences by first clustering the sequences and selecting the sequences closest to the center of each cluster:
+```{r}
+mostRepresentativeSequences(x, num.seqs = 5)
+```
