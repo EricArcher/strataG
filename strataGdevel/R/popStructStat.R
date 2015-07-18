@@ -14,5 +14,8 @@
 #' @return the named statistic estimate.
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' 
+#' @useDynLib strataGdevel
+#' @importFrom Rcpp sourceCpp
 #'
 NULL

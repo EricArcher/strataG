@@ -3,11 +3,11 @@
 \docType{package}
 \name{strataG-package}
 \alias{strataG-package}
-\alias{strataG.devel}
+\alias{strataGdevel}
 \title{Summaries and population structure analyses of DNA sequence genotypic
   data}
 \description{
-strataG.devel
+strataGdevel
 }
 \keyword{package}
 
