@@ -5,7 +5,7 @@ using namespace std;
 // [[Rcpp::export]]
 double statChi2_C(NumericMatrix loci, NumericVector strata) {
   // function declarations
-  NumericMatrix table2D(NumericVector, NumericVector y);
+  NumericMatrix table2D(NumericVector, NumericVector);
   NumericVector rowSumC(NumericMatrix);
   NumericVector colSumC(NumericMatrix);
   NumericMatrix outerC(NumericVector, NumericVector);

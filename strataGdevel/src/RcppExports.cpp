@@ -5,6 +5,19 @@
 
 using namespace Rcpp;
 
+// Hstats_C
+NumericMatrix Hstats_C(NumericMatrix loci, NumericVector strata, int ploidy);
+RcppExport SEXP strataGdevel_Hstats_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type loci(lociSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type strata(strataSEXP);
+    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
+    __result = Rcpp::wrap(Hstats_C(loci, strata, ploidy));
+    return __result;
+END_RCPP
+}
 // getMaxInt
 int getMaxInt(NumericVector x);
 RcppExport SEXP strataGdevel_getMaxInt(SEXP xSEXP) {
@@ -47,6 +60,17 @@ BEGIN_RCPP
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
     __result = Rcpp::wrap(colSumC(x));
+    return __result;
+END_RCPP
+}
+// colMeanC
+NumericVector colMeanC(NumericMatrix x);
+RcppExport SEXP strataGdevel_colMeanC(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
+    __result = Rcpp::wrap(colMeanC(x));
     return __result;
 END_RCPP
 }

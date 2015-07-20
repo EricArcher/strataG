@@ -25,8 +25,7 @@ Hstats <- function(g, strata = NULL) {
     hom.freq <- prop.table(table(g@strata, genotype), 1)
     hom.freq <- hom.freq[, colnames(hom.freq) != "het", drop = FALSE]
     Ho <- if(ncol(hom.freq) == 0) 0 else {
-      mean.hom.freq <- colMeans(hom.freq)
-      1 - sum(mean.hom.freq)
+      1 - sum(colMeans(hom.freq))
     }
 
     ## Estimate Hs (expected heterozygosity within strata): Equation 9, page 255

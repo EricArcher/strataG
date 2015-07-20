@@ -4,6 +4,7 @@ using namespace std;
 
 // [[Rcpp::export]]
 int getMaxInt(NumericVector x) {
+  x = na_omit(x);
   int m(x[0]);
   int len(x.size());
   for(int i = 1; i < len; i++) if(x[i] > m) m = x[i];
@@ -37,6 +38,14 @@ NumericVector colSumC(NumericMatrix x) {
   NumericVector colsum(ncol);
   for(int i = 0; i < ncol; i++) colsum[i] = sum(x(_, i));
   return colsum;
+}
+
+// [[Rcpp::export]]
+NumericVector colMeanC(NumericMatrix x) {
+  double ncol(x.ncol());
+  NumericVector colmean(ncol);
+  for(int i = 0; i < ncol; i++) colmean[i] = mean(x(_, i));
+  return colmean;
 }
 
 // [[Rcpp::export]]

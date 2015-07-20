@@ -18,5 +18,5 @@
 #' @export
 #' 
 numAlleles <- function(g) {
-  apply(g@loci, 2, function(locus) length(unique(locus)))
+  apply(g@loci, 2, function(locus) length(unique(na.omit(locus))))
 }

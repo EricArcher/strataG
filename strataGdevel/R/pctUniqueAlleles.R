@@ -21,7 +21,6 @@
 #' @export
 #' 
 pctUniqueAlleles <- function(g) { 
-  p <- ploidy(g)
   id.rows <- sub("\\.[[:digit:]]*$", "", rownames(loci(g)))
   apply(loci(g), 2, function(locus) {
     id.a.freqs <- table(id.rows, locus)
