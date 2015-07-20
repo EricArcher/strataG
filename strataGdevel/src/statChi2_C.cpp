@@ -1,6 +1,5 @@
 #include <Rcpp.h>
 using namespace Rcpp;
-using namespace std;
 
 // [[Rcpp::export]]
 double statChi2_C(NumericMatrix loci, NumericVector strata) {

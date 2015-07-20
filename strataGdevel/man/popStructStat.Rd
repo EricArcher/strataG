@@ -23,7 +23,7 @@ statFstPrime(g, strata = NULL, ...)
 
 statGst(g, strata = NULL, ...)
 
-statGstPrime(g, strata = NULL, prime.type = "nei", ...)
+statGstPrime(g, strata = NULL, prime.type = c("nei", "hedrick"), ...)
 
 statGstDblPrime(g, strata = NULL, ...)
 

@@ -33,3 +33,15 @@ statChi2_C <- function(loci, strata) {
     .Call('strataGdevel_statChi2_C', PACKAGE = 'strataGdevel', loci, strata)
 }
 
+statGst_C <- function(loci, strata, ploidy) {
+    .Call('strataGdevel_statGst_C', PACKAGE = 'strataGdevel', loci, strata, ploidy)
+}
+
+statGstPrime_C <- function(loci, strata, ploidy, primeType) {
+    .Call('strataGdevel_statGstPrime_C', PACKAGE = 'strataGdevel', loci, strata, ploidy, primeType)
+}
+
+statGstDblPrime_C <- function(loci, strata, ploidy) {
+    .Call('strataGdevel_statGstDblPrime_C', PACKAGE = 'strataGdevel', loci, strata, ploidy)
+}
+

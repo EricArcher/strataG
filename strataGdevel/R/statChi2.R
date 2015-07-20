@@ -7,9 +7,12 @@ statChi2 <- function(g, strata = NULL, ...) {
   } else {
     rep(strata, length.out = nInd(g))
   }
-  strata <- rep(as.numeric(strata), ploidy(g))
-  loci <- sapply(loci(g), as.numeric)
-  chi2 <- statChi2_C(loci, strata)
+  if(!is.factor(strata)) strata <- factor(strata)
+  
+  chi2 <- statChi2_C(
+    sapply(loci(g), as.numeric),
+    rep(as.numeric(factor(strata)), ploidy(g))
+  )
   
 #   chi2 <- vector("numeric", ncol(g@loci))
 #   for(i in 1:length(chi2)) {
