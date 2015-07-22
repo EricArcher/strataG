@@ -3,23 +3,20 @@ using namespace Rcpp;
 using namespace std;
 
 // [[Rcpp::export]]
-int getMaxInt(NumericVector x) {
+int getMaxInt(IntegerVector x) {
   x = na_omit(x);
   int m(x[0]);
-  int len(x.size());
-  for(int i = 1; i < len; i++) if(x[i] > m) m = x[i];
+  for(int i = 1; i < x.size(); i++) if(x[i] > m) m = x[i];
   return m;
 }
 
 // [[Rcpp::export]]
-NumericMatrix table2D(NumericVector x, NumericVector y) {
-  int len(x.size());
-  int x_max(getMaxInt(x));
-  int y_max(getMaxInt(y));
-  NumericMatrix tbl(x_max, y_max);
-  for(int i = 0; i < len; i++) {
-    if(NumericVector::is_na(x[i]) || NumericVector::is_na(y[i])) continue;
-    tbl(x[i] - 1, y[i] - 1)++;
+IntegerMatrix table2D(IntegerVector x, IntegerVector y) {
+  int x_max(getMaxInt(x) + 1), y_max(getMaxInt(y) + 1);
+  IntegerMatrix tbl(x_max, y_max);
+  for(int i = 0; i < x.size(); i++) {
+    if(IntegerVector::is_na(x[i]) || IntegerVector::is_na(y[i])) continue;
+    tbl(x[i], y[i])++;
   }
   return tbl;
 }
@@ -63,4 +60,30 @@ NumericMatrix outerC(NumericVector x, NumericVector y) {
     }
   }
   return tbl;
+}
+
+// [[Rcpp::export]]
+IntegerMatrix intVecToMat(IntegerVector x, int ncol) {
+  int len(x.size()), r, c;
+  int n(len / ncol);
+  IntegerMatrix mat(n, ncol);
+  for(int i = 0; i < len; i++) {
+    c = floor(i / n);
+    r = i - (n * c);
+    mat(r, c) = x[i];
+  }
+  return mat;
+}
+
+// [[Rcpp::export]]
+NumericMatrix numVecToMat(NumericVector x, int ncol) {
+  int len(x.size()), r, c;
+  int n(len / ncol);
+  NumericMatrix mat(n, ncol);
+  for(int i = 0; i < len; i++) {
+    c = floor(i / n);
+    r = i - (n * c);
+    mat(r, c) = x[i];
+  }
+  return mat;
 }
