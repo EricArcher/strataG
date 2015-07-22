@@ -1,5 +1,4 @@
 #' @rdname popStructStat
-#' @importFrom swfscMisc harmonic.mean
 #' @export
 #' 
 Hstats <- function(g, strata = NULL) {

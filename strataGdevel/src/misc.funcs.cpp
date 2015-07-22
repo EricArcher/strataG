@@ -1,5 +1,13 @@
 #include <Rcpp.h>
 using namespace Rcpp;
+
+// [[Rcpp:export]]
+double harmonicMean_C(NumericVector x) {
+  NumericVector invN(x.size());
+  for(int j = 0; j < invN.size(); j++) invN[j] = 1 / x[j];
+  return x.size() / sum(invN);
+}
+
 // [[Rcpp::export]]
 int getMaxInt(IntegerVector x) {
   x = na_omit(x);

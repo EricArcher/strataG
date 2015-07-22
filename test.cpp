@@ -2,6 +2,13 @@
 using namespace Rcpp;
 using namespace std;
 
+// [[Rcpp:export]]
+double harmonicMean_C(NumericVector x) {
+  NumericVector invN(x.size());
+  for(int j = 0; j < invN.size(); j++) invN[j] = 1 / x[j];
+  return x.size() / sum(invN);
+}
+  
 // [[Rcpp::export]]
 int getMaxInt(IntegerVector x) {
   x = na_omit(x);
@@ -104,39 +111,70 @@ IntegerVector calcStrataN(IntegerVector locus, IntegerVector strata) {
 
 
 // [[Rcpp::export]]
-double statChi2_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
+
+double statJostD_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
   // function declarations
   IntegerMatrix table2D(IntegerVector, IntegerVector);
-  NumericVector rowSumC(NumericMatrix);
-  NumericVector colSumC(NumericMatrix);
-  NumericMatrix outerC(NumericVector, NumericVector);
+  IntegerVector calcStrataN(IntegerVector, IntegerVector);
+  double harmonicMean_C(NumericVector);
   
-  strata = rep(strata, ploidy);
-  double chi2(0);
+  NumericVector est(loci.ncol());
   for(int i = 0; i < loci.ncol(); i++) {
-    IntegerMatrix obsFreq(table2D(loci(_, i), strata));
-    int n = 0;
-    for(int r = 0; r < obsFreq.nrow(); r++)
-      for(int c = 0; c < obsFreq.ncol(); c++) n += obsFreq(r, c);
-    if(obsFreq.nrow() == 0 || obsFreq.ncol() < 2) continue;
-    NumericMatrix expFreq = outerC(rowSumC(wrap(obsFreq)), colSumC(wrap(obsFreq)));
-    for(int r = 0; r < obsFreq.nrow(); r++) {
-      for(int c = 0; c < obsFreq.ncol(); c++) {
-        double exp_freq = expFreq(r, c) / n;
-        if(exp_freq > 0) chi2 += pow(obsFreq(r, c) - exp_freq, 2) / exp_freq;
+    IntegerMatrix alleleStrataFreq = table2D(loci(_, i), rep(strata, ploidy));
+    int numStrata = calcStrataN(loci, strata).size();
+    NumericMatrix iTerms(2, alleleStrataFreq.nrow());
+    for(int a = 0; a < iTerms.ncol(); a++) {
+      NumericMatrix jTerms(3, alleleStrataFreq.ncol());
+      for(int s = 0; s < jTerms.ncol(); s++) {
+        double Nj = sum(alleleStrataFreq(_, s));
+        double Nij = alleleStrataFreq(a, s);
+        jTerms(0, s) = Nij / Nj;
+        jTerms(1, s) = pow(jTerms(0, s), 2);
+        jTerms(2, s) = Nij * (Nij - 1) / (Nj * (Nj - 1));
       }
+      double aTerm1 = pow(sum(jTerms(0, _)), 2);
+      double aTerm2 = sum(jTerms(1, _));
+      iTerms(0, a) = (aTerm1 - aTerm2) / (numStrata - 1);
+      iTerms(1, a) = sum(jTerms(2, _));
     }
+    est[i] = 1 - sum(iTerms(0, _)) / sum(iTerms(1, _));
   }
-  return chi2;
+  return harmonicMean_C(est);
 }
+
+// terms <- sapply(1:ncol(g@loci), function(i) {
+//   allele.strata.freq <- table(g@loci[, i], strata, useNA = "no")
+//   num.strata <- ncol(allele.strata.freq)
+//   i.terms <- sapply(rownames(allele.strata.freq), function(allele) {
+//     j.terms <- sapply(colnames(allele.strata.freq), function(strata) {
+//       Nj <- sum(allele.strata.freq[, strata])
+//       Nij <- allele.strata.freq[allele, strata]
+//       a.term1 <- Nij / Nj
+//       a.term2 <- a.term1 ^ 2
+//       b.term <- Nij * (Nij - 1) / (Nj * (Nj - 1))
+//       c(a.term1 = a.term1, a.term2 = a.term2, b.term = b.term)
+//     })
+//     a.term1 <- sum(j.terms["a.term1", ]) ^ 2
+//     a.term2 <- sum(j.terms["a.term2", ])
+//     c(a = (a.term1 - a.term2) / (num.strata - 1), 
+//       b = sum(j.terms["b.term", ])
+//     )
+//   })
+//   
+//   c(a = sum(i.terms["a", ]), b = sum(i.terms["b", ]))
+// })
+//   est <- 1 - terms["a", ] / terms["b", ]
+// 
+// c(D = harmonic.mean(est))
 
 
 /*** R
 library(strataGdevel)
 example(gtypes)
-msats <- stratify(msats, "fine")
+msats <- stratify(msats, "broad")
 
-statChi2_C(
+statJostD(msats)
+statJostD_C(
   sapply(loci(msats), function(x) as.numeric(x) - 1), 
   as.numeric(strata(msats)) - 1,
   ploidy(msats)

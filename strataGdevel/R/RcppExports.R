@@ -85,3 +85,7 @@ statGstDblPrime_C <- function(loci, strata, ploidy) {
     .Call('strataGdevel_statGstDblPrime_C', PACKAGE = 'strataGdevel', loci, strata, ploidy)
 }
 
+statJostD_C <- function(loci, strata, ploidy) {
+    .Call('strataGdevel_statJostD_C', PACKAGE = 'strataGdevel', loci, strata, ploidy)
+}
+

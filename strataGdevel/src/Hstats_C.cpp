@@ -75,6 +75,7 @@ NumericMatrix Hstats_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
   // function declarations
   IntegerVector calcStrataN(IntegerVector, IntegerVector);
   IntegerMatrix table2D(IntegerVector, IntegerVector);
+  double harmonicMean_C(NumericVector);
   
   int nInd(loci.nrow() / ploidy);
   NumericMatrix hstats(3, loci.ncol());
@@ -82,9 +83,10 @@ NumericMatrix Hstats_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
     IntegerVector strataN = calcStrataN(loci(_, i), strata);
     hstats(0, i) = HoCalc(nInd, loci(_, i), ploidy, strata, strataN);
     NumericMatrix alleleFreq = wrap(table2D(rep(strata, ploidy), loci(_, i)));
-    NumericVector invN(strataN.size());
-    for(int j = 0; j < invN.size(); j++) invN[j] = 1 / double(strataN[j]);
-    double harmN = strataN.size() / sum(invN);
+//     NumericVector invN(strataN.size());
+//     for(int j = 0; j < invN.size(); j++) invN[j] = 1 / double(strataN[j]);
+//     double harmN = strataN.size() / sum(invN);
+    double harmN = harmonicMean_C(wrap(strataN));
     hstats(1, i) = HsCalc(alleleFreq, ploidy, strataN, harmN, hstats(0, i));
     hstats(2, i) = HtCalc(alleleFreq, ploidy, strataN, harmN, hstats(0, i), hstats(1, i));
   }
