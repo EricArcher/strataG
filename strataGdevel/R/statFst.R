@@ -15,8 +15,9 @@ statFst <- function(g, strata = NULL, ...) {
   if(!is.factor(strata)) strata <- factor(strata)
   
   est <- statFst_C(
-    sapply(loci(g), as.numeric), 
-    as.numeric(strata(g))
+    sapply(loci(g), function(x) as.numeric(x) - 1), 
+    as.numeric(strata(g)) - 1,
+    ploidy(g)
   )
    
 #   # returns numerator and denominator sums for
@@ -116,14 +117,27 @@ statFstPrime <- function(g, strata = NULL, ...) {
   }
   if(!is.factor(strata)) strata <- factor(strata)
   
-  fst.max.g <- g
-  for(i in 1:ncol(fst.max.g@loci)) {
-    new.locus <- paste(strata.vec, fst.max.g@loci[, i], sep = ".")
-    new.locus[is.na(g@loci[, i]) | is.na(strata.vec)] <- NA
-    fst.max.g@loci[, i] <- factor(new.locus)
-  }
+  loci.fst <- sapply(loci(g), function(x) as.numeric(x) - 1)
+  strata <- as.numeric(strata(g)) - 1
+  ploidy <- ploidy(g)
   
-  est <- statFst(g, strata, ...) / statFst(fst.max.g, strata, ...)
+  loci.max <- sapply(1:ncol(loci.fst), function(i) {
+    new.locus <- paste(strata, loci.fst[, i], sep = ".")
+    new.locus[is.na(loci.fst[, i]) | is.na(strata)] <- NA
+    as.numeric(factor(new.locus))
+  })
+    
+  est <- statFst_C(loci.fst, strata, ploidy) / statFst_C(loci.max, strata, ploidy)
+  
+#   
+#   fst.max.g <- g
+#   for(i in 1:ncol(fst.max.g@loci)) {
+#     new.locus <- paste(strata.vec, fst.max.g@loci[, i], sep = ".")
+#     new.locus[is.na(g@loci[, i]) | is.na(strata.vec)] <- NA
+#     fst.max.g@loci[, i] <- factor(new.locus)
+#   }
+#   est <- statFst(g, strata, ...) / statFst(fst.max.g, strata, ...)
+    
   names(est) <- "F'st"
   est
 }

@@ -9,19 +9,20 @@ statChi2 <- function(g, strata = NULL, ...) {
   }
   if(!is.factor(strata)) strata <- factor(strata)
   
-  chi2 <- statChi2_C(
-    sapply(loci(g), as.numeric),
-    rep(as.numeric(factor(strata)), ploidy(g))
+  est <- statChi2_C(
+    sapply(loci(g), function(x) as.numeric(x) - 1), 
+    as.numeric(strata(g)) - 1,
+    ploidy(g)
   )
   
-#   chi2 <- vector("numeric", ncol(g@loci))
-#   for(i in 1:length(chi2)) {
+#   est <- vector("numeric", ncol(g@loci))
+#   for(i in 1:length(est)) {
 #     obs.freq <- table(g@loci[, i], strata, useNA = "no")
 #     if(nrow(obs.freq) > 0 & ncol(obs.freq) > 1) {
 #       exp.freq <- outer(rowSums(obs.freq), colSums(obs.freq)) / sum(obs.freq)
-#       chi2[i] <- sum((obs.freq - exp.freq) ^ 2 / exp.freq, na.rm = TRUE)
+#       est[i] <- sum((obs.freq - exp.freq) ^ 2 / exp.freq, na.rm = TRUE)
 #     }
 #   }
   
-  c(Chi2 = chi2)
+  c(Chi2 = est)
 }

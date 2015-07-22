@@ -115,7 +115,9 @@ popStructTest <- function(g, nrep = 100, stats = "all",
 
 
 #' @rdname popStructTest
-#' @importFrom parallel mclapply
+#' @importFrom parallel makeCluster
+#' @importFrom parallel parLapply 
+#' @importFrom parallel stopCluster
 #' @importFrom swfscMisc pVal
 #' @export
 #' 
@@ -157,13 +159,16 @@ overallTest <- function(g, nrep = 100, stats = "all",
   null.dist <- NULL
   if(nrep > 0 & length(stat.list) > 0) {
     st <- strata(g)  
+    # setup clusters
+    cl <- makeCluster(num.cores)
     # calculate matrix of null distributions
-    null.dist <- do.call(rbind, mclapply(1:nrep, function(i) {
+    null.dist <- do.call(rbind, parLapply(cl, 1:nrep, function(i) {
       ran.strata <- sample(st)
       sapply(1:length(stat.list), function(j) {
         stat.list[[j]](g, strata = ran.strata, ...)
       })
-    }, mc.cores = num.cores))
+    }))
+    stopCluster(cl)
     colnames(null.dist) <- rownames(result)
     
     # calculate vector of p-values

@@ -4,7 +4,7 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 NumericMatrix alleleFreqCalc(IntegerVector locVec, IntegerVector strata,
                              int ploidy) {
-  IntegerVector table2D(IntegerVector, IntegerVector);
+  IntegerMatrix table2D(IntegerVector, IntegerVector);
   NumericVector colSumC(NumericMatrix);
   
   // get allele frequencies in each population
@@ -78,28 +78,20 @@ NumericMatrix varCompCalc(IntegerVector nvec, NumericMatrix alleleFreq,
     // Vc (between gametes within individuals) - Eqn. 4
     varcompMat(2, i) = 0.5 * hbar;
   }
-  cout << endl;
   return varcompMat;
 }
 
-
 // [[Rcpp::export]]
 double statFst_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
+  // function declarations
+  IntegerMatrix intVecToMat(IntegerVector, int);
+  IntegerVector calcStrataN(IntegerVector, IntegerVector);
+  
   // returns numerator and denominator sums for
   //   theta-w calculation for alleles at each locus (page 1363)
-  
-  int nInd(loci.nrow() / ploidy);
-  LogicalVector toUse(nInd);
   NumericMatrix locusSums(2, loci.ncol());
-  for(int i = 0; i < strata.size(); i++) {
-    if(!IntegerVector::is_na(strata[i])) strata[i]--;
-  }
-  
   for(int loc = 0; loc < loci.ncol(); loc++) {
     IntegerVector locVec = loci(_, loc);
-    for(int i = 0; i < locVec.size(); i++) {
-      if(!IntegerVector::is_na(locVec[i])) locVec[i]--; 
-    }
     
     // identify unique alleles and return zeroes if locus is fixed
     IntegerVector alleles = unique(na_omit(locVec));
@@ -107,23 +99,14 @@ double statFst_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
     
     // form matrix of alleles for each individual
     IntegerMatrix locusMat = intVecToMat(locVec, ploidy);
-
-    // calculate variables constant for locus
-    IntegerVector nvec(unique(strata).size());
-    for(int r = 0; r < locusMat.nrow(); r++) {
-      bool allelesNA(any(is_na(locusMat(r, _))));
-      bool strataNA(IntegerVector::is_na(strata[r]));
-      if(allelesNA || strataNA) continue;
-      nvec[strata[r]]++;
-    }
+    
+    IntegerVector nvec = calcStrataN(loci(_, loc), strata);
     int r = nvec.size();
     if(r < 2) continue;
     double nbar = mean(nvec);
     double rnbar = r * nbar;
     double nc = (rnbar - (sum(pow(nvec, 2)) / rnbar)) / (r - 1);
-    
     NumericMatrix alleleFreq = alleleFreqCalc(locVec, strata, ploidy);
-    
     NumericMatrix prHet = prHetCalc(alleles, nvec, locusMat, strata, ploidy);
     NumericMatrix varcompMat = varCompCalc(nvec, alleleFreq, prHet, r, nbar, rnbar, nc);
     locusSums(0, loc) = sum(varcompMat(0, _));

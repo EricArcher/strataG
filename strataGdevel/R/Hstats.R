@@ -3,19 +3,27 @@
 #' @export
 #' 
 Hstats <- function(g, strata = NULL) {
-  strata <- if(is.null(strata)) {
-    rep(strat(g), ploidy(g)) 
-  } else {
-    rep(rep(strata, length.out = nInd(g)), ploidy(g))
+  if(ploidy(g) < 2) {
+    result <- matrix(NA, nrow = 3, ncol = nLoc(g))
+    rownames(result) <- c("Ho", "Hs", "Ht")
+    colnames(result) <- locNames(g)
+    return(result)
   }
-  strata <- as.numeric(factor(strata))
+  
+  strata <- if(is.null(strata)) {
+    strata(g)
+  } else {
+    rep(strata, length.out = nInd(g))
+  }
+  if(!is.factor(strata)) strata <- factor(strata)
+  
   result <- Hstats_C(
-    sapply(loci(g), as.numeric),
-    as.numeric(factor(strata))
+    sapply(loci(g), function(x) as.numeric(x) - 1), 
+    as.numeric(strata(g)) - 1,
+    ploidy(g)
   )
   rownames(result) <- c("Ho", "Hs", "Ht")
   colnames(result) <- locNames(g)
-  result
   
 #   nloc <- ncol(g@loci)
 #   result <- matrix(0, nrow = 3, ncol = nloc)
@@ -50,5 +58,6 @@ Hstats <- function(g, strata = NULL) {
 #     Ht <- mean.het + (Hs / harm.n.s) - (Ho / 2 / harm.n.s)
 #     result[, i] <- c(Ho, Hs, Ht)
 #   }
-# result
+  
+  result
 }

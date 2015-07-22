@@ -2,9 +2,9 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-double statGst_C(NumericMatrix loci, NumericVector strata, int ploidy) {
+double statGst_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
   // function declarations
-  NumericMatrix Hstats_C(NumericMatrix, NumericVector, int);
+  NumericMatrix Hstats_C(IntegerMatrix, IntegerVector, int);
   
   NumericMatrix hets(Hstats_C(loci, strata, ploidy));
   double Hs(mean(hets(1, _))), Ht(mean(hets(2, _)));
@@ -14,9 +14,9 @@ double statGst_C(NumericMatrix loci, NumericVector strata, int ploidy) {
 }
   
 // [[Rcpp::export]]
-double statGstPrime_C(NumericMatrix loci, NumericVector strata, int ploidy, int primeType) {
+double statGstPrime_C(IntegerMatrix loci, IntegerVector strata, int ploidy, int primeType) {
   // function declarations
-  NumericMatrix Hstats_C(NumericMatrix, NumericVector, int);
+  NumericMatrix Hstats_C(IntegerMatrix, IntegerVector, int);
   
   NumericMatrix hets(Hstats_C(loci, strata, ploidy));
   double Hs(mean(hets(1, _))), Ht(mean(hets(2, _))), gstMax, est;
@@ -32,9 +32,9 @@ double statGstPrime_C(NumericMatrix loci, NumericVector strata, int ploidy, int 
 }
 
 // [[Rcpp::export]]
-double statGstDblPrime_C(NumericMatrix loci, NumericVector strata, int ploidy) {
+double statGstDblPrime_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
   // function declarations
-  NumericMatrix Hstats_C(NumericMatrix, NumericVector, int);
+  NumericMatrix Hstats_C(IntegerMatrix, IntegerVector, int);
   
   NumericMatrix hets(Hstats_C(loci, strata, ploidy));
   double Hs(mean(hets(1, _))), Ht(mean(hets(2, _))), est;
