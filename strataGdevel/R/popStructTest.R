@@ -115,7 +115,7 @@ popStructTest <- function(g, nrep = 100, stats = "all",
 
 
 #' @rdname popStructTest
-#' @importFrom parallel makeCluster
+#' @importFrom parallel makeForkCluster
 #' @importFrom parallel parLapply 
 #' @importFrom parallel stopCluster
 #' @importFrom swfscMisc pVal

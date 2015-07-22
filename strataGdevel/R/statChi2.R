@@ -11,7 +11,7 @@ statChi2 <- function(g, strata = NULL, ...) {
   
   est <- statChi2_C(
     sapply(loci(g), function(x) as.numeric(x) - 1), 
-    as.numeric(strata(g)) - 1,
+    as.numeric(strata) - 1,
     ploidy(g)
   )
   

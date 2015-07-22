@@ -12,7 +12,7 @@ statGst <- function(g, strata = NULL, ...) {
   
   est <- statGst_C(
     sapply(loci(g), function(x) as.numeric(x) - 1), 
-    as.numeric(strata(g)) - 1,
+    as.numeric(strata) - 1,
     ploidy(g)
   )
   
@@ -42,7 +42,7 @@ statGstPrime <- function(g, strata = NULL, prime.type = c("nei", "hedrick"), ...
   
   est <- statGstPrime_C(
     sapply(loci(g), function(x) as.numeric(x) - 1), 
-    as.numeric(strata(g)) - 1,
+    as.numeric(strata) - 1,
     ploidy(g),
     switch(prime.type, nei = 0, hedrick = 1)
   )
@@ -78,7 +78,7 @@ statGstDblPrime <- function(g, strata = NULL, ...) {
   
   est <- statGstDblPrime_C(
     sapply(loci(g), function(x) as.numeric(x) - 1), 
-    as.numeric(strata(g)) - 1,
+    as.numeric(strata) - 1,
     ploidy(g)
   )
   
