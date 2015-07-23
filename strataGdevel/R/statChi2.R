@@ -12,7 +12,7 @@ statChi2 <- function(g, strata = NULL, ...) {
   if(any(is.na(strata))) {
     toUse <- !is.na(strata)
     strata <- strata[toUse]
-    g <- subset(g, id = which(toUse))
+    g <- g[toUse, , ]
   }
   
   est <- statChi2_C(

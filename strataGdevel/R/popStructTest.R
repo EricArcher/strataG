@@ -133,10 +133,8 @@ overallTest <- function(g, nrep = 100, stats = "all",
   }
   if(nrep < 1) keep.null = FALSE
   
-  if(any(is.na(strata(g)))) {
-    toUse <- !is.na(strata(g))
-    g <- subset(g, id = which(toUse))
-  }
+  # remove unstratified samples
+  if(any(is.na(strata(g)))) g <- g[, , strataNames(g)]
   
   if(!quietly) cat(
     cat("\n<<<", description(g), ">>>\n"),

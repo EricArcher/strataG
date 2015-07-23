@@ -228,8 +228,7 @@ setMethod("[",
       missing.strata <- paste(missing.strata, collapse = ", ")
       warning(paste("the following strata cannot be found:", missing.strata))
     }
-    st <- intersect(k, strataNames(x))
-    st.i <- names(which(st %in% k))
+    st.i <- names(st)[st %in% k]
     if(any(is.na(k))) st.i <- c(st.i, names(st)[is.na(st)])
     st.i
   } else {
@@ -248,6 +247,7 @@ setMethod("[",
   if(length(j) == 0) stop("no loci selected")
   if(length(k) == 0) stop("no strata selected")
   
+  i <- i[order(match(i, ids))]
   x@loci <- x@loci[idRows(i, rownames(x@loci)), j, drop = FALSE]
   x@loci <- droplevels(x@loci)
   x@strata <- droplevels(x@strata[i])

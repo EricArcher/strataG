@@ -14,6 +14,12 @@ statFst <- function(g, strata = NULL, ...) {
   }
   if(!is.factor(strata)) strata <- factor(strata)
   
+  if(any(is.na(strata))) {
+    toUse <- !is.na(strata)
+    strata <- strata[toUse]
+    g <- g[toUse, , ]
+  }
+  
   est <- statFst_C(
     sapply(loci(g), function(x) as.numeric(x) - 1), 
     as.numeric(strata) - 1,
@@ -116,6 +122,12 @@ statFstPrime <- function(g, strata = NULL, ...) {
     rep(strata, length.out = nInd(g))
   }
   if(!is.factor(strata)) strata <- factor(strata)
+  
+  if(any(is.na(strata))) {
+    toUse <- !is.na(strata)
+    strata <- strata[toUse]
+    g <- g[toUse, , ]
+  }
   
   loci.fst <- sapply(loci(g), function(x) as.numeric(x) - 1)
   strata <- as.numeric(strata) - 1

@@ -10,6 +10,12 @@ statGst <- function(g, strata = NULL, ...) {
   }
   if(!is.factor(strata)) strata <- factor(strata)
   
+  if(any(is.na(strata))) {
+    toUse <- !is.na(strata)
+    strata <- strata[toUse]
+    g <- g[toUse, , ]
+  }
+  
   est <- statGst_C(
     sapply(loci(g), function(x) as.numeric(x) - 1), 
     as.numeric(strata) - 1,
@@ -39,6 +45,12 @@ statGstPrime <- function(g, strata = NULL, prime.type = c("nei", "hedrick"), ...
     rep(strata, length.out = nInd(g))
   }
   if(!is.factor(strata)) strata <- factor(strata)
+  
+  if(any(is.na(strata))) {
+    toUse <- !is.na(strata)
+    strata <- strata[toUse]
+    g <- g[toUse, , ]
+  }
   
   est <- statGstPrime_C(
     sapply(loci(g), function(x) as.numeric(x) - 1), 
@@ -75,6 +87,12 @@ statGstDblPrime <- function(g, strata = NULL, ...) {
     rep(strata, length.out = nInd(g))
   }
   if(!is.factor(strata)) strata <- factor(strata)
+  
+  if(any(is.na(strata))) {
+    toUse <- !is.na(strata)
+    strata <- strata[toUse]
+    g <- g[toUse, , ]
+  }
   
   est <- statGstDblPrime_C(
     sapply(loci(g), function(x) as.numeric(x) - 1), 

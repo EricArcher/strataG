@@ -11,6 +11,12 @@ statJostD <- function(g, strata = NULL, ...) {
   }
   if(!is.factor(strata)) strata <- factor(strata)
   
+  if(any(is.na(strata))) {
+    toUse <- !is.na(strata)
+    strata <- strata[toUse]
+    g <- g[toUse, , ]
+  }
+  
   est <- statJostD_C(
     sapply(loci(g), function(x) as.numeric(x) - 1), 
     as.numeric(strata) - 1,
