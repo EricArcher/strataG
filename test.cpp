@@ -8,7 +8,7 @@ double harmonicMean_C(NumericVector x) {
   for(int j = 0; j < invN.size(); j++) invN[j] = 1 / x[j];
   return x.size() / sum(invN);
 }
-  
+
 // [[Rcpp::export]]
 int getMaxInt(IntegerVector x) {
   x = na_omit(x);
@@ -53,7 +53,24 @@ NumericVector colMeanC(NumericMatrix x) {
 }
 
 // [[Rcpp::export]]
-NumericMatrix outerC(NumericVector x, NumericVector y) {
+IntegerMatrix intOuterC(IntegerVector x, IntegerVector y) {
+  int x_len(x.size());
+  int y_len(y.size());
+  IntegerMatrix tbl(x_len, y_len);
+  for(int i = 0; i < x_len; i++) {
+    for(int j = 0; j < y_len; j++) {
+      if(IntegerVector::is_na(x[i]) || IntegerVector::is_na(y[j])) {
+        tbl(i, j) = NA_INTEGER;
+      } else {
+        tbl(i, j) = x[i] * y[j]; 
+      }
+    }
+  }
+  return tbl;
+}
+
+// [[Rcpp::export]]
+NumericMatrix numOuterC(NumericVector x, NumericVector y) {
   int x_len(x.size());
   int y_len(y.size());
   NumericMatrix tbl(x_len, y_len);
@@ -111,74 +128,100 @@ IntegerVector calcStrataN(IntegerVector locus, IntegerVector strata) {
 
 
 // [[Rcpp::export]]
-
-double statJostD_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
-  // function declarations
-  IntegerMatrix table2D(IntegerVector, IntegerVector);
-  IntegerVector calcStrataN(IntegerVector, IntegerVector);
-  double harmonicMean_C(NumericVector);
+double ssWPCalc(IntegerVector strataFreq, IntegerMatrix strataHapFreq,
+                        NumericMatrix hapDist) {
+  IntegerMatrix intOuterC(IntegerVector, IntegerVector);
   
-  NumericVector est(loci.ncol());
-  for(int i = 0; i < loci.ncol(); i++) {
-    IntegerMatrix alleleStrataFreq = table2D(loci(_, i), rep(strata, ploidy));
-    int numStrata = calcStrataN(loci, strata).size();
-    NumericMatrix iTerms(2, alleleStrataFreq.nrow());
-    for(int a = 0; a < iTerms.ncol(); a++) {
-      NumericMatrix jTerms(3, alleleStrataFreq.ncol());
-      for(int s = 0; s < jTerms.ncol(); s++) {
-        double Nj = sum(alleleStrataFreq(_, s));
-        double Nij = alleleStrataFreq(a, s);
-        jTerms(0, s) = Nij / Nj;
-        jTerms(1, s) = pow(jTerms(0, s), 2);
-        jTerms(2, s) = Nij * (Nij - 1) / (Nj * (Nj - 1));
+  // Calculate sums of squares within strata (Eqn 8a)
+  NumericVector ssWPvec(strataFreq.size());
+  for(int i = 0; i < ssWPvec.size(); i++) {
+    IntegerVector hapFreq = strataHapFreq(_, i);
+    IntegerMatrix freqProd = intOuterC(hapFreq, hapFreq);
+    for(int r = 0; r < freqProd.nrow(); r++) {
+      for(int c = 0; c < freqProd.ncol(); c++) {
+        ssWPvec[i] += freqProd(r, c) * hapDist(r, c);
       }
-      double aTerm1 = pow(sum(jTerms(0, _)), 2);
-      double aTerm2 = sum(jTerms(1, _));
-      iTerms(0, a) = (aTerm1 - aTerm2) / (numStrata - 1);
-      iTerms(1, a) = sum(jTerms(2, _));
     }
-    est[i] = 1 - sum(iTerms(0, _)) / sum(iTerms(1, _));
+    ssWPvec[i] /= (2 * strataFreq[i]);
   }
-  return harmonicMean_C(est);
+ return sum(ssWPvec); 
 }
 
-// terms <- sapply(1:ncol(g@loci), function(i) {
-//   allele.strata.freq <- table(g@loci[, i], strata, useNA = "no")
-//   num.strata <- ncol(allele.strata.freq)
-//   i.terms <- sapply(rownames(allele.strata.freq), function(allele) {
-//     j.terms <- sapply(colnames(allele.strata.freq), function(strata) {
-//       Nj <- sum(allele.strata.freq[, strata])
-//       Nij <- allele.strata.freq[allele, strata]
-//       a.term1 <- Nij / Nj
-//       a.term2 <- a.term1 ^ 2
-//       b.term <- Nij * (Nij - 1) / (Nj * (Nj - 1))
-//       c(a.term1 = a.term1, a.term2 = a.term2, b.term = b.term)
-//     })
-//     a.term1 <- sum(j.terms["a.term1", ]) ^ 2
-//     a.term2 <- sum(j.terms["a.term2", ])
-//     c(a = (a.term1 - a.term2) / (num.strata - 1), 
-//       b = sum(j.terms["b.term", ])
-//     )
-//   })
-//   
-//   c(a = sum(i.terms["a", ]), b = sum(i.terms["b", ]))
-// })
-//   est <- 1 - terms["a", ] / terms["b", ]
-// 
-// c(D = harmonic.mean(est))
+// [[Rcpp::export]]
+double ssAPCalc(IntegerVector strataFreq, IntegerMatrix strataHapFreq, 
+                NumericMatrix hapDist) {
+  IntegerMatrix intOuterC(IntegerVector, IntegerVector);
+  
+  // Calculate sums of squares among strata (Eqn 8b)
+  double ssAP(0);
+  for(int i = 0; i < strataHapFreq.ncol(); i++) {
+    for(int j = 0; j < strataHapFreq.ncol(); j++) {
+      IntegerMatrix freqProd = intOuterC(strataHapFreq(_, i), strataHapFreq(_, j));
+      for(int r = 0; r < freqProd.nrow(); r++) {
+        for(int c = 0; c < freqProd.ncol(); c++) {
+          ssAP += freqProd(r, c) * hapDist(r, c);
+          cout << freqProd(r, c) << " ";
+        }
+        cout << endl;
+      }
+      cout << endl;
+    }
+  }
+  return ssAP / (2 * sum(strataFreq));
+}
+
+// [[Rcpp::export]]
+double statPhist_C(IntegerVector haps, IntegerVector strata, NumericMatrix hapDist) {
+  // function declarations
+  IntegerMatrix table2D(IntegerVector, IntegerVector);
+  NumericVector colSumC(NumericMatrix);
+  
+  LogicalVector hapsGood = !is_na(haps);
+  LogicalVector strataGood = !is_na(strata);
+  LogicalVector toUse = hapsGood & strataGood;
+  haps = haps[toUse];
+  strata = strata[toUse];
+  
+  // Extract summary values
+  IntegerMatrix strataHapFreq = table2D(haps, strata);
+  IntegerVector strataFreq = wrap(colSumC(wrap(strataHapFreq)));
+
+  double ssWP = ssWPCalc(strataFreq, strataHapFreq, hapDist);
+  double ssAP = ssAPCalc(strataFreq, strataHapFreq, hapDist);
+  ssAP = ssAP - ssWP;
+  
+  // Calculate average sample size correction for among strata variance 
+  //   Eqn 9a in paper, but modified as in Table 8.2.1.1 from Arlequin v3.5.1 manual
+  //   (denominator is sum{I} - 1)
+  int numSamples = sum(strataFreq);
+  int numStrata = strataFreq.size();
+  NumericVector n2(numStrata);
+  for(int i = 0; i < n2.size(); i++) n2[i] = pow(strataFreq[i], 2) / numSamples;
+  double n = (numSamples - sum(n2)) / (numStrata - 1);
+  
+  // Calculate variance components (Table 1)
+  //   Set MSD (SSD / df) equal to expected MSD
+  double Vc = ssWP / (numSamples - numStrata);
+  double Vb = ((ssAP / (numStrata - 1)) - Vc) / n;
+  return Vb / (Vb + Vc);
+}
+
+
 
 
 /*** R
 library(strataGdevel)
+library(ape)
 example(gtypes)
-msats <- stratify(msats, "broad")
+dloop <- stratify(dloop, "fine")
+hap.dist <- dist.dna(getSequences(sequences(dloop))[levels(loci(dloop)[, 1])], model = "K80", 
+                     gamma = FALSE, pairwise.deletion = TRUE, as.matrix = TRUE)
 
-statJostD(msats)
-statJostD_C(
-  sapply(loci(msats), function(x) as.numeric(x) - 1), 
-  as.numeric(strata(msats)) - 1,
-  ploidy(msats)
-)
 
+statPhist(dloop)
+
+l <- as.numeric(loci(dloop)[, 1]) - 1
+s <- as.numeric(strata(dloop)) - 1
+statPhist_C(l, s, hap.dist)
 
 */

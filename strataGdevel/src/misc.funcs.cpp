@@ -52,7 +52,24 @@ NumericVector colMeanC(NumericMatrix x) {
 }
 
 // [[Rcpp::export]]
-NumericMatrix outerC(NumericVector x, NumericVector y) {
+IntegerMatrix intOuterC(IntegerVector x, IntegerVector y) {
+  int x_len(x.size());
+  int y_len(y.size());
+  IntegerMatrix tbl(x_len, y_len);
+  for(int i = 0; i < x_len; i++) {
+    for(int j = 0; j < y_len; j++) {
+      if(IntegerVector::is_na(x[i]) || IntegerVector::is_na(y[j])) {
+        tbl(i, j) = NA_INTEGER;
+      } else {
+        tbl(i, j) = x[i] * y[j]; 
+      }
+    }
+  }
+  return tbl;
+}
+
+// [[Rcpp::export]]
+NumericMatrix numOuterC(NumericVector x, NumericVector y) {
   int x_len(x.size());
   int y_len(y.size());
   NumericMatrix tbl(x_len, y_len);

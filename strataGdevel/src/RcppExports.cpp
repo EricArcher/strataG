@@ -117,15 +117,27 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// outerC
-NumericMatrix outerC(NumericVector x, NumericVector y);
-RcppExport SEXP strataGdevel_outerC(SEXP xSEXP, SEXP ySEXP) {
+// intOuterC
+IntegerMatrix intOuterC(IntegerVector x, IntegerVector y);
+RcppExport SEXP strataGdevel_intOuterC(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    __result = Rcpp::wrap(intOuterC(x, y));
+    return __result;
+END_RCPP
+}
+// numOuterC
+NumericMatrix numOuterC(NumericVector x, NumericVector y);
+RcppExport SEXP strataGdevel_numOuterC(SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
-    __result = Rcpp::wrap(outerC(x, y));
+    __result = Rcpp::wrap(numOuterC(x, y));
     return __result;
 END_RCPP
 }
@@ -286,6 +298,45 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type strata(strataSEXP);
     Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
     __result = Rcpp::wrap(statJostD_C(loci, strata, ploidy));
+    return __result;
+END_RCPP
+}
+// ssWPCalc
+double ssWPCalc(IntegerVector strataFreq, IntegerMatrix strataHapFreq, NumericMatrix hapDist);
+RcppExport SEXP strataGdevel_ssWPCalc(SEXP strataFreqSEXP, SEXP strataHapFreqSEXP, SEXP hapDistSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< IntegerVector >::type strataFreq(strataFreqSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type strataHapFreq(strataHapFreqSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type hapDist(hapDistSEXP);
+    __result = Rcpp::wrap(ssWPCalc(strataFreq, strataHapFreq, hapDist));
+    return __result;
+END_RCPP
+}
+// ssAPCalc
+double ssAPCalc(IntegerVector strataFreq, IntegerMatrix strataHapFreq, NumericMatrix hapDist);
+RcppExport SEXP strataGdevel_ssAPCalc(SEXP strataFreqSEXP, SEXP strataHapFreqSEXP, SEXP hapDistSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< IntegerVector >::type strataFreq(strataFreqSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type strataHapFreq(strataHapFreqSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type hapDist(hapDistSEXP);
+    __result = Rcpp::wrap(ssAPCalc(strataFreq, strataHapFreq, hapDist));
+    return __result;
+END_RCPP
+}
+// statPhist_C
+double statPhist_C(IntegerVector haps, IntegerVector strata, NumericMatrix hapDist);
+RcppExport SEXP strataGdevel_statPhist_C(SEXP hapsSEXP, SEXP strataSEXP, SEXP hapDistSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< IntegerVector >::type haps(hapsSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type strata(strataSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type hapDist(hapDistSEXP);
+    __result = Rcpp::wrap(statPhist_C(haps, strata, hapDist));
     return __result;
 END_RCPP
 }

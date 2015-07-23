@@ -37,8 +37,12 @@ colMeanC <- function(x) {
     .Call('strataGdevel_colMeanC', PACKAGE = 'strataGdevel', x)
 }
 
-outerC <- function(x, y) {
-    .Call('strataGdevel_outerC', PACKAGE = 'strataGdevel', x, y)
+intOuterC <- function(x, y) {
+    .Call('strataGdevel_intOuterC', PACKAGE = 'strataGdevel', x, y)
+}
+
+numOuterC <- function(x, y) {
+    .Call('strataGdevel_numOuterC', PACKAGE = 'strataGdevel', x, y)
 }
 
 intVecToMat <- function(x, ncol) {
@@ -87,5 +91,17 @@ statGstDblPrime_C <- function(loci, strata, ploidy) {
 
 statJostD_C <- function(loci, strata, ploidy) {
     .Call('strataGdevel_statJostD_C', PACKAGE = 'strataGdevel', loci, strata, ploidy)
+}
+
+ssWPCalc <- function(strataFreq, strataHapFreq, hapDist) {
+    .Call('strataGdevel_ssWPCalc', PACKAGE = 'strataGdevel', strataFreq, strataHapFreq, hapDist)
+}
+
+ssAPCalc <- function(strataFreq, strataHapFreq, hapDist) {
+    .Call('strataGdevel_ssAPCalc', PACKAGE = 'strataGdevel', strataFreq, strataHapFreq, hapDist)
+}
+
+statPhist_C <- function(haps, strata, hapDist) {
+    .Call('strataGdevel_statPhist_C', PACKAGE = 'strataGdevel', haps, strata, hapDist)
 }
 
