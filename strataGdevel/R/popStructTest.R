@@ -159,16 +159,29 @@ overallTest <- function(g, nrep = 100, stats = "all",
   null.dist <- NULL
   if(nrep > 0 & length(stat.list) > 0) {
     st <- strata(g)  
-    # setup clusters
-    cl <- makeCluster(num.cores)
-    # calculate matrix of null distributions
-    null.dist <- do.call(rbind, parLapply(cl, 1:nrep, function(i) {
+    perm.func <- function(i, st, stat.list, g) {
       ran.strata <- sample(st)
       sapply(1:length(stat.list), function(j) {
         stat.list[[j]](g, strata = ran.strata, ...)
       })
-    }))
-    stopCluster(cl)
+    }
+    
+    if(num.cores > 1) {
+      # setup clusters
+      cl <- makeForkCluster(num.cores)
+      tryCatch({
+        # calculate matrix of null distributions
+        null.dist <- do.call(
+          rbind, 
+          parLapply(cl, 1:nrep, perm.func, st = st, stat.list = stat.list, g = g)
+        )
+      }, finally = stopCluster(cl))
+    } else {
+      null.dist <- do.call(
+        rbind, 
+        lapply(1:nrep, perm.func, st = st, stat.list = stat.list, g = g)
+      )
+    }
     colnames(null.dist) <- rownames(result)
     
     # calculate vector of p-values

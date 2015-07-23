@@ -118,15 +118,15 @@ statFstPrime <- function(g, strata = NULL, ...) {
   if(!is.factor(strata)) strata <- factor(strata)
   
   loci.fst <- sapply(loci(g), function(x) as.numeric(x) - 1)
-  strata <- as.numeric(strata(g)) - 1
+  strata <- as.numeric(strata) - 1
   ploidy <- ploidy(g)
   
-  loci.max <- sapply(1:ncol(loci.fst), function(i) {
-    new.locus <- paste(strata, loci.fst[, i], sep = ".")
-    new.locus[is.na(loci.fst[, i]) | is.na(strata)] <- NA
-    as.numeric(factor(new.locus))
+  loci.max <- sapply(loci.fst, function(x) {
+    new.locus <- paste(strata, x, sep = ".")
+    new.locus[is.na(x) | is.na(strata)] <- NA
+    as.numeric(factor(new.locus)) - 1
   })
-    
+  
   est <- statFst_C(loci.fst, strata, ploidy) / statFst_C(loci.max, strata, ploidy)
   
 #   
