@@ -6,10 +6,24 @@
 #' @param seqName the name (or number) of a set of sequences from the 
 #'   \code{@@sequences} slot to return.
 #' @param ids vector of individual ids.
-#' @param loci vecor of loci.
+#' @param loci vector of loci.
+#' @param i,j,k subsetting slots for individuals (\code{i}), loci (\code{j}),
+#'   or strata (\code{k}). See Details for more information.
+#' @param quiet suppress warnings about unmatched requested individuals, loci, or strata?
+#' @param drop if \code{TRUE} the return object will have unused sequences removed.
 #' @param ... other arguments passed from generics (ignored).
 #' @param value value being assigned by accessor.
 #' 
+#' @details 
+#' Indexing a \code{gtypes} object with integers, characters, or logicals with 
+#'   the \code{[} operator follows the same rules as normal R indexing. The 
+#'   order that individuals, loci, and strata are chosen in follow the order 
+#'   returned by \code{indNames}, \code{locNames}, and \code{strataNames} 
+#'   respectively. If unstratified samples are present, they can be selected as
+#'   a group either by including \code{NA} in the character or numeric vector of the 
+#'   \code{k} slot, or by providing a logical vector based on \code{is.na(strata(g))} 
+#'   to the \code{i} slot.
+#'
 #' @return
 #' \tabular{ll}{
 #'   \code{nInd} \tab number of individuals/samples.\cr
@@ -167,3 +181,77 @@ setGeneric("description", function(x, ...) standardGeneric("description"))
 #' @aliases description,gtypes
 #' @export
 setMethod("description", "gtypes", function(x, ...) x@description)
+
+#' @rdname gtypes.accessors
+#' @aliases index,gtypes
+#' @export
+setMethod("[", 
+          signature(x = "gtypes", i = "ANY", j = "ANY", drop = "ANY"), 
+          function(x, i, j, k, ..., quiet = TRUE, drop = FALSE) {
+  
+  # check ids (i)
+  if(missing(i)) i <- TRUE
+  if(is.factor(i)) i <- as.character(i)
+  ids <- indNames(x)
+  i <- if(is.character(i)) {
+    i <- unique(i)
+    missing.ids <- setdiff(i, ids)
+    if(length(missing.ids) > 0) {
+      missing.ids <- paste(missing.ids, collapse = ", ")
+      warning(paste("the following ids cannot be found:", missing.ids))
+    }
+    intersect(i, ids)
+  } else ids[i]
+  
+  # check loci (j)
+  if(missing(j)) j <- TRUE
+  if(is.factor(j)) j <- as.character(j)
+  locs <- locNames(x)
+  j <- if(is.character(j)) {
+    j <- unique(j)
+    missing.locs <- setdiff(j, locs)
+    if(length(missing.locs) > 0 & !quiet) {
+      missing.locs <- paste(missing.locs, collapse = ", ")
+      warning(paste("the following loci cannot be found:", missing.locs))
+    }
+    intersect(j, locs)
+  } else locs[j]
+  
+  # check strata (k) 
+  if(missing(k)) k <- TRUE
+  if(is.factor(k)) k <- as.character(k)
+  st <- strata(x)
+  k.i <- if(is.character(k)) {
+    k <- unique(k)
+    missing.strata <- setdiff(k, st)
+    if(length(missing.strata) > 0 & !quiet) {
+      missing.strata <- paste(missing.strata, collapse = ", ")
+      warning(paste("the following strata cannot be found:", missing.strata))
+    }
+    st <- intersect(k, strataNames(x))
+    st.i <- names(which(st %in% k))
+    if(any(is.na(k))) st.i <- c(st.i, names(st)[is.na(st)])
+    st.i
+  } else {
+    names(st)[st %in% strataNames(x)[k]]
+  }
+  
+  # check ids in selected strata
+  missing.ids <- setdiff(i, k.i)
+  if(length(missing.ids) > 0 & !quiet) {
+    missing.ids <- paste(missing.ids, collapse = ", ")
+    warning(paste("the following ids are not in the selected strata:", missing.ids))
+  }
+  i <- intersect(i, k.i)
+  
+  if(length(i) == 0) stop("no samples selected")
+  if(length(j) == 0) stop("no loci selected")
+  if(length(k) == 0) stop("no strata selected")
+  
+  x@loci <- x@loci[idRows(i, rownames(x@loci)), j, drop = FALSE]
+  x@loci <- droplevels(x@loci)
+  x@strata <- droplevels(x@strata[i])
+  if(drop) x <- removeSequences(x)
+
+  return(x)
+})

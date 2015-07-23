@@ -9,6 +9,12 @@ statChi2 <- function(g, strata = NULL, ...) {
   }
   if(!is.factor(strata)) strata <- factor(strata)
   
+  if(any(is.na(strata))) {
+    toUse <- !is.na(strata)
+    strata <- strata[toUse]
+    g <- subset(g, id = which(toUse))
+  }
+  
   est <- statChi2_C(
     sapply(loci(g), function(x) as.numeric(x) - 1), 
     as.numeric(strata) - 1,

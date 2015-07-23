@@ -133,6 +133,11 @@ overallTest <- function(g, nrep = 100, stats = "all",
   }
   if(nrep < 1) keep.null = FALSE
   
+  if(any(is.na(strata(g)))) {
+    toUse <- !is.na(strata(g))
+    g <- subset(g, id = which(toUse))
+  }
+  
   if(!quietly) cat(
     cat("\n<<<", description(g), ">>>\n"),
     format(Sys.time()), ": Overall test :", nrep, "permutations\n"

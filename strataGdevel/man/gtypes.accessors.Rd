@@ -2,6 +2,7 @@
 % Please edit documentation in R/gtypes.accessors.R
 \docType{class}
 \name{gtypes.accessors}
+\alias{[,gtypes,ANY,ANY,ANY-method}
 \alias{accessors}
 \alias{description}
 \alias{description,gtypes}
@@ -9,6 +10,7 @@
 \alias{gtypes.accessors}
 \alias{indNames,gtypes}
 \alias{indNames,gtypes-method}
+\alias{index,gtypes}
 \alias{locNames,gtypes}
 \alias{locNames,gtypes-method}
 \alias{loci}
@@ -96,6 +98,9 @@ sequences(x, ...)
 description(x, ...)
 
 \S4method{description}{gtypes}(x, ...)
+
+\S4method{[}{gtypes,ANY,ANY,ANY}(x, i, j, k, ..., quiet = TRUE,
+  drop = FALSE)
 }
 \arguments{
 \item{x}{a \linkS4class{gtypes} object.}
@@ -106,10 +111,17 @@ description(x, ...)
 
 \item{ids}{vector of individual ids.}
 
-\item{loci}{vecor of loci.}
+\item{loci}{vector of loci.}
 
 \item{seqName}{the name (or number) of a set of sequences from the
 \code{@sequences} slot to return.}
+
+\item{i,j,k}{subsetting slots for individuals (\code{i}), loci (\code{j}),
+or strata (\code{k}). See Details for more information.}
+
+\item{quiet}{suppress warnings about unmatched requested individuals, loci, or strata?}
+
+\item{drop}{if \code{TRUE} the return object will have unused sequences removed.}
 }
 \value{
 \tabular{ll}{
@@ -133,6 +145,16 @@ description(x, ...)
 }
 \description{
 Accessors for slots in \linkS4class{gtypes} objects.
+}
+\details{
+Indexing a \code{gtypes} object with integers, characters, or logicals with
+  the \code{[} operator follows the same rules as normal R indexing. The
+  order that individuals, loci, and strata are chosen in follow the order
+  returned by \code{indNames}, \code{locNames}, and \code{strataNames}
+  respectively. If unstratified samples are present, they can be selected as
+  a group either by including \code{NA} in the character or numeric vector of the
+  \code{k} slot, or by providing a logical vector based on \code{is.na(strata(g))}
+  to the \code{i} slot.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

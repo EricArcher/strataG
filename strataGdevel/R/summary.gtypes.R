@@ -44,6 +44,8 @@ setMethod("summary", "gtypes",
         }
       )
     }))
+    
+    smry$unstratified <- sum(is.na(strata(x))) 
   
     smry$locus.smry <- if(ploidy(x) > 1) summarizeLoci(x) else NULL
     
@@ -85,6 +87,7 @@ print.gtypeSummary <- function(x, ... ) {
   cat(names(x$allele.freqs), sep = ", ")
   cat("\n\nStrata summary:\n")
   print(x$strata.smry)
+  if(x$unstratified > 0) cat(x$unstratified, "samples are unstratified\n")
   if(!is.null(x$locus.smry)) {
     cat("\nLocus summary:\n")
     print(x$locus.smry[, c(1, 3, 5, 7)])
