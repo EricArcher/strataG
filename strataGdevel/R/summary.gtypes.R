@@ -83,8 +83,6 @@ print.gtypeSummary <- function(x, ... ) {
   cat("<<<", attr(x, "description"), ">>>\n")
   cat("\nContents: ")
   cat(ind.txt, loc.txt, strata.txt, sep = ", ")
-  cat("\n\nLoci: ")
-  cat(names(x$allele.freqs), sep = ", ")
   cat("\n\nStrata summary:\n")
   print(x$strata.smry)
   if(x$unstratified > 0) cat(x$unstratified, "samples are unstratified\n")

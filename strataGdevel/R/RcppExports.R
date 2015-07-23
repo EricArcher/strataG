@@ -61,6 +61,10 @@ statChi2_C <- function(loci, strata, ploidy) {
     .Call('strataGdevel_statChi2_C', PACKAGE = 'strataGdevel', loci, strata, ploidy)
 }
 
+statFis_C <- function(loci, strata, ploidy) {
+    .Call('strataGdevel_statFis_C', PACKAGE = 'strataGdevel', loci, strata, ploidy)
+}
+
 alleleFreqCalc <- function(locVec, strata, ploidy) {
     .Call('strataGdevel_alleleFreqCalc', PACKAGE = 'strataGdevel', locVec, strata, ploidy)
 }

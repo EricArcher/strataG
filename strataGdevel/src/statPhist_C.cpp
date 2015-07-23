@@ -76,5 +76,8 @@ double statPhist_C(IntegerVector haps, IntegerVector strata, NumericMatrix hapDi
   //   Set MSD (SSD / df) equal to expected MSD
   double Vc = ssWP / (numSamples - numStrata);
   double Vb = ((ssAP / (numStrata - 1)) - Vc) / n;
-  return Vb / (Vb + Vc);
+  double est(Vb / (Vb + Vc));
+  
+  if(isnan(est)) est = NA_REAL;
+  return est;
 }

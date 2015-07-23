@@ -190,6 +190,19 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// statFis_C
+double statFis_C(IntegerMatrix loci, IntegerVector strata, int ploidy);
+RcppExport SEXP strataGdevel_statFis_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< IntegerMatrix >::type loci(lociSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type strata(strataSEXP);
+    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
+    __result = Rcpp::wrap(statFis_C(loci, strata, ploidy));
+    return __result;
+END_RCPP
+}
 // alleleFreqCalc
 NumericMatrix alleleFreqCalc(IntegerVector locVec, IntegerVector strata, int ploidy);
 RcppExport SEXP strataGdevel_alleleFreqCalc(SEXP locVecSEXP, SEXP strataSEXP, SEXP ploidySEXP) {

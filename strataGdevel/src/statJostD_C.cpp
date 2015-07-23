@@ -8,7 +8,7 @@ double statJostD_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
   IntegerVector calcStrataN(IntegerVector, IntegerVector);
   double harmonicMean_C(NumericVector);
   
-  NumericVector est(loci.ncol());
+  NumericVector terms(loci.ncol());
   for(int i = 0; i < loci.ncol(); i++) {
     IntegerMatrix alleleStrataFreq = table2D(loci(_, i), rep(strata, ploidy));
     int numStrata = calcStrataN(loci, strata).size();
@@ -27,7 +27,10 @@ double statJostD_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
       iTerms(0, a) = (aTerm1 - aTerm2) / (numStrata - 1);
       iTerms(1, a) = sum(jTerms(2, _));
     }
-    est[i] = 1 - sum(iTerms(0, _)) / sum(iTerms(1, _));
+    terms[i] = 1 - sum(iTerms(0, _)) / sum(iTerms(1, _));
   }
-  return harmonicMean_C(est);
+  
+  double est(harmonicMean_C(terms));
+  if(isnan(est)) est = NA_REAL;
+  return est;
 }

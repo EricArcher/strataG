@@ -27,7 +27,7 @@ permutation test.}
 
 \item{stats}{a character vector or list of functions specifying which
 anlayses to conduct. If characters, then valid possible choices are:
-"phist", "fst", "fst.prime", "gst", "gst.prime", "gst.dbl.prime", "d",
+"phist", "fst", "fst.prime", "fis", "gst", "gst.prime", "gst.dbl.prime", "d",
 or "chi2", or "all". If a list, then functions must be a valid population
 structure function (see \code{\link{popStructStat}}) taking a
 \linkS4class{gtypes} object and returning a named statistic estimate.}
