@@ -56,7 +56,7 @@ qaqc <- function(g, label = NULL, ...) {
   # Sequence summaries
   by.seq <- if(!is.null(sequences(g))) {
     cat(format(Sys.time()), ": Sequence summaries\n")
-    sapply(seqNames(g), function(x) {
+    sapply(locNames(g), function(x) {
       list(
         low.freq.subs = lowFreqSubs(sequences(g, x), ...),
         hap.likelihoods = haplotypeLikelihoods(sequences(g, x), ...)

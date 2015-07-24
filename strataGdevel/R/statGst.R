@@ -2,7 +2,7 @@
 #' @export
 #' 
 statGst <- function(g, strata = NULL, ...) {
-  if(ploidy(g) < 2) return(c(Gst = NA))
+  if(ploidy(g) < 2 | nStrata(g) == 1) return(c(Gst = NA))
   strata <- if(is.null(strata)) {
     strata(g)
   } else {
@@ -37,7 +37,7 @@ statGst <- function(g, strata = NULL, ...) {
 #' @export
 #' 
 statGstPrime <- function(g, strata = NULL, prime.type = c("nei", "hedrick"), ...) { 
-  if(ploidy(g) < 2) return(c('G\'st' = NA))
+  if(ploidy(g) < 2 | nStrata(g) == 1) return(c('G\'st' = NA))
   prime.type <- match.arg(prime.type)
   strata <- if(is.null(strata)) {
     strata(g)
@@ -80,7 +80,7 @@ statGstPrime <- function(g, strata = NULL, prime.type = c("nei", "hedrick"), ...
 #' @export
 #' 
 statGstDblPrime <- function(g, strata = NULL, ...) {
-  if(ploidy(g) < 2) return(c('G\'\'st' = NA))
+  if(ploidy(g) < 2 | nStrata(g) == 1) return(c('G\'\'st' = NA))
   strata <- if(is.null(strata)) {
     strata(g)
   } else {

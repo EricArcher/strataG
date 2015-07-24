@@ -73,7 +73,7 @@ jackHWE <- function(g, exclude.num = 1, min.hwe.samples = 5,
       )
     }
     to.keep <- setdiff(indNames(g), exclude.arr[, i])
-    jack.gtypes <- subset(g, ids = to.keep)
+    jack.gtypes <- g[to.keep, , ]
     HWEgenepop(jack.gtypes, show.output = FALSE, ...)
   })
 

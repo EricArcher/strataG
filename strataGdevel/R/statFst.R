@@ -2,7 +2,7 @@
 #' @export
 #' 
 statFst <- function(g, strata = NULL, ...) {   
-  if(ploidy(g) == 1) {
+  if(ploidy(g) == 1 | nStrata(g) == 1) {
     g@sequences <- NULL
     return(statPhist(g, strata = strata))
   }
@@ -114,7 +114,7 @@ statFst <- function(g, strata = NULL, ...) {
 #' @export
 #' 
 statFstPrime <- function(g, strata = NULL, ...) {  
-  if(ploidy(g) == 1) return(c('F\'st' = NA))
+  if(ploidy(g) == 1 | nStrata(g) == 1) return(c('F\'st' = NA))
   
   strata <- if(is.null(strata)) {
     strata(g)

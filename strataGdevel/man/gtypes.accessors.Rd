@@ -5,48 +5,38 @@
 \alias{[,gtypes,ANY,ANY,ANY-method}
 \alias{accessors}
 \alias{description}
-\alias{description,gtypes}
 \alias{description,gtypes-method}
 \alias{gtypes.accessors}
-\alias{indNames,gtypes}
+\alias{indNames}
 \alias{indNames,gtypes-method}
-\alias{index,gtypes}
-\alias{locNames,gtypes}
+\alias{index}
+\alias{locNames}
 \alias{locNames,gtypes-method}
 \alias{loci}
-\alias{loci,gtypes}
 \alias{loci,gtypes-method}
-\alias{nInd,gtypes}
+\alias{nInd}
 \alias{nInd,gtypes-method}
-\alias{nLoc,gtypes}
+\alias{nLoc}
 \alias{nLoc,gtypes-method}
 \alias{nStrata}
-\alias{nStrata,gtypes}
 \alias{nStrata,gtypes-method}
-\alias{other,gtypes}
+\alias{other}
 \alias{other,gtypes-method}
-\alias{ploidy,gtypes}
+\alias{ploidy}
 \alias{ploidy,gtypes-method}
 \alias{schemes}
-\alias{schemes,gtypes}
 \alias{schemes,gtypes-method}
 \alias{schemes<-}
-\alias{schemes<-,gtypes}
 \alias{schemes<-,gtypes-method}
-\alias{seqNames}
-\alias{seqNames,gtypes}
-\alias{seqNames,gtypes-method}
 \alias{sequences}
-\alias{sequences,gtypes}
 \alias{sequences,gtypes-method}
-\alias{strata,gtypes}
+\alias{strata}
 \alias{strata,gtypes-method}
 \alias{strata<-}
-\alias{strata<-,gtypes}
 \alias{strata<-,gtypes-method}
 \alias{strataNames}
-\alias{strataNames,gtypes}
 \alias{strataNames,gtypes-method}
+\alias{subset}
 \title{\code{gtypes} Accessors}
 \usage{
 \S4method{nInd}{gtypes}(x, ...)
@@ -87,10 +77,6 @@ loci(x, ...)
 
 \S4method{loci}{gtypes}(x, ids = NULL, loci = NULL)
 
-seqNames(x, ...)
-
-\S4method{seqNames}{gtypes}(x, ...)
-
 sequences(x, ...)
 
 \S4method{sequences}{gtypes}(x, seqName = NULL, ...)
@@ -125,7 +111,7 @@ or strata (\code{k}). See Details for more information.}
 }
 \value{
 \tabular{ll}{
-  \code{nInd} \tab number of individuals/samples.\cr
+  \code{nInd} \tab number of individuals.\cr
   \code{nLoc} \tab number of loci.\cr
   \code{nStrata} \tab number of strata.\cr
   \code{indNames} \tab vector of individual/sample names.\cr
@@ -137,9 +123,9 @@ or strata (\code{k}). See Details for more information.}
   \code{schemes} \tab return or modify the current stratification schemes.\cr
   \code{loci} \tab return a data.frame of the alleles for the specified ids
     and loci.\cr
-  \code{seqNames} \tab return the names of each set of sequences.\cr
   \code{sequences} \tab return the \linkS4class{multidna} object in
-    the \code{@sequences} slot.\cr
+    the \code{@sequences} slot.\cr See \code{\link[apex]{getSequences}} to
+    extract individual genes or sequences from this object.
   \code{description} \tab return the object's description.\cr
 }
 }
@@ -155,6 +141,50 @@ Indexing a \code{gtypes} object with integers, characters, or logicals with
   a group either by including \code{NA} in the character or numeric vector of the
   \code{k} slot, or by providing a logical vector based on \code{is.na(strata(g))}
   to the \code{i} slot.
+}
+\examples{
+#--- create a diploid (microsatellite) gtypes object
+data(dolph.msats)
+data(dolph.strata)
+msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
+msats <- df2gtypes(msats.merge, ploidy = 2)
+
+nStrata(msats)
+strataNames(msats)
+nLoc(msats)
+locNames(msats)
+
+# reassign all samples to two randomly chosen strata
+strata(msats) <- sample(c("A", "B"), nInd(msats), rep = TRUE)
+msats
+
+
+#--- a sequence example
+data(woodmouse)
+genes <- list(gene1=woodmouse[,1:500], gene2=woodmouse[,501:965])
+x <- new("multidna", genes)
+wood.g <- sequence2gtypes(x)
+strata(wood.g) <- sample(c("A", "B"), nInd(wood.g), rep = TRUE)
+wood.g
+
+# get the multidna sequence object
+multi.seqs <- sequences(wood.g)
+class(multi.seqs) # "multidna"
+
+# get a list of DNAbin objects
+dnabin.list <- getSequences(multi.seqs)
+class(dnabin.list) # "list"
+
+# get a DNAbin object of the first locus
+dnabin.1 <- getSequences(multi.seqs, locNames(wood.g)[1])
+class(dnabin.1) # "DNAbin"
+
+# NOTE: The default to the 'simplify' argument in 'getSequences' is TRUE,
+#   so if there is only one locus, 'getSequences' will return a DNAbin object
+#   rather than a single element list unless 'simplify = FALSE':
+gene1 <- wood.g[, "gene1", ]
+gene1.dnabin <- getSequences(sequences(gene1))
+class(gene1.dnabin) # "DNAbin"
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

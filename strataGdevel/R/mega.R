@@ -45,7 +45,7 @@ write.mega <- function(g, file = NULL, title = NULL, line.width = 60, locus = 1)
     file <- gsub("[[:punct:]]", ".", file)
   }
   if(is.null(title)) title <- description(g)
-  dna <- sequences(g, seqNames(g)[locus])
+  dna <- sequences(g, locNames(g)[locus])
   dna <- as.character(as.matrix(dna))
   
   write("#MEGA", file)

@@ -2,7 +2,7 @@
 #' @export
 #' 
 statFis <- function(g, strata = NULL, ...) {
-  if(ploidy(g) < 2) return(c(Fis = NA))
+  if(ploidy(g) < 2 | nStrata(g) == 1) return(c(Fis = NA))
   strata <- if(is.null(strata)) {
     strata(g)
   } else {

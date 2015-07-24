@@ -34,7 +34,7 @@ write.gtypes <- function(g, label = NULL, folder = NULL, as.frequency = FALSE) {
   write.csv(g.mat, file = out.files, row.names = FALSE)
   
   if(!is.null(sequences(g))) {
-    for(x in seqNames(g)) {
+    for(x in locNames(g)) {
       fname <- paste(label, x, "fasta", sep = ".")
       if(!is.null(folder)) fname <- file.path(folder, fname)
       write.dna(sequences(g, x), file = fname, format = "fasta", nbcol = -1, 

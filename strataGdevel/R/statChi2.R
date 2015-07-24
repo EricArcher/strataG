@@ -2,6 +2,7 @@
 #' @export
 #' 
 statChi2 <- function(g, strata = NULL, ...) {
+  if(nStrata(g) == 1) return(Chi2 = NA)
   strata <- if(is.null(strata)) {
     strata(g)
   } else {

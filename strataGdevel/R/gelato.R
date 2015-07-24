@@ -55,7 +55,7 @@ gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5,
   knowns <- sort(setdiff(all.strata, unknown.strata))
   # loop through every unknown strata
   result <- sapply(unknown.strata, function(unknown) {
-    unknown.gtypes <- subset(g, strata = unknown)
+    unknown.gtypes <- g[, , unknown]
     unknown.mat <- as.matrix(unknown.gtypes)
     unknown.mat <- cbind(strata = unknown, unknown.mat)
     unknown.n <- nInd(unknown.gtypes)
@@ -63,7 +63,7 @@ gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5,
     # loop through each known population and calculate distribution
     #   of Fst and log-likelihood of membership
     unknown.result <- sapply(knowns, function(known) {
-      known.gtypes <- subset(g, strata = known)
+      known.gtypes <- g[, , known]
       if((nInd(known.gtypes) - unknown.n) >= min.sample.size) {
         fst.dist <- do.call(rbind, mclapply(1:nrep, function(i) {
           # select samples to self assign
@@ -71,7 +71,7 @@ gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5,
           
           # extract gtypes of base known strata
           known.to.keep <- setdiff(indNames(known.gtypes), ran.sample)
-          known.sample <- subset(known.gtypes, ids = known.to.keep)
+          known.sample <- known.gtypes[known.to.keep, , ]
           
           # gtypes for observed Fst
           known.mat <- as.matrix(known.sample)

@@ -235,7 +235,7 @@ pairwiseTest <- function(g, nrep = 100, stats = "all",
       cat("  ", format(Sys.time()), ":", paste(pair, collapse = " v. "), "\n")
     }
     
-    pair.list[[i]] <- overallTest(g = subset(g, strata = pair), nrep = nrep,
+    pair.list[[i]] <- overallTest(g = g[ , , pair], nrep = nrep,
       stats = stats, keep.null = keep.null, quietly = TRUE, 
       num.cores = num.cores, ...
     )

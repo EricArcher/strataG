@@ -13,7 +13,6 @@ Collate:
   gtypes.accessors.R
   gtypes.class.R
   initialize.gtypes.R
-  subset.gtypes.R
   alleleFreqFormat.R
   alleleFreqs.R
   alleleSplit.R

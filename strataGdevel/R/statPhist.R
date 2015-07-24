@@ -3,7 +3,7 @@
 #' 
 statPhist <- function(g, strata = NULL, hap.dist = NULL, model = "K80", 
                       gamma = FALSE, pairwise.deletion = TRUE, ...)  {
-  if(ploidy(g) != 1) return(c(PHIst = NA))
+  if(ploidy(g) != 1 | nStrata(g) == 1) return(c(PHIst = NA))
   stat.name <- "PHIst"
   
   # check hap.dist matrix

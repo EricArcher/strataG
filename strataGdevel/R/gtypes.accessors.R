@@ -26,7 +26,7 @@
 #'
 #' @return
 #' \tabular{ll}{
-#'   \code{nInd} \tab number of individuals/samples.\cr
+#'   \code{nInd} \tab number of individuals.\cr
 #'   \code{nLoc} \tab number of loci.\cr
 #'   \code{nStrata} \tab number of strata.\cr
 #'   \code{indNames} \tab vector of individual/sample names.\cr
@@ -38,9 +38,9 @@
 #'   \code{schemes} \tab return or modify the current stratification schemes.\cr
 #'   \code{loci} \tab return a data.frame of the alleles for the specified ids 
 #'     and loci.\cr
-#'   \code{seqNames} \tab return the names of each set of sequences.\cr
 #'   \code{sequences} \tab return the \linkS4class{multidna} object in 
-#'     the \code{@@sequences} slot.\cr
+#'     the \code{@@sequences} slot.\cr See \code{\link[apex]{getSequences}} to 
+#'     extract individual genes or sequences from this object.
 #'   \code{description} \tab return the object's description.\cr
 #' }
 #' 
@@ -48,15 +48,62 @@
 #' 
 #' @aliases accessors
 #' 
+#' @examples
+#' #--- create a diploid (microsatellite) gtypes object
+#' data(dolph.msats)
+#' data(dolph.strata)
+#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
+#' msats <- df2gtypes(msats.merge, ploidy = 2)
+#' 
+#' nStrata(msats)
+#' strataNames(msats)
+#' nLoc(msats)
+#' locNames(msats)
+#' 
+#' # reassign all samples to two randomly chosen strata
+#' strata(msats) <- sample(c("A", "B"), nInd(msats), rep = TRUE)
+#' msats
+#' 
+#' 
+#' #--- a sequence example
+#' data(woodmouse)
+#' genes <- list(gene1=woodmouse[,1:500], gene2=woodmouse[,501:965])
+#' x <- new("multidna", genes)
+#' wood.g <- sequence2gtypes(x)
+#' strata(wood.g) <- sample(c("A", "B"), nInd(wood.g), rep = TRUE)
+#' wood.g
+#' 
+#' # get the multidna sequence object
+#' multi.seqs <- sequences(wood.g)
+#' class(multi.seqs) # "multidna"
+#'
+#' # get a list of DNAbin objects
+#' dnabin.list <- getSequences(multi.seqs)
+#' class(dnabin.list) # "list"
+#' 
+#' # get a DNAbin object of the first locus
+#' dnabin.1 <- getSequences(multi.seqs, locNames(wood.g)[1])
+#' class(dnabin.1) # "DNAbin"
+#' 
+#' # NOTE: The default to the 'simplify' argument in 'getSequences' is TRUE, 
+#' #   so if there is only one locus, 'getSequences' will return a DNAbin object
+#' #   rather than a single element list unless 'simplify = FALSE':
+#' gene1 <- wood.g[, "gene1", ]
+#' gene1.dnabin <- getSequences(sequences(gene1))
+#' class(gene1.dnabin) # "DNAbin"
+#' 
+#'       
+#'
+#'   
 setClass("gtypes")
 
 #' @rdname gtypes.accessors
-#' @aliases nInd,gtypes
+#' @aliases nInd
 #' @export
 setMethod("nInd", "gtypes", function(x, ...) nrow(x@loci) / x@ploidy)
 
 #' @rdname gtypes.accessors
-#' @aliases nLoc,gtypes
+#' @aliases nLoc
 #' @export
 setMethod("nLoc", "gtypes", function(x, ...) ncol(x@loci))
 
@@ -64,12 +111,12 @@ setMethod("nLoc", "gtypes", function(x, ...) ncol(x@loci))
 #' @export
 setGeneric("nStrata", function(x, ...) standardGeneric("nStrata"))
 #' @rdname gtypes.accessors
-#' @aliases nStrata,gtypes
+#' @aliases nStrata
 #' @export
 setMethod("nStrata", "gtypes", function(x, ...) nlevels(x@strata))
 
 #' @rdname gtypes.accessors
-#' @aliases indNames,gtypes
+#' @aliases indNames
 #' @export
 setMethod("indNames", "gtypes", function(x, ...) {
   ids <- rownames(x@loci)[1:(nrow(x@loci) / x@ploidy)]
@@ -77,7 +124,7 @@ setMethod("indNames", "gtypes", function(x, ...) {
 })
 
 #' @rdname gtypes.accessors
-#' @aliases locNames,gtypes
+#' @aliases locNames
 #' @export
 setMethod("locNames", "gtypes", function(x, ...) colnames(x@loci))
 
@@ -85,22 +132,22 @@ setMethod("locNames", "gtypes", function(x, ...) colnames(x@loci))
 #' @export
 setGeneric("strataNames", function(x, ...) standardGeneric("strataNames"))
 #' @rdname gtypes.accessors
-#' @aliases strataNames,gtypes
+#' @aliases strataNames
 #' @export
 setMethod("strataNames", "gtypes", function(x, ...) levels(x@strata))
 
 #' @rdname gtypes.accessors
-#' @aliases ploidy,gtypes
+#' @aliases ploidy
 #' @export
 setMethod("ploidy", "gtypes", function(x, ...) x@ploidy)
 
 #' @rdname gtypes.accessors
-#' @aliases other,gtypes
+#' @aliases other
 #' @export
 setMethod("other", "gtypes", function(x, ...) x@other)
 
 #' @rdname gtypes.accessors
-#' @aliases strata,gtypes
+#' @aliases strata
 #' @export
 setMethod("strata", "gtypes", function(x) x@strata)
 
@@ -108,7 +155,7 @@ setMethod("strata", "gtypes", function(x) x@strata)
 #' @export
 setGeneric("strata<-", function(x, value) standardGeneric("strata<-"))
 #' @rdname gtypes.accessors
-#' @aliases strata<-,gtypes
+#' @aliases strata
 #' @export
 setMethod("strata<-", "gtypes", function(x, value) {
   strata <- factor(rep(value, length.out = nInd(x)))
@@ -122,7 +169,7 @@ setMethod("strata<-", "gtypes", function(x, value) {
 #' @export
 setGeneric("schemes", function(x, ...) standardGeneric("schemes"))
 #' @rdname gtypes.accessors
-#' @aliases schemes,gtypes
+#' @aliases schemes
 #' @export
 setMethod("schemes", "gtypes", function(x, ...) x@schemes)
 
@@ -130,7 +177,7 @@ setMethod("schemes", "gtypes", function(x, ...) x@schemes)
 #' @export
 setGeneric("schemes<-", function(x, value) standardGeneric("schemes<-"))
 #' @rdname gtypes.accessors
-#' @aliases schemes<-,gtypes
+#' @aliases schemes
 #' @export
 setMethod("schemes<-", "gtypes", function(x, value) {
   x@schemes <- value
@@ -142,7 +189,7 @@ setMethod("schemes<-", "gtypes", function(x, value) {
 #' @export
 setGeneric("loci", function(x, ...) standardGeneric("loci"))
 #' @rdname gtypes.accessors
-#' @aliases loci,gtypes
+#' @aliases loci
 #' @export
 setMethod("loci", "gtypes", function(x, ids = NULL, loci = NULL) {
   if(is.null(ids)) ids <- indNames(x)
@@ -154,17 +201,9 @@ setMethod("loci", "gtypes", function(x, ids = NULL, loci = NULL) {
 
 #' @rdname gtypes.accessors
 #' @export
-setGeneric("seqNames", function(x, ...) standardGeneric("seqNames"))
-#' @rdname gtypes.accessors
-#' @aliases seqNames,gtypes
-#' @export
-setMethod("seqNames", "gtypes", function(x, ...) names(x@sequences@dna))
-
-#' @rdname gtypes.accessors
-#' @export
 setGeneric("sequences", function(x, ...) standardGeneric("sequences"))
 #' @rdname gtypes.accessors
-#' @aliases sequences,gtypes
+#' @aliases sequences
 #' @export
 setMethod("sequences", "gtypes", function(x, seqName = NULL, ...) {
   if(is.null(seqName)) {
@@ -178,12 +217,12 @@ setMethod("sequences", "gtypes", function(x, seqName = NULL, ...) {
 #' @export
 setGeneric("description", function(x, ...) standardGeneric("description"))
 #' @rdname gtypes.accessors
-#' @aliases description,gtypes
+#' @aliases description
 #' @export
 setMethod("description", "gtypes", function(x, ...) x@description)
 
 #' @rdname gtypes.accessors
-#' @aliases index,gtypes
+#' @aliases index subset
 #' @export
 setMethod("[", 
           signature(x = "gtypes", i = "ANY", j = "ANY", drop = "ANY"), 

@@ -81,6 +81,13 @@ setClass(
         return(FALSE)
       }
       
+      # check that locus names are the same in the @loci colnames and names of 
+      #  @sequences
+      if(!identical(colnames(object@loci), locusNames(object@sequences))) {
+        cat("the names of the sets of sequences is not the same as the loci\n")
+        return(FALSE)
+      }
+      
       # check that sequence haplotype labels can be found
       locus.good <- sapply(colnames(object@loci), function(x) {
         haps <- unique(as.character(object@loci[, x]))

@@ -245,7 +245,7 @@ phaseWrite <- function(g, loci, positions = NULL,
   loci <- loci[asc.order]
   positions <- positions[asc.order]
   
-  sub.g <- subset(g, loci = loci)
+  sub.g <- g[, loci, ]
   write(c(
     nInd(sub.g), 
     length(loci),

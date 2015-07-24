@@ -80,7 +80,7 @@ mRatio <- function(g, by.strata = TRUE, rpt.size = 8:2) {
     }
   }
   
-  if(nlevels(strata(g)) == 1 & by.strata) {
+  if(nStrata(g) == 1 & by.strata) {
     by.strata <- FALSE
     g <- g[, , strataNames(g)]
   }

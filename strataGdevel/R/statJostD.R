@@ -2,7 +2,7 @@
 #' @export
 #' 
 statJostD <- function(g, strata = NULL, ...) {
-  if(ploidy(g) == 1) return(c(D = NA))
+  if(ploidy(g) < 2 | nStrata(g) == 1) return(c(D = NA))
   
   strata <- if(is.null(strata)) {
     strata(g)

@@ -17,7 +17,7 @@ write.nexus.snapp <- function(g, file = "snapp.data.nex") {
     return(NULL)
   }
   
-  g <- subset(g, loci = biallelic)
+  g <- g[, biallelic, ]
   result <- sapply(locNames(g), function(locus) {
     genotypes <- sapply(indNames(g), function(ind) {
       x <- unlist(as.numeric(loci(g, ids = ind, loci = locus)[, locus]))
