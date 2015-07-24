@@ -14,12 +14,6 @@ Collate:
   gtypes.class.R
   initialize.gtypes.R
   subset.gtypes.R
-  FusFs.R
-  HWEgenepop.R
-  Hstats.R
-  LDgenepop.R
-  RcppExports.R
-  TiTvRatio.R
   alleleFreqFormat.R
   alleleFreqs.R
   alleleSplit.R
@@ -40,17 +34,21 @@ Collate:
   fixedSites.R
   freq2GenData.R
   fstToNm.R
+  FusFs.R
   gelato.R
   genepop.R
   genind2gtypes.R
   gtypes2loci.R
   haplotypeLikelihoods.R
   heterozygosity.R
+  Hstats.R
+  HWEgenepop.R
   idRows.R
   iupacCode.R
   jackHWE.R
   jmodeltest.R
   labelHaplotypes.R
+  LDgenepop.R
   lowFreqSubs.R
   mRatio.R
   mafft.R
@@ -69,7 +67,9 @@ Collate:
   phase.R
   popStructStat.R
   popStructTest.R
+  privateAlleles.R
   qaqc.R
+  RcppExports.R
   readGenData.R
   removeSequences.R
   sequence2gtypes.R
@@ -92,6 +92,7 @@ Collate:
   summary.gtypes.R
   tajimasD.R
   theta.R
+  TiTvRatio.R
   trimNs.R
   validIupacCodes.R
   variableSites.R
