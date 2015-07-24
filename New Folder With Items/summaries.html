@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="Eric Archer" />
+
+<meta name="date" content="2015-05-29" />
+
+<title>By-Locus Summaries</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<link href="data:text/css,body%20%7B%0A%20%20background%2Dcolor%3A%20%23fff%3B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20max%2Dwidth%3A%20700px%3B%0A%20%20overflow%3A%20visible%3B%0A%20%20padding%2Dleft%3A%202em%3B%0A%20%20padding%2Dright%3A%202em%3B%0A%20%20font%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0A%20%20font%2Dsize%3A%2014px%3B%0A%20%20line%2Dheight%3A%201%2E35%3B%0A%7D%0A%0A%23header%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0A%0A%23TOC%20%7B%0A%20%20clear%3A%20both%3B%0A%20%20margin%3A%200%200%2010px%2010px%3B%0A%20%20padding%3A%204px%3B%0A%20%20width%3A%20400px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20border%2Dradius%3A%205px%3B%0A%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20font%2Dsize%3A%2013px%3B%0A%20%20line%2Dheight%3A%201%2E3%3B%0A%7D%0A%20%20%23TOC%20%2Etoctitle%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%20%20font%2Dsize%3A%2015px%3B%0A%20%20%20%20margin%2Dleft%3A%205px%3B%0A%20%20%7D%0A%0A%20%20%23TOC%20ul%20%7B%0A%20%20%20%20padding%2Dleft%3A%2040px%3B%0A%20%20%20%20margin%2Dleft%3A%20%2D1%2E5em%3B%0A%20%20%20%20margin%2Dtop%3A%205px%3B%0A%20%20%20%20margin%2Dbottom%3A%205px%3B%0A%20%20%7D%0A%20%20%23TOC%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dleft%3A%20%2D2em%3B%0A%20%20%7D%0A%20%20%23TOC%20li%20%7B%0A%20%20%20%20line%2Dheight%3A%2016px%3B%0A%20%20%7D%0A%0Atable%20%7B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dcolor%3A%20%23DDDDDD%3B%0A%20%20border%2Dstyle%3A%20outset%3B%0A%20%20border%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0A%20%20border%2Dwidth%3A%202px%3B%0A%20%20padding%3A%205px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%20%20line%2Dheight%3A%2018px%3B%0A%20%20padding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0A%20%20border%2Dleft%2Dstyle%3A%20none%3B%0A%20%20border%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Ap%20%7B%0A%20%20margin%3A%200%2E5em%200%3B%0A%7D%0A%0Ablockquote%20%7B%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20padding%3A%200%2E25em%200%2E75em%3B%0A%7D%0A%0Ahr%20%7B%0A%20%20border%2Dstyle%3A%20solid%3B%0A%20%20border%3A%20none%3B%0A%20%20border%2Dtop%3A%201px%20solid%20%23777%3B%0A%20%20margin%3A%2028px%200%3B%0A%7D%0A%0Adl%20%7B%0A%20%20margin%2Dleft%3A%200%3B%0A%7D%0A%20%20dl%20dd%20%7B%0A%20%20%20%20margin%2Dbottom%3A%2013px%3B%0A%20%20%20%20margin%2Dleft%3A%2013px%3B%0A%20%20%7D%0A%20%20dl%20dt%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%7D%0A%0Aul%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%7D%0A%20%20ul%20li%20%7B%0A%20%20%20%20list%2Dstyle%3A%20circle%20outside%3B%0A%20%20%7D%0A%20%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dbottom%3A%200%3B%0A%20%20%7D%0A%0Apre%2C%20code%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20color%3A%20%23333%3B%0A%7D%0Apre%20%7B%0A%20%20white%2Dspace%3A%20pre%2Dwrap%3B%20%20%20%20%2F%2A%20Wrap%20long%20lines%20%2A%2F%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20margin%3A%205px%200px%2010px%200px%3B%0A%20%20padding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Acode%20%7B%0A%20%20font%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0A%20%20font%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0A%20%20padding%3A%202px%200px%3B%0A%7D%0A%0Adiv%2Efigure%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0A%20%20background%2Dcolor%3A%20%23FFFFFF%3B%0A%20%20padding%3A%202px%3B%0A%20%20border%3A%201px%20solid%20%23DDDDDD%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20margin%3A%200%205px%3B%0A%7D%0A%0Ah1%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%20%20font%2Dsize%3A%2035px%3B%0A%20%20line%2Dheight%3A%2040px%3B%0A%7D%0A%0Ah2%20%7B%0A%20%20border%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20padding%2Dbottom%3A%202px%3B%0A%20%20font%2Dsize%3A%20145%25%3B%0A%7D%0A%0Ah3%20%7B%0A%20%20border%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20font%2Dsize%3A%20120%25%3B%0A%7D%0A%0Ah4%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0A%20%20margin%2Dleft%3A%208px%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Ah5%2C%20h6%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23ccc%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Aa%20%7B%0A%20%20color%3A%20%230033dd%3B%0A%20%20text%2Ddecoration%3A%20none%3B%0A%7D%0A%20%20a%3Ahover%20%7B%0A%20%20%20%20color%3A%20%236666ff%3B%20%7D%0A%20%20a%3Avisited%20%7B%0A%20%20%20%20color%3A%20%23800080%3B%20%7D%0A%20%20a%3Avisited%3Ahover%20%7B%0A%20%20%20%20color%3A%20%23BB00BB%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%0A%2F%2A%20Class%20described%20in%20https%3A%2F%2Fbenjeffrey%2Ecom%2Fposts%2Fpandoc%2Dsyntax%2Dhighlighting%2Dcss%0A%20%20%20Colours%20from%20https%3A%2F%2Fgist%2Egithub%2Ecom%2Frobsimmons%2F1172277%20%2A%2F%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Keyword%20%2A%2F%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%2F%2A%20DataType%20%2A%2F%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%2F%2A%20DecVal%20%28decimal%20values%29%20%2A%2F%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20BaseN%20%2A%2F%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Float%20%2A%2F%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Char%20%2A%2F%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20String%20%2A%2F%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%2F%2A%20Comment%20%2A%2F%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%2F%2A%20OtherToken%20%2A%2F%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20AlertToken%20%2A%2F%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Function%20calls%20%2A%2F%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%2F%2A%20ErrorTok%20%2A%2F%0A%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+<div id="header">
+<h1 class="title">By-Locus Summaries</h1>
+<h4 class="author"><em>Eric Archer</em></h4>
+<h4 class="date"><em>2015-05-29</em></h4>
+</div>
+
+
+<p>There are several by-locus summary functions available for <em>gtypes</em> objects. Given some sample microsatellite data:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">digits =</span> <span class="dv">2</span>)
+<span class="kw">library</span>(strataG.devel)
+<span class="kw">data</span>(dolph.strata)
+<span class="kw">data</span>(dolph.msats)
+msats.merge &lt;-<span class="st"> </span><span class="kw">merge</span>(dolph.strata, dolph.msats, <span class="dt">all.y =</span> <span class="ot">TRUE</span>, <span class="dt">description =</span> <span class="kw">date</span>())
+msats &lt;-<span class="st"> </span><span class="kw">df2gtypes</span>(msats.merge, <span class="dt">ploidy =</span> <span class="dv">2</span>, <span class="dt">id.col =</span> <span class="dv">1</span>, <span class="dt">strata.col =</span> <span class="dv">3</span>, <span class="dt">loc.col =</span> <span class="dv">5</span>)
+<span class="kw">rownames</span>(dolph.strata) &lt;-<span class="st"> </span>dolph.strata$ids
+<span class="kw">schemes</span>(msats) &lt;-<span class="st"> </span>dolph.strata[, <span class="kw">c</span>(<span class="st">&quot;fine&quot;</span>, <span class="st">&quot;broad&quot;</span>)]
+msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <span class="st">&quot;broad&quot;</span>)
+msats &lt;-<span class="st"> </span><span class="kw">subset</span>(msats, <span class="dt">loci =</span> <span class="kw">locNames</span>(msats)[<span class="dv">1</span>:<span class="dv">4</span>])</code></pre>
+<p>One can calculate the following summaries:</p>
+<p>The number of alleles at each locus:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">numAlleles</span>(msats)</code></pre>
+<pre><code>## D11t D17t   D8 EV37 
+##   13   19   14   23</code></pre>
+<p>The number of samples with missing data at each locus:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">numMissing</span>(msats)</code></pre>
+<pre><code>## D11t D17t   D8 EV37 
+##    1    2    2    7</code></pre>
+<p>which can also be expressed as a proportion of samples with missing data:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">numMissing</span>(msats, <span class="dt">prop =</span> <span class="ot">TRUE</span>)</code></pre>
+<pre><code>##   D11t   D17t     D8   EV37 
+## 0.0079 0.0159 0.0159 0.0556</code></pre>
+<p>The allelic richness, or the average number of alleles per sample:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">allelicRichness</span>(msats)</code></pre>
+<pre><code>##  D11t  D17t    D8  EV37 
+## 0.096 0.145 0.105 0.185</code></pre>
+<p>The observed and expected heterozygosity:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">obsvdHet</span>(msats)</code></pre>
+<pre><code>## D11t D17t   D8 EV37 
+## 0.70 0.56 0.47 0.70</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">exptdHet</span>(msats)</code></pre>
+<pre><code>## D11t D17t   D8 EV37 
+## 0.75 0.72 0.67 0.83</code></pre>
+<p>The percent of alleles that are unique (present in only one sample):</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pctUniqueAlleles</span>(msats)</code></pre>
+<pre><code>## D11t D17t   D8 EV37 
+## 0.23 0.21 0.21 0.13</code></pre>
+<p>The value of theta based on heterozygosity:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">theta</span>(msats)</code></pre>
+<pre><code>## D11t D17t   D8 EV37 
+## 0.56 0.54 0.50 0.62</code></pre>
+<p>These measures are all calculated in the <em>summarizeLoci</em> function and returned as a matrix. This function also allows you to calculate the measures for each stratum separately, which returns a list for each stratum:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarizeLoci</span>(msats)</code></pre>
+<pre><code>##      num.genotyped pct.genotyped num.alleles allelic.richness
+## D11t           125          0.99          13            0.096
+## D17t           124          0.98          19            0.145
+## D8             124          0.98          14            0.105
+## EV37           119          0.94          23            0.185
+##      pct.unique.alleles expected.heterozygosity observed.heterozygosity
+## D11t               0.23                    0.75                    0.70
+## D17t               0.21                    0.72                    0.56
+## D8                 0.21                    0.67                    0.47
+## EV37               0.13                    0.83                    0.70
+##      theta
+## D11t  0.56
+## D17t  0.54
+## D8    0.50
+## EV37  0.62</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarizeLoci</span>(msats, <span class="dt">by.strata =</span> <span class="ot">TRUE</span>)</code></pre>
+<pre><code>## $Coastal
+##      num.genotyped pct.genotyped num.alleles allelic.richness
+## D11t            67          0.99           4            0.045
+## D17t            67          0.99           5            0.060
+## D8              68          1.00           5            0.074
+## EV37            63          0.93           8            0.111
+##      pct.unique.alleles expected.heterozygosity observed.heterozygosity
+## D11t               0.00                    0.49                    0.52
+## D17t               0.00                    0.45                    0.40
+## D8                 0.40                    0.35                    0.32
+## EV37               0.38                    0.61                    0.62
+##      theta
+## D11t  0.37
+## D17t  0.34
+## D8    0.26
+## EV37  0.45
+## 
+## $Offshore
+##      num.genotyped pct.genotyped num.alleles allelic.richness
+## D11t            58          1.00          12             0.21
+## D17t            57          0.98          19             0.32
+## D8              56          0.97          13             0.21
+## EV37            56          0.97          23             0.39
+##      pct.unique.alleles expected.heterozygosity observed.heterozygosity
+## D11t               0.25                    0.86                    0.91
+## D17t               0.21                    0.89                    0.75
+## D8                 0.15                    0.83                    0.64
+## EV37               0.13                    0.94                    0.79
+##      theta
+## D11t  0.64
+## D17t  0.67
+## D8    0.62
+## EV37  0.70</code></pre>
+<p>One can also obtain the allelic frequencies for each locus overall and by-strata by:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">alleleFreqs</span>(msats)</code></pre>
+<pre><code>## $D11t
+##     freq  prop
+## 117    1 0.004
+## 119    1 0.004
+## 121    4 0.016
+## 127    1 0.004
+## 129    3 0.012
+## 131   16 0.064
+## 133   75 0.300
+## 135   96 0.384
+## 137   20 0.080
+## 139   20 0.080
+## 141    7 0.028
+## 143    6 0.024
+## 
+## $D17t
+##     freq   prop
+## 140  121 0.4879
+## 146    2 0.0081
+## 158    2 0.0081
+## 162    1 0.0040
+## 166    7 0.0282
+## 168   31 0.1250
+## 170   29 0.1169
+## 172   21 0.0847
+## 174    8 0.0323
+## 176    5 0.0202
+## 178    6 0.0242
+## 180    4 0.0161
+## 184    3 0.0121
+## 186    1 0.0040
+## 190    3 0.0121
+## 192    1 0.0040
+## 194    2 0.0081
+## 198    1 0.0040
+## 
+## $D8
+##     freq   prop
+## 104    1 0.0040
+## 106    3 0.0121
+## 108    2 0.0081
+## 110   13 0.0524
+## 112   46 0.1855
+## 114   34 0.1371
+## 116  130 0.5242
+## 118    6 0.0242
+## 120    1 0.0040
+## 122    3 0.0121
+## 126    6 0.0242
+## 128    2 0.0081
+## 92     1 0.0040
+## 
+## $EV37
+##     freq   prop
+## 190    3 0.0126
+## 200    4 0.0168
+## 202    5 0.0210
+## 204    2 0.0084
+## 206    7 0.0294
+## 208    8 0.0336
+## 210    3 0.0126
+## 212   13 0.0546
+## 214   86 0.3613
+## 216   39 0.1639
+## 218    8 0.0336
+## 220    6 0.0252
+## 222   20 0.0840
+## 224   11 0.0462
+## 226    3 0.0126
+## 228    8 0.0336
+## 230    5 0.0210
+## 232    2 0.0084
+## 234    1 0.0042
+## 236    2 0.0084
+## 240    1 0.0042
+## 254    1 0.0042</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">alleleFreqs</span>(msats, <span class="dt">by.strata =</span> <span class="ot">TRUE</span>)</code></pre>
+<pre><code>## $D11t
+## , , Coastal
+## 
+##     freq  prop
+## 117    0 0.000
+## 119    0 0.000
+## 121    0 0.000
+## 127    0 0.000
+## 129    0 0.000
+## 131    0 0.000
+## 133   48 0.358
+## 135   83 0.619
+## 137    3 0.022
+## 139    0 0.000
+## 141    0 0.000
+## 143    0 0.000
+## 
+## , , Offshore
+## 
+##     freq   prop
+## 117    1 0.0086
+## 119    1 0.0086
+## 121    4 0.0345
+## 127    1 0.0086
+## 129    3 0.0259
+## 131   16 0.1379
+## 133   27 0.2328
+## 135   13 0.1121
+## 137   17 0.1466
+## 139   20 0.1724
+## 141    7 0.0603
+## 143    6 0.0517
+## 
+## 
+## $D17t
+## , , Coastal
+## 
+##     freq  prop
+## 140   97 0.724
+## 146    0 0.000
+## 158    0 0.000
+## 162    0 0.000
+## 166    0 0.000
+## 168   15 0.112
+## 170   11 0.082
+## 172   11 0.082
+## 174    0 0.000
+## 176    0 0.000
+## 178    0 0.000
+## 180    0 0.000
+## 184    0 0.000
+## 186    0 0.000
+## 190    0 0.000
+## 192    0 0.000
+## 194    0 0.000
+## 198    0 0.000
+## 
+## , , Offshore
+## 
+##     freq   prop
+## 140   24 0.2105
+## 146    2 0.0175
+## 158    2 0.0175
+## 162    1 0.0088
+## 166    7 0.0614
+## 168   16 0.1404
+## 170   18 0.1579
+## 172   10 0.0877
+## 174    8 0.0702
+## 176    5 0.0439
+## 178    6 0.0526
+## 180    4 0.0351
+## 184    3 0.0263
+## 186    1 0.0088
+## 190    3 0.0263
+## 192    1 0.0088
+## 194    2 0.0175
+## 198    1 0.0088
+## 
+## 
+## $D8
+## , , Coastal
+## 
+##     freq   prop
+## 104    1 0.0074
+## 106    0 0.0000
+## 108    0 0.0000
+## 110    0 0.0000
+## 112   21 0.1544
+## 114    5 0.0368
+## 116  108 0.7941
+## 118    1 0.0074
+## 120    0 0.0000
+## 122    0 0.0000
+## 126    0 0.0000
+## 128    0 0.0000
+## 92     0 0.0000
+## 
+## , , Offshore
+## 
+##     freq   prop
+## 104    0 0.0000
+## 106    3 0.0268
+## 108    2 0.0179
+## 110   13 0.1161
+## 112   25 0.2232
+## 114   29 0.2589
+## 116   22 0.1964
+## 118    5 0.0446
+## 120    1 0.0089
+## 122    3 0.0268
+## 126    6 0.0536
+## 128    2 0.0179
+## 92     1 0.0089
+## 
+## 
+## $EV37
+## , , Coastal
+## 
+##     freq   prop
+## 190    0 0.0000
+## 200    0 0.0000
+## 202    0 0.0000
+## 204    0 0.0000
+## 206    0 0.0000
+## 208    0 0.0000
+## 210    0 0.0000
+## 212    1 0.0079
+## 214   71 0.5635
+## 216   33 0.2619
+## 218    2 0.0159
+## 220    0 0.0000
+## 222   11 0.0873
+## 224    7 0.0556
+## 226    1 0.0079
+## 228    0 0.0000
+## 230    0 0.0000
+## 232    0 0.0000
+## 234    0 0.0000
+## 236    0 0.0000
+## 240    0 0.0000
+## 254    0 0.0000
+## 
+## , , Offshore
+## 
+##     freq   prop
+## 190    3 0.0268
+## 200    4 0.0357
+## 202    5 0.0446
+## 204    2 0.0179
+## 206    7 0.0625
+## 208    8 0.0714
+## 210    3 0.0268
+## 212   12 0.1071
+## 214   15 0.1339
+## 216    6 0.0536
+## 218    6 0.0536
+## 220    6 0.0536
+## 222    9 0.0804
+## 224    4 0.0357
+## 226    2 0.0179
+## 228    8 0.0714
+## 230    5 0.0446
+## 232    2 0.0179
+## 234    1 0.0089
+## 236    2 0.0179
+## 240    1 0.0089
+## 254    1 0.0089</code></pre>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
