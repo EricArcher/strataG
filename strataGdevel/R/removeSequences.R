@@ -8,6 +8,8 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @export
+#' 
 removeSequences <- function(g) {
   new.list <- lapply(locNames(g), function(x) {
     haps <- unique(as.character(loci(g)[[x]]))
