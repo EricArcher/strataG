@@ -5,7 +5,7 @@
 #' @param g a \linkS4class{gtypes} object.
 #' @param by.strata calculate ratio for each stratum separately?
 #' @param rpt.size set of values to check for allele repeat size. Function 
-#'   will use the lowest common denominator found in this range or return \code{NA}.
+#'   will use the largest common denominator found in this vector or return \code{NA}.
 #'
 #' @return If \code{by.strata = TRUE}, a matrix with loci as rows and strata 
 #'   as columns, otherwise a vector with the statistic for each locus over all
@@ -37,7 +37,7 @@
 #' @importFrom Hmisc all.is.numeric
 #' @export
 
-mRatio <- function(g, by.strata = TRUE, rpt.size = 2:8) {
+mRatio <- function(g, by.strata = TRUE, rpt.size = 8:2) {
   # function takes a matrix of allele frequencies (can be more than one column)
   # rownames represent allele sizes
   calc.mratio<- function(freqs) {
@@ -60,7 +60,7 @@ mRatio <- function(g, by.strata = TRUE, rpt.size = 2:8) {
       # find repeat sizes
       size.diff <- diff(sizes)
       rpt.found <- FALSE
-      for(r in rpt.size) {
+      for(r in sort(rpt.size, decreasing = TRUE)) {
         if(all(size.diff %% r == 0)) {
           rpt.found <- TRUE
           break
@@ -80,6 +80,7 @@ mRatio <- function(g, by.strata = TRUE, rpt.size = 2:8) {
     }
   }
   
+  if(nlevels(strata(g)) == 1) by.strata <- FALSE
   if(by.strata) {
     freqs <- alleleFreqs(g, by.strata = TRUE)
     do.call(rbind, lapply(freqs, function(loc) apply(loc, 3, calc.mratio)))

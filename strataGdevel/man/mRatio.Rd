@@ -4,7 +4,7 @@
 \alias{mRatio}
 \title{M ratio}
 \usage{
-mRatio(g, by.strata = TRUE, rpt.size = 2:8)
+mRatio(g, by.strata = TRUE, rpt.size = 8:2)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
@@ -12,7 +12,7 @@ mRatio(g, by.strata = TRUE, rpt.size = 2:8)
 \item{by.strata}{calculate ratio for each stratum separately?}
 
 \item{rpt.size}{set of values to check for allele repeat size. Function
-  will use the lowest common denominator found in this range or return \code{NA}.}
+  will use the largest common denominator found in this vector or return \code{NA}.}
 }
 \value{
 If \code{by.strata = TRUE}, a matrix with loci as rows and strata
