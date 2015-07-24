@@ -251,6 +251,11 @@ setMethod("[",
   x@loci <- x@loci[idRows(i, rownames(x@loci)), j, drop = FALSE]
   x@loci <- droplevels(x@loci)
   x@strata <- droplevels(x@strata[i])
+  if(!is.null(x@sequences)) {
+    j.seqs <- getSequences(x@sequences, loci = j, 
+                           simplify = FALSE, exclude.gap.only = FALSE)
+    x@sequences <- new("multidna", j.seqs)
+  }
   if(drop) x <- removeSequences(x)
 
   return(x)
