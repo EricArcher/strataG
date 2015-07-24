@@ -80,7 +80,10 @@ mRatio <- function(g, by.strata = TRUE, rpt.size = 8:2) {
     }
   }
   
-  if(nlevels(strata(g)) == 1) by.strata <- FALSE
+  if(nlevels(strata(g)) == 1 & by.strata) {
+    by.strata <- FALSE
+    g <- g[, , strataNames(g)]
+  }
   if(by.strata) {
     freqs <- alleleFreqs(g, by.strata = TRUE)
     do.call(rbind, lapply(freqs, function(loc) apply(loc, 3, calc.mratio)))
