@@ -130,22 +130,44 @@ fastsimcoal <- function(num.pops, Ne, sample.size = NULL,
     data.type <- f[grep("DataType=", f)]
     data.type <- gsub("\tDataType=", "", data.type)
     is.seq <- switch(data.type, DNA = T, MICROSAT = F, STANDARD = F)
-    if(is.seq) {
-      # replace sequence with all A's if there are no variable sites
-      n.loc <- locus.params[1, 1]
-      if(pop.data[1, 3] == "?") {
-        full.seq <- paste(rep("A", n.loc), collapse = "")
-        pop.data[, 3] <- rep(full.seq, nrow(pop.data))
-      } else { # otherwise add A's to pad out to full sequence length
-        partial.seq <- paste(rep("A", n.loc - nchar(pop.data[1, 3])), 
-                             collapse = "")
-        pop.data[, 3] <- sapply(pop.data[, 3], function(x) {
-          paste(x, partial.seq, sep = "", collapse = "")
-        })
-      }
-      dna.seq <- strsplit(pop.data[, 3], "")
-      names(dna.seq) <- pop.data[, 2]
-      sequence2gtypes(dna.seq, strata = pop.data[, 1], description = label)
+    if(is.seq) {    
+      # get sequence length markers
+      poly.pos.lines <- grep("polymorphic positions on chromosome", f, value = T)
+      num.poly <- as.numeric(sapply(strsplit(poly.pos.lines, " "), function(x) x[2]))
+      end <- cumsum(num.poly)
+      start <- c(1, end[1:(length(end) - 1)] + 1)
+      
+      seq.len <- locus.params[, 1]
+      dna.seqs <- lapply(1:length(seq.len), function(i) {
+        seq.i <- if(num.poly[i] == 0) {
+          full.seq <- paste(rep("A", seq.len[i]), collapse = "")
+          rep(full.seq, nrow(pop.data))
+        } else { # otherwise add A's to pad out to full sequence length
+          padding <- paste(rep("A", seq.len[i] - num.poly[i]), collapse = "")
+          seq.i <- substr(pop.data[, 3], start[i], end[i])
+          sapply(seq.i, function(x) paste(x, padding, sep = "", collapse = ""))
+        }
+        names(seq.i) <- pop.data[, 2]
+        as.DNAbin(strsplit(tolower(seq.i), ""))
+      })
+      dna.seqs <- new("multidna", dna.seqs)
+      sequence2gtypes(dna.seqs, strata = pop.data[, 1], description = label)
+      
+#       # replace sequence with all A's if there are no variable sites
+#       n.loc <- locus.params[1, 1]
+#       if(pop.data[1, 3] == "?") {
+#         full.seq <- paste(rep("A", n.loc), collapse = "")
+#         pop.data[, 3] <- rep(full.seq, nrow(pop.data))
+#       } else { # otherwise add A's to pad out to full sequence length
+#         partial.seq <- paste(rep("A", n.loc - nchar(pop.data[1, 3])), 
+#                              collapse = "")
+#         pop.data[, 3] <- sapply(pop.data[, 3], function(x) {
+#           paste(x, partial.seq, sep = "", collapse = "")
+#         })
+#       }
+#       dna.seq <- strsplit(pop.data[, 3], "")
+#       names(dna.seq) <- pop.data[, 2]
+#       sequence2gtypes(dna.seq, strata = pop.data[, 1], description = label)
     } else {
       # compile diploid data
       n.loc <- ncol(pop.data) - 2
@@ -164,11 +186,9 @@ fastsimcoal <- function(num.pops, Ne, sample.size = NULL,
           paste(a1, a2, sep = "/")
         })
       )
-      colnames(collapsed.loci) <- paste("Locus", 1:ncol(collapsed.loci), 
-                                        sep = ".")
+      colnames(collapsed.loci) <- paste("Locus", 1:ncol(collapsed.loci), sep = ".")
       rownames(collapsed.loci) <- pop.data[, 2]
-      df2gtypes(pop.data, ploidy = 2, id.col = 2, strata.col = 1, 
-                description = label)
+      df2gtypes(pop.data, ploidy = 2, id.col = 2, strata.col = 1, description = label)
     }
   })
   names(fs.gtypes) <- basename(arl.files)

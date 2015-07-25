@@ -77,10 +77,6 @@ tajimasD <- function(x) {
     c(D = D_obs, p.value = prob$value)
   }))
   
-  if(nrow(result) == 1) {
-    result[1, ]
-  } else {
-    rownames(result) <- locusNames(x)
-    result
-  }
+  rownames(result) <- locusNames(x)
+  result
 }

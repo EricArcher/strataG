@@ -11,29 +11,24 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @importFrom copula Stirling1
 #' @export
 #' 
 FusFs <- function(x) {
   x <- as.multidna(x)
   
-  result <- do.call(rbind, lapply(getSequences(x, simplify = FALSE), function(dna) {
-    dna <- as.matrix(labelHaplotypes(dna)$hap.seqs)
-    num.sites <- ncol(dna)
+  sapply(getSequences(x, simplify = FALSE), function(dna) {
+    dna <- as.matrix(dna)
+    haps <- as.matrix(labelHaplotypes(dna)$hap.seqs)
+    n <- nrow(dna)
+    k0 <- nrow(haps)
     
-    pws.diff <- dist.dna(dna, model = "N", pairwise.deletion = TRUE, as.matrix = TRUE)
+    pws.diff <- dist.dna(haps, model = "raw", pairwise.deletion = TRUE, as.matrix = TRUE)
     theta.pi <- mean(pws.diff[lower.tri(pws.diff)])
-    
-    Sn.theta.n <- prod(theta.pi - 0:(ncol(dna) + 1))
-    
-    s.prime <- 1
+    Sn.theta.pi <- prod(theta.pi - 0:(n + 1))
+    Sk.theta.k <- sapply(k0:n, function(k) abs(Stirling1(n, k)) * (theta.pi ^ k))
+    s.prime <- sum(Sk.theta.k / Sn.theta.pi)
     
     log(s.prime / (1 - s.prime))
-  }))
-  
-  if(nrow(result) == 1) {
-    result[1, ]
-  } else {
-    rownames(result) <- locusNames(x)
-    result
-  }
+  })
 }

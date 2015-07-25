@@ -86,6 +86,14 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
   
   # find sequences without Ns
   no.ns <- apply(as.character(x), 1, function(bases) !"n" %in% tolower(bases))
+  if(sum(no.ns) < 2) {
+    haps <- rep(NA, length(no.ns))
+    names(haps) <- names(no.ns)
+    haps[no.ns] <- names(haps)[no.ns]
+    warning("Fewer than 2 sequences have ambiguities (N's). Can't assign haplotypes. NULL returned.", 
+            call. = FALSE, immediate. = TRUE)
+    return(NULL)
+  }
   
   # get pairwise distances and set all non-0 distances to 1
   hap.dist <- dist.dna(x[no.ns, ], model = "N", pairwise.deletion = TRUE)
@@ -187,6 +195,12 @@ labelHaplotypes.gtypes <- function(x, ...) {
   new.haps <- lapply(
     getSequences(sequences(x), simplify = FALSE), labelHaplotypes, ...
   )
+  has.errors <- sapply(new.haps, is.null)
+  if(sum(has.errors) > 0) {
+    msg <- paste(names(new.haps)[has.errors], collapse = ", ")
+    msg <- paste("haplotypes could not be assigned for:", msg)
+    stop(msg)
+  }
 
   # create haplotype matrix
   hap.mat <- do.call(cbind, lapply(new.haps, function(x) x$haps))
