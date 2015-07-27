@@ -161,14 +161,17 @@ overallTest <- function(g, nrep = 100, stats = "all",
   # conduct permutation test
   null.dist <- NULL
   if(nrep > 0 & length(stat.list) > 0) {
-    st <- strata(g)  
-    perm.func <- function(i, st, stat.list, g) {
-      ran.strata <- sample(st)
-      sapply(1:length(stat.list), function(j) {
-        stat.list[[j]](g, strata = ran.strata, ...)
+    st <- lapply(1:nrep, function(i) sample(strata(g)))  
+    
+    # setup permutation function to return vector of values from each population 
+    #   structure statistic in stat.funcs
+    perm.func <- function(ran.strata, g, stat.funcs, ...) {
+      sapply(1:length(stat.funcs), function(j) {
+        stat.funcs[[j]](g, strata = ran.strata, ...)
       })
     }
     
+    # collect null distribution
     if(num.cores > 1) {
       # setup clusters
       cl <- makeForkCluster(num.cores)
@@ -176,13 +179,13 @@ overallTest <- function(g, nrep = 100, stats = "all",
         # calculate matrix of null distributions
         null.dist <- do.call(
           rbind, 
-          parLapply(cl, 1:nrep, perm.func, st = st, stat.list = stat.list, g = g)
+          parLapply(cl, st, perm.func, g = g, stat.funcs = stat.list, ...)
         )
       }, finally = stopCluster(cl))
     } else {
       null.dist <- do.call(
         rbind, 
-        lapply(1:nrep, perm.func, st = st, stat.list = stat.list, g = g)
+        lapply(st, perm.func, g = g, stat.funcs = stat.list, ...)
       )
     }
     colnames(null.dist) <- rownames(result)
