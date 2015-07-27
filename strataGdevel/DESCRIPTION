@@ -33,7 +33,7 @@ Collate:
   fixedSites.R
   freq2GenData.R
   fstToNm.R
-  FusFs.R
+  fusFs.R
   gelato.R
   genepop.R
   genind2gtypes.R

@@ -62,6 +62,7 @@ seq.df <- dolph.strata[ c(1, 2, 1)]
 colnames(seq.df)[3] <- "Haplotype"
 dloop.broad <- df2gtypes(seq.df, ploidy = 1, sequences = dolph.seqs,
   description = "dLoop: broad-scale stratification")
+dloop.broad
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

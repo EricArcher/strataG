@@ -2,8 +2,8 @@
 % Please edit documentation in R/as.matrix.gtypes.R
 \docType{methods}
 \name{as.matrix,gtypes-method}
-\alias{as.matrix,gtypes}
 \alias{as.matrix,gtypes-method}
+\alias{as.matrix.gtypes}
 \title{Convert \code{gtypes} To \code{matrix}}
 \usage{
 \S4method{as.matrix}{gtypes}(x, one.col = FALSE, sep = "/", ...)

@@ -23,7 +23,7 @@
 #' alleleFreqFormat(x, msats)
 #' 
 #' @export
-#'
+#' 
 alleleFreqFormat <- function(x, g) {
   if(!(is.data.frame(x) | is.matrix(x))) {
     stop("'x' must be a data.frame or matrix")

@@ -25,7 +25,7 @@
 #' f.pop[[1]]
 #' 
 #' @export
-
+#' 
 alleleFreqs <- function(g, by.strata = FALSE) {
   freqs <- vector("list", length = ncol(g@loci))
   strata <- rep(g@strata, g@ploidy)

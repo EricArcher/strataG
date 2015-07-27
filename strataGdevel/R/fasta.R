@@ -19,6 +19,7 @@ read.fasta <- function(file) {
   as.DNAbin(lapply(dna.seq, function(x) tolower(gsub("\\?", "n", x))))
 }
 
+
 #' @rdname fasta
 #' @export
 #' 

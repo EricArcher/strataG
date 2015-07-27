@@ -16,7 +16,7 @@
 #' @seealso \code{\link{structure}}
 #' 
 #' @export
-#' 
+ 
 evanno <- function(sr, plot = TRUE) {
   if(!"structure.result" %in% class(sr)) {
     stop("'sr' is not a result from 'structure.run'.")
