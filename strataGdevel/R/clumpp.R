@@ -35,7 +35,6 @@
 #' 
 #' @seealso \code{\link{structure}}
 #' 
-#' @aliases clumpp
 #' @export
 #' 
 clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
@@ -139,12 +138,14 @@ clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
   write.table(q.mat.df, file = ind.file, quote = FALSE, sep = " ", 
               row.names = FALSE, col.names = FALSE)
   
-  err.code <- system(paste("CLUMPP", param.file))
-  if(err.code == 127) {
-    stop("You do not have CLUMPP installed.")
-  } else if(!err.code == 0) {
-    stop(paste("Error running CLUMPP. Error code", err.code, "returned."))
-  }
+  tryCatch({
+    err.code <- system(paste("CLUMPP", param.file))
+    if(err.code == 127) {
+      stop("You do not have CLUMPP installed.")
+    } else if(!err.code == 0) {
+      stop(paste("Error running CLUMPP. Error code", err.code, "returned."))
+    }
+  })
   
   if(!file.exists(out.file)) {
     stop(paste("CLUMPP exited without creating output file, '", 

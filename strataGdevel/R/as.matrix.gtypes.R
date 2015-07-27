@@ -13,7 +13,7 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noa.gov}
 #' 
-#' @aliases as.matrix,gtypes
+#' @aliases as.matrix.gtypes
 #' @export
 #' 
 setMethod("as.matrix", "gtypes", function(x, one.col = FALSE, sep = "/", ...) {

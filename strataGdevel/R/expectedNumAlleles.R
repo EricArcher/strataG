@@ -28,7 +28,7 @@
 #' exptdNumAlleles(40, 2, 1)
 #'
 #' @export
-#'
+#' 
 exptdNumAlleles <- function(n, theta, ploidy) {
   n <- trunc(n)
   ploidy <- trunc(ploidy)

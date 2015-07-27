@@ -13,7 +13,7 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @export
-
+#' 
 alleleSplit <- function(x) {
   locus.names <- if(is.null(colnames(x))) {
     paste("Locus", 1:ncol(x), sep = "") 

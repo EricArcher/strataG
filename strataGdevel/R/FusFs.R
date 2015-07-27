@@ -14,7 +14,7 @@
 #' @importFrom copula Stirling1
 #' @export
 #' 
-FusFs <- function(x) {
+fusFs <- function(x) {
   x <- as.multidna(x)
   
   sapply(getSequences(x, simplify = FALSE), function(dna) {
