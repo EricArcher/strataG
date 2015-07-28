@@ -78,6 +78,6 @@ double statPhist_C(IntegerVector haps, IntegerVector strata, NumericMatrix hapDi
   double Vb = ((ssAP / (numStrata - 1)) - Vc) / n;
   double est(Vb / (Vb + Vc));
   
-  if(isnan(est)) est = NA_REAL;
+  if(std::isnan(est)) est = NA_REAL;
   return est;
 }

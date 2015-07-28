@@ -9,6 +9,6 @@ double statFis_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
   NumericMatrix hets(Hstats_C(loci, strata, ploidy));
   double Ho(mean(hets(0, _))), Hs(mean(hets(1, _)));
   double est((Hs  - Ho) / Hs);
-  if(isnan(est)) est = NA_REAL;
+  if(std::isnan(est)) est = NA_REAL;
   return est;
 }

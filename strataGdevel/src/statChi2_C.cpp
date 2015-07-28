@@ -26,6 +26,6 @@ double statChi2_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
     }
   }
   
-  if(isnan(chi2)) chi2 = NA_REAL;
+  if(std::isnan(chi2)) chi2 = NA_REAL;
   return chi2;
 }

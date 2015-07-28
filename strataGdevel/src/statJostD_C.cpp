@@ -31,6 +31,6 @@ double statJostD_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
   }
   
   double est(harmonicMean_C(terms));
-  if(isnan(est)) est = NA_REAL;
+  if(std::isnan(est)) est = NA_REAL;
   return est;
 }

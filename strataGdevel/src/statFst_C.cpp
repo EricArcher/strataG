@@ -116,6 +116,6 @@ double statFst_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
   }
   
   double est(sum(locusSums(0, _)) / sum(locusSums(1, _)));
-  if(isnan(est)) est = NA_REAL;
+  if(std::isnan(est)) est = NA_REAL;
   return est;
 }
