@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="Eric Archer" />
+
+<meta name="date" content="2015-07-29" />
+
+<title>Tests of Population Structure</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<link href="data:text/css,body%20%7B%0A%20%20background%2Dcolor%3A%20%23fff%3B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20max%2Dwidth%3A%20700px%3B%0A%20%20overflow%3A%20visible%3B%0A%20%20padding%2Dleft%3A%202em%3B%0A%20%20padding%2Dright%3A%202em%3B%0A%20%20font%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0A%20%20font%2Dsize%3A%2014px%3B%0A%20%20line%2Dheight%3A%201%2E35%3B%0A%7D%0A%0A%23header%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0A%0A%23TOC%20%7B%0A%20%20clear%3A%20both%3B%0A%20%20margin%3A%200%200%2010px%2010px%3B%0A%20%20padding%3A%204px%3B%0A%20%20width%3A%20400px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20border%2Dradius%3A%205px%3B%0A%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20font%2Dsize%3A%2013px%3B%0A%20%20line%2Dheight%3A%201%2E3%3B%0A%7D%0A%20%20%23TOC%20%2Etoctitle%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%20%20font%2Dsize%3A%2015px%3B%0A%20%20%20%20margin%2Dleft%3A%205px%3B%0A%20%20%7D%0A%0A%20%20%23TOC%20ul%20%7B%0A%20%20%20%20padding%2Dleft%3A%2040px%3B%0A%20%20%20%20margin%2Dleft%3A%20%2D1%2E5em%3B%0A%20%20%20%20margin%2Dtop%3A%205px%3B%0A%20%20%20%20margin%2Dbottom%3A%205px%3B%0A%20%20%7D%0A%20%20%23TOC%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dleft%3A%20%2D2em%3B%0A%20%20%7D%0A%20%20%23TOC%20li%20%7B%0A%20%20%20%20line%2Dheight%3A%2016px%3B%0A%20%20%7D%0A%0Atable%20%7B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dcolor%3A%20%23DDDDDD%3B%0A%20%20border%2Dstyle%3A%20outset%3B%0A%20%20border%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0A%20%20border%2Dwidth%3A%202px%3B%0A%20%20padding%3A%205px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%20%20line%2Dheight%3A%2018px%3B%0A%20%20padding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0A%20%20border%2Dleft%2Dstyle%3A%20none%3B%0A%20%20border%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Ap%20%7B%0A%20%20margin%3A%200%2E5em%200%3B%0A%7D%0A%0Ablockquote%20%7B%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20padding%3A%200%2E25em%200%2E75em%3B%0A%7D%0A%0Ahr%20%7B%0A%20%20border%2Dstyle%3A%20solid%3B%0A%20%20border%3A%20none%3B%0A%20%20border%2Dtop%3A%201px%20solid%20%23777%3B%0A%20%20margin%3A%2028px%200%3B%0A%7D%0A%0Adl%20%7B%0A%20%20margin%2Dleft%3A%200%3B%0A%7D%0A%20%20dl%20dd%20%7B%0A%20%20%20%20margin%2Dbottom%3A%2013px%3B%0A%20%20%20%20margin%2Dleft%3A%2013px%3B%0A%20%20%7D%0A%20%20dl%20dt%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%7D%0A%0Aul%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%7D%0A%20%20ul%20li%20%7B%0A%20%20%20%20list%2Dstyle%3A%20circle%20outside%3B%0A%20%20%7D%0A%20%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dbottom%3A%200%3B%0A%20%20%7D%0A%0Apre%2C%20code%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20color%3A%20%23333%3B%0A%7D%0Apre%20%7B%0A%20%20white%2Dspace%3A%20pre%2Dwrap%3B%20%20%20%20%2F%2A%20Wrap%20long%20lines%20%2A%2F%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20margin%3A%205px%200px%2010px%200px%3B%0A%20%20padding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Acode%20%7B%0A%20%20font%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0A%20%20font%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0A%20%20padding%3A%202px%200px%3B%0A%7D%0A%0Adiv%2Efigure%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0A%20%20background%2Dcolor%3A%20%23FFFFFF%3B%0A%20%20padding%3A%202px%3B%0A%20%20border%3A%201px%20solid%20%23DDDDDD%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20margin%3A%200%205px%3B%0A%7D%0A%0Ah1%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%20%20font%2Dsize%3A%2035px%3B%0A%20%20line%2Dheight%3A%2040px%3B%0A%7D%0A%0Ah2%20%7B%0A%20%20border%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20padding%2Dbottom%3A%202px%3B%0A%20%20font%2Dsize%3A%20145%25%3B%0A%7D%0A%0Ah3%20%7B%0A%20%20border%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20font%2Dsize%3A%20120%25%3B%0A%7D%0A%0Ah4%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0A%20%20margin%2Dleft%3A%208px%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Ah5%2C%20h6%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23ccc%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Aa%20%7B%0A%20%20color%3A%20%230033dd%3B%0A%20%20text%2Ddecoration%3A%20none%3B%0A%7D%0A%20%20a%3Ahover%20%7B%0A%20%20%20%20color%3A%20%236666ff%3B%20%7D%0A%20%20a%3Avisited%20%7B%0A%20%20%20%20color%3A%20%23800080%3B%20%7D%0A%20%20a%3Avisited%3Ahover%20%7B%0A%20%20%20%20color%3A%20%23BB00BB%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%0A%2F%2A%20Class%20described%20in%20https%3A%2F%2Fbenjeffrey%2Ecom%2Fposts%2Fpandoc%2Dsyntax%2Dhighlighting%2Dcss%0A%20%20%20Colours%20from%20https%3A%2F%2Fgist%2Egithub%2Ecom%2Frobsimmons%2F1172277%20%2A%2F%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Keyword%20%2A%2F%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%2F%2A%20DataType%20%2A%2F%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%2F%2A%20DecVal%20%28decimal%20values%29%20%2A%2F%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20BaseN%20%2A%2F%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Float%20%2A%2F%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Char%20%2A%2F%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20String%20%2A%2F%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%2F%2A%20Comment%20%2A%2F%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%2F%2A%20OtherToken%20%2A%2F%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20AlertToken%20%2A%2F%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Function%20calls%20%2A%2F%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%2F%2A%20ErrorTok%20%2A%2F%0A%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+<div id="header">
+<h1 class="title">Tests of Population Structure</h1>
+<h4 class="author"><em>Eric Archer</em></h4>
+<h4 class="date"><em>2015-07-29</em></h4>
+</div>
+
+
+<p>Given some sample microsatellite data:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">digits =</span> <span class="dv">2</span>)
+<span class="kw">library</span>(strataGdevel)
+<span class="kw">data</span>(dolph.strata)
+<span class="kw">data</span>(dolph.msats)
+msats.merge &lt;-<span class="st"> </span><span class="kw">merge</span>(dolph.strata, dolph.msats, <span class="dt">all.y =</span> <span class="ot">TRUE</span>, <span class="dt">description =</span> <span class="kw">date</span>())
+msats &lt;-<span class="st"> </span><span class="kw">df2gtypes</span>(msats.merge, <span class="dt">ploidy =</span> <span class="dv">2</span>, <span class="dt">id.col =</span> <span class="dv">1</span>, <span class="dt">strata.col =</span> <span class="dv">3</span>, <span class="dt">loc.col =</span> <span class="dv">5</span>)
+<span class="kw">rownames</span>(dolph.strata) &lt;-<span class="st"> </span>dolph.strata$ids
+<span class="kw">schemes</span>(msats) &lt;-<span class="st"> </span>dolph.strata[, <span class="kw">c</span>(<span class="st">&quot;fine&quot;</span>, <span class="st">&quot;broad&quot;</span>)]
+msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <span class="st">&quot;fine&quot;</span>)
+msats &lt;-<span class="st"> </span>msats[, <span class="kw">locNames</span>(msats)[<span class="dv">1</span>:<span class="dv">4</span>], ]</code></pre>
+<p>There are several ways that population structure analyses can be conducted. For each population structure metric, there is a function starting with “stat” (e.g., <em>statFst</em>, <em>statChi2</em>, <em>statGst</em>). A full list can be found in <em>?popStructStat</em>.</p>
+<p>Each of these functions takes a gtypes object and produces a single named estimate for the requested test statistic. As an example:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">statFst</span>(msats)</code></pre>
+<pre><code>##  Fst 
+## 0.17</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">statGst</span>(msats)</code></pre>
+<pre><code>##   Gst 
+## 0.085</code></pre>
+<p>By default, stratification is taken from the <a href="mailto:_@strata">_@strata</a>_ slot of the object. Alternative stratification can be provided as a vector when the function is called:</p>
+<pre class="sourceCode r"><code class="sourceCode r">ran.strata &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span>:<span class="dv">3</span>, <span class="dt">size =</span> <span class="kw">nInd</span>(msats), <span class="dt">replace =</span> <span class="ot">TRUE</span>)
+<span class="kw">statFst</span>(msats, ran.strata)</code></pre>
+<pre><code>##    Fst 
+## 0.0068</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">statGst</span>(msats, ran.strata)</code></pre>
+<pre><code>##     Gst 
+## 0.00016</code></pre>
+<p>Permutation tests can be conducted in an “overall” manner which addreses the question of whether or not there is significant stratification in all samples given the specified stratification scheme, or in a “pairwise” manner, which tests differentiation between all pairs of strata. The overall test can be run via <em>overallTest</em>, like this:</p>
+<pre class="sourceCode r"><code class="sourceCode r">ovl &lt;-<span class="st"> </span><span class="kw">overallTest</span>(msats, <span class="dt">nrep =</span> <span class="dv">100</span>)</code></pre>
+<pre><code>## 
+## &lt;&lt;&lt; gtypes created on 2015-07-29 12:22:31 &gt;&gt;&gt;
+##  2015-07-29 12:22:31 : Overall test : 100 permutations
+## 
+##                 N
+## Coastal        68
+## Offshore.North 40
+## Offshore.South 18
+## 
+## Population structure results:
+##       estimate  p.val
+## Chi2   592.116 0.0099
+## D        0.434 0.0396
+## Fst      0.171 0.0099
+## F'st     0.171 0.0099
+## Fis      0.090 1.0000
+## Gst      0.085 0.0099
+## G'st     0.122 0.0099
+## G''st    0.481 0.0099</code></pre>
+<p>This conducts tests for all available statistics. Tests for specified statistics can be conducted by listing them in the ‘stat.list’ argument:</p>
+<pre class="sourceCode r"><code class="sourceCode r">ovl &lt;-<span class="st"> </span><span class="kw">overallTest</span>(msats, <span class="dt">stats =</span> <span class="kw">c</span>(statFst, statChi2), <span class="dt">nrep =</span> <span class="dv">100</span>)</code></pre>
+<pre><code>## 
+## &lt;&lt;&lt; gtypes created on 2015-07-29 12:22:31 &gt;&gt;&gt;
+##  2015-07-29 12:22:52 : Overall test : 100 permutations
+## 
+##                 N
+## Coastal        68
+## Offshore.North 40
+## Offshore.South 18
+## 
+## Population structure results:
+##      estimate  p.val
+## Fst      0.17 0.0099
+## Chi2   592.12 0.0099</code></pre>
+<p>Pairwise tests are conducted with <em>pairwiseTest</em> in a similar fashion:</p>
+<pre class="sourceCode r"><code class="sourceCode r">pws &lt;-<span class="st"> </span><span class="kw">pairwiseTest</span>(msats, <span class="dt">stats =</span> <span class="kw">c</span>(statFstPrime, statGst), <span class="dt">nrep =</span> <span class="dv">100</span>)</code></pre>
+<pre><code>## 
+## &lt;&lt;&lt; gtypes created on 2015-07-29 12:22:31 &gt;&gt;&gt;
+##  2015-07-29 12:22:53 : Pairwise tests : 100 permutations
+##    2015-07-29 12:22:53 : Coastal v. Offshore.North 
+##    2015-07-29 12:23:07 : Coastal v. Offshore.South 
+##    2015-07-29 12:23:17 : Offshore.North v. Offshore.South 
+## 
+## Population structure results:
+##                                   pair.label    F'st F'st.p.val    Gst
+## 1        Coastal (68) v. Offshore.North (40)  0.1974     0.0099  0.097
+## 2        Coastal (68) v. Offshore.South (18)  0.2423     0.0099  0.108
+## 3 Offshore.North (40) v. Offshore.South (18) -0.0016     0.5644 -0.012
+##   Gst.p.val
+## 1    0.0099
+## 2    0.0099
+## 3    0.5446</code></pre>
+<p>The result of a pairwise test contains both a data.frame formatted for each pairwise comparison and pairwise matrices for each statistic with statistic estimates in the lower left, and p-values in the upper right.</p>
+<pre class="sourceCode r"><code class="sourceCode r">pws</code></pre>
+<pre><code>## $result
+##                                   pair.label       strata.1       strata.2
+## 1        Coastal (68) v. Offshore.North (40)        Coastal Offshore.North
+## 2        Coastal (68) v. Offshore.South (18)        Coastal Offshore.South
+## 3 Offshore.North (40) v. Offshore.South (18) Offshore.North Offshore.South
+##   n.1 n.2    F'st F'st.p.val    Gst Gst.p.val
+## 1  68  40  0.1974     0.0099  0.097    0.0099
+## 2  68  18  0.2423     0.0099  0.108    0.0099
+## 3  40  18 -0.0016     0.5644 -0.012    0.5446
+## 
+## $pair.mat
+## $pair.mat$`F'st`
+##                Coastal Offshore.North Offshore.South
+## Coastal             NA         0.0099         0.0099
+## Offshore.North    0.20             NA         0.5644
+## Offshore.South    0.24        -0.0016             NA
+## 
+## $pair.mat$Gst
+##                Coastal Offshore.North Offshore.South
+## Coastal             NA         0.0099         0.0099
+## Offshore.North   0.097             NA         0.5446
+## Offshore.South   0.108        -0.0120             NA
+## 
+## 
+## $null.dist
+## NULL</code></pre>
+<p>Both overall and pairwise tests can be conducted at once with <em>popStructTest</em>:</p>
+<pre class="sourceCode r"><code class="sourceCode r">popStruct &lt;-<span class="st"> </span><span class="kw">popStructTest</span>(msats, <span class="dt">stats =</span> <span class="kw">c</span>(statFst, statFstPrime), <span class="dt">nrep =</span> <span class="dv">100</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
+popStruct</code></pre>
+<pre><code>## $overall
+## $overall$strata.freq
+## 
+##        Coastal Offshore.North Offshore.South 
+##             68             40             18 
+## 
+## $overall$result
+##      estimate  p.val
+## Fst      0.17 0.0099
+## F'st     0.17 0.0099
+## 
+## $overall$null.dist
+## NULL
+## 
+## 
+## $pairwise
+## $pairwise$result
+##                                   pair.label       strata.1       strata.2
+## 1        Coastal (68) v. Offshore.North (40)        Coastal Offshore.North
+## 2        Coastal (68) v. Offshore.South (18)        Coastal Offshore.South
+## 3 Offshore.North (40) v. Offshore.South (18) Offshore.North Offshore.South
+##   n.1 n.2     Fst Fst.p.val    F'st F'st.p.val
+## 1  68  40  0.1979    0.0099  0.1974     0.0099
+## 2  68  18  0.2429    0.0099  0.2423     0.0099
+## 3  40  18 -0.0016    0.6040 -0.0016     0.6040
+## 
+## $pairwise$pair.mat
+## $pairwise$pair.mat$Fst
+##                Coastal Offshore.North Offshore.South
+## Coastal             NA         0.0099         0.0099
+## Offshore.North    0.20             NA         0.6040
+## Offshore.South    0.24        -0.0016             NA
+## 
+## $pairwise$pair.mat$`F'st`
+##                Coastal Offshore.North Offshore.South
+## Coastal             NA         0.0099         0.0099
+## Offshore.North    0.20             NA         0.6040
+## Offshore.South    0.24        -0.0016             NA
+## 
+## 
+## $pairwise$null.dist
+## NULL</code></pre>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

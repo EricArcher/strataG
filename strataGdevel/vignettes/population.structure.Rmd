@@ -1,0 +1,64 @@
+---
+title: "Tests of Population Structure"
+author: "Eric Archer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{4. Tests of Population Structure}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+Given some sample microsatellite data:
+```{r}
+options(digits = 2)
+library(strataGdevel)
+data(dolph.strata)
+data(dolph.msats)
+msats.merge <- merge(dolph.strata, dolph.msats, all.y = TRUE, description = date())
+msats <- df2gtypes(msats.merge, ploidy = 2, id.col = 1, strata.col = 3, loc.col = 5)
+rownames(dolph.strata) <- dolph.strata$ids
+schemes(msats) <- dolph.strata[, c("fine", "broad")]
+msats <- stratify(msats, "fine")
+msats <- msats[, locNames(msats)[1:4], ]
+```
+
+There are several ways that population structure analyses can be conducted. For each population structure metric, there is a function starting with "stat" (e.g., _statFst_, _statChi2_, _statGst_). A full list can be found in _?popStructStat_.
+
+Each of these functions takes a gtypes object and produces a single named estimate for the requested test statistic. As an example:
+```{r}
+statFst(msats)
+statGst(msats)
+```
+
+By default, stratification is taken from the _@strata_ slot of the object. Alternative stratification can be provided as a vector when the function is called:
+```{r}
+ran.strata <- sample(1:3, size = nInd(msats), replace = TRUE)
+statFst(msats, ran.strata)
+statGst(msats, ran.strata)
+```
+
+Permutation tests can be conducted in an "overall" manner which addreses the question of whether or not there is significant stratification in all samples given the specified stratification scheme, or in a "pairwise" manner, which tests differentiation between all pairs of strata. The overall test can be run via _overallTest_, like this:
+```{r}
+ovl <- overallTest(msats, nrep = 100)
+```
+
+This conducts tests for all available statistics. Tests for specified statistics can be conducted by listing them in the 'stat.list' argument:
+```{r}
+ovl <- overallTest(msats, stats = c(statFst, statChi2), nrep = 100)
+```
+
+Pairwise tests are conducted with _pairwiseTest_ in a similar fashion:
+```{r}
+pws <- pairwiseTest(msats, stats = c(statFstPrime, statGst), nrep = 100)
+```
+
+The result of a pairwise test contains both a data.frame formatted for each pairwise comparison and pairwise matrices for each statistic with statistic estimates in the lower left, and p-values in the upper right.
+```{r}
+pws
+```
+
+Both overall and pairwise tests can be conducted at once with _popStructTest_: 
+```{r}
+popStruct <- popStructTest(msats, stats = c(statFst, statFstPrime), nrep = 100, quietly = TRUE)
+popStruct
+```

@@ -64,7 +64,7 @@ permutation test?}
      \code{result} \tab a data.frame with the result of each pairwise
        comparison on a line.\cr
      \code{pair.mat} \tab a list with a pairwise matrix for each statistic.
-       Values in lower left are p-values, upper right is statistic estimate.\cr
+       Values in lower left are the statistic estimate, and upper right are p-values.\cr
      \code{null.dist} \tab a matrix with the null distributions for
        each statistic.\cr
    }}

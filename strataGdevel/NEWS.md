@@ -1,4 +1,10 @@
----
-title: "NEWS"
-output: html_document
----
+# strataG 1.0
+
+## Additions
+
+
+## Changes
+
+
+
+## Bug Fixes

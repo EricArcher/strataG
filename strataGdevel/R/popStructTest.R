@@ -39,7 +39,7 @@
 #'      \code{result} \tab a data.frame with the result of each pairwise 
 #'        comparison on a line.\cr
 #'      \code{pair.mat} \tab a list with a pairwise matrix for each statistic. 
-#'        Values in lower left are p-values, upper right is statistic estimate.\cr
+#'        Values in lower left are the statistic estimate, and upper right are p-values.\cr
 #'      \code{null.dist} \tab a matrix with the null distributions for 
 #'        each statistic.\cr
 #'    }}
@@ -68,6 +68,7 @@
 #' print(full$overall)
 #' print(full$pairwise)
 #' 
+#' @importFrom parallel makeForkCluster parLapply stopCluster
 #' @export
 #' 
 popStructTest <- function(g, nrep = 100, stats = "all", 
@@ -177,17 +178,12 @@ overallTest <- function(g, nrep = 100, stats = "all",
       cl <- makeForkCluster(num.cores)
       tryCatch({
         # calculate matrix of null distributions
-        null.dist <- do.call(
-          rbind, 
-          parLapply(cl, st, perm.func, g = g, stat.funcs = stat.list, ...)
-        )
+        null.dist <- parLapply(cl, st, perm.func, g = g, stat.funcs = stat.list, ...)
       }, finally = stopCluster(cl))
     } else {
-      null.dist <- do.call(
-        rbind, 
-        lapply(st, perm.func, g = g, stat.funcs = stat.list, ...)
-      )
+      null.dist <- lapply(st, perm.func, g = g, stat.funcs = stat.list, ...)
     }
+    null.dist <- do.call(rbind, null.dist)
     colnames(null.dist) <- rownames(result)
     
     # calculate vector of p-values

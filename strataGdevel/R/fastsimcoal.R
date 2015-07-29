@@ -16,11 +16,13 @@
 #' @param inf.site.model logical. Infinite site model?
 #' @param quiet logical. Run quietly?
 #' @param delete.files logical. Delete files when done?
+#' @param exec fastsimcoal executable
 #' 
 #' @note Assumes that the program \code{fastsimcoal} is properly installed and 
 #'   available on the command line. On PC's, this requires having it in a 
 #'   folder in the PATH environmental variable. On Macs, the executable 
-#'   should be installed in a folder like \code{/usr/local/bin} 
+#'   should be installed in a folder like \code{/usr/local/bin}. The actual name of 
+#'   the executable should be specified with the \code{exec} argument.
 #' 
 #' @return A list of \code{\link{gtypes}} objects for each simulated dataset.
 #' 
@@ -36,8 +38,9 @@
 fastsimcoal <- function(num.pops, Ne, sample.size = NULL, 
   sample.time = NULL, growth.rate = NULL, mig.rates = NULL, hist.ev = NULL, 
   num.chrom = 1, locus.params = NULL, 
-  label = "strataG.fastsimcoal", num.sims = 1, 
-  inf.site.model = TRUE, quiet = TRUE, delete.files = TRUE) {
+  label = "strataG_fastsimcoal", num.sims = 1, 
+  inf.site.model = TRUE, quiet = TRUE, delete.files = TRUE,
+  exec = "fsc252") {
   
   # Write input file
   hist.ev <- if(is.list(hist.ev)) do.call(rbind, hist.ev) else rbind(hist.ev)
@@ -102,7 +105,7 @@ fastsimcoal <- function(num.pops, Ne, sample.size = NULL,
   if(file.exists(label)) for(f in dir(label, full.names = T)) file.remove(f)
   
   # Run fastsimcoal
-  cmd <- paste("fastsimcoal -i", file, "-n 1",
+  cmd <- paste(exec, " -i", file, "-n 1",
                ifelse(inf.site.model, "-I", ""), ifelse(quiet, "-q", "")
   )
   err <- system(cmd, intern = F)

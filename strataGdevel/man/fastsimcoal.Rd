@@ -6,8 +6,9 @@
 \usage{
 fastsimcoal(num.pops, Ne, sample.size = NULL, sample.time = NULL,
   growth.rate = NULL, mig.rates = NULL, hist.ev = NULL, num.chrom = 1,
-  locus.params = NULL, label = "strataG.fastsimcoal", num.sims = 1,
-  inf.site.model = TRUE, quiet = TRUE, delete.files = TRUE)
+  locus.params = NULL, label = "strataG_fastsimcoal", num.sims = 1,
+  inf.site.model = TRUE, quiet = TRUE, delete.files = TRUE,
+  exec = "fsc252")
 }
 \arguments{
 \item{num.pops}{number of populations.}
@@ -37,6 +38,8 @@ fastsimcoal(num.pops, Ne, sample.size = NULL, sample.time = NULL,
 \item{quiet}{logical. Run quietly?}
 
 \item{delete.files}{logical. Delete files when done?}
+
+\item{exec}{fastsimcoal executable}
 }
 \value{
 A list of \code{\link{gtypes}} objects for each simulated dataset.
@@ -49,7 +52,8 @@ Run a fastsimcoal simualtion and load results into a
 Assumes that the program \code{fastsimcoal} is properly installed and
   available on the command line. On PC's, this requires having it in a
   folder in the PATH environmental variable. On Macs, the executable
-  should be installed in a folder like \code{/usr/local/bin}
+  should be installed in a folder like \code{/usr/local/bin}. The actual name of
+  the executable should be specified with the \code{exec} argument.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
