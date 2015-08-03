@@ -19,7 +19,7 @@
 #' 
 #' @seealso \code{\link{genepop}}
 #' 
-#' @aliases hwe, HWE
+#' @aliases hwe HWE
 #' @export
 #' 
 HWEgenepop <- function(g, show.output = FALSE, delete.files = TRUE, 

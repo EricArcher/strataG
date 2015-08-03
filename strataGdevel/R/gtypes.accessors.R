@@ -92,71 +92,94 @@
 #' gene1.dnabin <- getSequences(sequences(gene1))
 #' class(gene1.dnabin) # "DNAbin"
 #' 
-#'       
-#'
-#'   
 setClass("gtypes")
+
 
 #' @rdname gtypes.accessors
 #' @aliases nInd
 #' @export
+#' 
 setMethod("nInd", "gtypes", function(x, ...) nrow(x@loci) / x@ploidy)
+
 
 #' @rdname gtypes.accessors
 #' @aliases nLoc
 #' @export
+#' 
 setMethod("nLoc", "gtypes", function(x, ...) ncol(x@loci))
+
 
 #' @rdname gtypes.accessors
 #' @export
+#' 
 setGeneric("nStrata", function(x, ...) standardGeneric("nStrata"))
+
 #' @rdname gtypes.accessors
 #' @aliases nStrata
 #' @export
+#' 
 setMethod("nStrata", "gtypes", function(x, ...) nlevels(x@strata))
+
 
 #' @rdname gtypes.accessors
 #' @aliases indNames
 #' @export
+#' 
 setMethod("indNames", "gtypes", function(x, ...) {
   ids <- rownames(x@loci)[1:(nrow(x@loci) / x@ploidy)]
   unique(substr(ids, 1, nchar(ids) - 2))
 })
 
+
 #' @rdname gtypes.accessors
 #' @aliases locNames
 #' @export
+#' 
 setMethod("locNames", "gtypes", function(x, ...) colnames(x@loci))
+
 
 #' @rdname gtypes.accessors
 #' @export
+#' 
 setGeneric("strataNames", function(x, ...) standardGeneric("strataNames"))
+
 #' @rdname gtypes.accessors
 #' @aliases strataNames
 #' @export
+#' 
 setMethod("strataNames", "gtypes", function(x, ...) levels(x@strata))
+
 
 #' @rdname gtypes.accessors
 #' @aliases ploidy
 #' @export
+#' 
 setMethod("ploidy", "gtypes", function(x, ...) x@ploidy)
+
 
 #' @rdname gtypes.accessors
 #' @aliases other
 #' @export
+#' 
 setMethod("other", "gtypes", function(x, ...) x@other)
 
+
 #' @rdname gtypes.accessors
 #' @aliases strata
 #' @export
+#' 
 setMethod("strata", "gtypes", function(x) x@strata)
+
 
 #' @rdname gtypes.accessors
 #' @export
+#' 
 setGeneric("strata<-", function(x, value) standardGeneric("strata<-"))
+
 #' @rdname gtypes.accessors
 #' @aliases strata
 #' @export
+#' 
 setMethod("strata<-", "gtypes", function(x, value) {
   strata <- factor(rep(value, length.out = nInd(x)))
   names(strata) <- indNames(x)
@@ -165,32 +188,44 @@ setMethod("strata<-", "gtypes", function(x, value) {
   x
 })
 
-#' @rdname gtypes.accessors
-#' @export
-setGeneric("schemes", function(x, ...) standardGeneric("schemes"))
-#' @rdname gtypes.accessors
-#' @aliases schemes
-#' @export
-setMethod("schemes", "gtypes", function(x, ...) x@schemes)
 
 #' @rdname gtypes.accessors
 #' @export
-setGeneric("schemes<-", function(x, value) standardGeneric("schemes<-"))
+#' 
+setGeneric("schemes", function(x, ...) standardGeneric("schemes"))
+
 #' @rdname gtypes.accessors
 #' @aliases schemes
 #' @export
+#' 
+setMethod("schemes", "gtypes", function(x, ...) x@schemes)
+
+
+#' @rdname gtypes.accessors
+#' @export
+#' 
+setGeneric("schemes<-", function(x, value) standardGeneric("schemes<-"))
+
+#' @rdname gtypes.accessors
+#' @aliases schemes
+#' @export
+#' 
 setMethod("schemes<-", "gtypes", function(x, value) {
   x@schemes <- value
   validObject(x)
   x
 })
 
+
 #' @rdname gtypes.accessors
 #' @export
+#' 
 setGeneric("loci", function(x, ...) standardGeneric("loci"))
+
 #' @rdname gtypes.accessors
 #' @aliases loci
 #' @export
+#' 
 setMethod("loci", "gtypes", function(x, ids = NULL, loci = NULL) {
   if(is.null(ids)) ids <- indNames(x)
   if(is.null(loci)) loci <- locNames(x)
@@ -199,12 +234,16 @@ setMethod("loci", "gtypes", function(x, ids = NULL, loci = NULL) {
   x@loci[idRows(ids, rownames(x@loci)), loci, drop = FALSE]
 })
 
+
 #' @rdname gtypes.accessors
 #' @export
+#' 
 setGeneric("sequences", function(x, ...) standardGeneric("sequences"))
+
 #' @rdname gtypes.accessors
 #' @aliases sequences
 #' @export
+#' 
 setMethod("sequences", "gtypes", function(x, seqName = NULL, ...) {
   if(is.null(seqName)) {
     x@sequences
@@ -213,17 +252,23 @@ setMethod("sequences", "gtypes", function(x, seqName = NULL, ...) {
   }
 })
 
+
 #' @rdname gtypes.accessors
 #' @export
+#' 
 setGeneric("description", function(x, ...) standardGeneric("description"))
+
 #' @rdname gtypes.accessors
 #' @aliases description
 #' @export
+#' 
 setMethod("description", "gtypes", function(x, ...) x@description)
+
 
 #' @rdname gtypes.accessors
 #' @aliases index subset
 #' @export
+#' 
 setMethod("[", 
           signature(x = "gtypes", i = "ANY", j = "ANY", drop = "ANY"), 
           function(x, i, j, k, ..., quiet = TRUE, drop = FALSE) {

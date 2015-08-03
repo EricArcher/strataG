@@ -5,10 +5,11 @@
 \title{Run fastsimcoal}
 \usage{
 fastsimcoal(num.pops, Ne, sample.size = NULL, sample.time = NULL,
-  growth.rate = NULL, mig.rates = NULL, hist.ev = NULL, num.chrom = 1,
-  locus.params = NULL, label = "strataG_fastsimcoal", num.sims = 1,
-  inf.site.model = TRUE, quiet = TRUE, delete.files = TRUE,
-  exec = "fsc252")
+  growth.rate = NULL, mig.rates = NULL, hist.ev = NULL,
+  data.type = c("DNA", "MICROSAT", "SNP", "STANDARD", "FREQ"),
+  locus.params = NULL, num.chrom = NULL, label = "strataG_fastsimcoal",
+  num.sims = 1, inf.site.model = TRUE, quiet = TRUE,
+  delete.files = TRUE, exec = "fsc252")
 }
 \arguments{
 \item{num.pops}{number of populations.}
@@ -23,23 +24,27 @@ fastsimcoal(num.pops, Ne, sample.size = NULL, sample.time = NULL,
 
 \item{mig.rates}{list of migration matrices.}
 
-\item{hist.ev}{historical events.}
+\item{hist.ev}{matrix of historical events.}
 
-\item{num.chrom}{number of chromosomes.}
+\item{locus.params}{a list of locus parameter matrices with one element per
+chromosome.}
 
-\item{locus.params}{locus parameters.}
+\item{num.chrom}{number of chromosomes if multiple chromosomes with the same
+structure are desired. Leave as \code{NULL} to take the number from the
+number of elements in \code{locus.params}. If specified, the matrix in the
+first element in \code{locus.params} will be used.}
 
 \item{label}{character string to label files with.}
 
 \item{num.sims}{number of simulations to run.}
 
-\item{inf.site.model}{logical. Infinite site model?}
+\item{inf.site.model}{logical. Use infinite site model?}
 
 \item{quiet}{logical. Run quietly?}
 
 \item{delete.files}{logical. Delete files when done?}
 
-\item{exec}{fastsimcoal executable}
+\item{exec}{name of fastsimcoal executable.}
 }
 \value{
 A list of \code{\link{gtypes}} objects for each simulated dataset.

@@ -6,9 +6,9 @@
 \alias{obsvdHet}
 \title{Observed and Expected Heterozygosity}
 \usage{
-obsvdHet(g)
-
 exptdHet(g)
+
+obsvdHet(g)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
@@ -16,14 +16,18 @@ exptdHet(g)
 \description{
 Calculate observed heterozygosity for diploid data.
 }
+\note{
+For a measure of haplotypic diversity (haploid "heterozygosity"),
+  use \code{exptdHet}.
+}
 \examples{
 data(dolph.msats)
 data(dolph.strata)
-msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats,  all.y = TRUE)
+msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
 msats <- df2gtypes(msats.merge, ploidy = 2)
 
-obsvdHet(msats)
 exptdHet(msats)
+obsvdHet(msats)
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

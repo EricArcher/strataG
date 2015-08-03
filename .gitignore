@@ -11,3 +11,4 @@ test haps.R
 *.Rcheck/
 inst/doc
 .RData
+old and test code/

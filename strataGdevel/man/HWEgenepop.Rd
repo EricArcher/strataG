@@ -3,7 +3,7 @@
 \name{HWEgenepop}
 \alias{HWE}
 \alias{HWEgenepop}
-\alias{hwe,}
+\alias{hwe}
 \title{Hardy-Weinberg Equilibrium}
 \usage{
 HWEgenepop(g, show.output = FALSE, delete.files = TRUE,
