@@ -19,6 +19,7 @@
 #' 
 #' mostRepresentativeSequences(as.DNAbin(dolph.seqs))
 #' 
+#' @importFrom stats cmdscale kmeans
 #' @export
 #' 
 mostRepresentativeSequences <- function(x, num.seqs = NULL, model = "raw", 

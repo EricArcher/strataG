@@ -15,6 +15,8 @@
 #' 
 #' @seealso \code{\link{structure}}
 #' 
+#' @importFrom stats sd
+#' @importFrom graphics par layout segments axis box text
 #' @export
  
 evanno <- function(sr, plot = TRUE) {

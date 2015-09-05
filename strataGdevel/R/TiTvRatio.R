@@ -29,6 +29,7 @@
 #' 
 #' isTv("a", "c")
 #' 
+#' @importFrom utils combn
 #' @export
 #' 
 TiTvRatio <- function(x) {

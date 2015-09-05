@@ -41,6 +41,7 @@
 #' gelatoPlot(gelato.fine, "Offshore.South")
 #' 
 #' @importFrom parallel mclapply
+#' @importFrom stats sd dnorm median
 #' @export
 #' 
 gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5, 
@@ -138,6 +139,8 @@ gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5,
 }
 
 #' @rdname gelato
+#' @importFrom graphics par hist curve axis mtext
+#' @importFrom stats dnorm
 #' @export
 #' 
 gelatoPlot <- function(gelato.result, unknown, main = NULL) { 

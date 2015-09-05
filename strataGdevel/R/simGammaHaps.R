@@ -16,6 +16,8 @@
 #' haps <- simGammaHaps(1000, 15, 1, 2.5)
 #' print(haps)
 #'
+#' @importFrom graphics layout par curve hist box
+#' @importFrom stats dgamma
 #' @export
 
 simGammaHaps <- function(pop.size, num.haps, shape, scale,

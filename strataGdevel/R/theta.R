@@ -11,6 +11,7 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @importFrom pegas theta.h
+#' @importFrom stats na.omit
 #' @export
 #' 
 theta <- function(g) {

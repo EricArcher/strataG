@@ -11,6 +11,7 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @importFrom utils write.csv
 #' @export
 #' 
 write.gtypes <- function(g, label = NULL, folder = NULL, as.frequency = FALSE) {

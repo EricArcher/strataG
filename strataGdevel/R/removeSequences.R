@@ -8,6 +8,7 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @importFrom methods new
 #' @export
 #' 
 removeSequences <- function(g) {

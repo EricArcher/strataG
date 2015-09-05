@@ -26,6 +26,7 @@
 #' nucleotideDivergence(dloop)
 #' 
 #' @aliases dA
+#' @importFrom stats quantile
 #' @export
 #' 
 nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1), ...) { 

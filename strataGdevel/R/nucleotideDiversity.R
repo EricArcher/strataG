@@ -17,6 +17,7 @@
 #' 
 #' nucleotideDiversity(dloop)
 #' 
+#' @importFrom apex getSequences locusNames
 #' @importFrom swfscMisc diversity
 #' @export
 #' 

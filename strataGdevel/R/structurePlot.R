@@ -33,6 +33,8 @@
 #' 
 #' @seealso \code{\link{structure}}, \code{\link{clumpp}}
 #'
+#' @importFrom graphics par strwidth barplot axis mtext
+#' @importFrom grDevices rainbow
 #' @export
 #' 
 structurePlot <- function(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE, 

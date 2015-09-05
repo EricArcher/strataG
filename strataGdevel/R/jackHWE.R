@@ -44,12 +44,13 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @importFrom utils combn
 #' @export
 #' 
 jackHWE <- function(g, exclude.num = 1, min.hwe.samples = 5, 
                     show.progress = TRUE, ...) {  
   
-  if((nrow(g$genotypes) - exclude.num) < min.hwe.samples){
+  if((nInd(g) - exclude.num) < min.hwe.samples){
     stop(paste("'exclude.num' or 'min.HWE.samples' is too large to analyze this data"))
   }
   
@@ -145,6 +146,7 @@ jackInfluential <- function(jack.result, alpha = 0.05) {
 
 #' @rdname jackHWE
 #' @method plot jack.influential
+#' @importFrom graphics abline text
 #' @export
 #' 
 plot.jack.influential <- function(x, main = "", ...) {

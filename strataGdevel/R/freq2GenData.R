@@ -30,6 +30,7 @@
 #' x <- df2gtypes(gen.data, ploidy = 1)
 #' summary(x)
 #' 
+#' @importFrom stats complete.cases
 #' @export
 #' 
 freq2GenData <- function(freq.mat, hap.col, freq.col, id.label = NULL, 

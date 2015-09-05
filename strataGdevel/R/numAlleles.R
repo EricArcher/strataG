@@ -15,6 +15,7 @@
 #' 
 #' numAlleles(msats)
 #'
+#' @importFrom stats na.omit
 #' @export
 #' 
 numAlleles <- function(g) {

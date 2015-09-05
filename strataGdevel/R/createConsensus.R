@@ -16,6 +16,7 @@
 #' data(dolph.seqs)
 #' createConsensus(dolph.seqs)
 #' 
+#' @importFrom apex getSequences locusNames
 #' @export
 #' 
 createConsensus <- function(x, ignore.gaps = FALSE) { 

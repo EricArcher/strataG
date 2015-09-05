@@ -17,6 +17,7 @@
 #' 
 #' @seealso \code{\link{variableSites}}
 #' 
+#' @importFrom apex getSequences getSequenceNames
 #' @export
 #' 
 fixedSites <- function(x, bases = c("a", "c", "g", "t", "-")) {

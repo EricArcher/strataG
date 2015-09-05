@@ -17,6 +17,7 @@
 #' 
 #' allelicRichness(msats)
 #'
+#' @importFrom stats na.omit
 #' @export
 #' 
 allelicRichness <- function(g) {

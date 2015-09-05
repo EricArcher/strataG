@@ -21,6 +21,7 @@
 #' 
 #' mostDistantSequences(as.DNAbin(dolph.haps))
 #' 
+#' @importFrom stats cmdscale var
 #' @export
 #' 
 mostDistantSequences <- function(x, num.seqs = NULL, model = "raw", 

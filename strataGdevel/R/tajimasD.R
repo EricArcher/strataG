@@ -13,6 +13,8 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @importFrom apex getSequences locusNames
+#' @importFrom stats qbeta integrate
 #' @export
 #' 
 tajimasD <- function(x) {

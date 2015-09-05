@@ -91,6 +91,7 @@
 #' structurePlot(clumpp)
 #' }
 #' 
+#' @importFrom utils file_test
 #' @importFrom parallel mclapply
 #' @export
 #' 

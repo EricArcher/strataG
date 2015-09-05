@@ -69,6 +69,7 @@
 #' print(full$pairwise)
 #' 
 #' @importFrom parallel makeForkCluster parLapply stopCluster
+#' @importFrom utils write.csv
 #' @export
 #' 
 popStructTest <- function(g, nrep = 100, stats = "all", 

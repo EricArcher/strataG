@@ -31,6 +31,7 @@ exptdHet <- function(g) {
 
 
 #' @rdname heterozygosity
+#' @importFrom stats na.omit
 #' @export
 #' 
 obsvdHet <- function(g) {

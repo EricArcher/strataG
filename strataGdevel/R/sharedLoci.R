@@ -27,6 +27,8 @@
 #' 
 #' sharedAlleles(msats)
 #' 
+#' @importFrom utils combn
+#' @importFrom stats na.omit
 #' @export
 #' 
 propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = 1) {
@@ -70,6 +72,7 @@ propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = 1) {
 
 
 #' @rdname sharedLoci
+#' @importFrom utils combn
 #' @export
 #'  
 sharedAlleles <- function(g, smry = "num") {

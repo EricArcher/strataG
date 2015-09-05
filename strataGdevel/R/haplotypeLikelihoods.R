@@ -30,6 +30,8 @@
 #' 
 #' haplotypeLikelihoods(as.DNAbin(dolph.haps))
 #' 
+#' @importFrom stats sd dgamma
+#' @importFrom graphics dotchart
 #' @export
 #' 
 haplotypeLikelihoods <- function(x, model = "raw", pairwise.deletion = FALSE, 

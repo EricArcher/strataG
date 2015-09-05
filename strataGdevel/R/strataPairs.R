@@ -6,6 +6,8 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @importFrom utils combn
+#' 
 .strataPairs <- function(g) {
   if(nlevels(strata(g)) < 2) stop("'g' has less than 2 strata")
   strata.vec <- sort(unique(as.character(strata(g))))

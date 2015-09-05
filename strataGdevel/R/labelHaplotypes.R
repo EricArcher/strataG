@@ -70,6 +70,7 @@
 #' hap.assign <- labelHaplotypes(sample.seqs, prefix = "Hap.")
 #' hap.assign
 #' 
+#' @importFrom apex getSequences
 #' @importFrom swfscMisc zero.pad
 #' @export
 #' 

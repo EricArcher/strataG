@@ -178,6 +178,7 @@ setGeneric("strata<-", function(x, value) standardGeneric("strata<-"))
 
 #' @rdname gtypes.accessors
 #' @aliases strata
+#' @importFrom methods validObject
 #' @export
 #' 
 setMethod("strata<-", "gtypes", function(x, value) {
@@ -208,6 +209,7 @@ setGeneric("schemes<-", function(x, value) standardGeneric("schemes<-"))
 
 #' @rdname gtypes.accessors
 #' @aliases schemes
+#' @importFrom methods validObject
 #' @export
 #' 
 setMethod("schemes<-", "gtypes", function(x, value) {
@@ -267,6 +269,8 @@ setMethod("description", "gtypes", function(x, ...) x@description)
 
 #' @rdname gtypes.accessors
 #' @aliases index subset
+#' @importFrom apex getSequences
+#' @importFrom methods new
 #' @export
 #' 
 setMethod("[", 

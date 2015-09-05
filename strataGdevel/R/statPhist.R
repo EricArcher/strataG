@@ -1,4 +1,5 @@
 #' @rdname popStructStat
+#' @importFrom apex getSequences
 #' @export
 #' 
 statPhist <- function(g, strata = NULL, hap.dist = NULL, model = "K80", 

@@ -39,6 +39,7 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
 #' @aliases initialize.gtypes
+#' @importFrom apex getNumLoci
 #' @importFrom methods setMethod
 #' 
 setMethod("initialize", "gtypes", 

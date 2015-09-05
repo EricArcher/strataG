@@ -35,6 +35,7 @@
 #' 
 #' @seealso \code{\link{structure}}
 #' 
+#' @importFrom utils file_test write.table
 #' @export
 #' 
 clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",

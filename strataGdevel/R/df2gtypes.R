@@ -48,6 +48,7 @@
 #'   description = "dLoop: broad-scale stratification")
 #' dloop.broad
 #' 
+#' @importFrom methods new
 #' @export
 #' 
 df2gtypes <- function(x, ploidy, id.col = 1, strata.col = 2, loc.col = 3, 

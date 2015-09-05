@@ -24,6 +24,7 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @importFrom utils write.csv
 #' @export
 #' 
 qaqc <- function(g, label = NULL, ...) {
