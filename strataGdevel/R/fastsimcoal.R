@@ -10,6 +10,8 @@
 #' @param growth.rate growth rate of populations.
 #' @param mig.rates list of migration matrices.
 #' @param hist.ev matrix of historical events.
+#' @param data.type the data type to be modeled. Can be one of 
+#'   \code{"DNA", "MICROSAT", "SNP", "STANDARD", or "FREQ"}.
 #' @param locus.params a list of locus parameter matrices with one element per 
 #'   chromosome.
 #' @param num.chrom number of chromosomes if multiple chromosomes with the same 
@@ -183,7 +185,7 @@ NULL
 
 
 # parse microsatellite or snp data and return gtypes
-.fsc.parse.msats.snps <- function(f, pop.data){
+.fsc.parse.msats.snps <- function(f, label, pop.data) {
   # get diploid data
   n.loc <- ncol(pop.data) - 2
   pop.data <- do.call(
@@ -232,7 +234,7 @@ NULL
     if(is.seq) {
       .fsc.parse.dna(f, label, pop.data) 
     } else {
-      .fsc.parse.msats.snps(f, pop.data)
+      .fsc.parse.msats.snps(f, label, pop.data)
     }
   })
   names(fs.gtypes) <- basename(arl.files)
@@ -243,11 +245,13 @@ NULL
 #' @rdname fastsimcoal
 #' @export
 #' 
-fastsimcoal <- function(num.pops, Ne, sample.size = NULL, 
-                        sample.time = NULL, growth.rate = NULL, mig.rates = NULL, hist.ev = NULL, 
-                        data.type = c("DNA", "MICROSAT", "SNP", "STANDARD", "FREQ"), locus.params = NULL, 
-                        num.chrom = NULL, label = "strataG_fastsimcoal", num.sims = 1, 
-                        inf.site.model = TRUE, quiet = TRUE, delete.files = TRUE, exec = "fsc252") {
+fastsimcoal <- function(
+  num.pops, Ne, sample.size = NULL, sample.time = NULL, growth.rate = NULL, 
+  mig.rates = NULL, hist.ev = NULL, 
+  data.type = c("DNA", "MICROSAT", "SNP", "STANDARD", "FREQ"), 
+  locus.params = NULL, num.chrom = NULL, label = "strataG_fastsimcoal", 
+  num.sims = 1, inf.site.model = TRUE, quiet = TRUE, delete.files = TRUE, 
+  exec = "fsc252") {
   
   data.type <- match.arg(data.type)
   

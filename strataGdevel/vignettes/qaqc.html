@@ -10,7 +10,7 @@
 
 <meta name="author" content="Eric Archer" />
 
-<meta name="date" content="2015-08-11" />
+<meta name="date" content="2015-09-09" />
 
 <title>QA/QC</title>
 
@@ -54,16 +54,13 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="header">
 <h1 class="title">QA/QC</h1>
 <h4 class="author"><em>Eric Archer</em></h4>
-<h4 class="date"><em>2015-08-11</em></h4>
+<h4 class="date"><em>2015-09-09</em></h4>
 </div>
 
 
 <p>Quality of genotypes and sequences can be assessed with several functions. For genotypic data, by-locus summaries can be conducted with the <em>summarizeLoci</em> function, which will also produce summaries for each strata:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(strataGdevel)</code></pre>
-<pre><code>## Loading required package: apex
-## Loading required package: ape
-## Loading required package: phangorn</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(dolph.strata)
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(strataGdevel)
+<span class="kw">data</span>(dolph.strata)
 <span class="kw">data</span>(dolph.msats)
 msats.merge &lt;-<span class="st"> </span><span class="kw">merge</span>(dolph.strata, dolph.msats, <span class="dt">all.y =</span> <span class="ot">TRUE</span>, <span class="dt">description =</span> <span class="kw">date</span>())
 msats &lt;-<span class="st"> </span><span class="kw">df2gtypes</span>(msats.merge, <span class="dt">ploidy =</span> <span class="dv">2</span>, <span class="dt">id.col =</span> <span class="dv">1</span>, <span class="dt">strata.col =</span> <span class="dv">3</span>, <span class="dt">loc.col =</span> <span class="dv">5</span>)
@@ -92,7 +89,7 @@ smry &lt;-<span class="st"> </span><span class="kw">summarizeLoci</span>(msats)
 ## KWM12A 0.5669354</code></pre>
 <p>The <em>dupGenotypes</em> function identifies samples that have the same or nearly the same genotypes. The number (or percent) of loci that must be shared in order for it to be considered a duplicate can be set by the <em>num.shared</em> argument. The return data.frame provides which loci the two samples show mismatches at so they can be reviewed.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Find samples that share alleles at 2/3rds of the loci</span>
-<span class="kw">dupGenotypes</span>(msats, <span class="dt">num.shared =</span> <span class="fl">0.66</span>, <span class="dt">num.cores =</span> <span class="dv">2</span>)</code></pre>
+<span class="kw">dupGenotypes</span>(msats, <span class="dt">num.shared =</span> <span class="fl">0.66</span>)</code></pre>
 <pre><code>##   ids.1 ids.2 strata.1 strata.2 num.loci.genotyped num.loci.shared
 ## 1 41579 45237  Coastal  Coastal                 15              13
 ## 2 40916 42192  Coastal  Coastal                 15              10

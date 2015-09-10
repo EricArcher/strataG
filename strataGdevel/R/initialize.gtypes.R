@@ -113,7 +113,7 @@ setMethod("initialize", "gtypes",
   }))
   colnames(loci) <- if(is.null(colnames(gen.data))) {
     # return generic names if no colnames assigned
-    nums <- formatC(1:ncol(loci), digits = floor(log10(n.loc)), flag = "0")
+    nums <- formatC(1:ncol(loci), digits = floor(log10(ncol(loci))), flag = "0")
     paste("Locus", nums, sep = "_")
   } else .parseLocusNames(colnames(gen.data), ploidy)
   row.ids <- rep(rownames(gen.data), ploidy)

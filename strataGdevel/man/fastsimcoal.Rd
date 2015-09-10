@@ -26,6 +26,9 @@ fastsimcoal(num.pops, Ne, sample.size = NULL, sample.time = NULL,
 
 \item{hist.ev}{matrix of historical events.}
 
+\item{data.type}{the data type to be modeled. Can be one of
+\code{"DNA", "MICROSAT", "SNP", "STANDARD", or "FREQ"}.}
+
 \item{locus.params}{a list of locus parameter matrices with one element per
 chromosome.}
 

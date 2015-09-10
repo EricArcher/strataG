@@ -23,7 +23,7 @@ head(smry)
 The _dupGenotypes_ function identifies samples that have the same or nearly the same genotypes. The number (or percent) of loci that must be shared in order for it to be considered a duplicate can be set by the _num.shared_ argument. The return data.frame provides which loci the two samples show mismatches at so they can be reviewed.
 ```{r}
 # Find samples that share alleles at 2/3rds of the loci
-dupGenotypes(msats, num.shared = 0.66, num.cores = 2)
+dupGenotypes(msats, num.shared = 0.66)
 ```
 
 The start and end positions and number of N's and indels can be generated with the _summarizeSeqs_ function:

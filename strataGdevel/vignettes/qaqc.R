@@ -9,7 +9,7 @@ head(smry)
 
 ## ------------------------------------------------------------------------
 # Find samples that share alleles at 2/3rds of the loci
-dupGenotypes(msats, num.shared = 0.66, num.cores = 2)
+dupGenotypes(msats, num.shared = 0.66)
 
 ## ------------------------------------------------------------------------
 data(dolph.seqs)
