@@ -19,8 +19,7 @@ propSharedIds(ids, g)
 \item{type}{a character vector determining type of pairwise comparsion. Can
 be "strata" for strata or "ids" for individuals.}
 
-\item{num.cores}{number of CPU cores to use. Value is passed to
-  \code{\link[parallel]{mclapply}}.}
+\item{num.cores}{number of CPU cores to use.}
 
 \item{smry}{a character vector determining type of summary for
 \code{sharedAlleles}. "which" returns the names of the alleles shared.

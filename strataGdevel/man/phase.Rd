@@ -12,7 +12,7 @@
 phase(g, loci, positions = NULL, type = NULL, num.iter = 1e+05,
   thinning = 100, burnin = 1e+05, model = "new", ran.seed = NULL,
   final.run.factor = NULL, save.posterior = FALSE, in.file = "phase_in",
-  out.file = "phase_out", delete.files = TRUE, num.cores = 1)
+  out.file = "phase_out", delete.files = TRUE)
 
 phaseReadSample(out.file, type)
 
@@ -53,8 +53,6 @@ phaseFilter(ph.res, thresh = 0.5, keep.missing = TRUE)
 \item{out.file}{name to use for PHASE output files.}
 
 \item{delete.files}{logical. Delete PHASE input and output files when done?}
-
-\item{num.cores}{number of CPU cores to use. Value is passed to \code{\link[parallel]{mclapply}}.}
 
 \item{ph.res}{result from \code{phase.run}.}
 

@@ -10,8 +10,7 @@
 #'   \code{sharedAlleles}. "which" returns the names of the alleles shared. 
 #'   "num" returns the number of alleles shared.
 #' @param ids character vector of two sample ids to compare.
-#' @param num.cores number of CPU cores to use. Value is passed to 
-#'   \code{\link[parallel]{mclapply}}.
+#' @param num.cores number of CPU cores to use.
 #' 
 #' @return data.frame summary of pairwise shared loci.
 #' 
@@ -29,6 +28,7 @@
 #' 
 #' @importFrom utils combn
 #' @importFrom stats na.omit
+#' @importFrom parallel parLapply stopCluster
 #' @export
 #' 
 propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = 1) {
@@ -40,30 +40,45 @@ propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = 1) {
     if(length(id.vec) < 2) stop("'g' must have at least two individuals")
     t(combn(id.vec, 2))
   }
-  
-  shared <- if(type == "strata") {
-    freqs <- alleleFreqs(g, TRUE)
-    do.call(rbind, lapply(1:nrow(type.pairs), function(i) {
-      prop.shared.loci <- unlist(mclapply(freqs, function(f) {
-        pair.f <- f[, "prop", type.pairs[i, ]]
+  cl <- .setupClusters(num.cores)
+
+  shared <- tryCatch({
+    if(type == "strata") {  
+      freqs <- alleleFreqs(g, TRUE)
+      prop.func <- function(f, type.pair) {
+        pair.f <- f[, "prop", type.pair]
         sum(apply(pair.f, 1, function(x) !all(x == 0))) / nrow(pair.f)
-      }, mc.cores = num.cores))
-      names(prop.shared.loci) <- names(freqs)
-      prop.shared.loci
-    }))
-  } else {
-    do.call(rbind, mclapply(1:nrow(type.pairs), function(i) {
-      propSharedIds(type.pairs[i, ], g)
-    }, mc.cores = num.cores))
-  }
+      }
+      
+      sharedStrataList <- lapply(1:nrow(type.pairs), function(i) {
+        prop.shared.loci <- if(num.cores > 1) {
+          parLapply(cl, freqs, prop.func, type.pair = type.pairs[i, ])
+        } else {
+          lapply(freqs, prop.func, type.pair = type.pairs[i, ])
+        }
+        prop.shared.loci <- unlist(prop.shared.loci)
+        names(prop.shared.loci) <- names(freqs)
+        prop.shared.loci
+      })
+      do.call(rbind, sharedStrataList)
+    } else {
+      prop.func <- function(i, type.pairs, g) propSharedIds(type.pairs[i, ], g)
+      sharedIDlist <- if(num.cores > 1) {
+        parLapply(cl, 1:nrow(type.pairs), prop.func, type.pairs = type.pairs, g = g)
+      } else {
+        lapply(1:nrow(type.pairs), prop.func, type.pairs = type.pairs, g = g)
+      }
+      do.call(rbind, sharedIDlist)
+    }
+  }, finally = if(num.cores > 1) stopCluster(cl))
   
-  shared.summary <- do.call(rbind, mclapply(1:nrow(shared), function(i) {  
+  shared.summary <- do.call(rbind, lapply(1:nrow(shared), function(i) {  
     num.same <- sum(na.omit(shared[i, ]) == 1) 
     num.not.missing <- sum(!is.na(shared[i, ]))
     prop.same <- num.same / num.not.missing
     c(num.same = num.same, num.not.missing = num.not.missing, 
       prop.same = prop.same)
-  }, mc.cores = num.cores))
+  }))
   shared.summary <- cbind(as.data.frame(type.pairs, stringsAsFactors = FALSE), 
                           shared.summary, shared)
   colnames(shared.summary)[1:2] <- paste(type, 1:2, sep = ".")

@@ -41,8 +41,7 @@ permutation test?}
 
 \item{quietly}{logical. Print progress and results?}
 
-\item{num.cores}{number of CPU cores to use. Value is passed to
-\code{\link[parallel]{mclapply}}.}
+\item{num.cores}{number of CPU cores to use.}
 
 \item{write.output}{logical. Write a .csv file with results?}
 

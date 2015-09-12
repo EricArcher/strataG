@@ -12,8 +12,7 @@ dupGenotypes(g, num.shared = 0.8, num.cores = 1)
 \item{num.shared}{either number of loci or percentage of loci two
 individuals must share to be considered duplicate individuals.}
 
-\item{num.cores}{number of CPU cores to use. Value is passed to
-  \code{\link[parallel]{mclapply}}.}
+\item{num.cores}{number of CPU cores to use.}
 }
 \value{
 a data.frame with the following columns:

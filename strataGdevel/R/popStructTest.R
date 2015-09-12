@@ -18,8 +18,7 @@
 #' @param keep.null logical. Keep the null distribution from the 
 #'   permutation test?
 #' @param quietly logical. Print progress and results?
-#' @param num.cores number of CPU cores to use. Value is passed to 
-#'   \code{\link[parallel]{mclapply}}.
+#' @param num.cores number of CPU cores to use.
 #' @param write.output logical. Write a .csv file with results?
 #' @param ... other parameters to be passed to population 
 #'   differentiation functions.
@@ -68,7 +67,6 @@
 #' print(full$overall)
 #' print(full$pairwise)
 #' 
-#' @importFrom parallel makeForkCluster parLapply stopCluster
 #' @importFrom utils write.csv
 #' @export
 #' 
@@ -117,9 +115,7 @@ popStructTest <- function(g, nrep = 100, stats = "all",
 
 
 #' @rdname popStructTest
-#' @importFrom parallel makeForkCluster
-#' @importFrom parallel parLapply 
-#' @importFrom parallel stopCluster
+#' @importFrom parallel parLapply stopCluster
 #' @importFrom swfscMisc pVal
 #' @export
 #' 
@@ -176,7 +172,7 @@ overallTest <- function(g, nrep = 100, stats = "all",
     # collect null distribution
     if(num.cores > 1) {
       # setup clusters
-      cl <- makeForkCluster(num.cores)
+      cl <- .setupClusters(num.cores)
       tryCatch({
         # calculate matrix of null distributions
         null.dist <- parLapply(cl, st, perm.func, g = g, stat.funcs = stat.list, ...)

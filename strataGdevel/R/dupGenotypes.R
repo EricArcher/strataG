@@ -4,8 +4,7 @@
 #' @param g a \linkS4class{gtypes} object.
 #' @param num.shared either number of loci or percentage of loci two 
 #'   individuals must share to be considered duplicate individuals.
-#' @param num.cores number of CPU cores to use. Value is passed to 
-#'   \code{\link[parallel]{mclapply}}.
+#' @param num.cores number of CPU cores to use.
 #' 
 #' @return a data.frame with the following columns:
 #' \tabular{ll}{

@@ -19,7 +19,6 @@
 #' @param ph.res result from \code{phase.run}.
 #' @param thresh minimum probability for a genotype to be selected (0.5 - 1).
 #' @param keep.missing logical. T = keep missing data from original data set. F = Use estimated genotypes from PHASE.
-#' @param num.cores number of CPU cores to use. Value is passed to \code{\link[parallel]{mclapply}}.
 #'  
 #' @note Assumes that the the command line version of PHASE is properly installed and available on the command line,
 #'   so it is executable from any directory. On PC's, this requires having it in a folder in 
@@ -79,14 +78,12 @@
 #' summary(phased.snps)
 #' }
 #' 
-#' @importFrom parallel mclapply 
 #' @export
 #' 
 phase <- function(g, loci, positions = NULL, type = NULL,
   num.iter = 100000, thinning = 100, burnin = 100000, model = "new", 
   ran.seed = NULL, final.run.factor = NULL, save.posterior = FALSE, 
-  in.file = "phase_in", out.file = "phase_out", delete.files = TRUE, 
-  num.cores = 1) { 
+  in.file = "phase_in", out.file = "phase_out", delete.files = TRUE) { 
   
   if(ploidy(g) != 2) stop("'g' must be diploid")
   
@@ -110,7 +107,7 @@ phase <- function(g, loci, positions = NULL, type = NULL,
   }
   names(type) <- unique(loci$group)
   
-  result <- mclapply(unique(loci$group), function(grp) {
+  result <- lapply(unique(loci$group), function(grp) {
     lets <- paste(sample(c(0:9, letters), 10, replace = TRUE), collapse = "")
     in.file <- paste("phase_in_", lets, sep = "")
     out.file <- paste("phase_out_", lets, sep = "")
@@ -175,7 +172,7 @@ phase <- function(g, loci, positions = NULL, type = NULL,
     }
     
     locus.result  
-  }, mc.cores = num.cores)
+  })
   
   names(result) <- lapply(result, function(x) x$locus.name)
   class(result) <- c("phase.result", class(result))

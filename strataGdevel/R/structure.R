@@ -9,8 +9,6 @@
 #' @param num.k.rep number of replicates for each value in \code{k.range}.
 #' @param label label to use for input and output files
 #' @param delete.files logical. Delete all files when STRUCTURE is finished?
-#' @param num.cores number of CPU cores to use. Value is passed to 
-#'   \code{\link[parallel]{mclapply}}.
 #' @param exec name of executable for STRUCTURE. Defaults to "structure".
 #' @param ... arguments to be passed to \code{structure.write}.
 #' @param maxpops number of groups.
@@ -92,12 +90,10 @@
 #' }
 #' 
 #' @importFrom utils file_test
-#' @importFrom parallel mclapply
 #' @export
 #' 
 structureRun <- function(g, k.range = NULL, num.k.rep = 1, label = NULL, 
-                         delete.files = TRUE, num.cores = 1, 
-                         exec = "structure", ...) {
+                         delete.files = TRUE, exec = "structure", ...) {
   
   if(!ploidy(g) > 1) stop("'g' must have a ploidy > 1")
   
@@ -116,7 +112,7 @@ structureRun <- function(g, k.range = NULL, num.k.rep = 1, label = NULL,
   rep.df <- expand.grid(rep = 1:num.k.rep, k = k.range)
   
   rownames(rep.df) <- paste(label, ".k", rep.df$k, ".r", rep.df$rep, sep = "")
-  out.files <- mclapply(rownames(rep.df), function(x) {
+  out.files <- lapply(rownames(rep.df), function(x) {
     sw.out <- structureWrite(g, label = x, maxpops = rep.df[x, "k"], ...)
     files <- sw.out$files
     cmd <- paste(exec, " -m ", files["mainparams"], 
@@ -143,7 +139,7 @@ structureRun <- function(g, k.range = NULL, num.k.rep = 1, label = NULL,
     fname <- paste(x, ".ws.rdata", sep = "")
     save(result, file = fname)
     fname
-  }, mc.cores = num.cores)
+  })
   
   run.result <- lapply(out.files, function(f) {
     result <- NULL

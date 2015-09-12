@@ -8,7 +8,7 @@
 \title{STRUCTURE}
 \usage{
 structureRun(g, k.range = NULL, num.k.rep = 1, label = NULL,
-  delete.files = TRUE, num.cores = 1, exec = "structure", ...)
+  delete.files = TRUE, exec = "structure", ...)
 
 structureWrite(g, label = NULL, maxpops = nlevels(strata(g)),
   burnin = 1000, numreps = 1000, noadmix = TRUE, freqscorr = FALSE,
@@ -30,9 +30,6 @@ If set to \code{NULL}, a single STRUCTURE run is conducted with
 \item{label}{label to use for input and output files}
 
 \item{delete.files}{logical. Delete all files when STRUCTURE is finished?}
-
-\item{num.cores}{number of CPU cores to use. Value is passed to
-\code{\link[parallel]{mclapply}}.}
 
 \item{exec}{name of executable for STRUCTURE. Defaults to "structure".}
 
