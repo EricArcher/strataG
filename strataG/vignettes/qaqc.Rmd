@@ -10,7 +10,7 @@ vignette: >
 ---
 Quality of genotypes and sequences can be assessed with several functions. For genotypic data, by-locus summaries can be conducted with the _summarizeLoci_ function, which will also produce summaries for each strata:
 ```{r}
-library(strataGdevel)
+library(strataG)
 data(dolph.strata)
 data(dolph.msats)
 msats.merge <- merge(dolph.strata, dolph.msats, all.y = TRUE, description = date())

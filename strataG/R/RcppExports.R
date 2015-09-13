@@ -2,110 +2,110 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 indGenotype <- function(nInd, numAlleles, locus) {
-    .Call('strataGdevel_indGenotype', PACKAGE = 'strataGdevel', nInd, numAlleles, locus)
+    .Call('strataG_indGenotype', PACKAGE = 'strataG', nInd, numAlleles, locus)
 }
 
 HoCalc <- function(nInd, loci, ploidy, strata, strataN) {
-    .Call('strataGdevel_HoCalc', PACKAGE = 'strataGdevel', nInd, loci, ploidy, strata, strataN)
+    .Call('strataG_HoCalc', PACKAGE = 'strataG', nInd, loci, ploidy, strata, strataN)
 }
 
 HsCalc <- function(alleleFreq, ploidy, strataN, harmN, Ho) {
-    .Call('strataGdevel_HsCalc', PACKAGE = 'strataGdevel', alleleFreq, ploidy, strataN, harmN, Ho)
+    .Call('strataG_HsCalc', PACKAGE = 'strataG', alleleFreq, ploidy, strataN, harmN, Ho)
 }
 
 Hstats_C <- function(loci, strata, ploidy) {
-    .Call('strataGdevel_Hstats_C', PACKAGE = 'strataGdevel', loci, strata, ploidy)
+    .Call('strataG_Hstats_C', PACKAGE = 'strataG', loci, strata, ploidy)
 }
 
 getMaxInt <- function(x) {
-    .Call('strataGdevel_getMaxInt', PACKAGE = 'strataGdevel', x)
+    .Call('strataG_getMaxInt', PACKAGE = 'strataG', x)
 }
 
 table2D <- function(x, y) {
-    .Call('strataGdevel_table2D', PACKAGE = 'strataGdevel', x, y)
+    .Call('strataG_table2D', PACKAGE = 'strataG', x, y)
 }
 
 rowSumC <- function(x) {
-    .Call('strataGdevel_rowSumC', PACKAGE = 'strataGdevel', x)
+    .Call('strataG_rowSumC', PACKAGE = 'strataG', x)
 }
 
 colSumC <- function(x) {
-    .Call('strataGdevel_colSumC', PACKAGE = 'strataGdevel', x)
+    .Call('strataG_colSumC', PACKAGE = 'strataG', x)
 }
 
 colMeanC <- function(x) {
-    .Call('strataGdevel_colMeanC', PACKAGE = 'strataGdevel', x)
+    .Call('strataG_colMeanC', PACKAGE = 'strataG', x)
 }
 
 intOuterC <- function(x, y) {
-    .Call('strataGdevel_intOuterC', PACKAGE = 'strataGdevel', x, y)
+    .Call('strataG_intOuterC', PACKAGE = 'strataG', x, y)
 }
 
 numOuterC <- function(x, y) {
-    .Call('strataGdevel_numOuterC', PACKAGE = 'strataGdevel', x, y)
+    .Call('strataG_numOuterC', PACKAGE = 'strataG', x, y)
 }
 
 intVecToMat <- function(x, ncol) {
-    .Call('strataGdevel_intVecToMat', PACKAGE = 'strataGdevel', x, ncol)
+    .Call('strataG_intVecToMat', PACKAGE = 'strataG', x, ncol)
 }
 
 numVecToMat <- function(x, ncol) {
-    .Call('strataGdevel_numVecToMat', PACKAGE = 'strataGdevel', x, ncol)
+    .Call('strataG_numVecToMat', PACKAGE = 'strataG', x, ncol)
 }
 
 calcStrataN <- function(locus, strata) {
-    .Call('strataGdevel_calcStrataN', PACKAGE = 'strataGdevel', locus, strata)
+    .Call('strataG_calcStrataN', PACKAGE = 'strataG', locus, strata)
 }
 
 statChi2_C <- function(loci, strata, ploidy) {
-    .Call('strataGdevel_statChi2_C', PACKAGE = 'strataGdevel', loci, strata, ploidy)
+    .Call('strataG_statChi2_C', PACKAGE = 'strataG', loci, strata, ploidy)
 }
 
 statFis_C <- function(loci, strata, ploidy) {
-    .Call('strataGdevel_statFis_C', PACKAGE = 'strataGdevel', loci, strata, ploidy)
+    .Call('strataG_statFis_C', PACKAGE = 'strataG', loci, strata, ploidy)
 }
 
 alleleFreqCalc <- function(locVec, strata, ploidy) {
-    .Call('strataGdevel_alleleFreqCalc', PACKAGE = 'strataGdevel', locVec, strata, ploidy)
+    .Call('strataG_alleleFreqCalc', PACKAGE = 'strataG', locVec, strata, ploidy)
 }
 
 prHetCalc <- function(alleles, nvec, locusMat, strata, ploidy) {
-    .Call('strataGdevel_prHetCalc', PACKAGE = 'strataGdevel', alleles, nvec, locusMat, strata, ploidy)
+    .Call('strataG_prHetCalc', PACKAGE = 'strataG', alleles, nvec, locusMat, strata, ploidy)
 }
 
 varCompCalc <- function(nvec, alleleFreq, prHet, r, nbar, rnbar, nc) {
-    .Call('strataGdevel_varCompCalc', PACKAGE = 'strataGdevel', nvec, alleleFreq, prHet, r, nbar, rnbar, nc)
+    .Call('strataG_varCompCalc', PACKAGE = 'strataG', nvec, alleleFreq, prHet, r, nbar, rnbar, nc)
 }
 
 statFst_C <- function(loci, strata, ploidy) {
-    .Call('strataGdevel_statFst_C', PACKAGE = 'strataGdevel', loci, strata, ploidy)
+    .Call('strataG_statFst_C', PACKAGE = 'strataG', loci, strata, ploidy)
 }
 
 statGst_C <- function(loci, strata, ploidy) {
-    .Call('strataGdevel_statGst_C', PACKAGE = 'strataGdevel', loci, strata, ploidy)
+    .Call('strataG_statGst_C', PACKAGE = 'strataG', loci, strata, ploidy)
 }
 
 statGstPrime_C <- function(loci, strata, ploidy, primeType) {
-    .Call('strataGdevel_statGstPrime_C', PACKAGE = 'strataGdevel', loci, strata, ploidy, primeType)
+    .Call('strataG_statGstPrime_C', PACKAGE = 'strataG', loci, strata, ploidy, primeType)
 }
 
 statGstDblPrime_C <- function(loci, strata, ploidy) {
-    .Call('strataGdevel_statGstDblPrime_C', PACKAGE = 'strataGdevel', loci, strata, ploidy)
+    .Call('strataG_statGstDblPrime_C', PACKAGE = 'strataG', loci, strata, ploidy)
 }
 
 statJostD_C <- function(loci, strata, ploidy) {
-    .Call('strataGdevel_statJostD_C', PACKAGE = 'strataGdevel', loci, strata, ploidy)
+    .Call('strataG_statJostD_C', PACKAGE = 'strataG', loci, strata, ploidy)
 }
 
 ssWPCalc <- function(strataFreq, strataHapFreq, hapDist) {
-    .Call('strataGdevel_ssWPCalc', PACKAGE = 'strataGdevel', strataFreq, strataHapFreq, hapDist)
+    .Call('strataG_ssWPCalc', PACKAGE = 'strataG', strataFreq, strataHapFreq, hapDist)
 }
 
 ssAPCalc <- function(strataFreq, strataHapFreq, hapDist) {
-    .Call('strataGdevel_ssAPCalc', PACKAGE = 'strataGdevel', strataFreq, strataHapFreq, hapDist)
+    .Call('strataG_ssAPCalc', PACKAGE = 'strataG', strataFreq, strataHapFreq, hapDist)
 }
 
 statPhist_C <- function(haps, strata, hapDist) {
-    .Call('strataGdevel_statPhist_C', PACKAGE = 'strataGdevel', haps, strata, hapDist)
+    .Call('strataG_statPhist_C', PACKAGE = 'strataG', haps, strata, hapDist)
 }
 

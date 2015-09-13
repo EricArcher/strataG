@@ -15,7 +15,7 @@ The _structureRun_ function takes a _gtypes_ object and a vector of potential cl
 A simple example run is as follows:
 ```{r}
 # load msat data and create gtypes
-library(strataGdevel)
+library(strataG)
 data(dolph.strata)
 data(dolph.msats)
 msats.merge <- merge(dolph.strata, dolph.msats, all.y = TRUE, description = date())

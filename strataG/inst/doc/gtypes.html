@@ -10,7 +10,7 @@
 
 <meta name="author" content="Eric Archer" />
 
-<meta name="date" content="2015-07-29" />
+<meta name="date" content="2015-09-12" />
 
 <title>Creating and Manipulating gtypes Objects</title>
 
@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="header">
 <h1 class="title">Creating and Manipulating gtypes Objects</h1>
 <h4 class="author"><em>Eric Archer</em></h4>
-<h4 class="date"><em>2015-07-29</em></h4>
+<h4 class="date"><em>2015-09-12</em></h4>
 </div>
 
 
@@ -73,7 +73,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="new-constructor" class="section level3">
 <h3><em>new</em> constructor</h3>
 <p>A gtypes object can be created with the standard S4 <em>new</em> constructor function, like this:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(strataGdevel)
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(strataG)
 <span class="co">#--- create a diploid (microsatellite) gtypes object</span>
 <span class="kw">data</span>(dolph.msats)
 <span class="kw">data</span>(dolph.strata)
@@ -150,15 +150,8 @@ dloop.fine &lt;-<span class="st"> </span><span class="kw">sequence2gtypes</span>
 <div id="genind2gtypes---convert-genind-object" class="section level3">
 <h3><em>genind2gtypes</em> - Convert genind object</h3>
 <p>This converts from a <em>genind</em> object from the <em>adegenet</em> package.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(adegenet)</code></pre>
-<pre><code>## Loading required package: ade4
-## 
-##    /// adegenet 2.0.1 is loaded ////////////
-## 
-##    &gt; overview: '?adegenet'
-##    &gt; tutorials/doc/questions: 'adegenetWeb()' 
-##    &gt; bug reports/feature resquests: adegenetIssues()</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># from example(df2genind)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(adegenet)
+<span class="co"># from example(df2genind)</span>
 df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">locusA=</span><span class="kw">c</span>(<span class="st">&quot;11&quot;</span>,<span class="st">&quot;11&quot;</span>,<span class="st">&quot;12&quot;</span>,<span class="st">&quot;32&quot;</span>),
                  <span class="dt">locusB=</span><span class="kw">c</span>(<span class="ot">NA</span>,<span class="st">&quot;34&quot;</span>,<span class="st">&quot;55&quot;</span>,<span class="st">&quot;15&quot;</span>),
                  <span class="dt">locusC=</span><span class="kw">c</span>(<span class="st">&quot;22&quot;</span>,<span class="st">&quot;22&quot;</span>,<span class="st">&quot;21&quot;</span>,<span class="st">&quot;22&quot;</span>))
@@ -184,25 +177,25 @@ obj</code></pre>
 gi.g &lt;-<span class="st"> </span><span class="kw">genind2gtypes</span>(obj)
 gi.g</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2015-07-29 12:22:29 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2015-09-12 20:15:37 &gt;&gt;&gt;
 ## 
 ## Contents: 4 samples, 3 loci, 1 stratum
 ## 
 ## Strata summary:
 ##         num.samples num.missing num.alleles pct.unique.alleles
-## Default           4   0.3333333           3          0.5277778
+## Default           4        0.33           3               0.53
 ##         heterozygosity
-## Default      0.4722222
+## Default           0.47
 ## 
 ## Locus summary:
 ##        num.genotyped num.alleles pct.unique.alleles
-## locusA             4           3          0.3333333
-## locusB             3           4          0.7500000
-## locusC             4           2          0.5000000
+## locusA             4           3               0.33
+## locusB             3           4               0.75
+## locusC             4           2               0.50
 ##        observed.heterozygosity
-## locusA               0.5000000
-## locusB               0.6666667
-## locusC               0.2500000</code></pre>
+## locusA                    0.50
+## locusB                    0.67
+## locusC                    0.25</code></pre>
 </div>
 </div>
 <div id="accessor-functions" class="section level2">
@@ -231,81 +224,77 @@ gi.g</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>msats.fine[<span class="kw">sample</span>(<span class="kw">nInd</span>(msats.fine), <span class="dv">10</span>), , ]
 sub.msats</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2015-07-29 12:22:29 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2015-09-12 20:15:37 &gt;&gt;&gt;
 ## 
-## Contents: 10 samples, 15 loci, 3 strata
+## Contents: 10 samples, 15 loci, 2 strata
 ## 
 ## Strata summary:
 ##                num.samples num.missing num.alleles pct.unique.alleles
-## Coastal                  5   0.1333333    2.733333          0.2377778
-## Offshore.North           3   0.0000000    3.800000          0.6433333
-## Offshore.South           2   0.0000000    3.133333          0.8111111
+## Coastal                  8           0         3.5               0.19
+## Offshore.North           2           0         3.2               0.82
 ##                heterozygosity
-## Coastal             0.4100000
-## Offshore.North      0.7555556
-## Offshore.South      0.8000000
+## Coastal                  0.62
+## Offshore.North           0.80
 ## 
 ## Locus summary:
 ##         num.genotyped num.alleles pct.unique.alleles
-## D11t               10           9          0.6666667
-## D17t               10           8          0.7500000
-## D8                 10           5          0.4000000
-## EV37                9           8          0.8750000
-## EV94               10           7          0.5714286
-## KWM12A             10           6          0.3333333
-## KWM2a              10           7          0.2857143
-## SW19t              10           6          0.3333333
-## Ttr11              10           7          0.4285714
-## Ttr19               9           7          0.4285714
-## Ttr34              10           7          0.2857143
-## Ttr48              10           8          0.3750000
-## Ttr58              10           4          0.2500000
-## TtrRC11            10           8          0.7500000
-## TV7                10           4          0.2500000
+## D11t               10           5               0.60
+## D17t               10           5               0.80
+## D8                 10           6               0.67
+## EV37               10           7               0.43
+## EV94               10           6               0.33
+## KWM12A             10           5               0.20
+## KWM2a              10           6               0.67
+## SW19t              10           9               0.56
+## Ttr11              10           7               0.57
+## Ttr19              10           5               0.40
+## Ttr34              10           4               0.25
+## Ttr48              10           5               0.40
+## Ttr58              10           3               0.33
+## TtrRC11            10           7               0.71
+## TV7                10           4               0.25
 ##         observed.heterozygosity
-## D11t                  0.7000000
-## D17t                  0.6000000
-## D8                    0.3000000
-## EV37                  0.4444444
-## EV94                  0.7000000
-## KWM12A                0.8000000
-## KWM2a                 0.6000000
-## SW19t                 0.7000000
-## Ttr11                 0.6000000
-## Ttr19                 0.5555556
-## Ttr34                 0.6000000
-## Ttr48                 0.7000000
-## Ttr58                 0.5000000
-## TtrRC11               0.4000000
-## TV7                   0.7000000</code></pre>
+## D11t                        0.7
+## D17t                        0.2
+## D8                          0.5
+## EV37                        0.7
+## EV94                        0.6
+## KWM12A                      0.7
+## KWM2a                       0.9
+## SW19t                       0.9
+## Ttr11                       0.9
+## Ttr19                       0.7
+## Ttr34                       0.7
+## Ttr48                       1.0
+## Ttr58                       0.3
+## TtrRC11                     0.6
+## TV7                         0.4</code></pre>
 <p>…or to return specific loci:</p>
 <pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>sub.msats[, <span class="kw">c</span>(<span class="st">&quot;D11t&quot;</span>, <span class="st">&quot;EV37&quot;</span>, <span class="st">&quot;TV7&quot;</span>), ]
 sub.msats</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2015-07-29 12:22:29 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2015-09-12 20:15:37 &gt;&gt;&gt;
 ## 
-## Contents: 10 samples, 3 loci, 3 strata
+## Contents: 10 samples, 3 loci, 2 strata
 ## 
 ## Strata summary:
 ##                num.samples num.missing num.alleles pct.unique.alleles
-## Coastal                  5   0.3333333    2.333333          0.2222222
-## Offshore.North           3   0.0000000    3.333333          0.4888889
-## Offshore.South           2   0.0000000    3.000000          0.8333333
+## Coastal                  8           0         3.3               0.11
+## Offshore.North           2           0         3.3               0.83
 ##                heterozygosity
-## Coastal             0.5000000
-## Offshore.North      0.7777778
-## Offshore.South      0.6666667
+## Coastal                  0.54
+## Offshore.North           0.83
 ## 
 ## Locus summary:
 ##      num.genotyped num.alleles pct.unique.alleles observed.heterozygosity
-## D11t            10           9          0.6666667               0.7000000
-## EV37             9           8          0.8750000               0.4444444
-## TV7             10           4          0.2500000               0.7000000</code></pre>
+## D11t            10           5               0.60                     0.7
+## EV37            10           7               0.43                     0.7
+## TV7             10           4               0.25                     0.4</code></pre>
 <p>…or some loci in a specific stratum:</p>
 <pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>msats.fine[, <span class="kw">c</span>(<span class="st">&quot;EV94&quot;</span>, <span class="st">&quot;SW19t&quot;</span>), <span class="st">&quot;Coastal&quot;</span>]
 sub.msats</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2015-07-29 12:22:29 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2015-09-12 20:15:37 &gt;&gt;&gt;
 ## 
 ## Contents: 68 samples, 2 loci, 1 stratum
 ## 
@@ -313,12 +302,12 @@ sub.msats</code></pre>
 ##         num.samples num.missing num.alleles pct.unique.alleles
 ## Coastal          68         0.5           6                  0
 ##         heterozygosity
-## Coastal      0.7333187
+## Coastal           0.73
 ## 
 ## Locus summary:
 ##       num.genotyped num.alleles pct.unique.alleles observed.heterozygosity
-## EV94             68           5                  0               0.7352941
-## SW19t            67           7                  0               0.7313433</code></pre>
+## EV94             68           5                  0                    0.74
+## SW19t            67           7                  0                    0.73</code></pre>
 </div>
 <div id="summary" class="section level2">
 <h2>Summary</h2>
@@ -414,58 +403,58 @@ sub.msats</code></pre>
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : chr [1:15] &quot;D11t&quot; &quot;D17t&quot; &quot;D8&quot; &quot;EV37&quot; ...
 ##   .. ..$ : chr [1:8] &quot;num.genotyped&quot; &quot;pct.genotyped&quot; &quot;num.alleles&quot; &quot;allelic.richness&quot; ...
-##  - attr(*, &quot;description&quot;)= chr &quot;gtypes created on 2015-07-29 12:22:29&quot;
+##  - attr(*, &quot;description&quot;)= chr &quot;gtypes created on 2015-09-12 20:15:37&quot;
 ##  - attr(*, &quot;class&quot;)= chr [1:2] &quot;gtypeSummary&quot; &quot;list&quot;</code></pre>
 <p>For just the by-locus summary statistics:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarizeLoci</span>(msats.fine)</code></pre>
 <pre><code>##         num.genotyped pct.genotyped num.alleles allelic.richness
-## D11t              125     0.9920635          12       0.09600000
-## D17t              124     0.9841270          18       0.14516129
-## D8                124     0.9841270          13       0.10483871
-## EV37              119     0.9444444          22       0.18487395
-## EV94              125     0.9920635          15       0.12000000
-## KWM12A            124     0.9841270           9       0.07258065
-## KWM2a             124     0.9841270          10       0.08064516
-## SW19t             124     0.9841270          16       0.12903226
-## Ttr11             125     0.9920635           9       0.07200000
-## Ttr19             123     0.9761905          11       0.08943089
-## Ttr34             126     1.0000000          10       0.07936508
-## Ttr48             126     1.0000000          11       0.08730159
-## Ttr58             124     0.9841270           9       0.07258065
-## TtrRC11           126     1.0000000          16       0.12698413
-## TV7               123     0.9761905           7       0.05691057
+## D11t              125          0.99          12            0.096
+## D17t              124          0.98          18            0.145
+## D8                124          0.98          13            0.105
+## EV37              119          0.94          22            0.185
+## EV94              125          0.99          15            0.120
+## KWM12A            124          0.98           9            0.073
+## KWM2a             124          0.98          10            0.081
+## SW19t             124          0.98          16            0.129
+## Ttr11             125          0.99           9            0.072
+## Ttr19             123          0.98          11            0.089
+## Ttr34             126          1.00          10            0.079
+## Ttr48             126          1.00          11            0.087
+## Ttr58             124          0.98           9            0.073
+## TtrRC11           126          1.00          16            0.127
+## TV7               123          0.98           7            0.057
 ##         pct.unique.alleles expected.heterozygosity observed.heterozygosity
-## D11t            0.25000000               0.7468273               0.7040000
-## D17t            0.22222222               0.7247617               0.5645161
-## D8              0.23076923               0.6703343               0.4677419
-## EV37            0.13636364               0.8270751               0.6974790
-## EV94            0.06666667               0.8304900               0.7760000
-## KWM12A          0.11111111               0.7610030               0.7177419
-## KWM2a           0.20000000               0.8092269               0.7096774
-## SW19t           0.25000000               0.8438357               0.7822581
-## Ttr11           0.22222222               0.7953414               0.7040000
-## Ttr19           0.18181818               0.7627012               0.7317073
-## Ttr34           0.20000000               0.8144248               0.6984127
-## Ttr48           0.27272727               0.8257446               0.7698413
-## Ttr58           0.00000000               0.6111075               0.5161290
-## TtrRC11         0.12500000               0.6881996               0.5714286
-## TV7             0.14285714               0.6672640               0.5853659
-##             theta
-## D11t    0.5563279
-## D17t    0.5398255
-## D8      0.4991661
-## EV37    0.6164407
-## EV94    0.6190022
-## KWM12A  0.5669354
-## KWM2a   0.6030569
-## SW19t   0.6290162
-## Ttr11   0.5926503
-## Ttr19   0.5682064
-## Ttr34   0.6069539
-## Ttr48   0.6154427
-## Ttr58   0.4550089
-## TtrRC11 0.5125053
-## TV7     0.4968742</code></pre>
+## D11t                 0.250                    0.75                    0.70
+## D17t                 0.222                    0.72                    0.56
+## D8                   0.231                    0.67                    0.47
+## EV37                 0.136                    0.83                    0.70
+## EV94                 0.067                    0.83                    0.78
+## KWM12A               0.111                    0.76                    0.72
+## KWM2a                0.200                    0.81                    0.71
+## SW19t                0.250                    0.84                    0.78
+## Ttr11                0.222                    0.80                    0.70
+## Ttr19                0.182                    0.76                    0.73
+## Ttr34                0.200                    0.81                    0.70
+## Ttr48                0.273                    0.83                    0.77
+## Ttr58                0.000                    0.61                    0.52
+## TtrRC11              0.125                    0.69                    0.57
+## TV7                  0.143                    0.67                    0.59
+##         theta
+## D11t     0.56
+## D17t     0.54
+## D8       0.50
+## EV37     0.62
+## EV94     0.62
+## KWM12A   0.57
+## KWM2a    0.60
+## SW19t    0.63
+## Ttr11    0.59
+## Ttr19    0.57
+## Ttr34    0.61
+## Ttr48    0.62
+## Ttr58    0.46
+## TtrRC11  0.51
+## TV7      0.50</code></pre>
 </div>
 <div id="stratifying-samples" class="section level2">
 <h2>Stratifying samples</h2>
@@ -474,24 +463,24 @@ sub.msats</code></pre>
 <span class="kw">strata</span>(msats) &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;Pop1&quot;</span>, <span class="st">&quot;Pop2&quot;</span>), <span class="kw">nInd</span>(msats), <span class="dt">rep =</span> <span class="ot">TRUE</span>)
 <span class="kw">summary</span>(msats)$strata.smry</code></pre>
 <pre><code>##      num.samples num.missing num.alleles pct.unique.alleles heterozygosity
-## Pop1          77   0.5333333    11.13333          0.1738358      0.6756752
-## Pop2          49   1.3333333    10.93333          0.2663981      0.6516251</code></pre>
+## Pop1          71        0.67          11               0.18           0.67
+## Pop2          55        1.20          10               0.21           0.66</code></pre>
 <p>or, if there is a stratification scheme data.frame in the @schemes slot, you can use the <em>stratify</em> function to choose a stratification scheme:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># choose &quot;broad&quot; stratification scheme</span>
 msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <span class="st">&quot;broad&quot;</span>)
 <span class="kw">summary</span>(msats)$strata.smry</code></pre>
 <pre><code>##          num.samples num.missing num.alleles pct.unique.alleles
-## Coastal           68   0.7333333     4.20000         0.07190476
-## Offshore          58   1.1333333    12.26667         0.18240260
+## Coastal           68        0.73         4.2              0.072
+## Offshore          58        1.13        12.3              0.182
 ##          heterozygosity
-## Coastal       0.5505505
-## Offshore      0.8036931</code></pre>
+## Coastal            0.55
+## Offshore           0.80</code></pre>
 <p>If the @schemes slot is empty (NULL), you can fill it with a proper data.frame like this:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">schemes</span>(dloop) &lt;-<span class="st"> </span>strata.schemes</code></pre>
 <p>NOTE: Filling or changing the @schemes slot does not affect the current stratification of the samples. You must then select a new stratification scheme or fill the @strata slot as above.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stratify</span>(dloop, <span class="st">&quot;fine&quot;</span>)</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2015-07-29 12:22:29 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2015-09-12 20:15:37 &gt;&gt;&gt;
 ## 
 ## Contents: 126 samples, 1 locus, 3 strata
 ## 
@@ -506,10 +495,8 @@ msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <spa
 ## Offshore.South              1
 ## 
 ## Sequence summary:
-##      num.seqs min.length mean.length max.length         a         c
-## haps      126        402         402        402 0.3011288 0.2293531
-##              g         t
-## haps 0.1289702 0.3405479</code></pre>
+##      num.seqs min.length mean.length max.length   a    c    g    t
+## haps      126        402         402        402 0.3 0.23 0.13 0.34</code></pre>
 <p>If some samples should be unstratified (excluded from any stratified analyses), they should have NAs in the appropriate position in the @strata slot. For example:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># unstratify a random 10 samples</span>
 x &lt;-<span class="st"> </span><span class="kw">strata</span>(msats)
@@ -517,35 +504,35 @@ x[<span class="kw">sample</span>(<span class="kw">indNames</span>(msats), <span 
 <span class="kw">strata</span>(msats) &lt;-<span class="st"> </span>x
 <span class="kw">summary</span>(msats)$strata.smry</code></pre>
 <pre><code>##          num.samples num.missing num.alleles pct.unique.alleles
-## Coastal           61   0.7333333     4.20000         0.07190476
-## Offshore          55   1.1333333    12.26667         0.19323593
+## Coastal           59        0.47         4.1              0.066
+## Offshore          57        1.13        12.3              0.186
 ##          heterozygosity
-## Coastal       0.5525450
-## Offshore      0.8088944</code></pre>
+## Coastal            0.57
+## Offshore           0.81</code></pre>
 <p>You can also randomly permute the current stratification scheme using the <em>permuteStrata</em> function like this:</p>
 <pre class="sourceCode r"><code class="sourceCode r">msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <span class="st">&quot;fine&quot;</span>)
 
 <span class="co"># original</span>
 <span class="kw">summary</span>(msats)$strata.smry</code></pre>
 <pre><code>##                num.samples num.missing num.alleles pct.unique.alleles
-## Coastal                 68  0.73333333    4.200000         0.07190476
-## Offshore.North          40  1.06666667   11.333333         0.20056277
-## Offshore.South          18  0.06666667    9.733333         0.25018519
+## Coastal                 68       0.733         4.2              0.072
+## Offshore.North          40       1.067        11.3              0.201
+## Offshore.South          18       0.067         9.7              0.250
 ##                heterozygosity
-## Coastal             0.5505505
-## Offshore.North      0.7989789
-## Offshore.South      0.8139434</code></pre>
+## Coastal                  0.55
+## Offshore.North           0.80
+## Offshore.South           0.81</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># permuted</span>
 ran.msats &lt;-<span class="st"> </span><span class="kw">permuteStrata</span>(msats)
 <span class="kw">summary</span>(ran.msats)$strata.smry</code></pre>
 <pre><code>##                num.samples num.missing num.alleles pct.unique.alleles
-## Coastal                 68  0.93333333    10.80000          0.1972487
-## Offshore.North          40  0.86666667    10.46667          0.2808671
-## Offshore.South          18  0.06666667     8.20000          0.2827898
+## Coastal                 68       1.133        10.4               0.19
+## Offshore.North          40       0.667        10.9               0.23
+## Offshore.South          18       0.067         7.4               0.26
 ##                heterozygosity
-## Coastal             0.6632011
-## Offshore.North      0.6539564
-## Offshore.South      0.7065359</code></pre>
+## Coastal                  0.64
+## Offshore.North           0.70
+## Offshore.South           0.70</code></pre>
 <p>NOTE: Only samples assigned to strata are permuted with <em>permuteStrata</em>. Those not assigned (NAs) remain unassigned.</p>
 </div>
 <div id="exporting" class="section level2">

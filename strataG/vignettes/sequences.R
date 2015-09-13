@@ -1,5 +1,5 @@
 ## ------------------------------------------------------------------------
-library(strataGdevel)
+library(strataG)
 data(dolph.seqs)
 
 i <- sample(1:10, 1)

@@ -1,8 +1,8 @@
-#' strataGdevel
+#' strataG
 #' 
 #' @docType package
 #' @name strataG-package
-#' @aliases strataGdevel
+#' @aliases strataG
 #' @title Summaries and population structure analyses of DNA sequence genotypic 
 #'   data
 #' @keywords package

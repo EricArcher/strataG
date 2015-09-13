@@ -2,12 +2,12 @@
 % Please edit documentation in R/strataG-package.R
 \docType{package}
 \name{strataG-package}
+\alias{strataG}
 \alias{strataG-package}
-\alias{strataGdevel}
 \title{Summaries and population structure analyses of DNA sequence genotypic
   data}
 \description{
-strataGdevel
+strataG
 }
 \keyword{package}
 

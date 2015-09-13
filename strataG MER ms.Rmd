@@ -25,7 +25,7 @@ For most functions in _strataG_, you will need to load your data into a _gtypes_
 
 A gtypes object can be created with the standard S4 _new_ constructor function, like this:
 ```{r}
-library(strataGdevel)
+library(strataG)
 #--- create a diploid (microsatellite) gtypes object
 data(dolph.msats)
 data(dolph.strata)

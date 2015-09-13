@@ -15,7 +15,7 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @useDynLib strataGdevel
+#' @useDynLib strataG
 #' @importFrom Rcpp sourceCpp
 #'
 NULL

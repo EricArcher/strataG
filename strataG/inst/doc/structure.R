@@ -1,6 +1,6 @@
 ## ------------------------------------------------------------------------
 # load msat data and create gtypes
-library(strataGdevel)
+library(strataG)
 data(dolph.strata)
 data(dolph.msats)
 msats.merge <- merge(dolph.strata, dolph.msats, all.y = TRUE, description = date())

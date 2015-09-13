@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // indGenotype
 IntegerVector indGenotype(int nInd, int numAlleles, IntegerMatrix locus);
-RcppExport SEXP strataGdevel_indGenotype(SEXP nIndSEXP, SEXP numAllelesSEXP, SEXP locusSEXP) {
+RcppExport SEXP strataG_indGenotype(SEXP nIndSEXP, SEXP numAllelesSEXP, SEXP locusSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -20,7 +20,7 @@ END_RCPP
 }
 // HoCalc
 double HoCalc(int nInd, IntegerVector loci, int ploidy, IntegerVector strata, IntegerVector strataN);
-RcppExport SEXP strataGdevel_HoCalc(SEXP nIndSEXP, SEXP lociSEXP, SEXP ploidySEXP, SEXP strataSEXP, SEXP strataNSEXP) {
+RcppExport SEXP strataG_HoCalc(SEXP nIndSEXP, SEXP lociSEXP, SEXP ploidySEXP, SEXP strataSEXP, SEXP strataNSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -35,7 +35,7 @@ END_RCPP
 }
 // HsCalc
 double HsCalc(NumericMatrix alleleFreq, int ploidy, IntegerVector strataN, double harmN, double Ho);
-RcppExport SEXP strataGdevel_HsCalc(SEXP alleleFreqSEXP, SEXP ploidySEXP, SEXP strataNSEXP, SEXP harmNSEXP, SEXP HoSEXP) {
+RcppExport SEXP strataG_HsCalc(SEXP alleleFreqSEXP, SEXP ploidySEXP, SEXP strataNSEXP, SEXP harmNSEXP, SEXP HoSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -50,7 +50,7 @@ END_RCPP
 }
 // Hstats_C
 NumericMatrix Hstats_C(IntegerMatrix loci, IntegerVector strata, int ploidy);
-RcppExport SEXP strataGdevel_Hstats_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+RcppExport SEXP strataG_Hstats_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -63,7 +63,7 @@ END_RCPP
 }
 // getMaxInt
 int getMaxInt(IntegerVector x);
-RcppExport SEXP strataGdevel_getMaxInt(SEXP xSEXP) {
+RcppExport SEXP strataG_getMaxInt(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -74,7 +74,7 @@ END_RCPP
 }
 // table2D
 IntegerMatrix table2D(IntegerVector x, IntegerVector y);
-RcppExport SEXP strataGdevel_table2D(SEXP xSEXP, SEXP ySEXP) {
+RcppExport SEXP strataG_table2D(SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -86,7 +86,7 @@ END_RCPP
 }
 // rowSumC
 NumericVector rowSumC(NumericMatrix x);
-RcppExport SEXP strataGdevel_rowSumC(SEXP xSEXP) {
+RcppExport SEXP strataG_rowSumC(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -97,7 +97,7 @@ END_RCPP
 }
 // colSumC
 NumericVector colSumC(NumericMatrix x);
-RcppExport SEXP strataGdevel_colSumC(SEXP xSEXP) {
+RcppExport SEXP strataG_colSumC(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -108,7 +108,7 @@ END_RCPP
 }
 // colMeanC
 NumericVector colMeanC(NumericMatrix x);
-RcppExport SEXP strataGdevel_colMeanC(SEXP xSEXP) {
+RcppExport SEXP strataG_colMeanC(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -119,7 +119,7 @@ END_RCPP
 }
 // intOuterC
 IntegerMatrix intOuterC(IntegerVector x, IntegerVector y);
-RcppExport SEXP strataGdevel_intOuterC(SEXP xSEXP, SEXP ySEXP) {
+RcppExport SEXP strataG_intOuterC(SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -131,7 +131,7 @@ END_RCPP
 }
 // numOuterC
 NumericMatrix numOuterC(NumericVector x, NumericVector y);
-RcppExport SEXP strataGdevel_numOuterC(SEXP xSEXP, SEXP ySEXP) {
+RcppExport SEXP strataG_numOuterC(SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -143,7 +143,7 @@ END_RCPP
 }
 // intVecToMat
 IntegerMatrix intVecToMat(IntegerVector x, int ncol);
-RcppExport SEXP strataGdevel_intVecToMat(SEXP xSEXP, SEXP ncolSEXP) {
+RcppExport SEXP strataG_intVecToMat(SEXP xSEXP, SEXP ncolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -155,7 +155,7 @@ END_RCPP
 }
 // numVecToMat
 NumericMatrix numVecToMat(NumericVector x, int ncol);
-RcppExport SEXP strataGdevel_numVecToMat(SEXP xSEXP, SEXP ncolSEXP) {
+RcppExport SEXP strataG_numVecToMat(SEXP xSEXP, SEXP ncolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -167,7 +167,7 @@ END_RCPP
 }
 // calcStrataN
 IntegerVector calcStrataN(IntegerVector locus, IntegerVector strata);
-RcppExport SEXP strataGdevel_calcStrataN(SEXP locusSEXP, SEXP strataSEXP) {
+RcppExport SEXP strataG_calcStrataN(SEXP locusSEXP, SEXP strataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -179,7 +179,7 @@ END_RCPP
 }
 // statChi2_C
 double statChi2_C(IntegerMatrix loci, IntegerVector strata, int ploidy);
-RcppExport SEXP strataGdevel_statChi2_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+RcppExport SEXP strataG_statChi2_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -192,7 +192,7 @@ END_RCPP
 }
 // statFis_C
 double statFis_C(IntegerMatrix loci, IntegerVector strata, int ploidy);
-RcppExport SEXP strataGdevel_statFis_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+RcppExport SEXP strataG_statFis_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -205,7 +205,7 @@ END_RCPP
 }
 // alleleFreqCalc
 NumericMatrix alleleFreqCalc(IntegerVector locVec, IntegerVector strata, int ploidy);
-RcppExport SEXP strataGdevel_alleleFreqCalc(SEXP locVecSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+RcppExport SEXP strataG_alleleFreqCalc(SEXP locVecSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -218,7 +218,7 @@ END_RCPP
 }
 // prHetCalc
 NumericMatrix prHetCalc(IntegerVector alleles, IntegerVector nvec, IntegerMatrix locusMat, IntegerVector strata, int ploidy);
-RcppExport SEXP strataGdevel_prHetCalc(SEXP allelesSEXP, SEXP nvecSEXP, SEXP locusMatSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+RcppExport SEXP strataG_prHetCalc(SEXP allelesSEXP, SEXP nvecSEXP, SEXP locusMatSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -233,7 +233,7 @@ END_RCPP
 }
 // varCompCalc
 NumericMatrix varCompCalc(IntegerVector nvec, NumericMatrix alleleFreq, NumericMatrix prHet, int r, double nbar, double rnbar, double nc);
-RcppExport SEXP strataGdevel_varCompCalc(SEXP nvecSEXP, SEXP alleleFreqSEXP, SEXP prHetSEXP, SEXP rSEXP, SEXP nbarSEXP, SEXP rnbarSEXP, SEXP ncSEXP) {
+RcppExport SEXP strataG_varCompCalc(SEXP nvecSEXP, SEXP alleleFreqSEXP, SEXP prHetSEXP, SEXP rSEXP, SEXP nbarSEXP, SEXP rnbarSEXP, SEXP ncSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -250,7 +250,7 @@ END_RCPP
 }
 // statFst_C
 double statFst_C(IntegerMatrix loci, IntegerVector strata, int ploidy);
-RcppExport SEXP strataGdevel_statFst_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+RcppExport SEXP strataG_statFst_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -263,7 +263,7 @@ END_RCPP
 }
 // statGst_C
 double statGst_C(IntegerMatrix loci, IntegerVector strata, int ploidy);
-RcppExport SEXP strataGdevel_statGst_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+RcppExport SEXP strataG_statGst_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -276,7 +276,7 @@ END_RCPP
 }
 // statGstPrime_C
 double statGstPrime_C(IntegerMatrix loci, IntegerVector strata, int ploidy, int primeType);
-RcppExport SEXP strataGdevel_statGstPrime_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP, SEXP primeTypeSEXP) {
+RcppExport SEXP strataG_statGstPrime_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP, SEXP primeTypeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -290,7 +290,7 @@ END_RCPP
 }
 // statGstDblPrime_C
 double statGstDblPrime_C(IntegerMatrix loci, IntegerVector strata, int ploidy);
-RcppExport SEXP strataGdevel_statGstDblPrime_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+RcppExport SEXP strataG_statGstDblPrime_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -303,7 +303,7 @@ END_RCPP
 }
 // statJostD_C
 double statJostD_C(IntegerMatrix loci, IntegerVector strata, int ploidy);
-RcppExport SEXP strataGdevel_statJostD_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+RcppExport SEXP strataG_statJostD_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -316,7 +316,7 @@ END_RCPP
 }
 // ssWPCalc
 double ssWPCalc(IntegerVector strataFreq, IntegerMatrix strataHapFreq, NumericMatrix hapDist);
-RcppExport SEXP strataGdevel_ssWPCalc(SEXP strataFreqSEXP, SEXP strataHapFreqSEXP, SEXP hapDistSEXP) {
+RcppExport SEXP strataG_ssWPCalc(SEXP strataFreqSEXP, SEXP strataHapFreqSEXP, SEXP hapDistSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -329,7 +329,7 @@ END_RCPP
 }
 // ssAPCalc
 double ssAPCalc(IntegerVector strataFreq, IntegerMatrix strataHapFreq, NumericMatrix hapDist);
-RcppExport SEXP strataGdevel_ssAPCalc(SEXP strataFreqSEXP, SEXP strataHapFreqSEXP, SEXP hapDistSEXP) {
+RcppExport SEXP strataG_ssAPCalc(SEXP strataFreqSEXP, SEXP strataHapFreqSEXP, SEXP hapDistSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -342,7 +342,7 @@ END_RCPP
 }
 // statPhist_C
 double statPhist_C(IntegerVector haps, IntegerVector strata, NumericMatrix hapDist);
-RcppExport SEXP strataGdevel_statPhist_C(SEXP hapsSEXP, SEXP strataSEXP, SEXP hapDistSEXP) {
+RcppExport SEXP strataG_statPhist_C(SEXP hapsSEXP, SEXP strataSEXP, SEXP hapDistSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;

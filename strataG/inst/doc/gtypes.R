@@ -1,5 +1,5 @@
 ## ------------------------------------------------------------------------
-library(strataGdevel)
+library(strataG)
 #--- create a diploid (microsatellite) gtypes object
 data(dolph.msats)
 data(dolph.strata)
