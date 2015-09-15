@@ -30,4 +30,4 @@ devtools::install_github('ericarcher/strataG')
 
 ## Available functions:
 
-You can see the most recent changes to the package in the NEWS.md file: https://github.com/EricArcher/strataG/blob/master/strataGdevel/NEWS.md
+You can see the most recent changes to the package in the NEWS.md file: https://github.com/EricArcher/strataG/blob/master/strataG/NEWS.md
