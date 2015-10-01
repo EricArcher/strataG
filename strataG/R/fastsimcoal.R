@@ -10,14 +10,10 @@
 #' @param growth.rate growth rate of populations.
 #' @param mig.rates list of migration matrices.
 #' @param hist.ev matrix of historical events.
-#' @param data.type the data type to be modeled. Can be one of 
+#' @param locus.type the type of locus to be modeled. Can be one of 
 #'   \code{"DNA", "MICROSAT", "SNP", "STANDARD", or "FREQ"}.
-#' @param locus.params a list of locus parameter matrices with one element per 
+#' @param locus.params a matrix of locus parameter matrices with one row per 
 #'   chromosome.
-#' @param num.chrom number of chromosomes if multiple chromosomes with the same 
-#'   structure are desired. Leave as \code{NULL} to take the number from the 
-#'   number of elements in \code{locus.params}. If specified, the matrix in the 
-#'   first element in \code{locus.params} will be used.
 #' @param label character string to label files with.
 #' @param num.sims number of simulations to run.
 #' @param inf.site.model logical. Use infinite site model?
@@ -44,29 +40,24 @@ NULL
 
 
 # check the locus.params list
-.fsc.check.locus.params <- function(data.type, locus.params) {
-  req.col <- switch(data.type, DNA = 4, MICROSAT = 5, SNP = 3, STANDARD = 3, FREQ = 3)
-  if(!is.list(locus.params)) stop("'locus.params': not a list")
-  for(x in locus.params) {
-    if(!is.matrix(x)) stop("'locus.params': some elements are not matrices")
-    # check data type row lengths
-    for(i in nrow(x)) {
-      num.col <- length(x[i, ])
-      if(num.col != req.col) stop(
-        paste("'locus.params': a", data.type, "row has", num.col, "parameters, but should have", req.col)
-      )
-    }
-  }
+.fsc.check.locus.params <- function(locus.type, locus.params) {
+  req.col <- switch(locus.type, DNA = 4, MICROSAT = 5, SNP = 3, STANDARD = 3, FREQ = 3)
+  if(!is.matrix(locus.params)) stop("'locus.params': not a matrix")
+  # check data type row lengths
+  num.col <- ncol(locus.params)
+  if(num.col != req.col) stop(
+    paste("'locus.params': a", locus.type, "row has", num.col, "parameters, but should have", req.col)
+  )
 }
 
 
 # write input file
 .fsc.write <- function(num.pops, Ne, sample.size, sample.time, growth.rate, 
-                       mig.rates, hist.ev, data.type, locus.params, num.chrom, label) {
+                       mig.rates, hist.ev, locus.type, locus.params, label) {
   
   # Check argument format
   if(!is.numeric(hist.ev) & is.matrix(hist.ev)) stop("'hist.ev' is not a numerical matrix")
-  .fsc.check.locus.params(data.type, locus.params)
+  .fsc.check.locus.params(locus.type, locus.params)
   
   file <- paste(label, ".par", sep = "")
   write(paste("//  <<", label, ">>  (input from 'strataG::fastsimcoal')"), file)
@@ -99,25 +90,18 @@ NULL
   if(!is.null(hist.ev)) {
     for(i in 1:nrow(hist.ev)) write(paste(hist.ev[i, ], collapse = " "), file, append = T)
   }
-  
-  chrom.diff <- if(is.null(num.chrom)) {
-    num.chrom <- length(locus.params)
-    1
-  } else {
-    locus.params <- locus.params[1]
-    0
-  }
+
+  # limited to one linkage block per chromosome
+  num.chrom <- nrow(locus.params)
   write("//Number of independent loci [chromosome]", file, append = T)
-  write(paste(num.chrom, chrom.diff), file, append = T)
-  for(chrom in locus.params) {
+  write(paste(num.chrom, ifelse(num.chrom == 1, 0, 1)), file, append = T)
+  for(i in 1:num.chrom) {
     write("//Per chromosome: Number of linkage blocks", file, append = T)
-    write(nrow(chrom), file, append = T)
+    write("1", file, append = T)
     write("//Per block: data type, num loci, rec. rate and mut rate + optional parameters", file, append = T)
-    for(i in 1:nrow(chrom)) {
-      chrom.line <- paste(chrom[i, ], collapse = " ")
-      chrom.line <- paste(data.type, chrom.line)
-      write(chrom.line, file, append = T)
-    }
+    chrom.line <- paste(locus.params[i, ], collapse = " ")
+    chrom.line <- paste(locus.type, chrom.line)
+    write(chrom.line, file, append = T)
   }
   
   file
@@ -211,7 +195,7 @@ NULL
 
 
 # read arlequin output
-.fsc.read <- function(arl.files, data.type, label) {  
+.fsc.read <- function(arl.files, locus.type, label) {  
   fs.gtypes <- lapply(arl.files, function(file) {
     f <- readLines(file)
     
@@ -229,8 +213,8 @@ NULL
     }))
     
     # get data type and parse data
-    data.type <- gsub("\tDataType=", "", grep("DataType=", f, value = TRUE))
-    is.seq <- c(DNA = TRUE, MICROSAT = FALSE, STANDARD = FALSE)[data.type]
+    locus.type <- gsub("\tDataType=", "", grep("DataType=", f, value = TRUE))
+    is.seq <- c(DNA = TRUE, MICROSAT = FALSE, STANDARD = FALSE)[locus.type]
     if(is.seq) {
       .fsc.parse.dna(f, label, pop.data) 
     } else {
@@ -248,19 +232,18 @@ NULL
 fastsimcoal <- function(
   num.pops, Ne, sample.size = NULL, sample.time = NULL, growth.rate = NULL, 
   mig.rates = NULL, hist.ev = NULL, 
-  data.type = c("DNA", "MICROSAT", "SNP", "STANDARD", "FREQ"), 
-  locus.params = NULL, num.chrom = NULL, label = "strataG_fastsimcoal", 
+  locus.type = c("DNA", "MICROSAT", "SNP", "STANDARD", "FREQ"), 
+  locus.params = NULL, label = "strataG_fastsimcoal", 
   num.sims = 1, inf.site.model = TRUE, quiet = TRUE, delete.files = TRUE, 
   exec = "fsc252") {
   
-  data.type <- match.arg(data.type)
+  locus.type <- match.arg(locus.type)
   
   # Write input file
   infile <- .fsc.write(
     num.pops = num.pops, Ne = Ne, sample.size = sample.size, sample.time = sample.time, 
     growth.rate = growth.rate, mig.rates = mig.rates, hist.ev = hist.ev, 
-    data.type = data.type, locus.params = locus.params, num.chrom = num.chrom, 
-    label = label
+    locus.type = locus.type, locus.params = locus.params, label = label
   ) 
   
   # Check/setup folder structure
@@ -275,9 +258,9 @@ fastsimcoal <- function(
   if(err != 0) stop(paste("fastsimcoal returned error code", err)) 
   arl.files <- dir(label, pattern = ".arp", full.names = T)
   if(length(arl.files) == 0) stop("fastsimcoal did not generate output")
-  
+
   # Read and parse output
-  fsc.gtypes <- .fsc.read(arl.files, data.type, label)
+  fsc.gtypes <- .fsc.read(arl.files, locus.type, label)
   
   # Cleanup
   if(delete.files) {

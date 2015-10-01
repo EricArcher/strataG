@@ -6,10 +6,10 @@
 \usage{
 fastsimcoal(num.pops, Ne, sample.size = NULL, sample.time = NULL,
   growth.rate = NULL, mig.rates = NULL, hist.ev = NULL,
-  data.type = c("DNA", "MICROSAT", "SNP", "STANDARD", "FREQ"),
-  locus.params = NULL, num.chrom = NULL, label = "strataG_fastsimcoal",
-  num.sims = 1, inf.site.model = TRUE, quiet = TRUE,
-  delete.files = TRUE, exec = "fsc252")
+  locus.type = c("DNA", "MICROSAT", "SNP", "STANDARD", "FREQ"),
+  locus.params = NULL, label = "strataG_fastsimcoal", num.sims = 1,
+  inf.site.model = TRUE, quiet = TRUE, delete.files = TRUE,
+  exec = "fsc252")
 }
 \arguments{
 \item{num.pops}{number of populations.}
@@ -26,16 +26,11 @@ fastsimcoal(num.pops, Ne, sample.size = NULL, sample.time = NULL,
 
 \item{hist.ev}{matrix of historical events.}
 
-\item{data.type}{the data type to be modeled. Can be one of
+\item{locus.type}{the type of locus to be modeled. Can be one of
 \code{"DNA", "MICROSAT", "SNP", "STANDARD", or "FREQ"}.}
 
-\item{locus.params}{a list of locus parameter matrices with one element per
+\item{locus.params}{a matrix of locus parameter matrices with one row per
 chromosome.}
-
-\item{num.chrom}{number of chromosomes if multiple chromosomes with the same
-structure are desired. Leave as \code{NULL} to take the number from the
-number of elements in \code{locus.params}. If specified, the matrix in the
-first element in \code{locus.params} will be used.}
 
 \item{label}{character string to label files with.}
 

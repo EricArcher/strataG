@@ -3,7 +3,10 @@
 #' @description Run PHASE to estimate the phase of loci in diploid data.
 #' 
 #' @param g a \linkS4class{gtypes} object.
-#' @param loci vector of names of locus in 'gtypes' that are to be phased.
+#' @param loci vector or data.frame of loci in 'g' that are to be phased. If a 
+#'   data.frame, it should have columns named \code{locus} (name of locus in 'g'),  
+#'   \code{group} (number identifying loci in same linkage group), and
+#'   \code{position} (integer identifying location of each locus in a linkage group).
 #' @param positions position along chromosome of each locus.
 #' @param type type of each locus.
 #' @param num.iter number of PHASE MCMC iterations.
@@ -60,7 +63,7 @@
 #' @examples \dontrun{
 #' data(bowhead.snps)
 #' data(bowhead.snp.position)
-#' snps <- gtypes(bowhead.snps, description = "Bowhead SNP example")
+#' snps <- df2gtypes(bowhead.snps, ploidy = 2, description = "Bowhead SNPS")
 #' summary(snps)
 #' 
 #' # Run PHASE on all data
@@ -68,13 +71,13 @@
 #'   save.posterior = FALSE)
 #' 
 #' # Filter phase results
-#' filtered.results <- phase.filter(phase.results, thresh = 0.5)
+#' filtered.results <- phaseFilter(phase.results, thresh = 0.5)
 #' 
 #' # Convert phased genotypes to gtypes
 #' ids <- rownames(filtered.results)
 #' strata <- bowhead.snps$Stock[match(ids, bowhead.snps$LABID)]
-#' filtered.results <- cbind(id = ids, strata = strata, filtered.results)
-#' phased.snps <- gtypes(filtered.results, description = "Bowhead phased SNPs")
+#' filtered.df <- cbind(id = ids, strata = strata, filtered.results)
+#' phased.snps <- df2gtypes(filtered.df, ploidy = 2, description = "Bowhead phased SNPs")
 #' summary(phased.snps)
 #' }
 #' 
@@ -280,8 +283,8 @@ phasePosterior <- function(ph.res, keep.missing = TRUE) {
       
       if(keep.missing) {
         for(i in 1:nrow(post.df)) {
-          row <- which(rownames(ph.res$orig.gtypes$genotypes) == post.df[i, 1])
-          if(any(ph.res$orig.gtypes$genotypes[row, -1] == -1)) {
+          ids <- which(indNames(ph.res$orig.gtypes) == post.df[i, 1])
+          if(any(is.na(loci(ph.res$orig.gtypes[ids, , ])))) {
             post.df[i, 2:3] <- NA
           }
         }
@@ -317,8 +320,8 @@ phaseFilter <- function(ph.res, thresh = 0.5, keep.missing = TRUE) {
     
     if(keep.missing) {
       for(i in 1:nrow(locus.filtered)) {
-        row <- which(rownames(x$orig.gtypes$genotypes) == locus.filtered[i, 1])
-        if(any(x$orig.gtypes$genotypes[row, -1] == -1)) {
+        ids <- which(indNames(x$orig.gtypes) == locus.filtered[i, 1])
+        if(any(is.na(loci(x$orig.gtypes[ids, , ])))) {
           locus.filtered[i, 2:3] <- NA
         }
       }

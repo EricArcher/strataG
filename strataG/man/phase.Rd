@@ -28,7 +28,10 @@ phaseFilter(ph.res, thresh = 0.5, keep.missing = TRUE)
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
-\item{loci}{vector of names of locus in 'gtypes' that are to be phased.}
+\item{loci}{vector or data.frame of loci in 'g' that are to be phased. If a
+data.frame, it should have columns named \code{locus} (name of locus in 'g'),
+\code{group} (number identifying loci in same linkage group), and
+\code{position} (integer identifying location of each locus in a linkage group).}
 
 \item{positions}{position along chromosome of each locus.}
 
@@ -99,7 +102,7 @@ Assumes that the the command line version of PHASE is properly installed and ava
 \dontrun{
 data(bowhead.snps)
 data(bowhead.snp.position)
-snps <- gtypes(bowhead.snps, description = "Bowhead SNP example")
+snps <- df2gtypes(bowhead.snps, ploidy = 2, description = "Bowhead SNPS")
 summary(snps)
 
 # Run PHASE on all data
@@ -107,13 +110,13 @@ phase.results <- phase(snps, bowhead.snp.position, num.iter = 100,
   save.posterior = FALSE)
 
 # Filter phase results
-filtered.results <- phase.filter(phase.results, thresh = 0.5)
+filtered.results <- phaseFilter(phase.results, thresh = 0.5)
 
 # Convert phased genotypes to gtypes
 ids <- rownames(filtered.results)
 strata <- bowhead.snps$Stock[match(ids, bowhead.snps$LABID)]
-filtered.results <- cbind(id = ids, strata = strata, filtered.results)
-phased.snps <- gtypes(filtered.results, description = "Bowhead phased SNPs")
+filtered.df <- cbind(id = ids, strata = strata, filtered.results)
+phased.snps <- df2gtypes(filtered.df, ploidy = 2, description = "Bowhead phased SNPs")
 summary(phased.snps)
 }
 }
