@@ -134,6 +134,20 @@ overallTest <- function(g, nrep = 100, stats = "all",
   # remove unstratified samples
   if(any(is.na(strata(g)))) g <- g[, , strataNames(g)]
   
+  # delete loci with no genotypes in at least one stratum
+  to.delete <- unique(unlist(lapply(strataSplit(g), function(st.g) {
+    n.genotyped <- nInd(st.g) - numMissing(st.g)
+    names(n.genotyped)[n.genotyped == 0]
+  })))
+  if(length(to.delete) > 0) {
+    warning(
+      paste("The following loci will be removed because they have no genotypes in one or more strata: ",
+            paste(to.delete, collapse = ", ")
+      )
+    )
+    g <- g[, setdiff(locNames(g), to.delete), ]
+  }
+  
   if(!quietly) cat(
     cat("\n<<<", description(g), ">>>\n"),
     format(Sys.time()), ": Overall test :", nrep, "permutations\n"

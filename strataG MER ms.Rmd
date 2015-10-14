@@ -7,15 +7,15 @@ output: word_document
 
 ## Introduction
 
-The R programming language has rapidly become the platform of choice for population genetics.
+The R programming language has rapidly become a popular platform for population genetics analyses. Several packages have been developed to efficiently store and manipulate genetic data, summarize genetic diversity, and conduct phylogenetic analyses to name a few. 
 
-The _strataG_ pacakge is designed to be an extensible toolkit for population genetics. It incorporates functions to generate standard summary statistics, conduct analyses of population structure, 
+The _strataG_ pacakge is designed to be an extensible toolkit for population genetics. It incorporates functions to generate standard summary statistics, conduct analyses of population structure, and run several popular external programs such as Genepop and STRUCTURE.
 
 ## Data Import
 
-Most functions in _strataG_ operate on genetic data provided as a _gtypes_ object, which contain information about individual genotypes, ploidy, sequences, stratification, and can carry auxiliary information as well. _gtypes_ are stored as R S4 classes and accessor functions are provided for all of the slots in the class.
+Most functions in _strataG_ operate on genetic data provided as a _gtypes_ object. _gtypes_ contain information about individual genotypes, ploidy, sequences, stratification, and can carry auxiliary information about individuals. Internally, _gtypes_ are stored as R S4 classes, for which accessor functions are available for all of the slots in the class.
 
-There are multiple ways to create a _gtypes_ object. A standard inport format is to have the genetic data in a _data.frame_ or _matrix_, where each row is a genotype for an individual and columns represent the alleles at each locus. The _readGenData_ function in _strataG_ is a wrapper for _read.csv_ that will read a standard comma-delimited text file into a _data.frame_ recognizing commonly used missing data codes. 
+There are multiple ways to create a _gtypes_ object. A common format is to have the genetic data in a _data.frame_ or _matrix_ in which each row is a genotype for an individual and the columns represent the alleles at each locus. A function, _readGenData_, has been provided as a wrapper for _read.csv_ that will read a standard comma-delimited text file into a _data.frame_ while recognizing commonly used missing data codes. 
 
 For each locus, there should be a column for each allele. Each column name should contain the locus name and a suffix that designates the allele. For example, the two columns of a diploid locus named "ABC" would be named "ABC.1" and "ABC.2". If all alleles are in a single column, the _alleleSplit_ function will create a matrix with them split into multiple columns.
 
