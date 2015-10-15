@@ -53,17 +53,13 @@
 #' msats <- df2gtypes(msats.merge, ploidy = 2)
 #' 
 #' # Conduct an overall Chi-squared test
-#' ovl <- overallTest(msats, nrep = 5, 
-#'   stat.list = statList("chi2"), quietly = FALSE
-#' )
+#' ovl <- overallTest(msats, nrep = 5, stats = "chi2", quietly = FALSE)
 #' 
 #' # Conduct a pairwise test for Gst
-#' pws <- pairwiseTest(msats, nrep = 5, 
-#'   stat.list = list(statGst), quietly = FALSE
-#' )
+#' pws <- pairwiseTest(msats, nrep = 5, stats = list(statGst), quietly = FALSE)
 #' 
 #' # Conduct both overall and pairwise tests for Fst and F'st
-#' full <- popStructTest(msats, nrep = 5, stats = "fst")
+#' full <- popStructTest(msats, nrep = 5, stats = c("fst", "fst.prime"))
 #' print(full$overall)
 #' print(full$pairwise)
 #' 

@@ -17,21 +17,9 @@ Most functions in _strataG_ operate on genetic data provided as a _gtypes_ objec
 
 There are multiple ways to create a _gtypes_ object. A common format is to have the genetic data in a _data.frame_ or _matrix_ in which each row is a genotype for an individual and the columns represent the alleles at each locus. A function, _readGenData_, has been provided as a wrapper for _read.csv_ that will read a standard comma-delimited text file into a _data.frame_ while recognizing commonly used missing data codes. 
 
-For each locus, there should be a column for each allele. Each column name should contain the locus name and a suffix that designates the allele. For example, the two columns of a diploid locus named "ABC" would be named "ABC.1" and "ABC.2". If all alleles are in a single column, the _alleleSplit_ function will create a matrix with them split into multiple columns.
-
-The standard _new_ function 
-
-For most functions in _strataG_, you will need to load your data into a _gtypes_ object. A _gtypes_ object is an R S4 class with the following slots:
-
-* __\@loci__ a data.frame containing the allelic data as one column per locus. Alleles are on multiple rows per column with samples listed in the same order for each allele. rownames are sample names plus allele number formatted as 12345.1 and 12345.2 where 12345 is the sample name and 1 and 2 are the first and second alleles. colnames are unique locus names.
-* __\@sequences__ a _multidna_ object, which is a list of _DNAbin_ objects (from the _apex_ and _ape_ packages, respectively).
-* __\@ploidy__ integer representing the ploidy of the data. There are ploidy * the number of samples rows in 'loci'.
-* __\@strata__ a factor or vector that can be coerced as to a factor as long as the number of samples representing the current stratification scheme.
-* __\@schemes__ schemes a data.frame with stratification schemes in each column. Sample names are in the rownames and must match the first part of the sample names (rownames) of the 'loci' slot. Each column is a factor.
-* __\@description__ a label for the object.
-* __\@other__ a slot to carry other optional related data - unused in package analyses.
-
-### _new_ constructor
+For each locus, there should be a column for each allele. Each column name should contain the locus name and a suffix that designates the allele. For example, the two columns of a diploid locus named "ABC" would be named "ABC.1" and "ABC.2" respectively. If all alleles are in a single column, the _alleleSplit_ function will create a matrix with alleles split into multiple columns.
+ 
+### Creating _gtypes_ with the standard _new_ function
 
 A gtypes object can be created with the standard S4 _new_ constructor function, like this:
 ```{r}
@@ -100,6 +88,18 @@ obj
 gi.g <- genind2gtypes(obj)
 gi.g
 ```
+
+
+A _gtypes_ object is an R S4 class with the following slots:
+
+* __\@loci__ a data.frame containing the allelic data as one column per locus. Alleles are on multiple rows per column with samples listed in the same order for each allele. rownames are sample names plus allele number formatted as 12345.1 and 12345.2 where 12345 is the sample name and 1 and 2 are the first and second alleles. colnames are unique locus names.
+* __\@sequences__ a _multidna_ object, which is a list of _DNAbin_ objects (from the _apex_ and _ape_ packages, respectively).
+* __\@ploidy__ integer representing the ploidy of the data. There are ploidy * the number of samples rows in 'loci'.
+* __\@strata__ a factor or vector that can be coerced as to a factor as long as the number of samples representing the current stratification scheme.
+* __\@schemes__ schemes a data.frame with stratification schemes in each column. Sample names are in the rownames and must match the first part of the sample names (rownames) of the 'loci' slot. Each column is a factor.
+* __\@description__ a label for the object.
+* __\@other__ a slot to carry other optional related data - unused in package analyses.
+
 
 ## Accessor functions
 
