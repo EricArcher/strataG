@@ -150,7 +150,7 @@ overallTest <- function(g, nrep = 100, stats = "all",
   )
   
   # calculate list of observed values for each population structure function
-  result <- matrix(nrow = length(stat.list), ncol = 2)
+  result <- matrix(NA, nrow = length(stat.list), ncol = 2)
   rownames(result) <- 1:nrow(result)
   colnames(result) <- c("estimate", "p.val")
   for(i in 1:nrow(result)) {
@@ -159,12 +159,12 @@ overallTest <- function(g, nrep = 100, stats = "all",
     rownames(result)[i] <- names(x)
   }
   
-  # remove results and stats where estimate is NA
-  to.remove <- which(apply(result, 1, function(x) is.na(x["estimate"])))
-  if(length(to.remove) > 0) {
-    result <- result[-to.remove, , drop = FALSE]
-    stat.list <- stat.list[-to.remove]
-  }    
+#   # remove results and stats where estimate is NA
+#   to.remove <- which(apply(result, 1, function(x) is.na(x["estimate"])))
+#   if(length(to.remove) > 0) {
+#     result <- result[-to.remove, , drop = FALSE]
+#     stat.list <- stat.list[-to.remove]
+#   }    
   
   # conduct permutation test
   null.dist <- NULL
@@ -195,7 +195,8 @@ overallTest <- function(g, nrep = 100, stats = "all",
     
     # calculate vector of p-values
     for(x in rownames(result)) {
-      result[x, "p.val"] <- pVal(result[x, "estimate"], null.dist[, x])
+      est <- result[x, "estimate"]
+      if(!is.na(est)) result[x, "p.val"] <- pVal(est, na.omit(null.dist[, x]))
     }
   } 
   if(!keep.null) null.dist <- NULL
