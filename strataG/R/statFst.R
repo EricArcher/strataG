@@ -133,7 +133,7 @@ statFstPrime <- function(g, strata = NULL, ...) {
   strata <- as.numeric(strata) - 1
   ploidy <- ploidy(g)
   
-  loci.max <- sapply(loci.fst, function(x) {
+  loci.max <- apply(loci.fst, 2, function(x) {
     new.locus <- paste(strata, x, sep = ".")
     new.locus[is.na(x) | is.na(strata)] <- NA
     as.numeric(factor(new.locus)) - 1
