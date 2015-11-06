@@ -88,7 +88,7 @@ print.gtypeSummary <- function(x, ... ) {
   if(x$unstratified > 0) cat(x$unstratified, "samples are unstratified\n")
   if(!is.null(x$locus.smry)) {
     cat("\nLocus summary:\n")
-    print(x$locus.smry[, c(1, 3, 5, 7)])
+    print(x$locus.smry[, c(1, 3, 5, 7), drop = FALSE])
   }
   if(!is.null(x$seq.smry)) {
     cat("\nSequence summary:\n")

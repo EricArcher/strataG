@@ -6,6 +6,8 @@
 #' @param scheme either the column name of a stratification scheme stored 
 #'   in the data.frame of the \code{schemes} slot of \code{g}, or a vector or 
 #'   factor identifying which stratum each sample belongs to.
+#' @param drop remove samples not assigned to a stratum? (those assigned \code{NA} 
+#'   in stratification scheme)
 #'
 #' @note If \code{scheme} is a vector or factor and has names, then the 
 #'   they will be used to match with \code{\link{indNames}} of \code{g}. 
@@ -33,7 +35,7 @@
 #' 
 #' @export
 #' 
-stratify <- function(g, scheme = NULL) {
+stratify <- function(g, scheme = NULL, drop = TRUE) {
   ids <- indNames(g)
   
   scheme <- if(is.null(scheme)) {
@@ -59,5 +61,9 @@ stratify <- function(g, scheme = NULL) {
   
   names(scheme) <- ids
   g@strata <- factor(scheme)
+  if(drop) {
+    i <- which(is.na(strata(g)))
+    if(length(i) > 0) g <- g[-i, , , drop = TRUE]
+  }
   g
 }

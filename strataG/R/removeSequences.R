@@ -12,6 +12,7 @@
 #' @export
 #' 
 removeSequences <- function(g) {
+  if(is.null(sequences(g))) return(g)
   new.list <- lapply(locNames(g), function(x) {
     haps <- unique(as.character(loci(g)[[x]]))
     sequences(g, x)[haps, ]

@@ -4,14 +4,17 @@
 \alias{stratify}
 \title{Stratify gtypes}
 \usage{
-stratify(g, scheme = NULL)
+stratify(g, scheme = NULL, drop = TRUE)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
 \item{scheme}{either the column name of a stratification scheme stored
-  in the data.frame of the \code{schemes} slot of \code{g}, or a vector or
-  factor identifying which stratum each sample belongs to.}
+in the data.frame of the \code{schemes} slot of \code{g}, or a vector or
+factor identifying which stratum each sample belongs to.}
+
+\item{drop}{remove samples not assigned to a stratum? (those assigned \code{NA}
+  in stratification scheme)}
 }
 \value{
 A new \linkS4class{gtypes} object with an updated \code{strata}

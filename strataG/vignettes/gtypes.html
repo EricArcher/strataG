@@ -10,7 +10,7 @@
 
 <meta name="author" content="Eric Archer" />
 
-<meta name="date" content="2015-09-12" />
+<meta name="date" content="2015-11-04" />
 
 <title>Creating and Manipulating gtypes Objects</title>
 
@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="header">
 <h1 class="title">Creating and Manipulating gtypes Objects</h1>
 <h4 class="author"><em>Eric Archer</em></h4>
-<h4 class="date"><em>2015-09-12</em></h4>
+<h4 class="date"><em>2015-11-04</em></h4>
 </div>
 
 
@@ -98,41 +98,19 @@ dloop &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st"
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create a single data.frame with the msat data and stratification</span>
 msats.merge &lt;-<span class="st"> </span><span class="kw">merge</span>(dolph.strata, dolph.msats, <span class="dt">all.y =</span> <span class="ot">TRUE</span>, <span class="dt">description =</span> <span class="kw">date</span>())
 <span class="kw">str</span>(msats.merge)</code></pre>
-<pre><code>## 'data.frame':    126 obs. of  34 variables:
-##  $ ids      : chr  &quot;18650&quot; &quot;18651&quot; &quot;18652&quot; &quot;18653&quot; ...
-##  $ broad    : chr  &quot;Offshore&quot; &quot;Offshore&quot; &quot;Offshore&quot; &quot;Offshore&quot; ...
-##  $ fine     : chr  &quot;Offshore.South&quot; &quot;Offshore.South&quot; &quot;Offshore.South&quot; &quot;Offshore.South&quot; ...
-##  $ hap      : chr  &quot;Hap.06&quot; &quot;Hap.14&quot; &quot;Hap.23&quot; &quot;Hap.24&quot; ...
-##  $ D11t.1   : chr  &quot;131&quot; &quot;137&quot; &quot;131&quot; &quot;133&quot; ...
-##  $ D11t.2   : chr  &quot;133&quot; &quot;143&quot; &quot;133&quot; &quot;139&quot; ...
-##  $ D17t.1   : chr  NA &quot;172&quot; &quot;140&quot; &quot;168&quot; ...
-##  $ D17t.2   : chr  NA &quot;180&quot; &quot;170&quot; &quot;174&quot; ...
-##  $ D8.1     : chr  &quot;126&quot; &quot;116&quot; &quot;114&quot; &quot;92&quot; ...
-##  $ D8.2     : chr  &quot;126&quot; &quot;120&quot; &quot;128&quot; &quot;110&quot; ...
-##  $ EV37.1   : chr  &quot;212&quot; &quot;200&quot; &quot;212&quot; &quot;202&quot; ...
-##  $ EV37.2   : chr  &quot;222&quot; &quot;228&quot; &quot;218&quot; &quot;220&quot; ...
-##  $ EV94.1   : chr  &quot;263&quot; &quot;249&quot; &quot;249&quot; &quot;229&quot; ...
-##  $ EV94.2   : chr  &quot;265&quot; &quot;251&quot; &quot;251&quot; &quot;245&quot; ...
-##  $ KWM12A.1 : chr  &quot;177&quot; &quot;175&quot; &quot;179&quot; &quot;177&quot; ...
-##  $ KWM12A.2 : chr  &quot;183&quot; &quot;175&quot; &quot;181&quot; &quot;177&quot; ...
-##  $ KWM2a.1  : chr  &quot;154&quot; &quot;146&quot; &quot;154&quot; &quot;156&quot; ...
-##  $ KWM2a.2  : chr  &quot;156&quot; &quot;152&quot; &quot;156&quot; &quot;158&quot; ...
-##  $ SW19t.1  : chr  &quot;118&quot; &quot;116&quot; &quot;114&quot; &quot;102&quot; ...
-##  $ SW19t.2  : chr  &quot;120&quot; &quot;116&quot; &quot;116&quot; &quot;116&quot; ...
-##  $ Ttr11.1  : chr  &quot;197&quot; &quot;197&quot; &quot;211&quot; &quot;197&quot; ...
-##  $ Ttr11.2  : chr  &quot;209&quot; &quot;197&quot; &quot;213&quot; &quot;215&quot; ...
-##  $ Ttr19.1  : chr  &quot;186&quot; &quot;190&quot; &quot;190&quot; &quot;194&quot; ...
-##  $ Ttr19.2  : chr  &quot;198&quot; &quot;192&quot; &quot;192&quot; &quot;200&quot; ...
-##  $ Ttr34.1  : chr  &quot;185&quot; &quot;185&quot; &quot;185&quot; &quot;189&quot; ...
-##  $ Ttr34.2  : chr  &quot;187&quot; &quot;187&quot; &quot;191&quot; &quot;195&quot; ...
-##  $ Ttr48.1  : chr  &quot;128&quot; &quot;138&quot; &quot;124&quot; &quot;132&quot; ...
-##  $ Ttr48.2  : chr  &quot;140&quot; &quot;140&quot; &quot;128&quot; &quot;132&quot; ...
-##  $ Ttr58.1  : chr  &quot;187&quot; &quot;185&quot; &quot;179&quot; &quot;165&quot; ...
-##  $ Ttr58.2  : chr  &quot;189&quot; &quot;187&quot; &quot;187&quot; &quot;179&quot; ...
-##  $ TtrRC11.1: chr  &quot;150&quot; &quot;150&quot; &quot;148&quot; &quot;138&quot; ...
-##  $ TtrRC11.2: chr  &quot;162&quot; &quot;166&quot; &quot;162&quot; &quot;168&quot; ...
-##  $ TV7.1    : chr  &quot;166&quot; &quot;166&quot; &quot;166&quot; &quot;166&quot; ...
-##  $ TV7.2    : chr  &quot;168&quot; &quot;166&quot; &quot;172&quot; &quot;166&quot; ...</code></pre>
+<pre><code>## 'data.frame':    126 obs. of  12 variables:
+##  $ ids    : chr  &quot;18650&quot; &quot;18651&quot; &quot;18652&quot; &quot;18653&quot; ...
+##  $ broad  : chr  &quot;Offshore&quot; &quot;Offshore&quot; &quot;Offshore&quot; &quot;Offshore&quot; ...
+##  $ fine   : chr  &quot;Offshore.South&quot; &quot;Offshore.South&quot; &quot;Offshore.South&quot; &quot;Offshore.South&quot; ...
+##  $ hap    : chr  &quot;Hap.06&quot; &quot;Hap.14&quot; &quot;Hap.23&quot; &quot;Hap.24&quot; ...
+##  $ D11t.1 : chr  &quot;131&quot; &quot;137&quot; &quot;131&quot; &quot;133&quot; ...
+##  $ D11t.2 : chr  &quot;133&quot; &quot;143&quot; &quot;133&quot; &quot;139&quot; ...
+##  $ EV37.1 : chr  &quot;212&quot; &quot;200&quot; &quot;212&quot; &quot;202&quot; ...
+##  $ EV37.2 : chr  &quot;222&quot; &quot;228&quot; &quot;218&quot; &quot;220&quot; ...
+##  $ KWM2a.1: chr  &quot;154&quot; &quot;146&quot; &quot;154&quot; &quot;156&quot; ...
+##  $ KWM2a.2: chr  &quot;156&quot; &quot;152&quot; &quot;156&quot; &quot;158&quot; ...
+##  $ TV7.1  : chr  &quot;166&quot; &quot;166&quot; &quot;166&quot; &quot;166&quot; ...
+##  $ TV7.2  : chr  &quot;168&quot; &quot;166&quot; &quot;172&quot; &quot;166&quot; ...</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># creat the gtypes object</span>
 msats.fine &lt;-<span class="st"> </span><span class="kw">df2gtypes</span>(msats.merge, <span class="dt">ploidy =</span> <span class="dv">2</span>, <span class="dt">id.col =</span> <span class="dv">1</span>, <span class="dt">strata.col =</span> <span class="dv">3</span>, <span class="dt">loc.col =</span> <span class="dv">5</span>)</code></pre>
 </div>
@@ -184,7 +162,7 @@ obj</code></pre>
 gi.g &lt;-<span class="st"> </span><span class="kw">genind2gtypes</span>(obj)
 gi.g</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2015-09-12 20:23:49 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2015-11-04 11:00:56 &gt;&gt;&gt;
 ## 
 ## Contents: 4 samples, 3 loci, 1 stratum
 ## 
@@ -231,94 +209,67 @@ gi.g</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>msats.fine[<span class="kw">sample</span>(<span class="kw">nInd</span>(msats.fine), <span class="dv">10</span>), , ]
 sub.msats</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2015-09-12 20:23:49 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2015-11-04 11:00:56 &gt;&gt;&gt;
 ## 
-## Contents: 10 samples, 15 loci, 3 strata
+## Contents: 10 samples, 4 loci, 3 strata
 ## 
 ## Strata summary:
 ##                num.samples num.missing num.alleles pct.unique.alleles
-## Coastal                  8  0.06666667    3.400000          0.2555556
-## Offshore.North           1  0.00000000    1.866667          1.0000000
-## Offshore.South           1  0.00000000    1.866667          1.0000000
+## Coastal                  4           0        3.00          0.2916667
+## Offshore.North           3           0        3.00          0.3750000
+## Offshore.South           3           0        4.25          0.7750000
 ##                heterozygosity
-## Coastal             0.5285714
-## Offshore.North      0.8666667
-## Offshore.South      0.8666667
+## Coastal             0.7500000
+## Offshore.North      0.6666667
+## Offshore.South      0.7500000
 ## 
 ## Locus summary:
-##         num.genotyped num.alleles pct.unique.alleles
-## D11t               10           5          0.6000000
-## D17t               10           4          0.5000000
-## D8                 10           5          0.6000000
-## EV37                9           7          0.4285714
-## EV94               10           6          0.1666667
-## KWM12A             10           4          0.2500000
-## KWM2a              10           6          0.3333333
-## SW19t              10           7          0.2857143
-## Ttr11              10           5          0.2000000
-## Ttr19              10           5          0.4000000
-## Ttr34              10           7          0.5714286
-## Ttr48              10           6          0.5000000
-## Ttr58              10           6          0.8333333
-## TtrRC11            10           6          0.5000000
-## TV7                10           4          0.2500000
-##         observed.heterozygosity
-## D11t                  0.7000000
-## D17t                  0.3000000
-## D8                    0.4000000
-## EV37                  0.5555556
-## EV94                  0.7000000
-## KWM12A                0.6000000
-## KWM2a                 0.8000000
-## SW19t                 0.8000000
-## Ttr11                 0.8000000
-## Ttr19                 0.5000000
-## Ttr34                 0.8000000
-## Ttr48                 0.7000000
-## Ttr58                 0.3000000
-## TtrRC11               0.6000000
-## TV7                   0.4000000</code></pre>
+##       num.genotyped num.alleles pct.unique.alleles observed.heterozygosity
+## D11t             10           7          0.2857143                     0.8
+## EV37             10           8          0.6250000                     0.5
+## KWM2a            10           8          0.3750000                     0.9
+## TV7              10           5          0.2000000                     0.7</code></pre>
 <p>…or to return specific loci:</p>
 <pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>sub.msats[, <span class="kw">c</span>(<span class="st">&quot;D11t&quot;</span>, <span class="st">&quot;EV37&quot;</span>, <span class="st">&quot;TV7&quot;</span>), ]
 sub.msats</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2015-09-12 20:23:49 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2015-11-04 11:00:56 &gt;&gt;&gt;
 ## 
 ## Contents: 10 samples, 3 loci, 3 strata
 ## 
 ## Strata summary:
 ##                num.samples num.missing num.alleles pct.unique.alleles
-## Coastal                  8   0.3333333    3.000000         0.08333333
-## Offshore.North           1   0.0000000    1.666667         1.00000000
-## Offshore.South           1   0.0000000    1.666667         1.00000000
+## Coastal                  4           0    2.666667          0.2222222
+## Offshore.North           3           0    3.333333          0.5000000
+## Offshore.South           3           0    4.000000          0.7666667
 ##                heterozygosity
-## Coastal             0.5178571
+## Coastal             0.6666667
 ## Offshore.North      0.6666667
 ## Offshore.South      0.6666667
 ## 
 ## Locus summary:
 ##      num.genotyped num.alleles pct.unique.alleles observed.heterozygosity
-## D11t            10           5          0.6000000               0.7000000
-## EV37             9           7          0.4285714               0.5555556
-## TV7             10           4          0.2500000               0.4000000</code></pre>
+## D11t            10           7          0.2857143                     0.8
+## EV37            10           8          0.6250000                     0.5
+## TV7             10           5          0.2000000                     0.7</code></pre>
 <p>…or some loci in a specific stratum:</p>
-<pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>msats.fine[, <span class="kw">c</span>(<span class="st">&quot;EV94&quot;</span>, <span class="st">&quot;SW19t&quot;</span>), <span class="st">&quot;Coastal&quot;</span>]
+<pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>msats.fine[, <span class="kw">c</span>(<span class="st">&quot;KWM2a&quot;</span>, <span class="st">&quot;TV7&quot;</span>), <span class="st">&quot;Coastal&quot;</span>]
 sub.msats</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2015-09-12 20:23:49 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2015-11-04 11:00:56 &gt;&gt;&gt;
 ## 
 ## Contents: 68 samples, 2 loci, 1 stratum
 ## 
 ## Strata summary:
 ##         num.samples num.missing num.alleles pct.unique.alleles
-## Coastal          68         0.5           6                  0
+## Coastal          68         0.5         3.5                  0
 ##         heterozygosity
-## Coastal      0.7333187
+## Coastal      0.5850527
 ## 
 ## Locus summary:
 ##       num.genotyped num.alleles pct.unique.alleles observed.heterozygosity
-## EV94             68           5                  0               0.7352941
-## SW19t            67           7                  0               0.7313433</code></pre>
+## KWM2a            68           4                  0               0.6029412
+## TV7              67           3                  0               0.5671642</code></pre>
 </div>
 <div id="summary" class="section level2">
 <h2>Summary</h2>
@@ -327,145 +278,57 @@ sub.msats</code></pre>
 <span class="kw">str</span>(msats.smry)</code></pre>
 <pre><code>## List of 7
 ##  $ num.ind     : num 126
-##  $ num.loc     : int 15
+##  $ num.loc     : int 4
 ##  $ num.strata  : int 3
-##  $ allele.freqs:List of 15
-##   ..$ D11t   : num [1:12, 1:2, 1:3] 0 0 0 0 0 0 48 83 3 0 ...
+##  $ allele.freqs:List of 4
+##   ..$ D11t : num [1:12, 1:2, 1:3] 0 0 0 0 0 0 48 83 3 0 ...
 ##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
 ##   .. .. ..$ : chr [1:12] &quot;117&quot; &quot;119&quot; &quot;121&quot; &quot;127&quot; ...
 ##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
 ##   .. .. ..$ : chr [1:3] &quot;Coastal&quot; &quot;Offshore.North&quot; &quot;Offshore.South&quot;
-##   ..$ D17t   : num [1:18, 1:2, 1:3] 97 0 0 0 0 15 11 11 0 0 ...
-##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
-##   .. .. ..$ : chr [1:18] &quot;140&quot; &quot;146&quot; &quot;158&quot; &quot;162&quot; ...
-##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
-##   .. .. ..$ : chr [1:3] &quot;Coastal&quot; &quot;Offshore.North&quot; &quot;Offshore.South&quot;
-##   ..$ D8     : num [1:13, 1:2, 1:3] 1 0 0 0 21 5 108 1 0 0 ...
-##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
-##   .. .. ..$ : chr [1:13] &quot;104&quot; &quot;106&quot; &quot;108&quot; &quot;110&quot; ...
-##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
-##   .. .. ..$ : chr [1:3] &quot;Coastal&quot; &quot;Offshore.North&quot; &quot;Offshore.South&quot;
-##   ..$ EV37   : num [1:22, 1:2, 1:3] 0 0 0 0 0 0 0 1 71 33 ...
+##   ..$ EV37 : num [1:22, 1:2, 1:3] 0 0 0 0 0 0 0 1 71 33 ...
 ##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
 ##   .. .. ..$ : chr [1:22] &quot;190&quot; &quot;200&quot; &quot;202&quot; &quot;204&quot; ...
 ##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
 ##   .. .. ..$ : chr [1:3] &quot;Coastal&quot; &quot;Offshore.North&quot; &quot;Offshore.South&quot;
-##   ..$ EV94   : num [1:15, 1:2, 1:3] 0 0 0 12 0 47 30 0 0 25 ...
-##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
-##   .. .. ..$ : chr [1:15] &quot;229&quot; &quot;239&quot; &quot;243&quot; &quot;245&quot; ...
-##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
-##   .. .. ..$ : chr [1:3] &quot;Coastal&quot; &quot;Offshore.North&quot; &quot;Offshore.South&quot;
-##   ..$ KWM12A : num [1:9, 1:2, 1:3] 0 28 62 46 0 0 0 0 0 0 ...
-##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
-##   .. .. ..$ : chr [1:9] &quot;167&quot; &quot;173&quot; &quot;175&quot; &quot;177&quot; ...
-##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
-##   .. .. ..$ : chr [1:3] &quot;Coastal&quot; &quot;Offshore.North&quot; &quot;Offshore.South&quot;
-##   ..$ KWM2a  : num [1:10, 1:2, 1:3] 0 73 16 0 0 0 0 40 0 7 ...
+##   ..$ KWM2a: num [1:10, 1:2, 1:3] 0 73 16 0 0 0 0 40 0 7 ...
 ##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
 ##   .. .. ..$ : chr [1:10] &quot;146&quot; &quot;148&quot; &quot;150&quot; &quot;152&quot; ...
 ##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
 ##   .. .. ..$ : chr [1:3] &quot;Coastal&quot; &quot;Offshore.North&quot; &quot;Offshore.South&quot;
-##   ..$ SW19t  : num [1:16, 1:2, 1:3] 6 0 0 0 0 15 0 5 25 19 ...
-##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
-##   .. .. ..$ : chr [1:16] &quot;102&quot; &quot;104&quot; &quot;106&quot; &quot;108&quot; ...
-##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
-##   .. .. ..$ : chr [1:3] &quot;Coastal&quot; &quot;Offshore.North&quot; &quot;Offshore.South&quot;
-##   ..$ Ttr11  : num [1:9, 1:2, 1:3] 0 0 42 0 0 59 33 2 0 0 ...
-##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
-##   .. .. ..$ : chr [1:9] &quot;193&quot; &quot;197&quot; &quot;207&quot; &quot;209&quot; ...
-##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
-##   .. .. ..$ : chr [1:3] &quot;Coastal&quot; &quot;Offshore.North&quot; &quot;Offshore.South&quot;
-##   ..$ Ttr19  : num [1:11, 1:2, 1:3] 0 0 0 0 0 0 12 47 72 1 ...
-##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
-##   .. .. ..$ : chr [1:11] &quot;172&quot; &quot;174&quot; &quot;182&quot; &quot;184&quot; ...
-##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
-##   .. .. ..$ : chr [1:3] &quot;Coastal&quot; &quot;Offshore.North&quot; &quot;Offshore.South&quot;
-##   ..$ Ttr34  : num [1:10, 1:2, 1:3] 0 0 33 19 0 65 8 11 0 0 ...
-##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
-##   .. .. ..$ : chr [1:10] &quot;179&quot; &quot;183&quot; &quot;185&quot; &quot;187&quot; ...
-##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
-##   .. .. ..$ : chr [1:3] &quot;Coastal&quot; &quot;Offshore.North&quot; &quot;Offshore.South&quot;
-##   ..$ Ttr48  : num [1:11, 1:2, 1:3] 3 0 0 0 0 38 55 40 0 0 ...
-##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
-##   .. .. ..$ : chr [1:11] &quot;122&quot; &quot;124&quot; &quot;128&quot; &quot;130&quot; ...
-##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
-##   .. .. ..$ : chr [1:3] &quot;Coastal&quot; &quot;Offshore.North&quot; &quot;Offshore.South&quot;
-##   ..$ Ttr58  : num [1:9, 1:2, 1:3] 0 15 0 121 0 0 0 0 0 0 ...
-##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
-##   .. .. ..$ : chr [1:9] &quot;165&quot; &quot;179&quot; &quot;181&quot; &quot;185&quot; ...
-##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
-##   .. .. ..$ : chr [1:3] &quot;Coastal&quot; &quot;Offshore.North&quot; &quot;Offshore.South&quot;
-##   ..$ TtrRC11: num [1:16, 1:2, 1:3] 0 0 0 0 4 113 0 0 0 0 ...
-##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
-##   .. .. ..$ : chr [1:16] &quot;138&quot; &quot;140&quot; &quot;144&quot; &quot;146&quot; ...
-##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
-##   .. .. ..$ : chr [1:3] &quot;Coastal&quot; &quot;Offshore.North&quot; &quot;Offshore.South&quot;
-##   ..$ TV7    : num [1:7, 1:2, 1:3] 0 12 41 0 81 ...
+##   ..$ TV7  : num [1:7, 1:2, 1:3] 0 12 41 0 81 ...
 ##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
 ##   .. .. ..$ : chr [1:7] &quot;162&quot; &quot;164&quot; &quot;166&quot; &quot;168&quot; ...
 ##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
 ##   .. .. ..$ : chr [1:3] &quot;Coastal&quot; &quot;Offshore.North&quot; &quot;Offshore.South&quot;
-##  $ strata.smry : num [1:3, 1:5] 68 40 18 0.733 1.067 ...
+##  $ strata.smry : num [1:3, 1:5] 68 40 18 1.75 1.5 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : chr [1:3] &quot;Coastal&quot; &quot;Offshore.North&quot; &quot;Offshore.South&quot;
 ##   .. ..$ : chr [1:5] &quot;num.samples&quot; &quot;num.missing&quot; &quot;num.alleles&quot; &quot;pct.unique.alleles&quot; ...
 ##  $ unstratified: int 0
-##  $ locus.smry  : num [1:15, 1:8] 125 124 124 119 125 124 124 124 125 123 ...
+##  $ locus.smry  : num [1:4, 1:8] 125 119 124 123 0.992 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
-##   .. ..$ : chr [1:15] &quot;D11t&quot; &quot;D17t&quot; &quot;D8&quot; &quot;EV37&quot; ...
+##   .. ..$ : chr [1:4] &quot;D11t&quot; &quot;EV37&quot; &quot;KWM2a&quot; &quot;TV7&quot;
 ##   .. ..$ : chr [1:8] &quot;num.genotyped&quot; &quot;pct.genotyped&quot; &quot;num.alleles&quot; &quot;allelic.richness&quot; ...
-##  - attr(*, &quot;description&quot;)= chr &quot;gtypes created on 2015-09-12 20:23:49&quot;
+##  - attr(*, &quot;description&quot;)= chr &quot;gtypes created on 2015-11-04 11:00:56&quot;
 ##  - attr(*, &quot;class&quot;)= chr [1:2] &quot;gtypeSummary&quot; &quot;list&quot;</code></pre>
 <p>For just the by-locus summary statistics:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarizeLoci</span>(msats.fine)</code></pre>
-<pre><code>##         num.genotyped pct.genotyped num.alleles allelic.richness
-## D11t              125     0.9920635          12       0.09600000
-## D17t              124     0.9841270          18       0.14516129
-## D8                124     0.9841270          13       0.10483871
-## EV37              119     0.9444444          22       0.18487395
-## EV94              125     0.9920635          15       0.12000000
-## KWM12A            124     0.9841270           9       0.07258065
-## KWM2a             124     0.9841270          10       0.08064516
-## SW19t             124     0.9841270          16       0.12903226
-## Ttr11             125     0.9920635           9       0.07200000
-## Ttr19             123     0.9761905          11       0.08943089
-## Ttr34             126     1.0000000          10       0.07936508
-## Ttr48             126     1.0000000          11       0.08730159
-## Ttr58             124     0.9841270           9       0.07258065
-## TtrRC11           126     1.0000000          16       0.12698413
-## TV7               123     0.9761905           7       0.05691057
-##         pct.unique.alleles expected.heterozygosity observed.heterozygosity
-## D11t            0.25000000               0.7468273               0.7040000
-## D17t            0.22222222               0.7247617               0.5645161
-## D8              0.23076923               0.6703343               0.4677419
-## EV37            0.13636364               0.8270751               0.6974790
-## EV94            0.06666667               0.8304900               0.7760000
-## KWM12A          0.11111111               0.7610030               0.7177419
-## KWM2a           0.20000000               0.8092269               0.7096774
-## SW19t           0.25000000               0.8438357               0.7822581
-## Ttr11           0.22222222               0.7953414               0.7040000
-## Ttr19           0.18181818               0.7627012               0.7317073
-## Ttr34           0.20000000               0.8144248               0.6984127
-## Ttr48           0.27272727               0.8257446               0.7698413
-## Ttr58           0.00000000               0.6111075               0.5161290
-## TtrRC11         0.12500000               0.6881996               0.5714286
-## TV7             0.14285714               0.6672640               0.5853659
-##             theta
-## D11t    0.5563279
-## D17t    0.5398255
-## D8      0.4991661
-## EV37    0.6164407
-## EV94    0.6190022
-## KWM12A  0.5669354
-## KWM2a   0.6030569
-## SW19t   0.6290162
-## Ttr11   0.5926503
-## Ttr19   0.5682064
-## Ttr34   0.6069539
-## Ttr48   0.6154427
-## Ttr58   0.4550089
-## TtrRC11 0.5125053
-## TV7     0.4968742</code></pre>
+<pre><code>##       num.genotyped pct.genotyped num.alleles allelic.richness
+## D11t            125     0.9920635          12       0.09600000
+## EV37            119     0.9444444          22       0.18487395
+## KWM2a           124     0.9841270          10       0.08064516
+## TV7             123     0.9761905           7       0.05691057
+##       pct.unique.alleles expected.heterozygosity observed.heterozygosity
+## D11t           0.2500000               0.7468273               0.7040000
+## EV37           0.1363636               0.8270751               0.6974790
+## KWM2a          0.2000000               0.8092269               0.7096774
+## TV7            0.1428571               0.6672640               0.5853659
+##           theta
+## D11t  0.5563279
+## EV37  0.6164407
+## KWM2a 0.6030569
+## TV7   0.4968742</code></pre>
 </div>
 <div id="stratifying-samples" class="section level2">
 <h2>Stratifying samples</h2>
@@ -474,24 +337,24 @@ sub.msats</code></pre>
 <span class="kw">strata</span>(msats) &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;Pop1&quot;</span>, <span class="st">&quot;Pop2&quot;</span>), <span class="kw">nInd</span>(msats), <span class="dt">rep =</span> <span class="ot">TRUE</span>)
 <span class="kw">summary</span>(msats)$strata.smry</code></pre>
 <pre><code>##      num.samples num.missing num.alleles pct.unique.alleles heterozygosity
-## Pop1          62    0.400000    11.13333          0.1878235      0.6848064
-## Pop2          64    1.466667    10.73333          0.1678724      0.6484413</code></pre>
+## Pop1          66        2.00       11.25          0.1824561      0.6608703
+## Pop2          60        1.25       10.50          0.1842437      0.6886857</code></pre>
 <p>or, if there is a stratification scheme data.frame in the @schemes slot, you can use the <em>stratify</em> function to choose a stratification scheme:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># choose &quot;broad&quot; stratification scheme</span>
 msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <span class="st">&quot;broad&quot;</span>)
 <span class="kw">summary</span>(msats)$strata.smry</code></pre>
 <pre><code>##          num.samples num.missing num.alleles pct.unique.alleles
-## Coastal           68   0.7333333     4.20000         0.07190476
-## Offshore          58   1.1333333    12.26667         0.18240260
+## Coastal           68        1.75        4.25          0.1071429
+## Offshore          58        1.50       12.25          0.1948052
 ##          heterozygosity
-## Coastal       0.5505505
-## Offshore      0.8036931</code></pre>
+## Coastal       0.5778853
+## Offshore      0.7864840</code></pre>
 <p>If the @schemes slot is empty (NULL), you can fill it with a proper data.frame like this:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">schemes</span>(dloop) &lt;-<span class="st"> </span>strata.schemes</code></pre>
 <p>NOTE: Filling or changing the @schemes slot does not affect the current stratification of the samples. You must then select a new stratification scheme or fill the @strata slot as above.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stratify</span>(dloop, <span class="st">&quot;fine&quot;</span>)</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2015-09-12 20:23:48 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2015-11-04 11:00:56 &gt;&gt;&gt;
 ## 
 ## Contents: 126 samples, 1 locus, 3 strata
 ## 
@@ -517,35 +380,35 @@ x[<span class="kw">sample</span>(<span class="kw">indNames</span>(msats), <span 
 <span class="kw">strata</span>(msats) &lt;-<span class="st"> </span>x
 <span class="kw">summary</span>(msats)$strata.smry</code></pre>
 <pre><code>##          num.samples num.missing num.alleles pct.unique.alleles
-## Coastal           62   0.7333333     4.20000         0.07190476
-## Offshore          54   1.1333333    12.26667         0.19351371
+## Coastal           65        1.75           4         0.08333333
+## Offshore          51        0.75          12         0.22483766
 ##          heterozygosity
-## Coastal       0.5554295
-## Offshore      0.8065500</code></pre>
+## Coastal       0.5776042
+## Offshore      0.7852941</code></pre>
 <p>You can also randomly permute the current stratification scheme using the <em>permuteStrata</em> function like this:</p>
 <pre class="sourceCode r"><code class="sourceCode r">msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <span class="st">&quot;fine&quot;</span>)
 
 <span class="co"># original</span>
 <span class="kw">summary</span>(msats)$strata.smry</code></pre>
 <pre><code>##                num.samples num.missing num.alleles pct.unique.alleles
-## Coastal                 68  0.73333333    4.200000         0.07190476
-## Offshore.North          40  1.06666667   11.333333         0.20056277
-## Offshore.South          18  0.06666667    9.733333         0.25018519
+## Coastal                 68        1.75        4.25          0.1071429
+## Offshore.North          40        1.50       11.25          0.2110390
+## Offshore.South          18        0.00        9.75          0.2958333
 ##                heterozygosity
-## Coastal             0.5505505
-## Offshore.North      0.7989789
-## Offshore.South      0.8139434</code></pre>
+## Coastal             0.5778853
+## Offshore.North      0.7578947
+## Offshore.South      0.8472222</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># permuted</span>
 ran.msats &lt;-<span class="st"> </span><span class="kw">permuteStrata</span>(msats)
 <span class="kw">summary</span>(ran.msats)$strata.smry</code></pre>
 <pre><code>##                num.samples num.missing num.alleles pct.unique.alleles
-## Coastal                 68   0.2000000   11.600000          0.1924076
-## Offshore.North          40   1.3333333    9.866667          0.2079060
-## Offshore.South          18   0.3333333    6.533333          0.2688889
+## Coastal                 68        1.75       11.50          0.1500000
+## Offshore.North          40        1.50        8.75          0.1965812
+## Offshore.South          18        0.00        8.25          0.3208333
 ##                heterozygosity
-## Coastal             0.6549321
-## Offshore.North      0.6861142
-## Offshore.South      0.6684096</code></pre>
+## Coastal             0.6632976
+## Offshore.North      0.6763687
+## Offshore.South      0.7083333</code></pre>
 <p>NOTE: Only samples assigned to strata are permuted with <em>permuteStrata</em>. Those not assigned (NAs) remain unassigned.</p>
 </div>
 <div id="exporting" class="section level2">
@@ -553,58 +416,23 @@ ran.msats &lt;-<span class="st"> </span><span class="kw">permuteStrata</span>(ms
 <p>The allelic data in a <em>gtypes</em> object can be converted back to a matrix with <em>as.matrix</em>:</p>
 <pre class="sourceCode r"><code class="sourceCode r">gen.mat &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(msats)
 <span class="kw">head</span>(gen.mat)</code></pre>
-<pre><code>##      D11t.1 D11t.2 D17t.1 D17t.2 D8.1  D8.2  EV37.1 EV37.2 EV94.1 EV94.2
-## 4495 &quot;133&quot;  &quot;133&quot;  &quot;170&quot;  &quot;170&quot;  NA    NA    NA     NA     NA     NA    
-## 4496 &quot;137&quot;  &quot;141&quot;  &quot;140&quot;  &quot;140&quot;  NA    NA    NA     NA     &quot;243&quot;  &quot;251&quot; 
-## 4498 &quot;133&quot;  &quot;133&quot;  &quot;166&quot;  &quot;170&quot;  &quot;110&quot; &quot;114&quot; &quot;220&quot;  &quot;220&quot;  &quot;245&quot;  &quot;265&quot; 
-## 5814 &quot;135&quot;  &quot;139&quot;  &quot;170&quot;  &quot;170&quot;  &quot;110&quot; &quot;126&quot; &quot;210&quot;  &quot;226&quot;  &quot;251&quot;  &quot;265&quot; 
-## 5815 &quot;139&quot;  &quot;139&quot;  &quot;172&quot;  &quot;194&quot;  &quot;114&quot; &quot;114&quot; &quot;212&quot;  &quot;212&quot;  &quot;249&quot;  &quot;261&quot; 
-## 5816 &quot;135&quot;  &quot;137&quot;  &quot;140&quot;  &quot;140&quot;  &quot;118&quot; &quot;118&quot; &quot;214&quot;  &quot;220&quot;  &quot;249&quot;  &quot;253&quot; 
-##      KWM12A.1 KWM12A.2 KWM2a.1 KWM2a.2 SW19t.1 SW19t.2 Ttr11.1 Ttr11.2
-## 4495 NA       NA       NA      NA      NA      NA      &quot;211&quot;   &quot;211&quot;  
-## 4496 NA       NA       NA      NA      &quot;118&quot;   &quot;118&quot;   NA      NA     
-## 4498 &quot;177&quot;    &quot;179&quot;    &quot;152&quot;   &quot;156&quot;   &quot;102&quot;   &quot;124&quot;   &quot;209&quot;   &quot;211&quot;  
-## 5814 &quot;167&quot;    &quot;177&quot;    &quot;150&quot;   &quot;156&quot;   &quot;116&quot;   &quot;124&quot;   &quot;209&quot;   &quot;209&quot;  
-## 5815 &quot;177&quot;    &quot;177&quot;    &quot;152&quot;   &quot;156&quot;   &quot;106&quot;   &quot;114&quot;   &quot;207&quot;   &quot;213&quot;  
-## 5816 &quot;177&quot;    &quot;179&quot;    &quot;152&quot;   &quot;154&quot;   &quot;120&quot;   &quot;124&quot;   &quot;207&quot;   &quot;209&quot;  
-##      Ttr19.1 Ttr19.2 Ttr34.1 Ttr34.2 Ttr48.1 Ttr48.2 Ttr58.1 Ttr58.2
-## 4495 NA      NA      &quot;185&quot;   &quot;191&quot;   &quot;128&quot;   &quot;132&quot;   NA      NA     
-## 4496 &quot;190&quot;   &quot;196&quot;   &quot;189&quot;   &quot;189&quot;   &quot;130&quot;   &quot;138&quot;   NA      NA     
-## 4498 &quot;194&quot;   &quot;194&quot;   &quot;189&quot;   &quot;189&quot;   &quot;132&quot;   &quot;134&quot;   &quot;179&quot;   &quot;187&quot;  
-## 5814 &quot;196&quot;   &quot;198&quot;   &quot;185&quot;   &quot;187&quot;   &quot;130&quot;   &quot;134&quot;   &quot;187&quot;   &quot;189&quot;  
-## 5815 &quot;190&quot;   &quot;192&quot;   &quot;185&quot;   &quot;185&quot;   &quot;130&quot;   &quot;136&quot;   &quot;185&quot;   &quot;187&quot;  
-## 5816 &quot;192&quot;   &quot;196&quot;   &quot;187&quot;   &quot;195&quot;   &quot;130&quot;   &quot;142&quot;   &quot;179&quot;   &quot;185&quot;  
-##      TtrRC11.1 TtrRC11.2 TV7.1 TV7.2
-## 4495 &quot;138&quot;     &quot;138&quot;     NA    NA   
-## 4496 &quot;148&quot;     &quot;148&quot;     NA    NA   
-## 4498 &quot;154&quot;     &quot;168&quot;     &quot;166&quot; &quot;166&quot;
-## 5814 &quot;150&quot;     &quot;154&quot;     &quot;164&quot; &quot;166&quot;
-## 5815 &quot;144&quot;     &quot;148&quot;     &quot;166&quot; &quot;172&quot;
-## 5816 &quot;140&quot;     &quot;150&quot;     &quot;164&quot; &quot;166&quot;</code></pre>
+<pre><code>##      D11t.1 D11t.2 EV37.1 EV37.2 KWM2a.1 KWM2a.2 TV7.1 TV7.2
+## 4495 &quot;133&quot;  &quot;133&quot;  NA     NA     NA      NA      NA    NA   
+## 4496 &quot;137&quot;  &quot;141&quot;  NA     NA     NA      NA      NA    NA   
+## 4498 &quot;133&quot;  &quot;133&quot;  &quot;220&quot;  &quot;220&quot;  &quot;152&quot;   &quot;156&quot;   &quot;166&quot; &quot;166&quot;
+## 5814 &quot;135&quot;  &quot;139&quot;  &quot;210&quot;  &quot;226&quot;  &quot;150&quot;   &quot;156&quot;   &quot;164&quot; &quot;166&quot;
+## 5815 &quot;139&quot;  &quot;139&quot;  &quot;212&quot;  &quot;212&quot;  &quot;152&quot;   &quot;156&quot;   &quot;166&quot; &quot;172&quot;
+## 5816 &quot;135&quot;  &quot;137&quot;  &quot;214&quot;  &quot;220&quot;  &quot;152&quot;   &quot;154&quot;   &quot;164&quot; &quot;166&quot;</code></pre>
 <p>By default, this function splits each allele into its own column. One can make a matrix with one locus per column and alleles separated by a specified character by setting the <em>one.col</em> argument to <em>TRUE</em>:</p>
 <pre class="sourceCode r"><code class="sourceCode r">gen.mat &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(msats, <span class="dt">one.col =</span> <span class="ot">TRUE</span>)
 <span class="kw">head</span>(gen.mat)</code></pre>
-<pre><code>##      D11t      D17t      D8        EV37      EV94      KWM12A    KWM2a    
-## 4495 &quot;133/133&quot; &quot;170/170&quot; NA        NA        NA        NA        NA       
-## 4496 &quot;137/141&quot; &quot;140/140&quot; NA        NA        &quot;243/251&quot; NA        NA       
-## 4498 &quot;133/133&quot; &quot;166/170&quot; &quot;110/114&quot; &quot;220/220&quot; &quot;245/265&quot; &quot;177/179&quot; &quot;152/156&quot;
-## 5814 &quot;135/139&quot; &quot;170/170&quot; &quot;110/126&quot; &quot;210/226&quot; &quot;251/265&quot; &quot;167/177&quot; &quot;150/156&quot;
-## 5815 &quot;139/139&quot; &quot;172/194&quot; &quot;114/114&quot; &quot;212/212&quot; &quot;249/261&quot; &quot;177/177&quot; &quot;152/156&quot;
-## 5816 &quot;135/137&quot; &quot;140/140&quot; &quot;118/118&quot; &quot;214/220&quot; &quot;249/253&quot; &quot;177/179&quot; &quot;152/154&quot;
-##      SW19t     Ttr11     Ttr19     Ttr34     Ttr48     Ttr58     TtrRC11  
-## 4495 NA        &quot;211/211&quot; NA        &quot;185/191&quot; &quot;128/132&quot; NA        &quot;138/138&quot;
-## 4496 &quot;118/118&quot; NA        &quot;190/196&quot; &quot;189/189&quot; &quot;130/138&quot; NA        &quot;148/148&quot;
-## 4498 &quot;102/124&quot; &quot;209/211&quot; &quot;194/194&quot; &quot;189/189&quot; &quot;132/134&quot; &quot;179/187&quot; &quot;154/168&quot;
-## 5814 &quot;116/124&quot; &quot;209/209&quot; &quot;196/198&quot; &quot;185/187&quot; &quot;130/134&quot; &quot;187/189&quot; &quot;150/154&quot;
-## 5815 &quot;106/114&quot; &quot;207/213&quot; &quot;190/192&quot; &quot;185/185&quot; &quot;130/136&quot; &quot;185/187&quot; &quot;144/148&quot;
-## 5816 &quot;120/124&quot; &quot;207/209&quot; &quot;192/196&quot; &quot;187/195&quot; &quot;130/142&quot; &quot;179/185&quot; &quot;140/150&quot;
-##      TV7      
-## 4495 NA       
-## 4496 NA       
-## 4498 &quot;166/166&quot;
-## 5814 &quot;164/166&quot;
-## 5815 &quot;166/172&quot;
-## 5816 &quot;164/166&quot;</code></pre>
+<pre><code>##      D11t      EV37      KWM2a     TV7      
+## 4495 &quot;133/133&quot; NA        NA        NA       
+## 4496 &quot;137/141&quot; NA        NA        NA       
+## 4498 &quot;133/133&quot; &quot;220/220&quot; &quot;152/156&quot; &quot;166/166&quot;
+## 5814 &quot;135/139&quot; &quot;210/226&quot; &quot;150/156&quot; &quot;164/166&quot;
+## 5815 &quot;139/139&quot; &quot;212/212&quot; &quot;152/156&quot; &quot;166/172&quot;
+## 5816 &quot;135/137&quot; &quot;214/220&quot; &quot;152/154&quot; &quot;164/166&quot;</code></pre>
 <p>The contents of a <em>gtypes</em> object can be written to a file with the <em>write.gtypes</em> function. This will write a .csv file with the allelic information and a .fasta file for any sequence data if it exists.</p>
 </div>
 

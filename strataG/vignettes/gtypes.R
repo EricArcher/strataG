@@ -59,7 +59,7 @@ sub.msats <- sub.msats[, c("D11t", "EV37", "TV7"), ]
 sub.msats
 
 ## ------------------------------------------------------------------------
-sub.msats <- msats.fine[, c("EV94", "SW19t"), "Coastal"]
+sub.msats <- msats.fine[, c("KWM2a", "TV7"), "Coastal"]
 sub.msats
 
 ## ------------------------------------------------------------------------
