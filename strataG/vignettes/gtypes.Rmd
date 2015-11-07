@@ -147,7 +147,7 @@ summarizeLoci(msats.fine)
 
 ## Stratifying samples
 
-You can specify the stratification scheme when creating a _gtpyes_ object as in the examples above. Once a _gtypes_ object has been created, you can also change the stratification scheme by either supplying a new vector for the \@strata slot:
+You can specify the stratification scheme when creating a _gtypes_ object as in the examples above. Once a _gtypes_ object has been created, you can also change the stratification scheme by either supplying a new vector for the \@strata slot:
 ```{r}
 # randomly stratify individuals to two populations
 strata(msats) <- sample(c("Pop1", "Pop2"), nInd(msats), rep = TRUE)
