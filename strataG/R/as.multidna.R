@@ -26,13 +26,14 @@ as.multidna <- function(x) {
   if(inherits(x, "DNAbin")) return(new("multidna", list(as.matrix(x))))
   
   # character matrix or list of character vectors
-  if(is.character(x) | (is.list(x) & is.character(x[[1]]))) {
-    return(new("multidna", list(as.matrix(as.DNAbin(x)))))
+  if(is.character(x) | (is.list(x) & all(sapply(x, is.character)))) {
+    x <- list(as.DNAbin(x))
   }
   
   # list of DNAbin
-  if(is.list(x) & inherits(x[[1]], "DNAbin")) {
+  if(is.list(x) & all(sapply(x, function(elem) inherits(elem, "DNAbin")))) {
     x <- lapply(x, as.matrix)
+    if(is.null(names(x))) names(x) <- paste("gene", 1:length(x), sep = "")
     return(new("multidna", x))
   }
   

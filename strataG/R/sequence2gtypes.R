@@ -35,16 +35,16 @@ sequence2gtypes <- function(x, strata = NULL, seq.names = NULL,
     if(length(seq.names) != length(x@dna)) {
       stop("length of 'seq.names' is not equal to number of genes")
     }
-    names(x@dna) <- seq.names
+    locusNames(x) <- seq.names
   }
   
   # create gen.data data.frame
-  ind.names <- x@labels
-  gen.data <- do.call(data.frame, lapply(x@dna, function(dna) {
+  ind.names <- unique(unlist(getSequenceNames(x)))
+  gen.data <- do.call(data.frame, lapply(getSequences(x, simplify = FALSE), function(dna) {
     x.labels <- labels(dna)
     factor(x.labels[match(ind.names, x.labels)])
   }))
-  colnames(gen.data) <- labels(x@dna)
+  colnames(gen.data) <- locusNames(x)
   rownames(gen.data) <- ind.names
   
   # return new gtypes object

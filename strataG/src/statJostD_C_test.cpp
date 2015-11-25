@@ -2,7 +2,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-double statJostD_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
+double statJostD_C_test(IntegerMatrix loci, IntegerVector strata, int ploidy) {
   // function declarations
   IntegerMatrix table2D(IntegerVector, IntegerVector);
   IntegerVector calcStrataN(IntegerVector, IntegerVector);
@@ -30,9 +30,6 @@ double statJostD_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
     terms[i] = 1 - sum(iTerms(0, _)) / sum(iTerms(1, _));
   }
   
-  for(int i = 0; i < terms.size(); i++) {
-    if(terms[i] < 0) terms[i] = 0;
-  }
   double est(harmonicMean_C(terms));
   if(std::isnan(est)) est = NA_REAL;
   return est;

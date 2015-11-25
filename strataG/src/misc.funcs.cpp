@@ -3,9 +3,10 @@ using namespace Rcpp;
 
 // [[Rcpp:export]]
 double harmonicMean_C(NumericVector x) {
-  NumericVector invN(x.size());
-  for(int j = 0; j < invN.size(); j++) invN[j] = 1 / x[j];
-  return x.size() / sum(invN);
+  double n(x.size());
+  NumericVector invX(n);
+  for(int i = 0; i < n; i++) invX[i] = 1 / x[i];
+  return n / sum(invX);
 }
 
 // [[Rcpp::export]]

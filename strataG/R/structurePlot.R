@@ -51,8 +51,8 @@ structurePlot <- function(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
   }
   
   # make sure probs sum to 1 and get matrix
-  q.mat[, prob.cols] <- prop.table(as.matrix(q.mat[, prob.cols]), 1)
-  assign.mat <- t(q.mat[, prob.cols])  
+  q.mat[, prob.cols] <- prop.table(as.matrix(q.mat[, prob.cols, drop = FALSE]), 1)
+  assign.mat <- t(q.mat[, prob.cols, drop = FALSE])  
   
   # create barplot
   if(is.null(col)) col <- rainbow(length(prob.cols))

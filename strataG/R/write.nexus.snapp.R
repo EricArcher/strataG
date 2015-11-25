@@ -11,7 +11,7 @@ write.nexus.snapp <- function(g, file = "snapp.data.nex") {
   if(ploidy(g) != 2) stop("'g' must have diploid data")
   
   num.alleles <- numAlleles(g)
-  biallelic <- names(num.alleles)[num.alleles == 2]
+  biallelic <- names(num.alleles)[num.alleles <= 2]
   if(length(biallelic) == 0) {
     warning("No loci are biallelic. No file written.")
     return(NULL)
@@ -28,13 +28,15 @@ write.nexus.snapp <- function(g, file = "snapp.data.nex") {
   
   result[is.na(result)] <- "?"
   result <- lapply(1:nrow(result), function(i) result[i, ])
-  strata <- gsub("[ _]", ".", as.numeric(strata(g)))
+  strata <- gsub("[ _]", ".", strata(g))
   id <- gsub("[ _]", ".", indNames(g))
   names(result) <- paste(strata, id, sep = "_")
   
   write.nexus.data(result, file = file)
   
   snapp.file <- scan(file, what = "character", sep = "\n", quiet = TRUE)
+  bgn <- grep("BEGIN", snapp.file)
+  snapp.file[bgn] <- "BEGIN CHARACTERS;"
   fmt <- grep("FORMAT", snapp.file)
   snapp.file[fmt] <- "  FORMAT DATATYPE=STANDARD MISSING=? GAP=- SYMBOLS=\"012\" LABELS=LEFT TRANSPOSE=NO INTERLEAVE=NO;"
   write(snapp.file, file = file)

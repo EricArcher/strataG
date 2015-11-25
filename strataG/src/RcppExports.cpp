@@ -301,6 +301,19 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// statJostD_C_test
+double statJostD_C_test(IntegerMatrix loci, IntegerVector strata, int ploidy);
+RcppExport SEXP strataG_statJostD_C_test(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< IntegerMatrix >::type loci(lociSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type strata(strataSEXP);
+    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
+    __result = Rcpp::wrap(statJostD_C_test(loci, strata, ploidy));
+    return __result;
+END_RCPP
+}
 // statJostD_C
 double statJostD_C(IntegerMatrix loci, IntegerVector strata, int ploidy);
 RcppExport SEXP strataG_statJostD_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
