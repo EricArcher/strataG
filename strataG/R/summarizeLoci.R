@@ -12,12 +12,10 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @examples
-#' data(dolph.msats)
-#' data(dolph.strata)
-#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
-#' msats <- df2gtypes(msats.merge, ploidy = 2)
+#' data(msats.g)
+#' msats.g <- stratify(msats.g, "fine")
 #' 
-#' summarizeLoci(msats)
+#' summarizeLoci(msats.g)
 #' 
 #' @export
 #' 

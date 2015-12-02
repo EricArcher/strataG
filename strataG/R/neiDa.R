@@ -13,12 +13,9 @@
 #'   Oxford University Press, Oxford. (pp. 268, eqn 13.6)
 #'
 #' @examples
-#' data(dolph.msats)
-#' data(dolph.strata)
-#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
-#' msats <- df2gtypes(msats.merge, ploidy = 2)
+#' data(msats.g)
 #' 
-#' neiDa(msats)
+#' neiDa(msats.g)
 #'  
 #' @export
 #' 

@@ -1,4 +1,4 @@
-#' @name genind2gtypes
+#' @name gtypes2genind
 #' @title Convert Between \code{gtypes} And \code{genind} objects.
 #' @description Convert a \code{gtypes} object to a \code{genind} object 
 #'   and vice-versa.
@@ -12,6 +12,23 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @seealso \link{initialize.gtypes}, \link{df2gtypes}, \link{sequence2gtypes}, 
+#'   \link{gtypes2df}, \link{gtypes2loci}
+#' 
+#' @export
+#' 
+gtypes2genind <- function(x, type = c("codom", "PA")) {
+  df2genind(X = as.matrix(x, one.col = TRUE, sep = "/"),
+            sep = "/", 
+            pop = strata(x),
+            NA.char = NA,
+            ploidy = ploidy(x),
+            type = match.arg(type)
+  )
+}
+
+
+#' @rdname gtypes2genind
 #' @export
 #' 
 genind2gtypes <- function(x) {
@@ -25,18 +42,4 @@ genind2gtypes <- function(x) {
             loc.col = if(has.pop) 2 else 1,
             other = other(x)
   )  
-}
-
-
-#' @rdname genind2gtypes
-#' @export
-#' 
-gtypes2genind <- function(x, type = c("codom", "PA")) {
-  df2genind(X = as.matrix(x, one.col = TRUE, sep = "/"),
-            sep = "/", 
-            pop = strata(x),
-            NA.char = NA,
-            ploidy = ploidy(x),
-            type = match.arg(type)
-  )
 }

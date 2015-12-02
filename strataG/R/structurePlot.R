@@ -17,6 +17,7 @@
 #' @param col colors to use for each group.
 #' @param horiz logical. Plot horizontal bars?
 #' @param legend logical. Include a legend?
+#' @param cex font size value for axis labels.
 #' @param ... optional arguments to be passed to 
 #'   \code{\link[graphics]{barplot}}.
 #' 
@@ -37,13 +38,16 @@
 #' @importFrom grDevices rainbow
 #' @export
 #' 
-structurePlot <- function(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE, 
+structurePlot <- function(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
                           label.pops = TRUE, col = NULL, horiz = TRUE,
-                          legend = TRUE, ...) {    
+                          legend = TRUE, cex = NA, ...) {
   # sort q.mat within strata by probability
   prob.cols <- prob.col:ncol(q.mat)
+  q.mat <- data.frame(q.mat)
+  q.mat[, pop.col] <- factor(q.mat[, pop.col])
+  if(horiz) q.mat[, pop.col] <- factor(q.mat[, pop.col], levels = rev(levels(q.mat[, pop.col])))
   q.mat <- q.mat[order(q.mat[, pop.col]), ]
-  if(sort.probs) {      
+  if(sort.probs) {
     q.mat <- do.call(rbind, by(q.mat, list(q.mat[, pop.col]), function(x) {
       prob.list <- lapply(prob.cols, function(i) x[, i])
       x[do.call(order, prob.list), ]
@@ -52,7 +56,7 @@ structurePlot <- function(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
   
   # make sure probs sum to 1 and get matrix
   q.mat[, prob.cols] <- prop.table(as.matrix(q.mat[, prob.cols, drop = FALSE]), 1)
-  assign.mat <- t(q.mat[, prob.cols, drop = FALSE])  
+  assign.mat <- t(q.mat[, prob.cols, drop = FALSE])
   
   # create barplot
   if(is.null(col)) col <- rainbow(length(prob.cols))
@@ -73,14 +77,15 @@ structurePlot <- function(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
   pop.side <- if(horiz) 2 else 1
   tx <- tapply(bp, q.mat[, pop.col], min) + 0.1
   tx <- c(tx - tx[1], max(bp) + tx[1])
-  axis(prob.side, pos = min(tx) - 1.5)
+  cex.axis <- if(is.na(cex)) NULL else cex
+  axis(prob.side, pos = min(tx) - 1.5, cex.axis = cex.axis)
   axis(pop.side, at = tx, pos = -0.005, labels = FALSE)
   if(label.pops) {
     lbl.x <- sapply(1:(length(tx) - 1),
                     function(i) tx[i] + (tx[i + 1] - tx[i]) / 2
     )
     names(lbl.x) <- names(tx)[1:(length(tx) - 1)]
-    mtext(names(lbl.x), side = pop.side, at = lbl.x, line = 1)
+    mtext(names(lbl.x), side = pop.side, at = lbl.x, line = 1, cex = cex)
   }
   if(legend) {
     x <- if(horiz) par("usr")[2] else max(tx)

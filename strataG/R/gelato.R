@@ -31,12 +31,10 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @examples
-#' data(dolph.msats)
-#' data(dolph.strata)
-#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
-#' msats <- df2gtypes(msats.merge, ploidy = 2)
+#' data(msats.g)
+#' stratify(msats.g, "fine")
 #' 
-#' gelato.fine <- gelato(msats, unk = "Offshore.South", nrep = 10)
+#' gelato.fine <- gelato(msats.g, unk = "Offshore.South", nrep = 10)
 #' 
 #' gelatoPlot(gelato.fine, "Offshore.South")
 #' 

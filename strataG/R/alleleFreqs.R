@@ -13,15 +13,12 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
 #' @examples
-#' data(dolph.msats)
-#' data(dolph.strata)
-#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
-#' msats <- df2gtypes(msats.merge, ploidy = 2)
+#' data(msats.g)
 #' 
-#' f <- alleleFreqs(msats)
+#' f <- alleleFreqs(msats.g)
 #' f[[1]]
 #' 
-#' f.pop <- alleleFreqs(msats, TRUE)
+#' f.pop <- alleleFreqs(msats.g, TRUE)
 #' f.pop[[1]]
 #' 
 #' @export

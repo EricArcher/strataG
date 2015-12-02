@@ -1,4 +1,5 @@
 #' @title Write NEXUS File for SNAPP
+#' @description Write NEXUS File for SNAPP
 #' 
 #' @param g a \linkS4class{gtypes} object.
 #' @param file the filename the NEXUS file to output.

@@ -50,19 +50,17 @@
 #' 
 #' @examples
 #' #--- create a diploid (microsatellite) gtypes object
-#' data(dolph.msats)
-#' data(dolph.strata)
-#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
-#' msats <- df2gtypes(msats.merge, ploidy = 2)
+#' data(msats.g)
+#' msats.g <- stratify(msats.g, "fine")
 #' 
-#' nStrata(msats)
-#' strataNames(msats)
-#' nLoc(msats)
-#' locNames(msats)
+#' nStrata(msats.g)
+#' strataNames(msats.g)
+#' nLoc(msats.g)
+#' locNames(msats.g)
 #' 
 #' # reassign all samples to two randomly chosen strata
-#' strata(msats) <- sample(c("A", "B"), nInd(msats), rep = TRUE)
-#' msats
+#' strata(msats.g) <- sample(c("A", "B"), nInd(msats.g), rep = TRUE)
+#' msats.g
 #' 
 #' 
 #' #--- a sequence example

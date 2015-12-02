@@ -6,6 +6,9 @@
 #'  
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @seealso \link{initialize.gtypes}, \link{df2gtypes}, \link{sequence2gtypes}, 
+#'   \link{gtypes2df}, \link{gtypes2genind}
+#' 
 #' @importFrom pegas as.loci
 #' @export
 #' 

@@ -13,6 +13,7 @@
 #' @param loc.col column number of first allele of first locus.
 #' @param sequences a list, matrix, \code{\link{DNAbin}}, or 
 #'   \linkS4class{multidna} object containing sequences. 
+#' @param schemes an optional data.frame of stratification schemes.
 #' @param description a label for the object (optional).
 #' @param other a slot to carry other related information - unused in package
 #'   analyses (optional).
@@ -33,44 +34,58 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @seealso \link{initialize.gtypes}, \link{sequence2gtypes}, \link{gtypes2df},
+#'   \link{gtypes2genind}, \link{gtypes2loci}
+#' 
 #' @examples
 #' #--- create a diploid (microsatellite) gtypes object
 #' data(dolph.msats)
-#' data(dolph.strata)
-#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
-#' msats.fine <- df2gtypes(msats.merge, ploidy = 2)
+#' ms.g <- df2gtypes(dolph.msats, ploidy = 2, strata.col = NULL, loc.col = 2)
+#' ms.g
 #' 
 #' #' #--- create a haploid sequence (mtDNA) gtypes object
 #' data(dolph.seqs)
-#' seq.df <- dolph.strata[ c(1, 2, 1)]
-#' colnames(seq.df)[3] <- "Haplotype"
-#' dloop.broad <- df2gtypes(seq.df, ploidy = 1, sequences = dolph.seqs, 
-#'   description = "dLoop: broad-scale stratification")
-#' dloop.broad
+#' data(dolph.msats)
+#' 
+#' seq.df <- dolph.strata[ c("id", "broad", "dLoop")]
+#' dl.g <- df2gtypes(seq.df, ploidy = 1, sequences = dolph.seqs)
+#' dl.g
 #' 
 #' @importFrom methods new
 #' @export
 #' 
 df2gtypes <- function(x, ploidy, id.col = 1, strata.col = 2, loc.col = 3, 
-                      sequences = NULL, description = NULL, other = NULL) {
+                      sequences = NULL, schemes = NULL, description = NULL, 
+                      other = NULL) {
   # check x
   if(!(is.matrix(x) | is.data.frame(x))) {
     stop("'x' must be a matrix or data.frame")
   }
   
+  # check that id.col, strata.col, and loc.col are numbers and loc.col is max
+  if(!is.null(id.col)) id.col <- as.numeric(id.col)
+  if(!is.null(strata.col)) strata.col <- as.numeric(strata.col)
+  loc.col <- as.numeric(loc.col)
+  if(loc.col < max(id.col, strata.col, loc.col)) {
+    stop("'loc.col' must be greater than 'id.col' and 'strata.col'")
+  }
+  
   # extract id, strata, and locus information
-  rownames(x) <- if(is.null(id.col)) {
+  rownames(x) 
+  ind.names <- if(is.null(id.col)) {
     if(is.null(rownames(x))) {
       1:nrow(x) 
     } else {
       rownames(x)
     }
   } else x[, id.col]
+  ind.names <- as.character(ind.names)
   strata <- if(is.null(strata.col)) NULL else x[, strata.col]
   gen.data <- x[, loc.col:ncol(x), drop = FALSE]
   
   # return new gtypes object
-  new("gtypes", gen.data = gen.data, ploidy = ploidy, strata = strata,
-      sequences = sequences, description = description, other = other
+  new("gtypes", gen.data = gen.data, ploidy = ploidy, ind.names = ind.names,
+      strata = strata, schemes = schemes, sequences = sequences, 
+      description = description, other = other
   )
 }

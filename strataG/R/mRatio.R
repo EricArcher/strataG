@@ -23,15 +23,12 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov} (adapted from code by Sean Hoban)
 #'
 #' @examples
-#' data(dolph.msats)
-#' data(dolph.strata)
-#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
-#' msats <- df2gtypes(msats.merge, ploidy = 2)
+#' data(msats.g)
 #' 
-#' m.by.strata <- mRatio(msats, TRUE)
+#' m.by.strata <- mRatio(msats.g, TRUE)
 #' m.by.strata
 #' 
-#' m.overall <- mRatio(msats, FALSE)
+#' m.overall <- mRatio(msats.g, FALSE)
 #' m.overall
 #' 
 #' @importFrom Hmisc all.is.numeric

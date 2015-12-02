@@ -8,14 +8,11 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @examples
-#' data(dolph.msats)
-#' data(dolph.strata)
-#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, 
-#'   all.y = TRUE, description = date())
-#' msats <- df2gtypes(msats.merge, ploidy = 2)
-#' summary(msats)
+#' data(msats.g)
+#' msats.g <- stratify(msats.g, "fine")
+#' summary(msats.g)
 #' 
-#' ran.msats <- permuteStrata(msats)
+#' ran.msats <- permuteStrata(msats.g)
 #' summary(ran.msats)
 #'
 #' @export

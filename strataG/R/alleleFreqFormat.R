@@ -11,16 +11,14 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @examples
-#' data(dolph.msats)
-#' data(dolph.strata)
-#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
-#' msats <- df2gtypes(msats.merge, ploidy = 2)
+#' data(msats.g)
+#' msats.g <- stratify(msats.g, "fine")
 #' 
 #' x <- cbind(
-#'  id = sample(indNames(msats), 10, rep = TRUE),
-#'  locus = sample(locNames(msats), 10, rep = TRUE)
+#'  id = sample(indNames(msats.g), 10, rep = TRUE),
+#'  locus = sample(locNames(msats.g), 10, rep = TRUE)
 #' )
-#' alleleFreqFormat(x, msats)
+#' alleleFreqFormat(x, msats.g)
 #' 
 #' @export
 #' 

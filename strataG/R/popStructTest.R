@@ -47,19 +47,17 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @examples
-#' data(dolph.msats)
-#' data(dolph.strata)
-#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
-#' msats <- df2gtypes(msats.merge, ploidy = 2)
+#' data(msats.g)
+#' msats.g <- stratify(msats.g, "fine")
 #' 
 #' # Conduct an overall Chi-squared test
-#' ovl <- overallTest(msats, nrep = 5, stats = "chi2", quietly = FALSE)
-#' 
+#' ovl <- overallTest(msats.g, nrep = 5, stats = "chi2", quietly = FALSE)
+#'
 #' # Conduct a pairwise test for Gst
-#' pws <- pairwiseTest(msats, nrep = 5, stats = list(statGst), quietly = FALSE)
-#' 
+#' pws <- pairwiseTest(msats.g, nrep = 5, stats = list(statGst), quietly = FALSE)
+#'
 #' # Conduct both overall and pairwise tests for Fst and F'st
-#' full <- popStructTest(msats, nrep = 5, stats = c("fst", "fst.prime"))
+#' full <- popStructTest(msats.g, nrep = 5, stats = c("fst", "fst.prime"))
 #' print(full$overall)
 #' print(full$pairwise)
 #' 

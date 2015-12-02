@@ -22,5 +22,7 @@ trimNs <- function(x) {
     dna[[i]][start:end]
   })
   
-  as.DNAbin(result)
+  result <- as.DNAbin(result)
+  names(result) <- names(x)
+  result
 }

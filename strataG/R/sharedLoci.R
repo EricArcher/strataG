@@ -17,14 +17,12 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @examples
-#' data(dolph.msats)
-#' data(dolph.strata)
-#' msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
-#' msats <- df2gtypes(msats.merge, ploidy = 2)
+#' data(msats.g)
+#' msats.g <- stratify(msats.g, "fine")
 #' 
-#' propSharedLoci(msats)
+#' propSharedLoci(msats.g)
 #' 
-#' sharedAlleles(msats)
+#' sharedAlleles(msats.g)
 #' 
 #' @importFrom utils combn
 #' @importFrom stats na.omit
@@ -43,13 +41,17 @@ propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = 1) {
   cl <- .setupClusters(num.cores)
 
   shared <- tryCatch({
-    if(type == "strata") {  
-      freqs <- alleleFreqs(g, TRUE)
-      prop.func <- function(f, type.pair) {
+    prop.func <- if(type == "strata") {
+      function(f, type.pair) {
         pair.f <- f[, "prop", type.pair]
         sum(apply(pair.f, 1, function(x) !all(x == 0))) / nrow(pair.f)
       }
-      
+    } else {
+      function(i, type.pairs, g) propSharedIds(type.pairs[i, ], g)
+    }
+    
+    if(type == "strata") {  
+      freqs <- alleleFreqs(g, TRUE)
       sharedStrataList <- lapply(1:nrow(type.pairs), function(i) {
         prop.shared.loci <- if(num.cores > 1) {
           parLapply(cl, freqs, prop.func, type.pair = type.pairs[i, ])
@@ -62,7 +64,6 @@ propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = 1) {
       })
       do.call(rbind, sharedStrataList)
     } else {
-      prop.func <- function(i, type.pairs, g) propSharedIds(type.pairs[i, ], g)
       sharedIDlist <- if(num.cores > 1) {
         parLapply(cl, 1:nrow(type.pairs), prop.func, type.pairs = type.pairs, g = g)
       } else {

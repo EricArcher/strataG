@@ -1,5 +1,6 @@
 #' @name popStructStat
-#' @title Population Structure statistics
+#' @title Population structure statistics
+#' @description Population structure statistics
 #'
 #' @param g a \linkS4class{gtypes} object.
 #' @param strata an optional alternative stratification vector to use in place

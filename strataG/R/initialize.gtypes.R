@@ -38,7 +38,10 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
-#' @aliases initialize.gtypes
+#' @seealso \link{df2gtypes}, \link{sequence2gtypes}, \link{gtypes2df},
+#'   \link{gtypes2genind}, \link{gtypes2loci}
+#'
+#' @aliases initialize.gtypes new
 #' @importFrom apex getNumLoci
 #' @importFrom methods setMethod
 #' 
@@ -51,7 +54,10 @@ setMethod("initialize", "gtypes",
   if(is.null(gen.data) | is.null(ploidy)) return(.Object)
             
   # check gen.data
-  if(is.vector(gen.data)) gen.data <- cbind(gen.data)
+  if(is.vector(gen.data)) {
+    gen.data <- cbind(gen.data)
+    colnames(gen.data) <- "Haplotype"
+  }
   if(!(is.matrix(gen.data) | is.data.frame(gen.data))) {
     stop("'gen.data' is not a vector, matrix, or data.frame")
   }
@@ -74,6 +80,11 @@ setMethod("initialize", "gtypes",
     as.character(ind.names)
   } else {
     if(!is.null(rownames(gen.data))) rownames(gen.data) else 1:nrow(gen.data)
+  }
+  if(any(duplicated(ind.names))) {
+    dup.names <- unique(ind.names[duplicated(ind.names)])
+    dup.names <- paste(dup.names, collapse = ", ")
+    stop(paste("there are duplicated individual names:", dup.names))
   }
   rownames(gen.data) <- ind.names
   
