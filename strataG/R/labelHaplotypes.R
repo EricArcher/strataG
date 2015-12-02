@@ -186,7 +186,7 @@ labelHaplotypes.gtypes <- function(x, ...) {
   if(ploidy(x) > 1 | is.null(sequences(x))) {
     stop("'x' is not haploid or does not have any sequences")
   }
-
+  
   # label haplotypes for each gene
   new.haps <- lapply(
     getSequences(sequences(x), simplify = FALSE), labelHaplotypes, ...
@@ -197,32 +197,30 @@ labelHaplotypes.gtypes <- function(x, ...) {
     msg <- paste("haplotypes could not be assigned for:", msg)
     stop(msg)
   }
-
-  # create haplotype matrix
-  hap.mat <- do.call(cbind, lapply(new.haps, function(x) x$haps))
-  #colnames(hap.mat) <- names(new.haps)
-  hap.mat <- cbind(
-    ids = rownames(hap.mat),
-    strata = as.character(strata(x)[rownames(hap.mat)]),
-    hap.mat
-  )
-  hap.mat <- hap.mat[!is.na(hap.mat[, "strata"]), ]
-
+  
+  # create haplotype data.frame
+  hap.df <- gtypes2df(x)
+  for(gene in names(new.haps)) {
+    old.haps <- hap.df[, gene]
+    hap.df[, gene] <- new.haps[[gene]]$haps[old.haps]
+  }
+  hap.df <- hap.df[!is.na(hap.df[, "strata"]), ]
+  
   # collect sequences
   hap.seqs <- lapply(new.haps, function(x) x$hap.seqs)
   names(hap.seqs) <- names(new.haps)
-
+  
   # collect unassigned
   unassigned <- lapply(new.haps, function(x) x$unassigned)
-
+  
   # create new gtypes
   strata <- strata(x)
-  schemes <- schemes(x)
-  x <- df2gtypes(hap.mat, ploidy = 1, id.col = 1, strata.col = 2, loc.col = 3,
-    sequences = hap.seqs, description = description(x), other = other(x)
+  x <- df2gtypes(
+    hap.df, ploidy = 1, id.col = 1, strata.col = 2, loc.col = 3,
+    sequences = hap.seqs, description = description(x), schemes = schemes(x), 
+    other = other(x)
   )
   strata(x) <- strata
-  schemes(x) <- schemes
 
   list(gtypes = x, unassigned = unassigned)
 }
