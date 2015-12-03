@@ -33,28 +33,33 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1), ...) {
   if(ploidy(g) > 1) stop("'g' must be haploid")
   if(is.null(g@sequences)) stop("'g' must have sequences")
   
-  pair.dist.summary <- function(hap1, hap2, d) {
-    pws.dist <- d[hap1, hap2]
-    pws.dist <- pws.dist[lower.tri(pws.dist)]
+  pair.dist.summary <- function(haps, d, probs) {
+    pws.dist <- apply(haps, 1, function(h) {
+      if(any(is.na(h))) return(NA)
+      d[h[1], h[2]]
+    })
     dist.quant <- quantile(pws.dist, probs, na.rm = TRUE)
     names(dist.quant) <- paste("pct.", probs, sep = "")
     c(mean = mean(pws.dist, na.rm = TRUE), dist.quant)
   }
   
+  g <- g[, , strataNames(g)]
   st.pairs <- as.matrix(.strataPairs(g))
   st <- strata(g)
-  hap.dist <- lapply(g@sequences@dna, dist.dna, as.matrix = TRUE, ...)
+  hap.dist <- lapply(sequences(g)@dna, dist.dna, as.matrix = TRUE, ...)
   
-  result <- lapply(1:nLoc(g), function(i) {
-    within.dist <- do.call(rbind, tapply(1:nrow(g@loci), st, function(r) {
-      pair.dist.summary(g@loci[r, i], g@loci[r, i], hap.dist[[i]])
+  result <- lapply(locNames(g), function(loc) {
+    within.dist <- do.call(rbind, tapply(names(st), st, function(ids) {
+      haps <- as.character(loci(g, ids = ids, loci = loc)[, 1])
+      pair.dist.summary(t(combn(haps, 2)), hap.dist[[loc]], probs)
     }))
   
     between.dist <- t(apply(st.pairs, 1, function(sp) {
-      btwn <- pair.dist.summary(g@loci[which(st == sp[1]), i],
-                                g@loci[which(st == sp[2]), i],  
-                                hap.dist[[i]]
-      )
+      ids1 <- names(st)[which(st == sp[1])]
+      ids2 <- names(st)[which(st == sp[2])]
+      h1 <- as.character(loci(g, ids = ids1, loci = loc)[, 1])
+      h2 <- as.character(loci(g, ids = ids2, loci = loc)[, 1])
+      btwn <- pair.dist.summary(expand.grid(h1, h2), hap.dist[[loc]], probs)
       dA <- btwn["mean"] - (sum(within.dist[sp, "mean"], na.rm = TRUE) / 2)
       c(dA = unname(dA), btwn)
     }))
