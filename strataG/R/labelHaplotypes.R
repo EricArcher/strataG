@@ -116,9 +116,10 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
     names(hap.order) <- paste(prefix, hap.nums, sep = "")
     names(sort(hap.order))
   } else {
-    # if no prefix, sort based on sequence name and use first for each haplotype
-    hap.code.sort <- hap.code[order(names(hap.code))]
-    names(sort(hap.code[!duplicated(hap.code.sort)]))
+    # if no prefix, use first sequence name for each haplotype
+    #hap.code.sort <- hap.code[order(names(hap.code))]
+    #names(sort(hap.code[!duplicated(hap.code.sort)]))
+    names(hap.code[!duplicated(hap.code)])
   }
   hap.code <- hap.labels[hap.code]
   names(hap.code) <- rownames(hap.dist)
@@ -204,7 +205,7 @@ labelHaplotypes.gtypes <- function(x, ...) {
     old.haps <- hap.df[, gene]
     hap.df[, gene] <- new.haps[[gene]]$haps[old.haps]
   }
-  hap.df <- hap.df[!is.na(hap.df[, "strata"]), ]
+  #hap.df <- hap.df[!is.na(hap.df[, "strata"]), ]
   
   # collect sequences
   hap.seqs <- lapply(new.haps, function(x) x$hap.seqs)
@@ -214,13 +215,13 @@ labelHaplotypes.gtypes <- function(x, ...) {
   unassigned <- lapply(new.haps, function(x) x$unassigned)
   
   # create new gtypes
-  strata <- strata(x)
+  st <- strata(x)
   x <- df2gtypes(
     hap.df, ploidy = 1, id.col = 1, strata.col = 2, loc.col = 3,
     sequences = hap.seqs, description = description(x), schemes = schemes(x), 
     other = other(x)
   )
-  strata(x) <- strata
+  strata(x) <- st
 
   list(gtypes = x, unassigned = unassigned)
 }

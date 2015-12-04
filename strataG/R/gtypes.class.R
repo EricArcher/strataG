@@ -92,7 +92,7 @@ setClass(
       locus.good <- sapply(colnames(object@loci), function(x) {
         haps <- unique(as.character(object@loci[, x]))
         seqs <- rownames(object@sequences@dna[[x]])
-        all(haps %in% seqs)
+        all(na.omit(haps) %in% seqs)
       })
       if(!all(locus.good)) {
         bad.loci <- paste(colnames(object@loci)[!locus.good], collapse = ", ")
