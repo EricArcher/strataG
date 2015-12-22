@@ -1,0 +1,32 @@
+## ------------------------------------------------------------------------
+options(digits = 2)
+library(strataG)
+data(msats.g)
+msats <- stratify(msats.g, "fine")
+msats <- msats[, locNames(msats)[1:4], ]
+
+## ------------------------------------------------------------------------
+statFst(msats)
+statGst(msats)
+
+## ------------------------------------------------------------------------
+ran.strata <- sample(1:3, size = nInd(msats), replace = TRUE)
+statFst(msats, ran.strata)
+statGst(msats, ran.strata)
+
+## ------------------------------------------------------------------------
+ovl <- overallTest(msats, nrep = 100)
+
+## ------------------------------------------------------------------------
+ovl <- overallTest(msats, stats = c(statFst, statChi2), nrep = 100)
+
+## ------------------------------------------------------------------------
+pws <- pairwiseTest(msats, stats = c(statFstPrime, statGst), nrep = 100)
+
+## ------------------------------------------------------------------------
+pws
+
+## ------------------------------------------------------------------------
+popStruct <- popStructTest(msats, stats = c(statFst, statFstPrime), nrep = 100, quietly = TRUE)
+popStruct
+

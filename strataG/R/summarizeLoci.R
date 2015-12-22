@@ -30,7 +30,8 @@ summarizeLoci <- function(g, by.strata = FALSE, ...) {
       pct.unique.alleles = pctUniqueAlleles(x),
       expected.heterozygosity = exptdHet(x),
       observed.heterozygosity = obsvdHet(x),
-      theta = theta(x)
+      theta = theta(x),
+      hwe.p.value = hweTest(x, use.genepop = FALSE)
     )
   }
   

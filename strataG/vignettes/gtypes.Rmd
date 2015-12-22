@@ -1,0 +1,210 @@
+---
+title: "Creating and Manipulating gtypes Objects"
+author: "Eric Archer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{1. Creating and Manipulating gtypes Objects}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+## Construction
+
+For most functions in _strataG_, you will need to load your data into a _gtypes_ object. A _gtypes_ object is an R S4 class with the following slots:
+
+* __\@loci__ a data.frame containing the allelic data as one column per locus. Alleles are on multiple rows per column with samples listed in the same order for each allele. rownames are sample names plus allele number formatted as 12345.1 and 12345.2 where 12345 is the sample name and 1 and 2 are the first and second alleles. colnames are unique locus names.
+* __\@sequences__ a _multidna_ object, which is a list of _DNAbin_ objects (from the _apex_ and _ape_ packages, respectively).
+* __\@ploidy__ integer representing the ploidy of the data. There are ploidy * the number of samples rows in 'loci'.
+* __\@strata__ a factor or vector that can be coerced as to a factor as long as the number of samples representing the current stratification scheme.
+* __\@schemes__ schemes a data.frame with stratification schemes in each column. Sample names are in the rownames and must match the first part of the sample names (rownames) of the 'loci' slot. Each column is a factor.
+* __\@description__ a label for the object.
+* __\@other__ a slot to carry other optional related data - unused in package analyses.
+
+### _new_ constructor
+
+A gtypes object can be created with the standard S4 _new_ constructor function, like this:
+```{r}
+library(strataG)
+#--- create a diploid (microsatellite) gtypes object
+data(dolph.msats)
+data(dolph.strata)
+strata.schemes <- dolph.strata[, c("broad", "fine")]
+rownames(strata.schemes) <- dolph.strata$id
+msats <- new("gtypes", gen.data = dolph.msats[, -1], ploidy = 2,
+  ind.names = dolph.msats[, 1], schemes = strata.schemes)
+
+#--- create a haploid sequence (mtDNA) gtypes object
+data(dolph.seqs)
+dloop.haps <- cbind(haps = dolph.strata$id)
+rownames(dloop.haps) <- dolph.strata$id
+dloop <- new("gtypes", gen.data = dloop.haps, ploidy = 1, 
+  sequences = dolph.seqs)
+```
+
+Both of these examples create a _gtypes_ where every individual is in a single default stratum. To stratify samples when created, supply either a vector, factor, or stratification scheme name to the 'strata' argument in _new_, like so:
+```{r}
+msats.fine <- new("gtypes", gen.data = dolph.msats[, -1], ploidy = 2,
+  ind.names = dolph.msats[, 1], schemes = strata.schemes, strata = "fine")
+```
+
+### _df2gtypes_ - Convert a data.frame or matrix
+
+The _df2gtypes_ function assumes that you have a matrix or data.frame with columns for individual ids, stratification, and locus data. You then specify the columns in the data.frame where this information can be found. 
+```{r}
+# create a single data.frame with the msat data and stratification
+msats.merge <- merge(dolph.strata, dolph.msats, all.y = TRUE, description = date())
+str(msats.merge)
+
+# creat the gtypes object
+msats.fine <- df2gtypes(msats.merge, ploidy = 2, id.col = 1, strata.col = 3, loc.col = 5)
+```
+
+### _sequence2gtypes_ - Convert DNA sequences
+
+The sequence2gtypes function assumes that you have some DNA sequences and perhaps a stratification scheme.
+```{r}
+# extract and name the stratification scheme
+strata <- dolph.strata$fine
+names(strata) <- dolph.strata$ids
+
+# create the gtypes object
+dloop.fine <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop",
+  description = "dLoop: fine-scale stratification")
+```
+
+### _genind2gtypes_ - Convert genind object
+
+This converts from a _genind_ object from the _adegenet_ package.
+```{r}
+library(adegenet)
+# from example(df2genind)
+df <- data.frame(locusA=c("11","11","12","32"),
+                 locusB=c(NA,"34","55","15"),
+                 locusC=c("22","22","21","22"))
+row.names(df) <- .genlab("genotype",4)
+obj <- df2genind(df, ploidy=2, ncode=1)
+obj
+
+# convert to gtypes
+gi.g <- genind2gtypes(obj)
+gi.g
+```
+
+## Accessor functions
+
+There are several functions for getting basic information from a _gtypes_ object:
+
+* __nInd(g)__ Returns the number of individuals.
+* __nLoc(g)__ Returns the number of loci.
+* __nStrata(g)__ Returns the number of strata in the current scheme.
+* __indNames(g)__ Returns the names of the individuals.
+* __locNames(g)__ Returns the names of the loci or genes.
+* __strataNames(g)__ Returns the names of the strata in the current scheme.
+* __ploidy(g)__ Returns the ploidy of each locus.
+* __strata(g)__ Returns the current strata to which each individual belongs. Can be set with strata(g) <- value as below.
+* __schemes(g)__ Returns a data.frame of potential stratification schemes. Can be set with schemes(g) <- value as below.
+* __loci(g, ids = NULL, loci = NULL)__ Returns a data.frame of the allelic for specified individuals and loci.
+* __seqNames(g)__ Returns the names of seat of sequences.
+* __sequences(g)__ Returns the _multidna_ object in the \@sequences slot.
+* __description(g)__ Returns the label describing the object.
+* __other(g)__ Returns the optional data stored in the \@other slot.
+
+## Subsetting/Indexing
+
+A _gtypes_ object can be subset using the standard R '[' indexing operation. The first argument specifies the desired individuals, the second is the loci to return, and the third is the strata. All standard R indexing operations involving numerical, character, or logical vectors work for each argument.
+For example, to return 10 random individuals:
+```{r}
+sub.msats <- msats.fine[sample(nInd(msats.fine), 10), , ]
+sub.msats
+```
+
+...or to return specific loci:
+```{r}
+sub.msats <- sub.msats[, c("D11t", "EV37", "TV7"), ]
+sub.msats
+```
+
+...or some loci in a specific stratum:
+```{r}
+sub.msats <- msats.fine[, c("Ttr11", "D11t"), "Coastal"]
+sub.msats
+```
+
+## Summary
+
+A _summary_ function has been defined for _gtypes_, and the return value provides the number of individuals, loci, strata, allele frequencies, a by-strata summary, and a by-locus summary:
+```{r}
+msats.smry <- summary(msats.fine)
+str(msats.smry)
+```
+
+For just the by-locus summary statistics:
+```{r}
+summarizeLoci(msats.fine)
+```
+
+
+## Stratifying samples
+
+You can specify the stratification scheme when creating a _gtypes_ object as in the examples above. Once a _gtypes_ object has been created, you can also change the stratification scheme by either supplying a new vector for the \@strata slot:
+```{r}
+# randomly stratify individuals to two populations
+strata(msats) <- sample(c("Pop1", "Pop2"), nInd(msats), rep = TRUE)
+summary(msats)$strata.smry
+```
+
+or, if there is a stratification scheme data.frame in the \@schemes slot, you can use the _stratify_ function to choose a stratification scheme:
+```{r}
+# choose "broad" stratification scheme
+msats <- stratify(msats, "broad")
+summary(msats)$strata.smry
+```
+
+If the \@schemes slot is empty (NULL), you can fill it with a proper data.frame like this:
+```{r}
+schemes(dloop) <- strata.schemes
+```
+
+NOTE: Filling or changing the \@schemes slot does not affect the current stratification of the samples. You must then select a new stratification scheme or fill the \@strata slot as above.
+```{r}
+stratify(dloop, "fine")
+```
+
+If some samples should be unstratified (excluded from any stratified analyses), they should have NAs in the appropriate position in the \@strata slot. For example:
+```{r}
+# unstratify a random 10 samples
+x <- strata(msats)
+x[sample(indNames(msats), 10)] <- NA
+strata(msats) <- x
+summary(msats)$strata.smry
+```
+
+You can also randomly permute the current stratification scheme using the _permuteStrata_ function like this:
+```{r}
+msats <- stratify(msats, "fine")
+
+# original
+summary(msats)$strata.smry
+
+# permuted
+ran.msats <- permuteStrata(msats)
+summary(ran.msats)$strata.smry
+```
+NOTE: Only samples assigned to strata are permuted with _permuteStrata_. Those not assigned (NAs) remain unassigned.
+
+## Exporting
+
+The allelic data in a _gtypes_ object can be converted back to a matrix with _as.matrix_:
+```{r}
+gen.mat <- as.matrix(msats)
+head(gen.mat)
+```
+
+By default, this function splits each allele into its own column. One can make a matrix with one locus per column and alleles separated by a specified character by setting the _one.col_ argument to _TRUE_:
+```{r}
+gen.mat <- as.matrix(msats, one.col = TRUE)
+head(gen.mat)
+```
+
+The contents of a _gtypes_ object can be written to a file with the _write.gtypes_ function. This will write a .csv file with the allelic information and a .fasta file for any sequence data if it exists.

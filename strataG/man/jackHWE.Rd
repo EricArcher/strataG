@@ -7,7 +7,7 @@
 \title{Hardy-Weinberg Equlibrium Jackknife}
 \usage{
 jackHWE(g, exclude.num = 1, min.hwe.samples = 5, show.progress = TRUE,
-  ...)
+  use.genepop = FALSE, ...)
 
 jackInfluential(jack.result, alpha = 0.05)
 
@@ -21,6 +21,9 @@ jackInfluential(jack.result, alpha = 0.05)
 \item{min.hwe.samples}{minimum samples needed to calculate HWE.}
 
 \item{show.progress}{logical. Show progress of jackknife?}
+
+\item{use.genepop}{logical. Use GENEPOP to calculate HWE p-values? If \code{FALSE} 
+then \code{\link[pegas]{hw.test}} is used.}
 
 \item{...}{other arguments to be passed to GENEPOP.}
 
@@ -63,6 +66,13 @@ Test influence of samples on Hardy-Weinberg equilibrium via
     line marks the smallest influential exclusion.\cr
 }
 }
+\note{
+If \code{use.genepop = TRUE}, the command line version of GENEPOP v.4 
+  must be properly installed and available on the command line, so it is 
+  executable from any directory. On PC's, this requires having it in a 
+  folder in the PATH environmental variable. On Macs, the executable should 
+  be installed in a folder like \code{/usr/local/bin}.
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
@@ -71,5 +81,8 @@ Morin, P.A., R.G. LeDuc, F.I. Archer, K.K. Martien,
   R. Huebinger, J.W. Bickham, and B.L. Taylor. 2009. Significant deviations 
   from Hardy-Weinberg equilibirum caused by low levels of microsatellite 
   genotyping errors. Molecular Ecology Resources 9:498-504.
+}
+\seealso{
+\code{\link{hweTest}}
 }
 

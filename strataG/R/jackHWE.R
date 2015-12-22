@@ -6,6 +6,8 @@
 #' @param exclude.num Number of samples to exclude at a time.
 #' @param min.hwe.samples minimum samples needed to calculate HWE.
 #' @param show.progress logical. Show progress of jackknife?
+#' @param use.genepop logical. Use GENEPOP to calculate HWE p-values? If \code{FALSE} 
+#'   then \code{\link[pegas]{hw.test}} is used.
 #' @param ... other arguments to be passed to GENEPOP.
 #' @param jack.result result from run of \code{jackHWE}.
 #' @param alpha critical value to determine if exclusion is "influential".
@@ -24,6 +26,12 @@
 #'     of all odds-ratios from \code{jack.influential}. A vertical dashed 
 #'     line marks the smallest influential exclusion.\cr
 #' }
+#' 
+#' @note If \code{use.genepop = TRUE}, the command line version of GENEPOP v.4 
+#'   must be properly installed and available on the command line, so it is 
+#'   executable from any directory. On PC's, this requires having it in a 
+#'   folder in the PATH environmental variable. On Macs, the executable should 
+#'   be installed in a folder like \code{/usr/local/bin}.
 #' 
 #' @return \code{jack.hwe} returns a list with:
 #' \item{obs}{a named vector of HWE p-values for each locus.}
@@ -44,11 +52,14 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @seealso \code{\link{hweTest}}
+#' 
 #' @importFrom utils combn
+#' @importFrom pegas hw.test
 #' @export
 #' 
 jackHWE <- function(g, exclude.num = 1, min.hwe.samples = 5, 
-                    show.progress = TRUE, ...) {  
+                    show.progress = TRUE, use.genepop = FALSE, ...) {  
   
   if((nInd(g) - exclude.num) < min.hwe.samples){
     stop(paste("'exclude.num' or 'min.HWE.samples' is too large to analyze this data"))
@@ -57,13 +68,16 @@ jackHWE <- function(g, exclude.num = 1, min.hwe.samples = 5,
   # Setup array of samples to exclude
   exclude.arr <- combn(indNames(g), exclude.num)
   
-  # Calculate observed HWE and run jackknife 
   start.time <- Sys.time()
   nsteps <- ncol(exclude.arr) + 1 
   if(show.progress) {
     cat(format(start.time, "%Y-%m-%d %H:%M:%S"), "|", 1, "/", nsteps, "\n")
   }
-  obs <- HWEgenepop(g, show.output = FALSE, ...)
+  
+  # calculate observed HWE
+  obs <- hweTest(g, use.genepop = use.genepop, show.output = FALSE, ...)
+  
+  # jackknife HWE
   jack <- sapply(1:ncol(exclude.arr), function(i) {           
     if(show.progress) {
       now <- Sys.time()    
@@ -75,7 +89,7 @@ jackHWE <- function(g, exclude.num = 1, min.hwe.samples = 5,
     }
     to.keep <- setdiff(indNames(g), exclude.arr[, i])
     jack.gtypes <- g[to.keep, , ]
-    HWEgenepop(jack.gtypes, show.output = FALSE, ...)
+    hweTest(jack.gtypes, use.genepop = use.genepop, show.output = FALSE, ...)
   })
 
   exclude.vec <- apply(exclude.arr, 2, function(x) paste(x, collapse = ", "))
