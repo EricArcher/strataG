@@ -20,7 +20,9 @@ fusFs <- function(x) {
   
   sapply(getSequences(x, simplify = FALSE), function(dna) {
     dna <- as.matrix(dna)
-    haps <- as.matrix(labelHaplotypes(dna)$hap.seqs)
+    haps <- labelHaplotypes(dna)
+    if(is.null(haps)) return(NA)
+    haps <- as.matrix(haps$hap.seqs)
     n <- nrow(dna)
     k0 <- nrow(haps)
     

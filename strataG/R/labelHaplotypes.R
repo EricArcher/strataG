@@ -91,7 +91,7 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
     haps <- rep(NA, length(no.ns))
     names(haps) <- names(no.ns)
     haps[no.ns] <- names(haps)[no.ns]
-    warning("Fewer than 2 sequences have ambiguities (N's). Can't assign haplotypes. NULL returned.",
+    warning("Fewer than 2 sequences have no ambiguities (N's). Can't assign haplotypes. NULL returned.",
             call. = FALSE, immediate. = TRUE)
     return(NULL)
   }
