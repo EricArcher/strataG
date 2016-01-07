@@ -149,7 +149,21 @@ setMethod("initialize", "gtypes",
   g@schemes <- schemes
   g@description <- description
   g@other <- other
+  
+  # Check for samples missing data for all loci
+  g.mat <- as.matrix(g)
+  not.missing.all <- apply(g.mat, 1, function(y) !all(is.na(y)))
+  to.keep <- names(which(not.missing.all))
+  to.remove <- names(which(!not.missing.all))
+  if(length(to.remove)) {
+    warning("The following samples are missing data for all loci and have been removed: ", 
+            paste(to.remove, collapse = ", "))
+  }
+  g@loci <- g@loci[idRows(to.keep, rownames(g@loci)), , drop = FALSE]
+  g@loci <- droplevels(g@loci)
+  
   if(remove.sequences) g <- removeSequences(g)
+  
   stratify(g, strata)
 })
          

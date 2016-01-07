@@ -342,6 +342,20 @@ setMethod("[",
                            simplify = FALSE, exclude.gap.only = FALSE)
     x@sequences <- new("multidna", j.seqs)
   }
+  
+  # Check for samples missing data for all loci
+  x.mat <- as.matrix(x)
+  not.missing.all <- apply(x.mat, 1, function(y) !all(is.na(y)))
+  to.keep <- names(which(not.missing.all))
+  to.remove <- names(which(!not.missing.all))
+  if(length(to.remove)) {
+    warning("The following samples are missing data for all loci and have been removed: ", 
+            paste(to.remove, collapse = ", "))
+  }
+  x@loci <- x@loci[idRows(to.keep, rownames(x@loci)), , drop = FALSE]
+  x@loci <- droplevels(x@loci)
+  x@strata <- droplevels(x@strata[to.keep])
+  
   if(drop) x <- removeSequences(x)
 
   return(x)
