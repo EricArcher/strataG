@@ -35,12 +35,12 @@ qaqc <- function(g, label = NULL, ...) {
     smry <- sapply(locNames(g), function(loc) {
       gt <- loci(g, id, loc)
       missing <- any(is.na(gt))
-      hmzgs <- if(missing) NA else length(unique(gt)) == 1
+      hmzgs <- if(missing) NA else length(unique(unlist(gt))) == 1
       c(missing = missing, hmzgs = hmzgs)
     })
     
     missing <- sum(smry["missing", ], na.rm = TRUE)
-    c(sample = id, 
+    data.frame(sample = id, 
       num.loci.missing.genotypes = missing,
       pct.loci.missing.genotypes = missing / num.loc,
       pct.loci.homozygous = mean(smry["hmzgs", ], na.rm = TRUE)
