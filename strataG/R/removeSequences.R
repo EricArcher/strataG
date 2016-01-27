@@ -13,12 +13,12 @@
 #' 
 removeSequences <- function(g) {
   if(is.null(sequences(g))) return(g)
-  new.list <- lapply(locNames(g), function(x) {
+  new.seqs <- lapply(locNames(g), function(x) {
     haps <- unique(as.character(loci(g)[[x]]))
-    sequences(g, x)[haps, ]
+    getSequences(sequences(g), x)[haps]
   })
-  names(new.list) <- locNames(g)
-  g@sequences <- new("multidna", new.list)
+  names(new.seqs) <- locNames(g)
+  g@sequences <- as.multidna(new.seqs)
   g
 }
   

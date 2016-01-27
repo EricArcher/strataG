@@ -7,6 +7,9 @@
 #'   \code{@@sequences} slot to return.
 #' @param ids vector of individual ids.
 #' @param loci vector of loci.
+#' @param as.haplotypes return sequences as haplotypes? If \code{TRUE}, contents of 
+#'   \code{@@sequences} slot are returned. If \code{FALSE}, one sequence per individual 
+#'   is returned.
 #' @param i,j,k subsetting slots for individuals (\code{i}), loci (\code{j}),
 #'   or strata (\code{k}). See Details for more information.
 #' @param quiet suppress warnings about unmatched requested individuals, loci, or strata?
@@ -244,12 +247,19 @@ setGeneric("sequences", function(x, ...) standardGeneric("sequences"))
 #' @aliases sequences
 #' @export
 #' 
-setMethod("sequences", "gtypes", function(x, seqName = NULL, ...) {
-  if(is.null(seqName)) {
-    x@sequences
-  } else {
-    x@sequences@dna[[seqName]]
+setMethod("sequences", "gtypes", function(x, seqName = NULL, as.haplotypes = TRUE, ...) {
+  if(is.null(x@sequences)) return(NULL)
+  dna <- getSequences(x@sequences, simplify = FALSE)
+  if(!as.haplotypes) {
+    dna <- lapply(locNames(x), function(l) {
+      haps <- as.character(loci(x)[, l])
+      ind.seqs <- dna[[l]][haps]
+      names(ind.seqs) <- indNames(x)
+      ind.seqs
+    })
   }
+  if(!is.null(seqName)) dna <- dna[seqName]
+  as.multidna(dna)
 })
 
 

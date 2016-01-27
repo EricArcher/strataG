@@ -79,7 +79,7 @@ loci(x, ...)
 
 sequences(x, ...)
 
-\S4method{sequences}{gtypes}(x, seqName = NULL, ...)
+\S4method{sequences}{gtypes}(x, seqName = NULL, as.haplotypes = TRUE, ...)
 
 description(x, ...)
 
@@ -101,6 +101,10 @@ description(x, ...)
 
 \item{seqName}{the name (or number) of a set of sequences from the 
 \code{@sequences} slot to return.}
+
+\item{as.haplotypes}{return sequences as haplotypes? If \code{TRUE}, contents of 
+\code{@sequences} slot are returned. If \code{FALSE}, one sequence per individual 
+is returned.}
 
 \item{i, j, k}{subsetting slots for individuals (\code{i}), loci (\code{j}),
 or strata (\code{k}). See Details for more information.}

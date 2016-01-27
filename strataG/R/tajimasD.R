@@ -43,6 +43,11 @@ tajimasD <- function(x) {
     # which allows you to calculate D!
     D_obs <- (pi - S / a1) / sqrt(e1 * S + e2 * S * (S - 1))
     
+    if(is.nan(D_obs)) {
+      warning("D cannot be computed (division by zero in final equation)")
+      return(c(D = NA, p.value = NA))
+    }
+    
     # making life easier:
     D.to.x <- function(D, Dmin, Dmax) (D - Dmin) / (Dmax - Dmin) # conversion 1
     x.to.D <- function(x, Dmin, Dmax) x * (Dmax - Dmin) + Dmin   # conversion 2
