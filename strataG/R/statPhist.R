@@ -1,32 +1,11 @@
 #' @rdname popStructStat
 #' @importFrom apex getSequences
+#' @importFrom swfscMisc harmonic.mean
 #' @export
 #' 
 statPhist <- function(g, strata = NULL, hap.dist = NULL, model = "K80", 
                       gamma = FALSE, pairwise.deletion = TRUE, ...)  {
   if(ploidy(g) != 1 | nStrata(g) == 1) return(c(PHIst = NA))
-  stat.name <- "PHIst"
-  
-  # check hap.dist matrix
-  if(!is.null(hap.dist)) {
-    if(!("dist" %in% class(hap.dist))) {
-      stop("'hap.dist' must be of class 'dist'")
-    }
-    if(all(hap.dist[lower.tri(hap.dist)] == 1)) stat.name <- "Fst"
-  } else if(is.null(g@sequences)) {
-    # format distances for Fst (all 1s, and 0s on the diagonal)
-    haps <- unique(g@loci[, 1])
-    hap.dist <- matrix(1, nrow = length(haps), ncol = length(haps), 
-                       dimnames = list(haps, haps))
-    diag(hap.dist) <- 0
-    stat.name <- "Fst"
-  } else {
-    hap.dist <- dist.dna(
-      getSequences(sequences(g), simplify = F)[[1]], model = model, gamma = gamma, 
-      pairwise.deletion = pairwise.deletion
-    )
-  }
-  if(!is.matrix(hap.dist)) hap.dist <- as.matrix(hap.dist)
   
   strata <- if(is.null(strata)) {
     strata(g)
@@ -35,14 +14,48 @@ statPhist <- function(g, strata = NULL, hap.dist = NULL, model = "K80",
   }
   if(!is.factor(strata)) strata <- factor(strata)
   
-  haps <- loci(g)[, 1]
-  hap.dist <- hap.dist[levels(haps), levels(haps)]
+  if(!is.null(hap.dist)) {
+    if(inherits(hap.dist, "dist")) {
+      hap.dist <- lapply(locNames(g), function(gene) hap.dist)
+    } else if(is.list(hap.dist) & length(hap.dist) == nLoc(g)) {
+      names(hap.dist) <- locNames(g)
+    } else {
+      warning("'hap.dist' is not NULL, nor a distance matrix or list as long as the number of genes.")
+      hap.dist <- NULL
+    }
+  }
   
-  est <- statPhist_C(
-    as.numeric(haps) - 1,
-    as.numeric(strata) - 1,
-    hap.dist
-  )
+  est <- sapply(locNames(g), function(gene) {  
+    stat.name <- "PHIst"
+    # check hap.dist matrix
+    hd <- hap.dist[[gene]]
+    if(!is.null(hd)) {
+      if(!("dist" %in% class(hd))) stop("'hap.dist' must be of class 'dist'")
+      if(all(hd[lower.tri(hd)] == 1)) stat.name <- "Fst"
+    } else if(is.null(sequences(g))) {
+      # format distances for Fst (all 1s, and 0s on the diagonal)
+      haps <- unique(as.character(loci(g)[, gene]))
+      hd <- matrix(1, nrow = length(haps), ncol = length(haps), dimnames = list(haps, haps))
+      diag(hd) <- 0
+      stat.name <- "Fst"
+    } else {
+      hd <- dist.dna(
+        getSequences(sequences(g, gene), simplify = TRUE), model = model, gamma = gamma, 
+        pairwise.deletion = pairwise.deletion
+      )
+    }
+    if(!is.matrix(hd)) hd <- as.matrix(hd)
+    
+    haps <- loci(g)[, gene]
+    hd <- hd[levels(haps), levels(haps), drop = FALSE]
+    
+    result <- statPhist_C(as.numeric(haps) - 1, as.numeric(strata) - 1, hd)
+    names(result) <- stat.name
+    result
+  }, USE.NAMES = FALSE)
+  est[is.na(est)] <- 0
+  stat.name <- if(any(names(est) == "PHIst")) "PHIst" else "Fst"
+  est <- if(any(est <= 0)) mean(est, na.rm = TRUE) else harmonic.mean(est)
   
 #   # Extract summary values
 #   strata.hap.freq <- table(g@loci[, 1], strata, useNA = "no")
