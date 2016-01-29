@@ -16,19 +16,25 @@
 #' @export
 #' 
 fusFs <- function(x) {
-  x <- as.multidna(x)
+  dna <- if(inherits(x, "gtypes")) {
+    sequences(x, as.haplotypes = FALSE)
+  } else {
+    as.multidna(x)
+  }
   
-  sapply(getSequences(x, simplify = FALSE), function(dna) {
-    dna <- as.matrix(dna)
-    haps <- labelHaplotypes(dna)
-    if(is.null(haps)) return(NA)
-    haps <- as.matrix(haps$hap.seqs)
-    n <- nrow(dna)
-    k0 <- nrow(haps)
+  haps <- lapply(getSequences(dna, simplify = FALSE), labelHaplotypes)
+  
+  sapply(haps, function(h) {
+    if(is.null(h)) return(NA)
+    h$hap.seqs <- as.matrix(h$hap.seqs)
+    h$haps <- na.omit(h$haps)
+    n <- length(h$haps)
+    k0 <- length(unique(h$haps))
     
-    pws.diff <- dist.dna(haps, model = "raw", pairwise.deletion = TRUE, as.matrix = TRUE)
+    pws.diff <- dist.dna(h$hap.seqs, model = "N", pairwise.deletion = TRUE, as.matrix = TRUE)
+    pws.diff <- pws.diff[h$haps, h$haps]
     theta.pi <- mean(pws.diff[lower.tri(pws.diff)])
-    Sn.theta.pi <- prod(theta.pi - 0:(n + 1))
+    Sn.theta.pi <- prod(theta.pi + 0:(n - 1)) # potential typo on page 916 that implies prod(theta.pi - 0:(n + 1))
     Sk.theta.k <- sapply(k0:n, function(k) abs(Stirling1(n, k)) * (theta.pi ^ k))
     s.prime <- sum(Sk.theta.k / Sn.theta.pi)
     
