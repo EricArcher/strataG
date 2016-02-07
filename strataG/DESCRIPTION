@@ -3,7 +3,7 @@ Type: Package
 Title: Summaries and Population Structure Analyses of Genetic Data
 Description: A toolkit for analyzing stratified population genetic data.
 Version: 1.0
-Date: 2015-09-12
+Date: 2016-02-07
 Author: Eric Archer
 Maintainer: Eric Archer <eric.archer@noaa.gov>
 Depends:

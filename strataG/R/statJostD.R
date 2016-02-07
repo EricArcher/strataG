@@ -26,12 +26,11 @@ statJostD <- function(g, strata = NULL, ...) {
   
   allele.freqs <- alleleFreqs(g, by.strata = TRUE)
   terms <- sapply(locNames(g), function(x) {
-    allele.strata.freq <- allele.freqs[[x]][, "freq", ]
-    num.strata <- ncol(allele.strata.freq)
-    i.terms <- sapply(rownames(allele.strata.freq), function(a) {
-      j.terms <- sapply(colnames(allele.strata.freq), function(s) {
-        Nj <- sum(allele.strata.freq[, s])
-        Nij <- allele.strata.freq[a, s]
+    num.strata <- dim(allele.freqs[[x]])[3]
+    i.terms <- sapply(dimnames(allele.freqs[[x]])[[1]], function(a) {
+      j.terms <- sapply(dimnames(allele.freqs[[x]])[[3]], function(s) {
+        Nj <- sum(allele.freqs[[x]][, "freq", s])
+        Nij <- allele.freqs[[x]][a, "freq", s]
         a.term1 <- Nij / Nj
         a.term2 <- a.term1 ^ 2
         b.term <- Nij * (Nij - 1) / (Nj * (Nj - 1))
