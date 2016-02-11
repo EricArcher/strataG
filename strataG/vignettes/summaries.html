@@ -10,7 +10,7 @@
 
 <meta name="author" content="Eric Archer" />
 
-<meta name="date" content="2015-12-22" />
+<meta name="date" content="2016-02-10" />
 
 <title>By-Locus Summaries</title>
 
@@ -54,14 +54,12 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="header">
 <h1 class="title">By-Locus Summaries</h1>
 <h4 class="author"><em>Eric Archer</em></h4>
-<h4 class="date"><em>2015-12-22</em></h4>
+<h4 class="date"><em>2016-02-10</em></h4>
 </div>
 
 
 <p>There are several by-locus summary functions available for <em>gtypes</em> objects. Given some sample microsatellite data:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">digits =</span> <span class="dv">2</span>)
-<span class="kw">library</span>(strataG)
-<span class="kw">data</span>(msats.g)
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(msats.g)
 msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats.g, <span class="st">&quot;broad&quot;</span>)
 msats &lt;-<span class="st"> </span>msats[, <span class="kw">locNames</span>(msats)[<span class="dv">1</span>:<span class="dv">4</span>], ]</code></pre>
 <p>One can calculate the following summaries:</p>
@@ -109,10 +107,10 @@ msats &lt;-<span class="st"> </span>msats[, <span class="kw">locNames</span>(msa
 ## EV94               0.067                    0.83                    0.78
 ## Ttr11              0.222                    0.80                    0.70
 ##       theta hwe.p.value
-## D11t   0.56       0.004
+## D11t   0.56       0.002
 ## EV37   0.62       0.000
-## EV94   0.62       0.039
-## Ttr11  0.59       0.000</code></pre>
+## EV94   0.62       0.046
+## Ttr11  0.59       0.002</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarizeLoci</span>(msats, <span class="dt">by.strata =</span> <span class="ot">TRUE</span>)</code></pre>
 <pre><code>## $Coastal
 ##       num.genotyped pct.genotyped num.alleles allelic.richness
@@ -127,9 +125,9 @@ msats &lt;-<span class="st"> </span>msats[, <span class="kw">locNames</span>(msa
 ## Ttr11               0.00                    0.66                    0.63
 ##       theta hwe.p.value
 ## D11t   0.37        0.54
-## EV37   0.45        0.23
-## EV94   0.57        0.91
-## Ttr11  0.49        0.88
+## EV37   0.45        0.24
+## EV94   0.57        0.92
+## Ttr11  0.49        0.87
 ## 
 ## $Offshore
 ##       num.genotyped pct.genotyped num.alleles allelic.richness
@@ -143,10 +141,10 @@ msats &lt;-<span class="st"> </span>msats[, <span class="kw">locNames</span>(msa
 ## EV94               0.067                    0.86                    0.82
 ## Ttr11              0.222                    0.82                    0.79
 ##       theta hwe.p.value
-## D11t   0.64       0.903
-## EV37   0.70       0.014
-## EV94   0.64       0.350
-## Ttr11  0.61       0.242</code></pre>
+## D11t   0.64       0.907
+## EV37   0.70       0.016
+## EV94   0.64       0.332
+## Ttr11  0.61       0.231</code></pre>
 <p>One can also obtain the allelic frequencies for each locus overall and by-strata by:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">alleleFreqs</span>(msats)</code></pre>
 <pre><code>## $D11t

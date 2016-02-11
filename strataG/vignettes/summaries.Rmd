@@ -8,10 +8,12 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
-There are several by-locus summary functions available for _gtypes_ objects. Given some sample microsatellite data:
-```{r}
+```{r echo = FALSE, message = FALSE}
 options(digits = 2)
 library(strataG)
+```
+There are several by-locus summary functions available for _gtypes_ objects. Given some sample microsatellite data:
+```{r}
 data(msats.g)
 msats <- stratify(msats.g, "broad")
 msats <- msats[, locNames(msats)[1:4], ]

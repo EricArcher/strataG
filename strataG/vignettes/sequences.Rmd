@@ -1,5 +1,5 @@
 ---
-title: "3. Working With Sequences"
+title: "Working With Sequences"
 author: "Eric Archer"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -8,12 +8,14 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
-
+```{r echo = FALSE, message = FALSE}
+options(digits = 2)
+library(strataG)
+```
 There are several functions for working with sequence data in strataG. They will either take a haploid _gtypes_ object that contains sequences or some format that can be converted to a _DNAbin_ (in the _ape_ package), or _multidna_ (in the _apex_ package) object.
 
 Leading and trailing N's can be removed from all sequences like this:
 ```{r}
-library(strataG)
 data(dolph.seqs)
 
 i <- sample(1:10, 1)

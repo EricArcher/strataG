@@ -8,9 +8,12 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
+```{r echo = FALSE, message = FALSE}
+options(digits = 2)
+library(strataG)
+```
 Quality of genotypes and sequences can be assessed with several functions. For genotypic data, by-locus summaries can be conducted with the _summarizeLoci_ function, which will also produce summaries for each strata:
 ```{r}
-library(strataG)
 data(msats.g)
 msats <- msats.g
 smry <- summarizeLoci(msats)

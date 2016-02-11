@@ -10,7 +10,7 @@
 
 <meta name="author" content="Eric Archer" />
 
-<meta name="date" content="2015-12-22" />
+<meta name="date" content="2016-02-10" />
 
 <title>QA/QC</title>
 
@@ -54,13 +54,12 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="header">
 <h1 class="title">QA/QC</h1>
 <h4 class="author"><em>Eric Archer</em></h4>
-<h4 class="date"><em>2015-12-22</em></h4>
+<h4 class="date"><em>2016-02-10</em></h4>
 </div>
 
 
 <p>Quality of genotypes and sequences can be assessed with several functions. For genotypic data, by-locus summaries can be conducted with the <em>summarizeLoci</em> function, which will also produce summaries for each strata:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(strataG)
-<span class="kw">data</span>(msats.g)
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(msats.g)
 msats &lt;-<span class="st"> </span>msats.g
 smry &lt;-<span class="st"> </span><span class="kw">summarizeLoci</span>(msats)
 <span class="kw">head</span>(smry)</code></pre>
@@ -77,10 +76,10 @@ smry &lt;-<span class="st"> </span><span class="kw">summarizeLoci</span>(msats)
 ## Ttr11              0.222                    0.80                    0.70
 ## Ttr34              0.200                    0.81                    0.70
 ##       theta hwe.p.value
-## D11t   0.56       0.003
+## D11t   0.56       0.002
 ## EV37   0.62       0.000
-## EV94   0.62       0.049
-## Ttr11  0.59       0.001
+## EV94   0.62       0.047
+## Ttr11  0.59       0.002
 ## Ttr34  0.61       0.000</code></pre>
 <p>The <em>dupGenotypes</em> function identifies samples that have the same or nearly the same genotypes. The number (or percent) of loci that must be shared in order for it to be considered a duplicate can be set by the <em>num.shared</em> argument. The return data.frame provides which loci the two samples show mismatches at so they can be reviewed.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Find samples that share alleles at 2/3rds of the loci</span>
