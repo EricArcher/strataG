@@ -36,6 +36,7 @@
 #'
 #' @importFrom graphics par strwidth barplot axis mtext
 #' @importFrom grDevices rainbow
+#' @importFrom RColorBrewer brewer.pal
 #' @export
 #' 
 structurePlot <- function(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
@@ -59,7 +60,7 @@ structurePlot <- function(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
   assign.mat <- t(q.mat[, prob.cols, drop = FALSE])
   
   # create barplot
-  if(is.null(col)) col <- rainbow(length(prob.cols))
+  if(is.null(col)) col <- brewer.pal(12, "Set3")[1:length(prob.cols)]
   mai <- par("mai")
   mai[1] = 0.7
   mai[3] = 0.2

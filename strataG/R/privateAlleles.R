@@ -15,15 +15,15 @@
 #' @export
 #' 
 privateAlleles <- function(g) {
-  freqs <- alleleFreqs(g, T)
+  freqs <- alleleFreqs(g, TRUE)
   
   do.call(rbind, lapply(freqs, function(f) {
-    f <- f[, 1, ]
+    f <- f[, "freq", , drop = FALSE]
     f[f > 0] <- 1
     pa <- rowSums(apply(f, 1, function(x) {
       if(sum(x > 0) == 1) x else rep(0, length(x))
     }))
-    names(pa) <- colnames(f)
+    names(pa) <- dimnames(f)[[3]]
     pa
   }))
 }
