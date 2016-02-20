@@ -77,11 +77,15 @@ tajimasD <- function(x) {
     
     # important probabilities 
     # D negative: intregrate from Dmin to D, D positive: integrate from D to Dmax
-    prob <- integrate(beta.D, lower = ifelse(D_obs < 0, DMin, D_obs),
-                      upper = ifelse(D_obs < 0, D_obs, DMax), 
-                      alpha = Alpha, beta = Beta, Dmin = DMin, Dmax = DMax)
-    
-    c(D = D_obs, p.value = prob$value)
+    tryCatch({
+      prob <- integrate(beta.D, lower = ifelse(D_obs < 0, DMin, D_obs),
+                        upper = ifelse(D_obs < 0, D_obs, DMax), 
+                        alpha = Alpha, beta = Beta, Dmin = DMin, Dmax = DMax)
+      c(D = D_obs, p.value = prob$value)
+    }, error = function(e) {
+      warning("error in Tajima's D integration, NA returned")
+      c(D = NA, p.value = NA)
+    })
   }))
   
   rownames(result) <- locusNames(x)

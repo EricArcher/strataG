@@ -100,7 +100,7 @@ sharedAlleles <- function(g, smry = "num") {
   
   shared <- do.call(rbind, lapply(1:nrow(st.pairs), function(i) {
     which.shared <- sapply(freqs, function(f) {
-      pair.f <- f[, "prop", st.pairs[i, ]] 
+      pair.f <- f[, "prop", st.pairs[i, ], drop = FALSE] 
       if(any(is.na(pair.f))) return(NA)
       is.shared <- apply(pair.f, 1, function(x) all(x != 0))
       if(sum(is.shared) > 0) {
