@@ -40,6 +40,12 @@ mRatio <- function(g, by.strata = TRUE, rpt.size = 8:2) {
   calc.mratio<- function(freqs) {
     # extract first column
     freqs <- freqs[, 1]
+    
+    if(length(freqs) == 1) {
+      warning("only one allele")
+      return(NA)
+    }
+    
     # check if rownames are numerics
     if(!all.is.numeric(names(freqs))) {
       warning("allele names are non-numeric")
