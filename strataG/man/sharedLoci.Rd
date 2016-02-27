@@ -9,7 +9,7 @@
 \usage{
 propSharedLoci(g, type = c("strata", "ids"), num.cores = 1)
 
-sharedAlleles(g, smry = "num")
+sharedAlleles(g, smry = c("num", "which"))
 
 propSharedIds(ids, g)
 }

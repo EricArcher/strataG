@@ -91,30 +91,30 @@ propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = 1) {
 #' @importFrom utils combn
 #' @export
 #'  
-sharedAlleles <- function(g, smry = "num") {
-  st.vec <- levels(strata(g))
-  if(length(st.vec) < 2) stop("'g' must have at least two strata")
-  st.pairs <- t(combn(st.vec, 2))
-  colnames(st.pairs) <- c("strata.1", "strata.2")
+sharedAlleles <- function(g, smry = c("num", "which")) {
+  st.pairs <- .strataPairs(g)
+  if(is.null(st.pairs)) stop("'g' must have at least two strata")
+  smry <- match.arg(smry)
+  st.pairs <- as.matrix(st.pairs)
   freqs <- alleleFreqs(g, TRUE)
   
   shared <- do.call(rbind, lapply(1:nrow(st.pairs), function(i) {
-    which.shared <- sapply(freqs, function(f) {
+    result <- sapply(freqs, function(f) {
       pair.f <- f[, "prop", st.pairs[i, ], drop = FALSE] 
       if(any(is.na(pair.f))) return(NA)
       is.shared <- apply(pair.f, 1, function(x) all(x != 0))
-      if(sum(is.shared) > 0) {
-        if(smry == "which") {
+      num.shared <- sum(is.shared)
+      if(smry == "which") {
+        if(num.shared > 0) {
           paste(rownames(pair.f)[is.shared], collapse = ", ")
-        } else sum(is.shared)
-      } else NA
+        } else NA
+      } else num.shared
     }, USE.NAMES = TRUE)
-    names(which.shared) <- names(freqs)
-    which.shared
+    names(result) <- names(freqs)
+    result
   }))
   
-  st.pairs <- data.frame(st.pairs, stringsAsFactors = FALSE)
-  cbind(st.pairs, shared)
+  return(data.frame(st.pairs, shared, stringsAsFactors = FALSE))
 }
 
 
