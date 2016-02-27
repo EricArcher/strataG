@@ -138,7 +138,7 @@ setMethod("initialize", "gtypes",
     if(getNumLoci(sequences) != ncol(loci)) {
       stop("the number of genes in 'sequences' is not equal to the number of loci")
     }
-    names(sequences@dna) <- colnames(loci)
+    locusNames(sequences) <- colnames(loci)
   }
   
   # create and return gtypes object

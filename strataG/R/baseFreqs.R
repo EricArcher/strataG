@@ -19,7 +19,6 @@
 #' @export
 #' 
 baseFreqs <- function(x, bases = NULL, ignore = c("n", "x", "-", ".")) {
-  x <- as.multidna(x)
   
   bases <- if(is.null(bases)) {
     rownames(iupac.mat)
@@ -27,8 +26,10 @@ baseFreqs <- function(x, bases = NULL, ignore = c("n", "x", "-", ".")) {
     tolower(as.character(bases))
   }
   ignore <- tolower(ignore)
-  result <- lapply(x@dna, function(dna) {
-    seq.mat <- as.character(dna)
+  
+  x <- getSequences(as.multidna(x), simplify = FALSE)
+  result <- lapply(x, function(dna) {
+    seq.mat <- as.character(as.matrix(dna))
     site.freqs <- apply(seq.mat, 2, function(site) {
       site <- site[!site %in% ignore]
       table(factor(site, levels = bases))
@@ -42,7 +43,7 @@ baseFreqs <- function(x, bases = NULL, ignore = c("n", "x", "-", ".")) {
   if(length(result) == 1) {
     result[[1]]
   } else {
-    names(result) <- names(x@dna)
+    names(result) <- names(x)
     result
   }
 }

@@ -24,7 +24,8 @@
 #' 
 variableSites <- function(x, bases = c("a", "c", "g", "t", "-")) {
   x <- as.multidna(x)
-  result <- lapply(x@dna, function(dna) {
+  result <- lapply(getSequences(x, simplify = FALSE), function(dna) {
+    dna <- as.matrix(dna)
     site.freqs <- baseFreqs(dna, bases)$site.freqs
     var.site <- apply(site.freqs, 2, function(site) sum(site > 0) > 1)
     dna <- as.character(dna)
@@ -38,7 +39,7 @@ variableSites <- function(x, bases = c("a", "c", "g", "t", "-")) {
   if(length(result) == 1) {
     result[[1]]
   } else {
-    names(result) <- names(x@dna)
+    names(result) <- locusNames(x)
     result
   }
 }

@@ -205,7 +205,6 @@ labelHaplotypes.gtypes <- function(x, ...) {
     old.haps <- hap.df[, gene]
     hap.df[, gene] <- new.haps[[gene]]$haps[old.haps]
   }
-  #hap.df <- hap.df[!is.na(hap.df[, "strata"]), ]
   
   # collect sequences
   hap.seqs <- lapply(new.haps, function(x) x$hap.seqs)

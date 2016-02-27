@@ -32,7 +32,7 @@ sequence2gtypes <- function(x, strata = NULL, seq.names = NULL,
   
   # check seq.names
   if(!is.null(seq.names)) {
-    if(length(seq.names) != length(x@dna)) {
+    if(length(seq.names) != getNumLoci(x)) {
       stop("length of 'seq.names' is not equal to number of genes")
     }
     locusNames(x) <- seq.names

@@ -5,8 +5,9 @@
 #' @param g a \linkS4class{gtypes} object.
 #' @param probs a numeric vector of probabilities of the pairwise distance 
 #'   distributions with values in \code{0:1}.
-#' @param ... arguments passed to \code{\link[ape]{dist.dna}} such as 
-#'   \code{model} or \code{pairwise.deletion}.
+#' @param model evolutionary model to be used. see \code{\link[ape]{dist.dna}} 
+#'   for options.
+#' @param ... other arguments passed to \code{\link[ape]{dist.dna}}.
 #' 
 #' @return a list with summaries of the \code{within} and \code{between} strata 
 #'   pairwise distances including Nei's dA. 
@@ -29,7 +30,7 @@
 #' @importFrom stats quantile
 #' @export
 #' 
-nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1), ...) { 
+nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1), model = "raw", ...) { 
   if(ploidy(g) > 1) stop("'g' must be haploid")
   if(is.null(g@sequences)) stop("'g' must have sequences")
   
@@ -47,7 +48,10 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1), ...) {
   st.pairs <- .strataPairs(g)
   if(!is.null(st.pairs)) st.pairs <- as.matrix(st.pairs)
   st <- strata(g)
-  hap.dist <- lapply(sequences(g)@dna, dist.dna, as.matrix = TRUE, ...)
+  hap.dist <- lapply(
+    getSequences(sequences(g), simplify = FALSE), 
+    dist.dna, model = model, as.matrix = TRUE, ...
+  )
   
   result <- lapply(locNames(g), function(loc) {
     within.dist <- do.call(rbind, tapply(names(st), st, function(ids) {

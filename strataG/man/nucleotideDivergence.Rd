@@ -5,7 +5,8 @@
 \alias{nucleotideDivergence}
 \title{Nucleotide Divergence}
 \usage{
-nucleotideDivergence(g, probs = c(0, 0.025, 0.5, 0.975, 1), ...)
+nucleotideDivergence(g, probs = c(0, 0.025, 0.5, 0.975, 1), model = "raw",
+  ...)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
@@ -13,8 +14,10 @@ nucleotideDivergence(g, probs = c(0, 0.025, 0.5, 0.975, 1), ...)
 \item{probs}{a numeric vector of probabilities of the pairwise distance 
 distributions with values in \code{0:1}.}
 
-\item{...}{arguments passed to \code{\link[ape]{dist.dna}} such as 
-\code{model} or \code{pairwise.deletion}.}
+\item{model}{evolutionary model to be used. see \code{\link[ape]{dist.dna}} 
+for options.}
+
+\item{...}{other arguments passed to \code{\link[ape]{dist.dna}}.}
 }
 \value{
 a list with summaries of the \code{within} and \code{between} strata 

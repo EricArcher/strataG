@@ -49,8 +49,10 @@ setMethod("summary", "gtypes",
   
     smry$locus.smry <- if(ploidy(x) > 1) summarizeLoci(x) else NULL
     
-    smry$seq.smry <- if(!is.null(x@sequences)) {
-      do.call(rbind, sapply(x@sequences@dna, function(dna) {
+    smry$seq.smry <- if(!is.null(sequences(x))) {
+      sequences <- getSequences(sequences(x), simplify = FALSE)
+      do.call(rbind, sapply(sequences, function(dna) {
+        dna <- as.matrix(dna)
         dna.len <- unlist(lapply(dna, length))
         len.range <- range(dna.len)
         result <- data.frame(num.seqs = nrow(dna),
