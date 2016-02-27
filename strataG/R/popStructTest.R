@@ -134,11 +134,10 @@ overallTest <- function(g, nrep = 100, stats = "all",
     names(n.genotyped)[n.genotyped == 0]
   })))
   if(length(to.delete) > 0) {
-    warning(
-      paste("The following loci will be removed because they have no genotypes in one or more strata: ",
-            paste(to.delete, collapse = ", ")
-      )
-    )
+    warning(paste(
+      "The following loci will be removed because they have no genotypes in one or more strata: ",
+      paste(to.delete, collapse = ", ")
+    ))
     g <- g[, setdiff(locNames(g), to.delete), ]
   }
   
@@ -156,14 +155,7 @@ overallTest <- function(g, nrep = 100, stats = "all",
     result[i, "estimate"] <- x
     rownames(result)[i] <- names(x)
   }
-  
-#   # remove results and stats where estimate is NA
-#   to.remove <- which(apply(result, 1, function(x) is.na(x["estimate"])))
-#   if(length(to.remove) > 0) {
-#     result <- result[-to.remove, , drop = FALSE]
-#     stat.list <- stat.list[-to.remove]
-#   }    
-  
+
   # conduct permutation test
   null.dist <- NULL
   if(nrep > 0 & length(stat.list) > 0) {
@@ -184,7 +176,9 @@ overallTest <- function(g, nrep = 100, stats = "all",
       tryCatch({
         # calculate matrix of null distributions
         null.dist <- parLapply(cl, st, perm.func, g = g, stat.funcs = stat.list, ...)
-      }, finally = stopCluster(cl))
+      })
+      stopCluster(cl)
+      closeAllConnections()
     } else {
       null.dist <- lapply(st, perm.func, g = g, stat.funcs = stat.list, ...)
     }

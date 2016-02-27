@@ -9,7 +9,7 @@
 #' @importFrom utils combn
 #' 
 .strataPairs <- function(g) {
-  if(nlevels(strata(g)) < 2) stop("'g' has less than 2 strata")
+  if(nlevels(strata(g)) < 2) return(NULL)
   strata.vec <- sort(unique(as.character(strata(g))))
   strata.pairs <- t(combn(strata.vec, 2))
   colnames(strata.pairs) <- c("strata.1", "strata.2")
