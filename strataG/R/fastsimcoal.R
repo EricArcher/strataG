@@ -1,33 +1,27 @@
 #' @name fastsimcoal
 #' @title Run fastsimcoal
-#' @description Run a fastsimcoal simualtion and load results into a 
+#' @description Run a fastsimcoal simulation and load results into a 
 #'   \linkS4class{gtypes} object.
 #'
-#' @param num.pops number of populations.
-#' @param Ne effective population size.
-#' @param sample.size number of samples to take.
-#' @param sample.time time to draw samples.
-#' @param growth.rate growth rate of populations.
-#' @param mig.rates list of migration matrices.
-#' @param hist.ev matrix of historical events.
-#' @param locus.type the type of locus to be modeled. Can be one of 
-#'   \code{"DNA", "MICROSAT", "SNP", "STANDARD", or "FREQ"}.
-#' @param locus.params a matrix of locus parameter matrices with one row per 
-#'   chromosome.
+#' @param pop.info matrix of population sampling information created by the 
+#'   \code{\link{fscPopInfo}} function.
+#' @param locus.params data.frame specifying loci to simulate created by the 
+#'   \code{\link{fscLocusParams}} function.
+#' @param mig.rates a matrix or list of matrices giving the migration rates 
+#'   between pairs of populations.
+#' @param hist.ev matrix of historical events created by the 
+#'   \code{\link{fscHistEv}} function.
 #' @param label character string to label files with.
-#' @param num.sims number of simulations to run.
-#' @param inf.site.model logical. Use infinite site model?
 #' @param quiet logical. Run quietly?
 #' @param delete.files logical. Delete files when done?
 #' @param exec name of fastsimcoal executable.
+#' @param num.cores number of cores to use.
 #' 
 #' @note Assumes that the program \code{fastsimcoal} is properly installed and 
 #'   available on the command line. On PC's, this requires having it in a 
 #'   folder in the PATH environmental variable. On Macs, the executable 
 #'   should be installed in a folder like \code{/usr/local/bin}. The actual name of 
 #'   the executable should be specified with the \code{exec} argument.
-#' 
-#' @return A list of \code{\link{gtypes}} objects for each simulated dataset.
 #' 
 #' @references Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time 
 #'   coalescent simulator of genomic diversity under arbitrarily complex 
@@ -39,42 +33,29 @@
 NULL
 
 
-# check the locus.params list
-.fsc.check.locus.params <- function(locus.type, locus.params) {
-  req.col <- switch(locus.type, DNA = 4, MICROSAT = 5, SNP = 3, STANDARD = 3, FREQ = 3)
-  if(!is.matrix(locus.params)) stop("'locus.params': not a matrix")
-  # check data type row lengths
-  num.col <- ncol(locus.params)
-  if(num.col != req.col) stop(
-    paste("'locus.params': a", locus.type, "row has", num.col, "parameters, but should have", req.col)
-  )
-}
-
-
-# write input file
-.fsc.write <- function(num.pops, Ne, sample.size, sample.time, growth.rate, 
-                       mig.rates, hist.ev, locus.type, locus.params, label) {
+.fscWrite <- function(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL, label = NULL) {
+  opt <- options(scipen = 999)
   
-  # Check argument format
-  if(!is.numeric(hist.ev) & is.matrix(hist.ev)) stop("'hist.ev' is not a numerical matrix")
-  .fsc.check.locus.params(locus.type, locus.params)
+  ploidy <- attr(locus.params, "ploidy")
+  pop.info[, c("pop.size", "sample.size")] <- pop.info[, c("pop.size", "sample.size")] * ploidy
   
+  if(is.null(label)) label <- "fastsimcoal.output"
   file <- paste(label, ".par", sep = "")
-  write(paste("//  <<", label, ">>  (input from 'strataG::fastsimcoal')"), file)
-  write(paste(num.pops, "populations to sample"), file, append = T)
+  mig.rates <- if(!is.null(mig.rates)) if(is.list(mig.rates)) mig.rates else list(mig.rates)
+  hist.ev <- if(is.list(hist.ev)) do.call(rbind, hist.ev) else rbind(hist.ev)
+  
+  # Write input file
+  write(paste("//  <<", label, ">>  (input from 'fastsimcoal.skeleSim.run')"), file)
+  write(paste(nrow(pop.info), "populations to sample"), file, append = T)
   
   write("//Population effective sizes", file, append = T)
-  for(i in 1:length(Ne)) write(Ne[i], file, append = T)
+  for(i in 1:nrow(pop.info)) write(pop.info[i, "pop.size"], file, append = T)
   
   write("//Sample sizes", file, append = T)
-  if(is.null(sample.size)) sample.size <- rep(Ne, length(num.pops))
-  if(is.null(sample.time)) sample.time <- rep(0, length(num.pops))
-  sample.size <- paste(sample.size, sample.time)
-  for(i in 1:length(sample.size)) write(sample.size[i], file, append = T)
+  for(i in 1:nrow(pop.info)) write(pop.info[i, c("sample.size", "sample.times")], file, append = T)
   
   write("//Growth rates", file, append = T)
-  if(is.null(growth.rate)) growth.rate <- rep(0, num.pops)
-  for(i in 1:length(growth.rate)) write(growth.rate[i], file, append = T)
+  for(i in 1:nrow(pop.info)) write(pop.info[i, "growth.rate"], file, append = T)
   
   write("//Number of migration matrices", file, append = T)
   write(length(mig.rates), file, append = T)
@@ -88,179 +69,156 @@ NULL
   write("//Historical events: time, source, sink, migrants, new size, growth rate, migr. matrix", file, append = T)
   write(ifelse(is.null(hist.ev), 0, nrow(hist.ev)), file, append = T)
   if(!is.null(hist.ev)) {
-    for(i in 1:nrow(hist.ev)) write(paste(hist.ev[i, ], collapse = " "), file, append = T)
+    for(i in 1:nrow(hist.ev)) {
+      write(paste(hist.ev[i, ], collapse = " "), file, append = T)
+    }
   }
-
-  # limited to one linkage block per chromosome
-  num.chrom <- nrow(locus.params)
-  write("//Number of independent loci [chromosome]", file, append = T)
-  write(paste(num.chrom, ifelse(num.chrom == 1, 0, 1)), file, append = T)
-  for(i in 1:num.chrom) {
+  
+  num.chrom <- attr(locus.params, "num.chrom")
+  if(!is.null(num.chrom)) locus.params$chromosome <- 1
+  locus.params <- split(locus.params, locus.params$chromosome)
+  num.independent <- if(is.null(num.chrom)) length(locus.params) else num.chrom
+  chrom.struct <- if(num.independent == 1 | !is.null(num.chrom)) 0 else 1
+  write("//Number of independent loci [chromosomes]", file, append = T)
+  write(paste(num.independent, chrom.struct), file, append = T)
+  for(block in locus.params) {
+    block$chromosome <- NULL
     write("//Per chromosome: Number of linkage blocks", file, append = T)
-    write("1", file, append = T)
+    write(nrow(block), file, append = T)
     write("//Per block: data type, num loci, rec. rate and mut rate + optional parameters", file, append = T)
-    chrom.line <- paste(locus.params[i, ], collapse = " ")
-    chrom.line <- paste(locus.type, chrom.line)
-    write(chrom.line, file, append = T)
+    for(i in 1:nrow(block)) {
+      line <- paste(block[i, ], collapse = " ")
+      write(gsub(" NA", "", line), file, append = T)
+    }
   }
   
-  file
+  options(opt)
+  invisible(file)
 }
 
 
-.fsc.parse.simparam <- function(folder) {
-  sp <- dir(folder, pattern = ".simparam", full.names = TRUE)
-  sp <- readLines(sp)
-  start <- grep("Number of linkage blocks", sp)
-  end <- c(start - 1, length(sp))
-  end <- end[-1]
-  lapply(1:length(start), function(i) {
-    chrom.sp <- sp[start[i]:end[i]]
-    info <- grep("partially linked", chrom.sp, value = TRUE)
-    info <- regmatches(info, gregexpr("[[:digit:]]", info))
-    as.numeric(sapply(info, paste, collapse = ""))
-  })
-}
-
-
-# parse dna sequence data and return gtypes
-.fsc.parse.dna <- function(f, label, pop.data) {
-  # get polymorphic positions
-  poly.pos <- grep("polymorphic positions on chromosome", f) + 1
-  num.poly <- f[poly.pos - 1]
-  num.poly <- regmatches(num.poly, gregexpr("^#[[:space:]][[:digit:]]+", num.poly))
-  num.poly <- sapply(num.poly, function(x) as.numeric(gsub("# ", "", x)))
-  poly.pos <- gsub("#", "", f[poly.pos])
-  poly.pos <- strsplit(poly.pos, ",")
-  poly.pos[num.poly == 0] <- NA
-  poly.pos <- lapply(poly.pos, as.numeric)
-  
-  seq.len <- .fsc.parse.simparam(label)
-  seq.mat <- do.call(rbind, strsplit(pop.data[, 3], ""))
-  
-  dna.seqs <- lapply(1:length(seq.len), function(i) {
-    seq.mat.i <- matrix("A", nrow = nrow(pop.data), ncol = sum(seq.len[[i]]))
-    if(num.poly[i] > 0) {
-      for(j in 1:length(poly.pos[[i]])) {
-        seq.mat.i[, poly.pos[[i]][j]] <- seq.mat[, j]
-      }
-    }
-    seqs <- lapply(1:nrow(seq.mat.i), function(j) tolower(seq.mat.i[j, ]))
-    names(seqs) <- pop.data[, 2]
-    as.DNAbin(seqs)
-  })
-  names(dna.seqs) <- paste("chrom", 1:length(dna.seqs), sep = ".")
-  
-  #     seq.i <- if(num.poly[i] == 0) {
-  #       full.seq <- paste(rep("A", seq.len[i]), collapse = "")
-  #       rep(full.seq, nrow(pop.data))
-  #     } else { # otherwise add A's to pad out to full sequence length
-  #       padding <- paste(rep("A", seq.len[i] - num.poly[i]), collapse = "")
-  #       seq.i <- substr(pop.data[, 3], start[i], end[i])
-  #       sapply(seq.i, function(x) paste(x, padding, sep = "", collapse = ""))
-  #     }
-  #     names(seq.i) <- pop.data[, 2]
-  #     as.DNAbin(strsplit(tolower(seq.i), ""))
-  #   })
-  
-  dna.seqs <- new("multidna", dna.seqs)
-  sequence2gtypes(dna.seqs, strata = pop.data[, 1], description = label)
-}
-
-
-# parse microsatellite or snp data and return gtypes
-.fsc.parse.msats.snps <- function(f, label, pop.data) {
-  # get diploid data
-  n.loc <- ncol(pop.data) - 2
-  pop.data <- do.call(
-    rbind, lapply(seq(1, nrow(pop.data), 2), function(i) {
-      ind <- pop.data[c(i, i + 1), ]
-      locus.data <- as.vector(ind[, -(1:2)])
-      c(ind[1, 1], paste(ind[, 2], collapse = "/"), locus.data)
-    })
-  )
-  locus.data <- pop.data[, -c(1:2)]
-  collapsed.loci <- do.call(
-    cbind, lapply(seq(2, ncol(locus.data), by = 2), function(i) {
-      a1 <- locus.data[, i - 1]
-      a2 <- locus.data[, i]
-      paste(a1, a2, sep = "/")
-    })
-  )
-  colnames(collapsed.loci) <- paste("Locus", 1:ncol(collapsed.loci), sep = ".")
-  rownames(collapsed.loci) <- pop.data[, 2]
-  g <- df2gtypes(pop.data, ploidy = 2, id.col = 2, strata.col = 1, description = label)
-  labelHaplotypes(g)$gtypes
-}
-
-
-# read arlequin output
-.fsc.read <- function(arl.files, locus.type, label) {  
-  fs.gtypes <- lapply(arl.files, function(file) {
-    f <- readLines(file)
-    
-    # get start and end points of data blocks
-    start <- grep("SampleData=", f) + 1
-    end <- which(f == "}") - 2
-    pos <- cbind(start, end)
-    
-    # compile data for each population
-    pop.data <- do.call(rbind, lapply(1:nrow(pos), function(i) {
-      f.line <- f[pos[i, 1]:pos[i, 2]]
-      f.line <- gsub("[[:space:]]+", "--", f.line)
-      data.mat <- do.call(rbind, strsplit(f.line, "--"))[, -2, drop = FALSE]
-      data.mat <- cbind(rep(paste("Sample", i), nrow(data.mat)), data.mat)
+.fscRead <- function(file, locus.params) {
+  formatGenotypes <- function(x, ploidy) {
+    # reformat matrix to have alleles side-by-side
+    nloci <- ncol(x) - 2
+    loc.end <- seq(ploidy, nrow(x), by = ploidy)
+    gen.data <- do.call(rbind, lapply(loc.end, function(i) {
+      allele.i <- (i - ploidy + 1):i
+      loci <- as.vector(x[allele.i, -(1:2)])
+      id <- paste(x[allele.i, 2], collapse = ".")
+      pop <- x[allele.i[1], 1]
+      c(id, pop, loci)
     }))
-    
-    # get data type and parse data
-    locus.type <- gsub("\tDataType=", "", grep("DataType=", f, value = TRUE))
-    is.seq <- c(DNA = TRUE, MICROSAT = FALSE, STANDARD = FALSE)[locus.type]
-    if(is.seq) {
-      .fsc.parse.dna(f, label, pop.data) 
+    # rename loci
+    locus_names <- paste("Locus", zero.pad(1:nloci), sep = "_")
+    locus_names <- paste(rep(locus_names, each = ploidy), 1:ploidy, sep = ".")
+    colnames(gen.data) <- c("id", "pop", locus_names)
+    gen.data
+  }
+  
+  formatDNA <- function(dna.seq, pop, locus.params) {
+    # create multidna object splitting chromosomes into loci
+    num.chrom <- attr(locus.params, "num.chrom")
+    chrom.pos <- if(is.null(num.chrom)) {
+      tapply(locus.params$num.markers, locus.params$chromosome, sum)
     } else {
-      .fsc.parse.msats.snps(f, label, pop.data)
+      rep(sum(locus.params$num.markers), num.chrom)
     }
-  })
-  names(fs.gtypes) <- basename(arl.files)
-  fs.gtypes
+    chrom.pos <- cumsum(chrom.pos)
+    chrom.pos <- cbind(start = c(1, chrom.pos[-length(chrom.pos)] + 1), end = chrom.pos)
+    
+    rownames(dna.seq) <- pop
+    dna.seq <- tolower(dna.seq)
+    new("multidna", lapply(1:nrow(chrom.pos), function(i) {
+      as.matrix(dna.seq)[, chrom.pos[i, "start"]:chrom.pos[i, "end"]]
+    }))
+  }
+  
+  f <- readLines(file)
+  
+  # get start and end points of data blocks
+  start <- grep("SampleData=", f) + 1
+  end <- which(f == "}") - 2
+  pos <- cbind(start, end)
+  
+  # compile data into 3 column character matrix
+  data.mat <- do.call(rbind, lapply(1:nrow(pos), function(i) {
+    f.line <- f[pos[i, 1]:pos[i, 2]]
+    f.line <- gsub("[[:space:]]+", "--", f.line)
+    result <- do.call(rbind, strsplit(f.line, "--"))[, -2]
+    cbind(rep(paste("Sample", i), nrow(result)), result)
+  }))
+  
+  ploidy <- attr(locus.params, "ploidy")
+  
+  # get data type
+  data.type <- f[grep("DataType=", f)]
+  data.type <- gsub("\tDataType=", "", data.type)
+  switch(
+    data.type,
+    DNA = { # diploid SNPs
+      dna.seq <- do.call(rbind, strsplit(data.mat[, 3], ""))
+      if(attr(locus.params, "ploidy") == 2) {
+        gen.data <- formatGenotypes(cbind(data.mat[, 1:2], dna.seq), ploidy)
+        df2gtypes(gen.data, ploidy, description = file)
+      } else { # haploid DNA sequences
+        dna.seq <- formatDNA(dna.seq, data.mat[, 2], locus.params)
+        g <- sequence2gtypes(dna.seq, strata = data.mat[, 1], description = file)
+        labelHaplotypes(g)$gtype
+      }
+    },
+    MICROSAT = {
+      gen.data <- formatGenotypes(data.mat, ploidy)
+      df2gtypes(gen.data, ploidy, description = file)
+    },
+    NULL
+  )
 }
 
 
 #' @rdname fastsimcoal
 #' @export
 #' 
-fastsimcoal <- function(
-  num.pops, Ne, sample.size = NULL, sample.time = NULL, growth.rate = NULL, 
-  mig.rates = NULL, hist.ev = NULL, 
-  locus.type = c("DNA", "MICROSAT", "SNP", "STANDARD", "FREQ"), 
-  locus.params = NULL, label = "strataG_fastsimcoal", 
-  num.sims = 1, inf.site.model = TRUE, quiet = TRUE, delete.files = TRUE, 
-  exec = "fsc252") {
+fastsimcoal <- function(pop.info, locus.params, mig.rates = NULL, 
+                        hist.ev = NULL, label = NULL, quiet = TRUE, 
+                        delete.files = TRUE, exec = "fsc252", num.cores = NULL) {
   
-  locus.type <- match.arg(locus.type)
-  
-  # Write input file
-  infile <- .fsc.write(
-    num.pops = num.pops, Ne = Ne, sample.size = sample.size, sample.time = sample.time, 
-    growth.rate = growth.rate, mig.rates = mig.rates, hist.ev = hist.ev, 
-    locus.type = locus.type, locus.params = locus.params, label = label
-  ) 
-  
-  # Check/setup folder structure
+  if(is.null(label)) label <- "fsc.run"
   if(file.exists(label)) for(f in dir(label, full.names = T)) file.remove(f)
   
-  # Run fastsimcoal
-  cmd <- paste(
-    exec, " -i", infile, "-n", num.sims, 
-    ifelse(inf.site.model, "-I", ""), ifelse(quiet, "-q", "")
+  # Write fastsimcoal input file
+  infile <- .fscWrite(
+    pop.info = pop.info, locus.params = locus.params,
+    mig.rates = mig.rates, hist.ev = hist.ev, label = label
   )
-  err <- system(cmd, intern = F)
-  if(err != 0) stop(paste("fastsimcoal returned error code", err)) 
-  arl.files <- dir(label, pattern = ".arp", full.names = T)
-  if(length(arl.files) == 0) stop("fastsimcoal did not generate output")
-
+  
+  # Run fastsimcoal
+  cores.spec <- if(!is.null(num.cores)) {
+    num.cores <- max(1, num.cores)
+    num.cores <- min(num.cores, min(detectCores(), 12))
+    paste(c("-c", "-B"), num.cores, collapse = " ")
+  } else ""
+  cmd.line <- paste(
+    exec, "-i", infile, "-n 1",
+    ifelse(quiet, "-q", ""), "-S", cores.spec,
+    attr(locus.params, "opts")
+  )
+  err <- if(.Platform$OS.type == "unix") {
+    system(cmd.line, intern = F)
+  } else {
+    shell(cmd.line, intern = F)
+  }
+  
+  if(err == 0) {
+    if(!quiet) cat("fastsimcoal exited normally\n")
+  } else {
+    stop("fastsimcoal exited with error ", err, "\n")
+  }
+  
   # Read and parse output
-  fsc.gtypes <- .fsc.read(arl.files, locus.type, label)
+  arp.file <- file.path(label, paste(label, "_1_1.arp", sep = ""))
+  if(!file.exists(arp.file)) stop("fastsimcoal did not generate output")
+  g <- .fscRead(arp.file, locus.params)
   
   # Cleanup
   if(delete.files) {
@@ -268,5 +226,5 @@ fastsimcoal <- function(
     file.remove(infile)
   }
   
-  fsc.gtypes
+  return(g)
 }

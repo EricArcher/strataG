@@ -89,8 +89,17 @@ print.gtypeSummary <- function(x, ... ) {
   print(x$strata.smry)
   if(x$unstratified > 0) cat(x$unstratified, "samples are unstratified\n")
   if(!is.null(x$locus.smry)) {
-    cat("\nLocus summary:\n")
-    print(x$locus.smry[, c(1, 3, 5, 7, 9), drop = FALSE])
+    cols <- c(1, 3, 5, 7)
+    num.rows <- nrow(x$locus.smry)
+    if(num.rows > 30) {
+      cat("\nLocus summary (first and last 10):\n")
+      print(x$locus.smry[1:10, cols, drop = FALSE])
+      cat("...\n")
+      print(x$locus.smry[(num.rows - 10):num.rows, cols, drop = FALSE])
+    } else {
+      cat("\nLocus summary:\n")
+      print(x$locus.smry[, cols, drop = FALSE])
+    }
   }
   if(!is.null(x$seq.smry)) {
     cat("\nSequence summary:\n")
