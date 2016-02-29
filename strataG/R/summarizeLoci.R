@@ -29,9 +29,7 @@ summarizeLoci <- function(g, by.strata = FALSE, ...) {
       allelic.richness = allelicRichness(x),
       pct.unique.alleles = pctUniqueAlleles(x),
       expected.heterozygosity = exptdHet(x),
-      observed.heterozygosity = obsvdHet(x),
-      theta = theta(x),
-      hwe.p.value = hweTest(x, use.genepop = FALSE)
+      observed.heterozygosity = obsvdHet(x)
     )
   }
   

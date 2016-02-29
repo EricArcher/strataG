@@ -4,51 +4,35 @@
 \alias{fastsimcoal}
 \title{Run fastsimcoal}
 \usage{
-fastsimcoal(num.pops, Ne, sample.size = NULL, sample.time = NULL,
-  growth.rate = NULL, mig.rates = NULL, hist.ev = NULL,
-  locus.type = c("DNA", "MICROSAT", "SNP", "STANDARD", "FREQ"),
-  locus.params = NULL, label = "strataG_fastsimcoal", num.sims = 1,
-  inf.site.model = TRUE, quiet = TRUE, delete.files = TRUE,
-  exec = "fsc252")
+fastsimcoal(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL,
+  label = NULL, quiet = TRUE, delete.files = TRUE, exec = "fsc252",
+  num.cores = NULL)
 }
 \arguments{
-\item{num.pops}{number of populations.}
+\item{pop.info}{matrix of population sampling information created by the 
+\code{\link{fscPopInfo}} function.}
 
-\item{Ne}{effective population size.}
+\item{locus.params}{data.frame specifying loci to simulate created by the 
+\code{\link{fscLocusParams}} function.}
 
-\item{sample.size}{number of samples to take.}
+\item{mig.rates}{a matrix or list of matrices giving the migration rates 
+between pairs of populations.}
 
-\item{sample.time}{time to draw samples.}
-
-\item{growth.rate}{growth rate of populations.}
-
-\item{mig.rates}{list of migration matrices.}
-
-\item{hist.ev}{matrix of historical events.}
-
-\item{locus.type}{the type of locus to be modeled. Can be one of 
-\code{"DNA", "MICROSAT", "SNP", "STANDARD", or "FREQ"}.}
-
-\item{locus.params}{a matrix of locus parameter matrices with one row per 
-chromosome.}
+\item{hist.ev}{matrix of historical events created by the 
+\code{\link{fscHistEv}} function.}
 
 \item{label}{character string to label files with.}
-
-\item{num.sims}{number of simulations to run.}
-
-\item{inf.site.model}{logical. Use infinite site model?}
 
 \item{quiet}{logical. Run quietly?}
 
 \item{delete.files}{logical. Delete files when done?}
 
 \item{exec}{name of fastsimcoal executable.}
-}
-\value{
-A list of \code{\link{gtypes}} objects for each simulated dataset.
+
+\item{num.cores}{number of cores to use.}
 }
 \description{
-Run a fastsimcoal simualtion and load results into a 
+Run a fastsimcoal simulation and load results into a 
   \linkS4class{gtypes} object.
 }
 \note{
