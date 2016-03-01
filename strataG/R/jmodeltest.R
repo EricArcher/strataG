@@ -42,6 +42,11 @@ jmodeltest <- function(x, sub.schemes = 3, unequal.base.freq = FALSE,
     "/usr/local/bin/jmodeltest"
   ), java.opts = NULL) {
   
+  if(inherits(x, "multidna")) {
+    if(getNumLoci(x) > 1) warning("'x' is a multidna object with more than one loci. Using first locus.")
+    x <- getSequences(x, loci = 1, simplify = TRUE)
+  }
+  
   if(!sub.schemes %in% c(3, 5, 7, 11, 203)) {
     stop("'sub.schemes' not equal to 3, 5, 7, 11, or 203.")
   }
@@ -67,12 +72,20 @@ jmodeltest <- function(x, sub.schemes = 3, unequal.base.freq = FALSE,
     "-tr", numThreads,
     ">", output.file
   )
-  err.code <- system(modeltest.call, intern = F)
+  err.code <- if(.Platform$OS.type == "unix") {
+    system(modeltest.call, intern = F)
+  } else {
+    shell(modeltest.call, intern = F)
+  }
   setwd(wd)
   
   if(err.code == 0) {
     file.remove(file.path(path, in.file))
     file.rename(file.path(path, output.file), file.path(wd, output.file))
+    cat("jModelTest finished successfully\n")
     invisible(output.file)
-  } else invisible(NULL)
+  } else {
+    warning(paste("jModelTest returned error code", err.code))
+    invisible(NULL)
+  }
 }

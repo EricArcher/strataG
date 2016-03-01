@@ -24,6 +24,17 @@ read.fasta <- function(file) {
 #' @export
 #' 
 write.fasta <- function(x, file = "sequences.fasta") {
-  write.dna(x, file = file, format = "fasta", nbcol = -1, colsep = "", 
-            indent = 0, blocksep = 0)
+  fname <- if(inherits(x, "multidna")) {
+    x <- getSequences(x, simplify = FALSE)
+    sapply(names(x), function(gene) {
+      write.dna(x[[gene]], file = paste(gene, file), format = "fasta", 
+                nbcol = -1, colsep = "", indent = 0, blocksep = 0)
+    })
+  } else {
+    if(inherits(x, "DNAbin")) x <- as.character(x)
+    write.dna(x, file = file, format = "fasta", nbcol = -1, colsep = "", 
+              indent = 0, blocksep = 0)
+    file
+  }
+  invisible(file)
 }
