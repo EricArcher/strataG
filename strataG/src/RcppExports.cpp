@@ -302,7 +302,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // statJostD_C_test
-double statJostD_C_test(IntegerMatrix loci, IntegerVector strata, int ploidy);
+NumericVector statJostD_C_test(IntegerMatrix loci, IntegerVector strata, int ploidy);
 RcppExport SEXP strataG_statJostD_C_test(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
