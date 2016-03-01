@@ -2,6 +2,11 @@
 #' @title Input functions for fastsimcoal parameters
 #' @description Functions to create \code{pop.info}, \code{locus.params}, and 
 #'   \code{hist.ev} input matrices for fastsimcoal function.
+#'  
+#' @note SNPs are simulated as a diploid DNA sequence with a single nucleotide,
+#'   with no recombination (each on its own "chromosome"). If \code{mut.rate} 
+#'   has more than one value then this many SNPs are simulated. Otherwise, 
+#'   \code{num.loci} independent SNPs are simulated.
 #'   
 #' @references Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time 
 #'   coalescent simulator of genomic diversity under arbitrarily complex 
@@ -41,7 +46,8 @@ fscPopInfo <- function(pop.size, sample.size, sample.times = 0, growth.rate = 0)
 #' @param sequence.length \code{dna}: number of DNA base pairs to use.
 #' @param num.loci \code{msat, snp}: number of loci to simulate.
 #' @param mut.rate \code{dna, msat}: per base pair or locus mutation rate.
-#' @param transition.rate dna: fraction of substitutions that are transitions.
+#' @param transition.rate dna: fraction of substitutions that are transitions. 
+#'   Set to 1 (all transitions) for SNPs.
 #' @param gsm.param \code{msat}: Value of the geometric parameter for a
 #'   Generalized Stepwise Mutation (GSM) model. This value represents the
 #'   proportion of mutations that will change the allele size by more than
@@ -49,7 +55,8 @@ fscPopInfo <- function(pop.size, sample.size, sample.times = 0, growth.rate = 0)
 #'   strict Stepwise Mutation Model (SMM).
 #' @param range.constraint \code{msat}: Range constraint (number of different
 #'   alleles allowed). A value of 0 means no range constraint.
-#' @param recomb.rate recombination rate between adjacent markers.
+#' @param recomb.rate recombination rate between adjacent markers. No effect for 
+#'   SNPs.
 #' @param chromosome number or character identifying which chromosome the marker
 #'   is on.
 #' @param num.chrom a value giving the number of chromosomes that the
@@ -76,7 +83,7 @@ fscLocusParams <- function(locus.type = c("dna", "msat", "snp"),
       param.6 = param.6, stringsAsFactors = FALSE
     )
     df <- df[order(df$chromosome), ]
-    attr(df, "num.chrom") <- num.chrom
+    attr(df, "num.chrom") <- num.chrom[1]
     attr(df, "ploidy") <- ploidy
     return(df)
   }
@@ -91,10 +98,15 @@ fscLocusParams <- function(locus.type = c("dna", "msat", "snp"),
       chromosome, "MICROSAT", num.loci, recomb.rate, mut.rate, gsm.param,
       range.constraint, 2, num.chrom
     ),
-    snp = createLocusParams(
-      chromosome, "DNA", 1, recomb.rate, mut.rate, 1,
-      NA, 2, num.loci
-    )
+    snp = if(length(mut.rate) == 1) {
+      createLocusParams(
+        1, "DNA", 1, 0, mut.rate, 1, NA, 2, num.loci
+      )
+    } else {
+      createLocusParams(
+        1:length(mut.rate), "DNA", 1, 0, mut.rate, 1, NA, 2, NULL
+      )
+    }
   )
   attr(df, "opts") <- if(locus.type == "snp") "-s" else ""
   return(df)

@@ -38,7 +38,8 @@ Can be "dna", "msat", or "snp".}
 
 \item{mut.rate}{\code{dna, msat}: per base pair or locus mutation rate.}
 
-\item{transition.rate}{dna: fraction of substitutions that are transitions.}
+\item{transition.rate}{dna: fraction of substitutions that are transitions. 
+Set to 1 (all transitions) for SNPs.}
 
 \item{gsm.param}{\code{msat}: Value of the geometric parameter for a
 Generalized Stepwise Mutation (GSM) model. This value represents the
@@ -49,7 +50,8 @@ strict Stepwise Mutation Model (SMM).}
 \item{range.constraint}{\code{msat}: Range constraint (number of different
 alleles allowed). A value of 0 means no range constraint.}
 
-\item{recomb.rate}{recombination rate between adjacent markers.}
+\item{recomb.rate}{recombination rate between adjacent markers. No effect for 
+SNPs.}
 
 \item{chromosome}{number or character identifying which chromosome the marker
 is on.}
@@ -81,6 +83,12 @@ generation t.}
 \description{
 Functions to create \code{pop.info}, \code{locus.params}, and 
   \code{hist.ev} input matrices for fastsimcoal function.
+}
+\note{
+SNPs are simulated as a diploid DNA sequence with a single nucleotide,
+  with no recombination (each on its own "chromosome"). If \code{mut.rate} 
+  has more than one value then this many SNPs are simulated. Otherwise, 
+  \code{num.loci} independent SNPs are simulated.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
