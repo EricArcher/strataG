@@ -1,13 +1,16 @@
 #' @title Convert Sequences To \code{gtypes}
-#' @description Load sequence data into a \linkS4class{gtypes} object. 
+#' @description Create a \linkS4class{gtypes} object from sequence data.
 #' 
 #' @param x DNA sequences as a character matrix, a \code{\link{DNAbin}} object, 
 #'   or \linkS4class{multidna} object.
-#' @param strata a vector or factor giving stratification for each sequence.
-#' @param seq.names names for each set of sequences.
-#' @param description a label for the object (optional).
+#' @param strata a vector or factor giving stratification for each sequence. If 
+#'   not provided all individuals are assigned to the same stratum (Default).
+#' @param seq.names names for each set of sequences. If not provided default names 
+#'   are generated.
+#' @param schemes an optional data.frame of stratification schemes.
+#' @param description an optional label for the object.
 #' @param other a slot to carry other related information - unused in package
-#'   analyses (optional).
+#'   analyses.
 #' 
 #' @return a \linkS4class{gtypes} object.
 #' 
@@ -25,7 +28,7 @@
 #' @importFrom methods new
 #' @export
 #' 
-sequence2gtypes <- function(x, strata = NULL, seq.names = NULL, 
+sequence2gtypes <- function(x, strata = NULL, seq.names = NULL, schemes = NULL,
                             description = NULL, other = NULL) {
   # convert sequences
   x <- as.multidna(x)
@@ -49,6 +52,6 @@ sequence2gtypes <- function(x, strata = NULL, seq.names = NULL,
   
   # return new gtypes object
   new("gtypes", gen.data = gen.data, ploidy = 1, strata = strata,
-      sequences = x, description = description, other = other
+      schemes = schemes, sequences = x, description = description, other = other
   )
 }

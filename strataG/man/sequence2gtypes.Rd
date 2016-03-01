@@ -4,27 +4,31 @@
 \alias{sequence2gtypes}
 \title{Convert Sequences To \code{gtypes}}
 \usage{
-sequence2gtypes(x, strata = NULL, seq.names = NULL, description = NULL,
-  other = NULL)
+sequence2gtypes(x, strata = NULL, seq.names = NULL, schemes = NULL,
+  description = NULL, other = NULL)
 }
 \arguments{
 \item{x}{DNA sequences as a character matrix, a \code{\link{DNAbin}} object, 
 or \linkS4class{multidna} object.}
 
-\item{strata}{a vector or factor giving stratification for each sequence.}
+\item{strata}{a vector or factor giving stratification for each sequence. If 
+not provided all individuals are assigned to the same stratum (Default).}
 
-\item{seq.names}{names for each set of sequences.}
+\item{seq.names}{names for each set of sequences. If not provided default names 
+are generated.}
 
-\item{description}{a label for the object (optional).}
+\item{schemes}{an optional data.frame of stratification schemes.}
+
+\item{description}{an optional label for the object.}
 
 \item{other}{a slot to carry other related information - unused in package
-analyses (optional).}
+analyses.}
 }
 \value{
 a \linkS4class{gtypes} object.
 }
 \description{
-Load sequence data into a \linkS4class{gtypes} object.
+Create a \linkS4class{gtypes} object from sequence data.
 }
 \examples{
 #--- create a haploid sequence (mtDNA) gtypes object
