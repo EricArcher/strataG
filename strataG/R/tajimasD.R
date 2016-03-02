@@ -13,7 +13,6 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @importFrom apex getSequences locusNames
 #' @importFrom stats qbeta integrate
 #' @export
 #' 
@@ -88,6 +87,6 @@ tajimasD <- function(x) {
     })
   }))
   
-  rownames(result) <- locusNames(x)
-  result
+  rownames(result) <- getLocusNames(x)
+  return(result)
 }

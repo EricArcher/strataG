@@ -12,7 +12,6 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @importFrom copula Stirling1
-#' @importFrom apex getSequences
 #' @export
 #' 
 fusFs <- function(x) {

@@ -1,5 +1,4 @@
 #' @rdname popStructStat
-#' @importFrom apex getSequences
 #' @importFrom swfscMisc harmonic.mean
 #' @export
 #' 

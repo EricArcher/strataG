@@ -84,7 +84,7 @@ setClass(
       
       # check that locus names are the same in the @loci colnames and names of 
       #  @sequences
-      if(!identical(colnames(object@loci), locusNames(object@sequences))) {
+      if(!identical(colnames(object@loci), getLocusNames(object@sequences))) {
         cat("the names of the sets of sequences is not the same as the loci\n")
         return(FALSE)
       }

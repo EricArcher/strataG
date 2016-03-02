@@ -16,7 +16,6 @@
 #' data(dolph.seqs)
 #' createConsensus(dolph.seqs)
 #' 
-#' @importFrom apex getSequences locusNames
 #' @export
 #' 
 createConsensus <- function(x, ignore.gaps = FALSE) { 
@@ -30,7 +29,7 @@ createConsensus <- function(x, ignore.gaps = FALSE) {
   if(length(result) == 1) {
     result[[1]]
   } else {
-    names(result) <- locusNames(x)
+    names(result) <- getLocusNames(x)
     result
   }
 }

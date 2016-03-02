@@ -277,7 +277,6 @@ setMethod("description", "gtypes", function(x, ...) x@description)
 
 #' @rdname gtypes.accessors
 #' @aliases index subset
-#' @importFrom apex getSequences
 #' @importFrom methods new
 #' @export
 #' 

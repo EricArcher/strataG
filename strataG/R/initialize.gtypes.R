@@ -16,7 +16,6 @@
 #' @param description an optional description for the object.
 #' @param other other optional information to include.
 #' @param remove.sequences logical. If \code{TRUE} any sequences not referenced 
-#'   in selected samples will not be in the returned object.
 #'
 #' @details
 #' For multi-allele loci, the \code{gen.data} argument should be 
@@ -42,7 +41,6 @@
 #'   \link{gtypes2genind}, \link{gtypes2loci}
 #'
 #' @aliases initialize.gtypes new
-#' @importFrom apex getNumLoci
 #' @importFrom methods setMethod
 #' 
 setMethod("initialize", "gtypes", 
@@ -138,7 +136,7 @@ setMethod("initialize", "gtypes",
     if(getNumLoci(sequences) != ncol(loci)) {
       stop("the number of genes in 'sequences' is not equal to the number of loci")
     }
-    locusNames(sequences) <- colnames(loci)
+    setLocusNames(sequences) <- colnames(loci)
   }
   
   # create and return gtypes object
