@@ -18,7 +18,6 @@
 #' @param keep.null logical. Keep the null distribution from the 
 #'   permutation test?
 #' @param quietly logical. Print progress and results?
-#' @param num.cores number of CPU cores to use.
 #' @param write.output logical. Write a .csv file with results?
 #' @param ... other parameters to be passed to population 
 #'   differentiation functions.
@@ -66,7 +65,7 @@
 #' 
 popStructTest <- function(g, nrep = 100, stats = "all", 
                           type = c("both", "overall", "pairwise"),
-                          keep.null = FALSE, quietly = FALSE, num.cores = 1, 
+                          keep.null = FALSE, quietly = FALSE, 
                           write.output = FALSE, ...) {
   # check arguments
   type <- match.arg(type)
@@ -74,16 +73,18 @@ popStructTest <- function(g, nrep = 100, stats = "all",
   # conduct overall test
   overall <- NULL
   if(type %in% c("both", "overall")) {
-    overall <- overallTest(g = g, nrep = nrep, stats = stats, 
-      keep.null = keep.null, num.cores = num.cores, quietly = quietly, ...
+    overall <- overallTest(
+      g = g, nrep = nrep, stats = stats, keep.null = keep.null, 
+      quietly = quietly, ...
     )    
   }
   
   # conduct pairwise test
   pairwise <- NULL
   if(type %in% c("both", "pairwise") & nStrata(g) > 2) {
-    pairwise <- pairwiseTest(g = g, nrep = nrep, stats = stats, 
-      keep.null = keep.null, num.cores = num.cores, quietly = quietly, ...
+    pairwise <- pairwiseTest(
+      g = g, nrep = nrep, stats = stats, keep.null = keep.null, 
+      quietly = quietly, ...
     )
   }
 
@@ -114,10 +115,12 @@ popStructTest <- function(g, nrep = 100, stats = "all",
 #' @export
 #' 
 overallTest <- function(g, nrep = 100, stats = "all", 
-                        keep.null = FALSE, quietly = FALSE, 
-                        num.cores = 1, ...) {  
+                        keep.null = FALSE, quietly = FALSE, ...) {  
   
   stat.list <- statList(stats)
+  if(length(stat.list) == 0)
+  if(is.null(nrep)) nrep <- 0
+  if(nrep < 1) keep.null <- FALSE
   
   # check replicates
   if(!is.numeric(nrep) & length(nrep) != 1) {
@@ -141,57 +144,67 @@ overallTest <- function(g, nrep = 100, stats = "all",
     g <- g[, setdiff(locNames(g), to.delete), ]
   }
   
+  if(nStrata(g) == 1) stop("'g' must have more than one stratum defined.")
+  
   if(!quietly) cat(
     cat("\n<<<", description(g), ">>>\n"),
     format(Sys.time()), ": Overall test :", nrep, "permutations\n"
   )
   
-  # calculate list of observed values for each population structure function
-  result <- matrix(NA, nrow = length(stat.list), ncol = 2)
-  rownames(result) <- 1:nrow(result)
-  colnames(result) <- c("estimate", "p.val")
-  for(i in 1:nrow(result)) {
-    x <- stat.list[[i]](g, ...)
-    result[i, "estimate"] <- x
-    rownames(result)[i] <- names(x)
-  }
-
-  # conduct permutation test
-  null.dist <- NULL
-  if(nrep > 0 & length(stat.list) > 0) {
-    st <- lapply(1:nrep, function(i) sample(strata(g)))  
-    
-    # setup permutation function to return vector of values from each population 
-    #   structure statistic in stat.funcs
-    perm.func <- function(ran.strata, g, stat.funcs, ...) {
-      sapply(1:length(stat.funcs), function(j) {
-        stat.funcs[[j]](g, strata = ran.strata, ...)
-      })
-    }
-    
-    # collect null distribution
-    if(num.cores > 1) {
-      # setup clusters
-      cl <- .setupClusters(num.cores)
-      tryCatch({
-        # calculate matrix of null distributions
-        null.dist <- parLapply(cl, st, perm.func, g = g, stat.funcs = stat.list, ...)
-      })
-      stopCluster(cl)
-      closeAllConnections()
-    } else {
-      null.dist <- lapply(st, perm.func, g = g, stat.funcs = stat.list, ...)
-    }
-    null.dist <- do.call(rbind, null.dist)
-    colnames(null.dist) <- rownames(result)
-    
-    # calculate vector of p-values
-    for(x in rownames(result)) {
-      est <- result[x, "estimate"]
-      if(!is.na(est)) result[x, "p.val"] <- pVal(est, na.omit(null.dist[, x]))
-    }
-  } 
-  if(!keep.null) null.dist <- NULL
+  # run each statistic and store in list
+  strata.mat <- .permStrata(g, nrep) 
+  result <- lapply(stat.list, function(stat.func) {
+    stat.func(g, strata.mat = strata.mat, keep.null = keep.null, ...)
+  })
+  
+  # create matrix of estimates and p-values
+  result.mat <- t(sapply(result, function(x) x$result))
+  rownames(result.mat) <- sapply(result, function(x) x$stat.name)
+  
+  # collect null distribution
+  null.dist <- if(keep.null) {
+    nd <- sapply(result, function(x) x$null.dist)
+    colnames(nd) <- rownames(result.mat)
+    nd
+  } else NULL
+  
+# # calculate list of observed values for each population structure function
+#   # conduct permutation test
+#   null.dist <- NULL
+#   if(nrep > 0 & length(stat.list) > 0) {
+#     st <- lapply(1:nrep, function(i) sample(strata(g)))  
+#     
+#     # setup permutation function to return vector of values from each population 
+#     #   structure statistic in stat.funcs
+#     perm.func <- function(ran.strata, g, stat.funcs, ...) {
+#       sapply(1:length(stat.funcs), function(j) {
+#         stat.funcs[[j]](g, strata = ran.strata, ...)
+#       })
+#     }
+#     
+#     # collect null distribution
+#     if(num.cores > 1) {
+#       # setup clusters
+#       cl <- .setupClusters(num.cores)
+#       tryCatch({
+#         # calculate matrix of null distributions
+#         null.dist <- parLapply(cl, st, perm.func, g = g, stat.funcs = stat.list, ...)
+#       })
+#       stopCluster(cl)
+#       closeAllConnections()
+#     } else {
+#       null.dist <- lapply(st, perm.func, g = g, stat.funcs = stat.list, ...)
+#     }
+#     null.dist <- do.call(rbind, null.dist)
+#     colnames(null.dist) <- rownames(result)
+#     
+#     # calculate vector of p-values
+#     for(x in rownames(result)) {
+#       est <- result[x, "estimate"]
+#       if(!is.na(est)) result[x, "p.val"] <- pVal(est, na.omit(null.dist[, x]))
+#     }
+#   } 
+  # if(!keep.null) null.dist <- NULL
   
   # collect strata frequencies to named vector 
   strata.freq <- table(strata(g), useNA = "no")
@@ -200,12 +213,12 @@ overallTest <- function(g, nrep = 100, stats = "all",
     cat("\n")
     print(cbind(N = strata.freq))
     cat("\nPopulation structure results:\n")
-    print(result)
+    print(result.mat)
     cat("\n")
   }
   
   invisible(
-    list(strata.freq = strata.freq, result = result, null.dist = null.dist)
+    list(strata.freq = strata.freq, result = result.mat, null.dist = null.dist)
   )
 }
 
@@ -214,8 +227,9 @@ overallTest <- function(g, nrep = 100, stats = "all",
 #' @export
 #' 
 pairwiseTest <- function(g, nrep = 100, stats = "all", 
-                         keep.null = FALSE, quietly = FALSE,
-                         num.cores = 1, ...) { 
+                         keep.null = FALSE, quietly = FALSE, ...) { 
+  
+  if(nStrata(g) == 1) stop("'g' must have more than one stratum defined.")
   
   if(!quietly) cat(
     cat("\n<<<", description(g), ">>>\n"),
@@ -235,8 +249,7 @@ pairwiseTest <- function(g, nrep = 100, stats = "all",
     }
     
     pair.list[[i]] <- overallTest(g = g[ , , pair], nrep = nrep,
-      stats = stats, keep.null = keep.null, quietly = TRUE, 
-      num.cores = num.cores, ...
+      stats = stats, keep.null = keep.null, quietly = TRUE, ...
     )
   }
   
@@ -329,5 +342,4 @@ statList <- function(stats = "all") {
   } else {
     stop("'stats' is not a list of functions.")
   }
-  
 }

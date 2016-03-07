@@ -81,8 +81,9 @@ NumericMatrix varCompCalc(IntegerVector nvec, NumericMatrix alleleFreq,
   return varcompMat;
 }
 
+
 // [[Rcpp::export]]
-double statFst_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
+double fstCalc(IntegerMatrix loci, IntegerVector strata, int ploidy) {
   // function declarations
   IntegerMatrix intVecToMat(IntegerVector, int);
   IntegerVector calcStrataN(IntegerVector, IntegerVector);
@@ -118,4 +119,58 @@ double statFst_C(IntegerMatrix loci, IntegerVector strata, int ploidy) {
   double est(sum(locusSums(0, _)) / sum(locusSums(1, _)));
   if(std::isnan(est)) est = NA_REAL;
   return est;
+}
+
+IntegerMatrix maxFstLoci(IntegerMatrix loci, IntegerVector strata, int ploidy, IntegerVector maxAllele) {
+  IntegerVector st(rep(strata, ploidy));
+  IntegerMatrix maxLoci(loci.nrow(), loci.ncol());
+  
+  for(int c = 0; c < maxLoci.ncol(); c++) {
+    for(int r = 0; r < maxLoci.nrow(); r++) {
+      if(IntegerVector::is_na(maxLoci(r, c))) {
+        maxLoci(r, c) = NA_INTEGER;
+      } else {
+        maxLoci(r, c) = loci(r, c) + (maxAllele[c] * st[r]);
+      }
+    }
+    IntegerVector alleles(unique(maxLoci(_, c)).sort());
+    for(int r = 0; r < maxLoci.nrow(); r++) {
+      if(IntegerVector::is_na(maxLoci(r, c))) continue;
+      for(int a = 0; a < alleles.size(); a++) {
+        if(maxLoci(r, c) == alleles[a]) {
+          maxLoci(r, c) = a;
+          break;
+        }
+      }
+    }
+  }
+  
+  return maxLoci;
+}
+
+// [[Rcpp::export]]
+NumericVector statFst_C(IntegerMatrix loci, IntegerMatrix strataMat, int ploidy) {
+  NumericVector estVec(strataMat.ncol());
+  for(int idx = 0; idx < estVec.size(); idx++) {
+    IntegerVector strata(strataMat(_, idx));
+    estVec[idx] = fstCalc(loci, strata, ploidy);
+  }
+  return estVec;
+}
+
+// [[Rcpp::export]]
+NumericVector statFstPrime_C(IntegerMatrix loci, IntegerMatrix strataMat, int ploidy) {
+  IntegerVector maxAllele(loci.ncol());
+  for(int c = 0; c < maxAllele.size(); c++) {
+    maxAllele[c] = max(na_omit(loci(_, c))) + 1;
+  }
+  
+  IntegerMatrix maxLoci;
+  NumericVector estVec(strataMat.ncol());
+  for(int idx = 0; idx < estVec.size(); idx++) {
+    IntegerVector strata(strataMat(_, idx));
+    maxLoci = maxFstLoci(loci, strata, ploidy, maxAllele);
+    estVec[idx] = fstCalc(loci, strata, ploidy) / fstCalc(maxLoci, strata, ploidy);
+  }
+  return estVec;
 }

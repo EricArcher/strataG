@@ -1,30 +1,30 @@
 #' @rdname popStructStat
 #' @export
 #' 
-statFst <- function(g, strata = NULL, ...) {   
+statFst <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...) {   
   if(ploidy(g) == 1 | nStrata(g) == 1) {
     g@sequences <- NULL
-    return(statPhist(g, strata = strata))
+    result <- statPhist(g, nrep = nrep, strata.mat = strata.mat, keep.null = keep.null)
+    result$stat.name <- "Fst"
+    return(result)
   }
   
-  strata <- if(is.null(strata)) {
-    strata(g)
-  } else {
-    rep(strata, length.out = nInd(g))
-  }
-  if(!is.factor(strata)) strata <- factor(strata)
-  
-  if(any(is.na(strata))) {
-    toUse <- !is.na(strata)
-    strata <- strata[toUse]
-    g <- g[toUse, , ]
+  if(nStrata(g) == 1) {
+    return(list(
+      stat.name = "Fst", 
+      result = c(estimate = NA, p.val = NA),
+      null.dist = NULL
+    ))
   }
   
-  est <- statFst_C(
+  strata.mat <- .checkStrataMat(strata.mat, g, nrep)
+  
+  result <- statFst_C(
     sapply(loci(g), function(x) as.numeric(x) - 1), 
-    as.numeric(strata) - 1,
-    ploidy(g)
+    strata.mat, ploidy(g)
   )
+  
+  return(.formatResult(result, "Fst", keep.null))
    
 #   # returns numerator and denominator sums for
 #   #   theta-w calculation for alleles at each locus (page 1363)
@@ -104,42 +104,43 @@ statFst <- function(g, strata = NULL, ...) {
 #   
 #   # return W & C Fst estimate (theta-w) from Eqn. 10
 #   est <- sum(locus.sums[1, ], na.rm = TRUE) / sum(locus.sums[2, ], na.rm = TRUE)
-  
-  if(is.nan(est)) est <- NA
-  c(Fst = est)
+#   
+#   if(is.nan(est)) est <- NA
+#   c(Fst = est)
 }
 
 
 #' @rdname popStructStat
 #' @export
 #' 
-statFstPrime <- function(g, strata = NULL, ...) {  
-  if(ploidy(g) == 1 | nStrata(g) == 1) return(c('F\'st' = NA))
-  
-  strata <- if(is.null(strata)) {
-    strata(g)
-  } else {
-    rep(strata, length.out = nInd(g))
-  }
-  if(!is.factor(strata)) strata <- factor(strata)
-  
-  if(any(is.na(strata))) {
-    toUse <- !is.na(strata)
-    strata <- strata[toUse]
-    g <- g[toUse, , ]
+statFstPrime <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...) {  
+  if(ploidy(g) == 1 | nStrata(g) == 1) {
+    return(list(
+      stat.name = "F'st", 
+      result = c(estimate = NA, p.val = NA),
+      null.dist = NULL
+    ))
   }
   
-  loci.fst <- sapply(loci(g), function(x) as.numeric(x) - 1)
-  strata <- as.numeric(strata) - 1
-  ploidy <- ploidy(g)
+  strata.mat <- .checkStrataMat(strata.mat, g, nrep)
   
-  loci.max <- apply(loci.fst, 2, function(x) {
-    new.locus <- paste(strata, x, sep = ".")
-    new.locus[is.na(x) | is.na(strata)] <- NA
-    as.numeric(factor(new.locus)) - 1
-  })
+  result <- statFstPrime_C(
+    sapply(loci(g), function(x) as.numeric(x) - 1), 
+    strata.mat, ploidy(g)
+  )
   
-  est <- statFst_C(loci.fst, strata, ploidy) / statFst_C(loci.max, strata, ploidy)
+  return(.formatResult(result, "F'st", keep.null))
+  
+  
+#   loci.max <- apply(loci.fst, 2, function(x) {
+#     new.locus <- paste(strata, x, sep = ".")
+#     new.locus[is.na(x) | is.na(strata)] <- NA
+#     as.numeric(factor(new.locus)) - 1
+#   })
+#   
+#   result <- statFst_C(loci.fst, strata, ploidy) / statFst_C(loci.max, strata, ploidy)
+#   
+#   
   
 #   
 #   fst.max.g <- g
@@ -149,7 +150,7 @@ statFstPrime <- function(g, strata = NULL, ...) {
 #     fst.max.g@loci[, i] <- factor(new.locus)
 #   }
 #   est <- statFst(g, strata, ...) / statFst(fst.max.g, strata, ...)
-    
-  names(est) <- "F'st"
-  est
+#     
+#   names(est) <- "F'st"
+#   est
 }

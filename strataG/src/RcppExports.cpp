@@ -178,28 +178,28 @@ BEGIN_RCPP
 END_RCPP
 }
 // statChi2_C
-double statChi2_C(IntegerMatrix loci, IntegerVector strata, int ploidy);
-RcppExport SEXP strataG_statChi2_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+NumericVector statChi2_C(IntegerMatrix loci, IntegerMatrix strataMat, int ploidy);
+RcppExport SEXP strataG_statChi2_C(SEXP lociSEXP, SEXP strataMatSEXP, SEXP ploidySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< IntegerMatrix >::type loci(lociSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type strata(strataSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type strataMat(strataMatSEXP);
     Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
-    __result = Rcpp::wrap(statChi2_C(loci, strata, ploidy));
+    __result = Rcpp::wrap(statChi2_C(loci, strataMat, ploidy));
     return __result;
 END_RCPP
 }
 // statFis_C
-double statFis_C(IntegerMatrix loci, IntegerVector strata, int ploidy);
-RcppExport SEXP strataG_statFis_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+NumericVector statFis_C(IntegerMatrix loci, IntegerMatrix strataMat, int ploidy);
+RcppExport SEXP strataG_statFis_C(SEXP lociSEXP, SEXP strataMatSEXP, SEXP ploidySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< IntegerMatrix >::type loci(lociSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type strata(strataSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type strataMat(strataMatSEXP);
     Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
-    __result = Rcpp::wrap(statFis_C(loci, strata, ploidy));
+    __result = Rcpp::wrap(statFis_C(loci, strataMat, ploidy));
     return __result;
 END_RCPP
 }
@@ -248,82 +248,95 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// statFst_C
-double statFst_C(IntegerMatrix loci, IntegerVector strata, int ploidy);
-RcppExport SEXP strataG_statFst_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+// fstCalc
+double fstCalc(IntegerMatrix loci, IntegerVector strata, int ploidy);
+RcppExport SEXP strataG_fstCalc(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< IntegerMatrix >::type loci(lociSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type strata(strataSEXP);
     Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
-    __result = Rcpp::wrap(statFst_C(loci, strata, ploidy));
+    __result = Rcpp::wrap(fstCalc(loci, strata, ploidy));
+    return __result;
+END_RCPP
+}
+// statFst_C
+NumericVector statFst_C(IntegerMatrix loci, IntegerMatrix strataMat, int ploidy);
+RcppExport SEXP strataG_statFst_C(SEXP lociSEXP, SEXP strataMatSEXP, SEXP ploidySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< IntegerMatrix >::type loci(lociSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type strataMat(strataMatSEXP);
+    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
+    __result = Rcpp::wrap(statFst_C(loci, strataMat, ploidy));
+    return __result;
+END_RCPP
+}
+// statFstPrime_C
+NumericVector statFstPrime_C(IntegerMatrix loci, IntegerMatrix strataMat, int ploidy);
+RcppExport SEXP strataG_statFstPrime_C(SEXP lociSEXP, SEXP strataMatSEXP, SEXP ploidySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< IntegerMatrix >::type loci(lociSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type strataMat(strataMatSEXP);
+    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
+    __result = Rcpp::wrap(statFstPrime_C(loci, strataMat, ploidy));
     return __result;
 END_RCPP
 }
 // statGst_C
-double statGst_C(IntegerMatrix loci, IntegerVector strata, int ploidy);
-RcppExport SEXP strataG_statGst_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+NumericVector statGst_C(IntegerMatrix loci, IntegerMatrix strataMat, int ploidy);
+RcppExport SEXP strataG_statGst_C(SEXP lociSEXP, SEXP strataMatSEXP, SEXP ploidySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< IntegerMatrix >::type loci(lociSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type strata(strataSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type strataMat(strataMatSEXP);
     Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
-    __result = Rcpp::wrap(statGst_C(loci, strata, ploidy));
+    __result = Rcpp::wrap(statGst_C(loci, strataMat, ploidy));
     return __result;
 END_RCPP
 }
 // statGstPrime_C
-double statGstPrime_C(IntegerMatrix loci, IntegerVector strata, int ploidy, int primeType);
-RcppExport SEXP strataG_statGstPrime_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP, SEXP primeTypeSEXP) {
+NumericVector statGstPrime_C(IntegerMatrix loci, IntegerMatrix strataMat, int ploidy, int primeType);
+RcppExport SEXP strataG_statGstPrime_C(SEXP lociSEXP, SEXP strataMatSEXP, SEXP ploidySEXP, SEXP primeTypeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< IntegerMatrix >::type loci(lociSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type strata(strataSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type strataMat(strataMatSEXP);
     Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
     Rcpp::traits::input_parameter< int >::type primeType(primeTypeSEXP);
-    __result = Rcpp::wrap(statGstPrime_C(loci, strata, ploidy, primeType));
+    __result = Rcpp::wrap(statGstPrime_C(loci, strataMat, ploidy, primeType));
     return __result;
 END_RCPP
 }
 // statGstDblPrime_C
-double statGstDblPrime_C(IntegerMatrix loci, IntegerVector strata, int ploidy);
-RcppExport SEXP strataG_statGstDblPrime_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+NumericVector statGstDblPrime_C(IntegerMatrix loci, IntegerMatrix strataMat, int ploidy);
+RcppExport SEXP strataG_statGstDblPrime_C(SEXP lociSEXP, SEXP strataMatSEXP, SEXP ploidySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< IntegerMatrix >::type loci(lociSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type strata(strataSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type strataMat(strataMatSEXP);
     Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
-    __result = Rcpp::wrap(statGstDblPrime_C(loci, strata, ploidy));
-    return __result;
-END_RCPP
-}
-// statJostD_C_test
-NumericVector statJostD_C_test(IntegerMatrix loci, IntegerVector strata, int ploidy);
-RcppExport SEXP strataG_statJostD_C_test(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< IntegerMatrix >::type loci(lociSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type strata(strataSEXP);
-    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
-    __result = Rcpp::wrap(statJostD_C_test(loci, strata, ploidy));
+    __result = Rcpp::wrap(statGstDblPrime_C(loci, strataMat, ploidy));
     return __result;
 END_RCPP
 }
 // statJostD_C
-double statJostD_C(IntegerMatrix loci, IntegerVector strata, int ploidy);
-RcppExport SEXP strataG_statJostD_C(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
+NumericVector statJostD_C(IntegerMatrix loci, IntegerMatrix strataMat, int ploidy);
+RcppExport SEXP strataG_statJostD_C(SEXP lociSEXP, SEXP strataMatSEXP, SEXP ploidySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< IntegerMatrix >::type loci(lociSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type strata(strataSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type strataMat(strataMatSEXP);
     Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
-    __result = Rcpp::wrap(statJostD_C(loci, strata, ploidy));
+    __result = Rcpp::wrap(statJostD_C(loci, strataMat, ploidy));
     return __result;
 END_RCPP
 }
@@ -354,15 +367,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // statPhist_C
-double statPhist_C(IntegerVector haps, IntegerVector strata, NumericMatrix hapDist);
-RcppExport SEXP strataG_statPhist_C(SEXP hapsSEXP, SEXP strataSEXP, SEXP hapDistSEXP) {
+NumericVector statPhist_C(IntegerMatrix hapMat, IntegerMatrix strataMat, List hapDist);
+RcppExport SEXP strataG_statPhist_C(SEXP hapMatSEXP, SEXP strataMatSEXP, SEXP hapDistSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< IntegerVector >::type haps(hapsSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type strata(strataSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type hapDist(hapDistSEXP);
-    __result = Rcpp::wrap(statPhist_C(haps, strata, hapDist));
+    Rcpp::traits::input_parameter< IntegerMatrix >::type hapMat(hapMatSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type strataMat(strataMatSEXP);
+    Rcpp::traits::input_parameter< List >::type hapDist(hapDistSEXP);
+    __result = Rcpp::wrap(statPhist_C(hapMat, strataMat, hapDist));
     return __result;
 END_RCPP
 }

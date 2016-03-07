@@ -85,8 +85,8 @@ gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5,
           st[ran.sample] <- "<gelato.unknown>"
           null.gtypes <- stratify(known.gtypes, st)
           
-          c(obs = unname(statFst(obs.gtypes)), 
-            null = unname(statFst(null.gtypes))
+          c(obs = unname(statFst(obs.gtypes)$result["estimate"]), 
+            null = unname(statFst(null.gtypes)$result["estimate"])
           )
         }, mc.cores = num.cores))
         fst.dist <- fst.dist[apply(fst.dist, 1, function(x) all(!is.na(x))), ]

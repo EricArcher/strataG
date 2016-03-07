@@ -1,20 +1,13 @@
 #' @rdname popStructStat
 #' @export
 #' 
-Hstats <- function(g, strata = NULL) {
+Hstats <- function(g) {
   if(ploidy(g) < 2) {
     result <- matrix(NA, nrow = 3, ncol = nLoc(g))
     rownames(result) <- c("Ho", "Hs", "Ht")
     colnames(result) <- locNames(g)
     return(result)
   }
-  
-  strata <- if(is.null(strata)) {
-    strata(g)
-  } else {
-    rep(strata, length.out = nInd(g))
-  }
-  if(!is.factor(strata)) strata <- factor(strata)
   
   result <- Hstats_C(
     sapply(loci(g), function(x) as.numeric(x) - 1), 

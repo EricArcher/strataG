@@ -1,63 +1,57 @@
 #' @rdname popStructStat
 #' @export
 #' 
-statGst <- function(g, strata = NULL, ...) {
-  if(ploidy(g) < 2 | nStrata(g) == 1) return(c(Gst = NA))
-  strata <- if(is.null(strata)) {
-    strata(g)
-  } else {
-    rep(strata, length.out = nInd(g))
-  }
-  if(!is.factor(strata)) strata <- factor(strata)
-  
-  if(any(is.na(strata))) {
-    toUse <- !is.na(strata)
-    strata <- strata[toUse]
-    g <- g[toUse, , ]
+statGst <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...) {
+  if(ploidy(g) < 2 | nStrata(g) == 1) {
+    return(list(
+      stat.name = "Gst", 
+      result = c(estimate = NA, p.val = NA),
+      null.dist = NULL
+    ))
   }
   
-  est <- statGst_C(
+  strata.mat <- .checkStrataMat(strata.mat, g, nrep)
+  
+  result <- statGst_C(
     sapply(loci(g), function(x) as.numeric(x) - 1), 
-    as.numeric(strata) - 1,
-    ploidy(g)
+    strata.mat, ploidy(g)
   )
+  
+  return(.formatResult(result, "Gst", keep.null))
   
 #   hets <- Hstats(g, strata)
 #   Hs <- mean(hets["Hs", ], na.rm = TRUE)
 #   Ht <- mean(hets["Ht", ], na.rm = TRUE)
 #   est <- 1 - (Hs / Ht) 
 #   if(is.nan(est)) est <- NA
-  
-  names(est) <- "Gst"
-  est
+#   
+#   names(est) <- "Gst"
+#   est
 }
 
 
 #' @rdname popStructStat
 #' @export
 #' 
-statGstPrime <- function(g, strata = NULL, prime.type = c("nei", "hedrick"), ...) { 
-  if(ploidy(g) < 2 | nStrata(g) == 1) return(c('G\'st' = NA))
-  prime.type <- match.arg(prime.type)
-  strata <- if(is.null(strata)) {
-    strata(g)
-  } else {
-    rep(strata, length.out = nInd(g))
-  }
-  if(!is.factor(strata)) strata <- factor(strata)
-  
-  if(any(is.na(strata))) {
-    toUse <- !is.na(strata)
-    strata <- strata[toUse]
-    g <- g[toUse, , ]
+statGstPrime <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE,
+                         prime.type = c("nei", "hedrick"), ...) { 
+  if(ploidy(g) < 2 | nStrata(g) == 1) {
+    return(list(
+      stat.name = "G'st", 
+      result = c(estimate = NA, p.val = NA),
+      null.dist = NULL
+    ))
   }
   
-  est <- statGstPrime_C(
+  strata.mat <- .checkStrataMat(strata.mat, g, nrep)
+  
+  result <- statGstPrime_C(
     sapply(loci(g), function(x) as.numeric(x) - 1), 
-    as.numeric(strata) - 1,
-    ploidy(g),
-    switch(prime.type, nei = 0, hedrick = 1)
+    strata.mat, ploidy(g),
+    switch( match.arg(prime.type), nei = 0, hedrick = 1)
   )
+  
+  return(.formatResult(result, "G'st", keep.null))
   
 #   hets <- Hstats(g, strata)
 #   Hs <- mean(hets["Hs", ], na.rm = TRUE)
@@ -71,34 +65,31 @@ statGstPrime <- function(g, strata = NULL, prime.type = c("nei", "hedrick"), ...
 #   }
 #   if(is.nan(est)) est <- NA
   
-  names(est) <- "G'st"
-  est
+#   names(est) <- "G'st"
+#   est
 }
 
 
 #' @rdname popStructStat
 #' @export
 #' 
-statGstDblPrime <- function(g, strata = NULL, ...) {
-  if(ploidy(g) < 2 | nStrata(g) == 1) return(c('G\'\'st' = NA))
-  strata <- if(is.null(strata)) {
-    strata(g)
-  } else {
-    rep(strata, length.out = nInd(g))
-  }
-  if(!is.factor(strata)) strata <- factor(strata)
-  
-  if(any(is.na(strata))) {
-    toUse <- !is.na(strata)
-    strata <- strata[toUse]
-    g <- g[toUse, , ]
+statGstDblPrime <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...) {
+  if(ploidy(g) < 2 | nStrata(g) == 1) {
+    return(list(
+      stat.name = "G''st", 
+      result = c(estimate = NA, p.val = NA),
+      null.dist = NULL
+    ))
   }
   
-  est <- statGstDblPrime_C(
+  strata.mat <- .checkStrataMat(strata.mat, g, nrep)
+  
+  result <- statGstDblPrime_C(
     sapply(loci(g), function(x) as.numeric(x) - 1), 
-    as.numeric(strata) - 1,
-    ploidy(g)
+    strata.mat, ploidy(g)
   )
+  
+  return(.formatResult(result, "G''st", keep.null))
   
 #   hets <- Hstats(g, strata)  
 #   Hs <- mean(hets["Hs", ], na.rm = TRUE)
@@ -106,7 +97,7 @@ statGstDblPrime <- function(g, strata = NULL, ...) {
 #   n <- if(is.null(strata)) nStrata(g) else length(unique(strata))
 #   est <- (n * (Ht - Hs)) / ((n * Ht) - Hs) / (1 - Hs)
 #   if(is.nan(est)) est <- NA
-  
-  names(est) <- "G''st"
-  est
+#   
+#   names(est) <- "G''st"
+#   est
 }

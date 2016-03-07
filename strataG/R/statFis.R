@@ -1,26 +1,27 @@
 #' @rdname popStructStat
 #' @export
 #' 
-statFis <- function(g, strata = NULL, ...) {
-  if(ploidy(g) < 2 | nStrata(g) == 1) return(c(Fis = NA))
-  strata <- if(is.null(strata)) {
-    strata(g)
-  } else {
-    rep(strata, length.out = nInd(g))
-  }
-  if(!is.factor(strata)) strata <- factor(strata)
-  
-  if(any(is.na(strata))) {
-    toUse <- !is.na(strata)
-    strata <- strata[toUse]
-    g <- g[toUse, , ]
+statFis <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...) {
+  if(ploidy(g) < 2 | nStrata(g) == 1) {
+    return(list(
+      stat.name = "Fis", 
+      result = c(estimate = NA, p.val = NA),
+      null.dist = NULL
+    ))
   }
   
-  est <- statFis_C(
+  strata.mat <- .checkStrataMat(strata.mat, g, nrep)
+  
+  result <- statFis_C(
     sapply(loci(g), function(x) as.numeric(x) - 1), 
-    as.numeric(strata) - 1,
-    ploidy(g)
+    strata.mat, ploidy(g)
   )
-  names(est) <- "Fis"
-  est
+  
+  if(length(result) == 1) keep.null <- FALSE
+  p.val <- if(length(result) == 1) NA else mean(result >= result[1], na.rm = TRUE) 
+  return(list(
+    stat.name = "Fis", 
+    result = c(estimate = result[1], p.val = p.val),
+    null.dist = if(keep.null) result[-1] else NULL
+  ))
 }

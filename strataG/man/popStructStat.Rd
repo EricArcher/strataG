@@ -14,39 +14,46 @@
 \alias{statPhist}
 \title{Population structure statistics}
 \usage{
-Hstats(g, strata = NULL)
+Hstats(g)
 
-statChi2(g, strata = NULL, ...)
+statChi2(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...)
 
-statFis(g, strata = NULL, ...)
+statFis(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...)
 
-statFst(g, strata = NULL, ...)
+statFst(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...)
 
-statFstPrime(g, strata = NULL, ...)
+statFstPrime(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...)
 
-statGst(g, strata = NULL, ...)
+statGst(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...)
 
-statGstPrime(g, strata = NULL, prime.type = c("nei", "hedrick"), ...)
+statGstPrime(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE,
+  prime.type = c("nei", "hedrick"), ...)
 
-statGstDblPrime(g, strata = NULL, ...)
+statGstDblPrime(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...)
 
-statJostD(g, strata = NULL, ...)
+statJostD(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...)
 
-statPhist(g, strata = NULL, hap.dist = NULL, model = "K80",
-  gamma = FALSE, pairwise.deletion = TRUE, ...)
+statPhist(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE,
+  model = "K80", gamma = FALSE, pairwise.deletion = TRUE, ...)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
-\item{strata}{an optional alternative stratification vector to use in place
-of the stratification in \code{g}. If \code{NULL} stratification is taken 
-from \code{g}.}
+\item{nrep}{number specifying number of permutation replicates to use for 
+permutation test.}
+
+\item{strata.mat}{an optional matrix of permuted stratifications. If given, 
+the first column is taken to be the observed stratification and all others 
+are random permutations. Strata must be defined by sequential integer values 
+starting with 0. If \code{NULL} stratification is taken from \code{g}. This 
+argument is primarily used internally in \code{\link{overallTest}}.}
+
+\item{keep.null}{logical. Keep the null distribution from the 
+permutation test?}
 
 \item{...}{optional arguments passed to or from other functions.}
 
 \item{prime.type}{type of G'st to calculate. Can be "nei" or "hedrick".}
-
-\item{hap.dist}{matrix of pairwise distances between haplotypes.}
 
 \item{model, gamma, pairwise.deletion}{parameters passed to 
 \code{\link[ape]{dist.dna}}.}

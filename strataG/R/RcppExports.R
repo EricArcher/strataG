@@ -57,12 +57,12 @@ calcStrataN <- function(locus, strata) {
     .Call('strataG_calcStrataN', PACKAGE = 'strataG', locus, strata)
 }
 
-statChi2_C <- function(loci, strata, ploidy) {
-    .Call('strataG_statChi2_C', PACKAGE = 'strataG', loci, strata, ploidy)
+statChi2_C <- function(loci, strataMat, ploidy) {
+    .Call('strataG_statChi2_C', PACKAGE = 'strataG', loci, strataMat, ploidy)
 }
 
-statFis_C <- function(loci, strata, ploidy) {
-    .Call('strataG_statFis_C', PACKAGE = 'strataG', loci, strata, ploidy)
+statFis_C <- function(loci, strataMat, ploidy) {
+    .Call('strataG_statFis_C', PACKAGE = 'strataG', loci, strataMat, ploidy)
 }
 
 alleleFreqCalc <- function(locVec, strata, ploidy) {
@@ -77,28 +77,32 @@ varCompCalc <- function(nvec, alleleFreq, prHet, r, nbar, rnbar, nc) {
     .Call('strataG_varCompCalc', PACKAGE = 'strataG', nvec, alleleFreq, prHet, r, nbar, rnbar, nc)
 }
 
-statFst_C <- function(loci, strata, ploidy) {
-    .Call('strataG_statFst_C', PACKAGE = 'strataG', loci, strata, ploidy)
+fstCalc <- function(loci, strata, ploidy) {
+    .Call('strataG_fstCalc', PACKAGE = 'strataG', loci, strata, ploidy)
 }
 
-statGst_C <- function(loci, strata, ploidy) {
-    .Call('strataG_statGst_C', PACKAGE = 'strataG', loci, strata, ploidy)
+statFst_C <- function(loci, strataMat, ploidy) {
+    .Call('strataG_statFst_C', PACKAGE = 'strataG', loci, strataMat, ploidy)
 }
 
-statGstPrime_C <- function(loci, strata, ploidy, primeType) {
-    .Call('strataG_statGstPrime_C', PACKAGE = 'strataG', loci, strata, ploidy, primeType)
+statFstPrime_C <- function(loci, strataMat, ploidy) {
+    .Call('strataG_statFstPrime_C', PACKAGE = 'strataG', loci, strataMat, ploidy)
 }
 
-statGstDblPrime_C <- function(loci, strata, ploidy) {
-    .Call('strataG_statGstDblPrime_C', PACKAGE = 'strataG', loci, strata, ploidy)
+statGst_C <- function(loci, strataMat, ploidy) {
+    .Call('strataG_statGst_C', PACKAGE = 'strataG', loci, strataMat, ploidy)
 }
 
-statJostD_C_test <- function(loci, strata, ploidy) {
-    .Call('strataG_statJostD_C_test', PACKAGE = 'strataG', loci, strata, ploidy)
+statGstPrime_C <- function(loci, strataMat, ploidy, primeType) {
+    .Call('strataG_statGstPrime_C', PACKAGE = 'strataG', loci, strataMat, ploidy, primeType)
 }
 
-statJostD_C <- function(loci, strata, ploidy) {
-    .Call('strataG_statJostD_C', PACKAGE = 'strataG', loci, strata, ploidy)
+statGstDblPrime_C <- function(loci, strataMat, ploidy) {
+    .Call('strataG_statGstDblPrime_C', PACKAGE = 'strataG', loci, strataMat, ploidy)
+}
+
+statJostD_C <- function(loci, strataMat, ploidy) {
+    .Call('strataG_statJostD_C', PACKAGE = 'strataG', loci, strataMat, ploidy)
 }
 
 ssWPCalc <- function(strataFreq, strataHapFreq, hapDist) {
@@ -109,7 +113,7 @@ ssAPCalc <- function(strataFreq, strataHapFreq, hapDist) {
     .Call('strataG_ssAPCalc', PACKAGE = 'strataG', strataFreq, strataHapFreq, hapDist)
 }
 
-statPhist_C <- function(haps, strata, hapDist) {
-    .Call('strataG_statPhist_C', PACKAGE = 'strataG', haps, strata, hapDist)
+statPhist_C <- function(hapMat, strataMat, hapDist) {
+    .Call('strataG_statPhist_C', PACKAGE = 'strataG', hapMat, strataMat, hapDist)
 }
 

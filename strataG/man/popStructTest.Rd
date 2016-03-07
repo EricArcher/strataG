@@ -8,14 +8,14 @@
 \title{Population Differentiation Tests}
 \usage{
 popStructTest(g, nrep = 100, stats = "all", type = c("both", "overall",
-  "pairwise"), keep.null = FALSE, quietly = FALSE, num.cores = 1,
-  write.output = FALSE, ...)
+  "pairwise"), keep.null = FALSE, quietly = FALSE, write.output = FALSE,
+  ...)
 
 overallTest(g, nrep = 100, stats = "all", keep.null = FALSE,
-  quietly = FALSE, num.cores = 1, ...)
+  quietly = FALSE, ...)
 
 pairwiseTest(g, nrep = 100, stats = "all", keep.null = FALSE,
-  quietly = FALSE, num.cores = 1, ...)
+  quietly = FALSE, ...)
 
 statList(stats = "all")
 }
@@ -40,8 +40,6 @@ only two strata, then only an overall test will be conducted.}
 permutation test?}
 
 \item{quietly}{logical. Print progress and results?}
-
-\item{num.cores}{number of CPU cores to use.}
 
 \item{write.output}{logical. Write a .csv file with results?}
 

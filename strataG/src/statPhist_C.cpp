@@ -43,22 +43,15 @@ double ssAPCalc(IntegerVector strataFreq, IntegerMatrix strataHapFreq,
   return ssAP / (2 * sum(strataFreq));
 }
 
-// [[Rcpp::export]]
-double statPhist_C(IntegerVector haps, IntegerVector strata, NumericMatrix hapDist) {
+double phistCalc(IntegerVector haps, IntegerVector strata, NumericMatrix hapDist) {  
   // function declarations
   IntegerMatrix table2D(IntegerVector, IntegerVector);
   NumericVector colSumC(NumericMatrix);
   
-  LogicalVector hapsGood = !is_na(haps);
-  LogicalVector strataGood = !is_na(strata);
-  LogicalVector toUse = hapsGood & strataGood;
-  haps = haps[toUse];
-  strata = strata[toUse];
-  
   // Extract summary values
   IntegerMatrix strataHapFreq = table2D(haps, strata);
   IntegerVector strataFreq = wrap(colSumC(wrap(strataHapFreq)));
-
+  
   double ssWP = ssWPCalc(strataFreq, strataHapFreq, hapDist);
   double ssAP = ssAPCalc(strataFreq, strataHapFreq, hapDist);
   ssAP = ssAP - ssWP;
@@ -80,4 +73,28 @@ double statPhist_C(IntegerVector haps, IntegerVector strata, NumericMatrix hapDi
   
   if(std::isnan(est)) est = NA_REAL;
   return est;
+}
+
+
+// [[Rcpp::export]]
+NumericVector statPhist_C(IntegerMatrix hapMat, IntegerMatrix strataMat, List hapDist) {
+  // function declarations
+  double harmonicMean_C(NumericVector);
+  
+  LogicalMatrix hapsGood(hapMat.nrow(), hapMat.ncol());
+  for(int gene = 0; gene < hapMat.ncol(); gene++) hapsGood(_, gene) = !is_na(hapMat(_, gene));
+  
+  NumericVector estVec(strataMat.ncol());
+  NumericVector geneVec(hapMat.ncol());
+  for(int idx = 0; idx < estVec.size(); idx++) {
+    IntegerVector strata(strataMat(_, idx));
+    LogicalVector strataGood = !is_na(strata);
+    for(int gene = 0; gene < hapMat.ncol(); gene++) {
+      LogicalVector toUse = hapsGood(_, gene) & strataGood;
+      IntegerVector haps = hapMat(_, gene);
+      geneVec[gene] = phistCalc(haps[toUse], strata[toUse], hapDist[gene]);
+    }
+    estVec[idx] = harmonicMean_C(geneVec);
+  }
+  return estVec;
 }

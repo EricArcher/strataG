@@ -2,29 +2,29 @@
 #' @importFrom swfscMisc harmonic.mean 
 #' @export
 #' 
-statJostD <- function(g, strata = NULL, ...) {
-  if(ploidy(g) < 2 | nStrata(g) == 1) return(c(D = NA))
-  
-  strata <- if(is.null(strata)) {
-    strata(g)
-  } else {
-    rep(strata, length.out = nInd(g))
-  }
-  if(!is.factor(strata)) strata <- factor(strata)
-  
-  if(any(is.na(strata))) {
-    toUse <- !is.na(strata)
-    strata <- strata[toUse]
-    g <- g[toUse, , ]
+statJostD <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...) {
+  if(ploidy(g) < 2 | nStrata(g) == 1) {
+    return(list(
+      stat.name = "D", 
+      result = c(estimate = NA, p.val = NA),
+      null.dist = NULL
+    ))
   }
   
-  est <- statJostD_C(
+  strata.mat <- .checkStrataMat(strata.mat, g, nrep)
+  
+  result <- statJostD_C(
     sapply(loci(g), function(x) as.numeric(x) - 1), 
-    as.numeric(strata) - 1,
-    ploidy(g)
+    strata.mat, ploidy(g)
   )
-  est <- harmonic.mean(est)
- 
+  
+  if(length(result) == 1) keep.null <- FALSE
+  p.val <- if(length(result) == 1) NA else mean(result >= result[1], na.rm = TRUE) 
+  return(list(
+    stat.name = "D", 
+    result = c(estimate = result[1], p.val = p.val),
+    null.dist = if(keep.null) result[-1] else NULL
+  ))
   
 #   allele.freqs <- alleleFreqs(g, by.strata = TRUE)
 #   terms <- sapply(locNames(g), function(x) {
@@ -50,6 +50,6 @@ statJostD <- function(g, strata = NULL, ...) {
 #   d.by.locus <- 1 - terms["a", ] / terms["b", ]
 #   d.by.locus <- ifelse(d.by.locus < 0, 0, d.by.locus)
 #   est <- harmonic.mean(d.by.locus)
-
-  c(D = est)
+# 
+#   c(D = est)
 }
