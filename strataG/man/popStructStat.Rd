@@ -42,11 +42,8 @@ statPhist(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE,
 \item{nrep}{number specifying number of permutation replicates to use for 
 permutation test.}
 
-\item{strata.mat}{an optional matrix of permuted stratifications. If given, 
-the first column is taken to be the observed stratification and all others 
-are random permutations. Strata must be defined by sequential integer values 
-starting with 0. If \code{NULL} stratification is taken from \code{g}. This 
-argument is primarily used internally in \code{\link{overallTest}}.}
+\item{strata.mat}{an optional matrix of permuted stratifications. See Notes 
+for more details. Ignored if \code{nrep} is not \code{NULL}.}
 
 \item{keep.null}{logical. Keep the null distribution from the 
 permutation test?}
@@ -59,10 +56,25 @@ permutation test?}
 \code{\link[ape]{dist.dna}}.}
 }
 \value{
-the named statistic estimate.
+A list with three elements:
+  \tabular{ll}{
+    \code{stat.name} \tab the name of the statistic.\cr
+    \code{result} \tab a vector of the statistic estimate and the p-value, 
+      if replicates were conducted.\cr
+    \code{null.dist} \tab a vector of the null distribution from the 
+      permutations.\cr
+   }
 }
 \description{
 Population structure statistics
+}
+\note{
+If \code{strata.mat} is provided, it must be a numeric matrix of 
+  integers from \code{0} to \code{k - 1}, where \code{k} is the number of 
+  strata. Each column is a separate permutation and the first column is assumed 
+  to represent the original stratification. If not provided \code{= NULL}, 
+  stratification is taken from \code{g}. This argument is primarily used 
+  internally by \code{\link{popStructTest}}.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

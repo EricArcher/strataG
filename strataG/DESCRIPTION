@@ -1,15 +1,19 @@
 Package: strataG
-Type: Package
 Title: Summaries and Population Structure Analyses of Genetic Data
 Description: A toolkit for analyzing stratified population genetic data.
 Version: 1.0
-Date: 2016-03-07
-Author: Eric Archer
-Maintainer: Eric Archer <eric.archer@noaa.gov>
+License: GNU General Public License
+Authors@R: c(
+  EA = person("Eric", "Archer", email = "eric.archer@noaa.gov", role = c("aut", "cre")),
+  PA = person("Paula", "Adams", email = "peadams@crimson.ua.edu", role = c("aut")),
+  BS = person("Brita", "Schneiders", email = "britaschneiders@u.northwestern.edu", role = c("aut")))
+BugReports: https://github.com/EricArcher/strataG/issues
 Depends:
     R (>= 3.2.0),
     apex,
     adegenet
+Suggests:
+    knitr
 Imports:
     ape,
     copula,
@@ -118,9 +122,6 @@ Collate:
     df2gtypes.R
     sequence2gtypes.R
 LazyData: true
-License: GNU General Public License
-Suggests:
-    knitr
 VignetteBuilder: knitr
 LinkingTo: Rcpp
 RoxygenNote: 5.0.1

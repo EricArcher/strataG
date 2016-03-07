@@ -137,6 +137,15 @@ setMethod("initialize", "gtypes",
       stop("the number of genes in 'sequences' is not equal to the number of loci")
     }
     setLocusNames(sequences) <- colnames(loci)
+    for(loc in colnames(loci)) {
+      haps <- unique(as.character(loci[, loc]))
+      seq.names <- getSequenceNames(sequences)[[loc]]
+      missing <- setdiff(haps, seq.names)
+      if(length(missing) > 0) {
+        missing <- paste(missing, collapse = ", ")
+        stop(paste("the following haplotypes can't be found in sequences for locus '", loc, "': ", missing, sep = ""))
+      }
+    }
   }
   
   # create and return gtypes object
