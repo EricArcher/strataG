@@ -1,5 +1,7 @@
-## ------------------------------------------------------------------------
+## ----echo = FALSE, message = FALSE---------------------------------------
 library(strataG)
+
+## ------------------------------------------------------------------------
 #--- create a diploid (microsatellite) gtypes object
 data(dolph.msats)
 data(dolph.strata)
@@ -24,8 +26,22 @@ msats.fine <- new("gtypes", gen.data = dolph.msats[, -1], ploidy = 2,
 msats.merge <- merge(dolph.strata, dolph.msats, all.y = TRUE, description = date())
 str(msats.merge)
 
-# creat the gtypes object
+# create the gtypes object
 msats.fine <- df2gtypes(msats.merge, ploidy = 2, id.col = 1, strata.col = 3, loc.col = 5)
+
+## ------------------------------------------------------------------------
+data(dolph.seqs)
+
+seq.df <- dolph.strata[ c("id", "broad", "id")]
+colnames(seq.df)[3] <- "D-loop"
+dl.g <- df2gtypes(seq.df, ploidy = 1, sequences = dolph.seqs)
+dl.g
+
+## ------------------------------------------------------------------------
+data(dolph.haps)
+
+haps.g <- sequence2gtypes(dolph.haps)
+haps.g
 
 ## ------------------------------------------------------------------------
 # extract and name the stratification scheme
@@ -35,6 +51,7 @@ names(strata) <- dolph.strata$ids
 # create the gtypes object
 dloop.fine <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop",
   description = "dLoop: fine-scale stratification")
+dloop.fine
 
 ## ------------------------------------------------------------------------
 library(adegenet)

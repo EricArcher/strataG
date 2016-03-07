@@ -51,19 +51,38 @@ msats.fine <- new("gtypes", gen.data = dolph.msats[, -1], ploidy = 2,
 
 ### _df2gtypes_ - Convert a data.frame or matrix
 
-The _df2gtypes_ function assumes that you have a matrix or data.frame with columns for individual ids, stratification, and locus data. You then specify the columns in the data.frame where this information can be found. 
+The _df2gtypes_ function assumes that you have a matrix or data.frame with columns for individual ids, stratification, and locus data. You then specify the columns in the data.frame where this information can be found. _df2gtypes_ can be used for data with multiple alleles per locus, like this:
 ```{r}
 # create a single data.frame with the msat data and stratification
 msats.merge <- merge(dolph.strata, dolph.msats, all.y = TRUE, description = date())
 str(msats.merge)
 
-# creat the gtypes object
+# create the gtypes object
 msats.fine <- df2gtypes(msats.merge, ploidy = 2, id.col = 1, strata.col = 3, loc.col = 5)
 ```
 
+...or for haploid data, like this:
+```{r}
+data(dolph.seqs)
+
+seq.df <- dolph.strata[ c("id", "broad", "id")]
+colnames(seq.df)[3] <- "D-loop"
+dl.g <- df2gtypes(seq.df, ploidy = 1, sequences = dolph.seqs)
+dl.g
+```
+
+
 ### _sequence2gtypes_ - Convert DNA sequences
 
-The sequence2gtypes function assumes that you have some DNA sequences and perhaps a stratification scheme.
+The _sequence2gtypes_ function creates an unstratified _gtype_ object with just a set of DNA sequences:
+```{r}
+data(dolph.haps)
+
+haps.g <- sequence2gtypes(dolph.haps)
+haps.g
+```
+
+If you have a vector that identifies strata designations for the sequences, that can be supplied as well:
 ```{r}
 # extract and name the stratification scheme
 strata <- dolph.strata$fine
@@ -72,7 +91,10 @@ names(strata) <- dolph.strata$ids
 # create the gtypes object
 dloop.fine <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop",
   description = "dLoop: fine-scale stratification")
+dloop.fine
 ```
+
+Note that stratification is generally provided for individuals, thus if you want to stratify the resulting _gtypes_ object from _sequence2gtypes_, one sequence for each individual should be provided, rather than just a set of unique haplotypes.
 
 ### _genind2gtypes_ - Convert genind object
 

@@ -7,10 +7,11 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <meta name="author" content="Eric Archer" />
 
-<meta name="date" content="2016-02-10" />
+<meta name="date" content="2016-03-07" />
 
 <title>Creating and Manipulating gtypes Objects</title>
 
@@ -36,14 +37,9 @@ code > span.al { color: #ff0000; font-weight: bold; }
 code > span.fu { color: #06287e; }
 code > span.er { color: #ff0000; font-weight: bold; }
 </style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 
 
-<link href="data:text/css,body%20%7B%0A%20%20background%2Dcolor%3A%20%23fff%3B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20max%2Dwidth%3A%20700px%3B%0A%20%20overflow%3A%20visible%3B%0A%20%20padding%2Dleft%3A%202em%3B%0A%20%20padding%2Dright%3A%202em%3B%0A%20%20font%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0A%20%20font%2Dsize%3A%2014px%3B%0A%20%20line%2Dheight%3A%201%2E35%3B%0A%7D%0A%0A%23header%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0A%0A%23TOC%20%7B%0A%20%20clear%3A%20both%3B%0A%20%20margin%3A%200%200%2010px%2010px%3B%0A%20%20padding%3A%204px%3B%0A%20%20width%3A%20400px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20border%2Dradius%3A%205px%3B%0A%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20font%2Dsize%3A%2013px%3B%0A%20%20line%2Dheight%3A%201%2E3%3B%0A%7D%0A%20%20%23TOC%20%2Etoctitle%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%20%20font%2Dsize%3A%2015px%3B%0A%20%20%20%20margin%2Dleft%3A%205px%3B%0A%20%20%7D%0A%0A%20%20%23TOC%20ul%20%7B%0A%20%20%20%20padding%2Dleft%3A%2040px%3B%0A%20%20%20%20margin%2Dleft%3A%20%2D1%2E5em%3B%0A%20%20%20%20margin%2Dtop%3A%205px%3B%0A%20%20%20%20margin%2Dbottom%3A%205px%3B%0A%20%20%7D%0A%20%20%23TOC%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dleft%3A%20%2D2em%3B%0A%20%20%7D%0A%20%20%23TOC%20li%20%7B%0A%20%20%20%20line%2Dheight%3A%2016px%3B%0A%20%20%7D%0A%0Atable%20%7B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dcolor%3A%20%23DDDDDD%3B%0A%20%20border%2Dstyle%3A%20outset%3B%0A%20%20border%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0A%20%20border%2Dwidth%3A%202px%3B%0A%20%20padding%3A%205px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%20%20line%2Dheight%3A%2018px%3B%0A%20%20padding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0A%20%20border%2Dleft%2Dstyle%3A%20none%3B%0A%20%20border%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Ap%20%7B%0A%20%20margin%3A%200%2E5em%200%3B%0A%7D%0A%0Ablockquote%20%7B%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20padding%3A%200%2E25em%200%2E75em%3B%0A%7D%0A%0Ahr%20%7B%0A%20%20border%2Dstyle%3A%20solid%3B%0A%20%20border%3A%20none%3B%0A%20%20border%2Dtop%3A%201px%20solid%20%23777%3B%0A%20%20margin%3A%2028px%200%3B%0A%7D%0A%0Adl%20%7B%0A%20%20margin%2Dleft%3A%200%3B%0A%7D%0A%20%20dl%20dd%20%7B%0A%20%20%20%20margin%2Dbottom%3A%2013px%3B%0A%20%20%20%20margin%2Dleft%3A%2013px%3B%0A%20%20%7D%0A%20%20dl%20dt%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%7D%0A%0Aul%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%7D%0A%20%20ul%20li%20%7B%0A%20%20%20%20list%2Dstyle%3A%20circle%20outside%3B%0A%20%20%7D%0A%20%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dbottom%3A%200%3B%0A%20%20%7D%0A%0Apre%2C%20code%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20color%3A%20%23333%3B%0A%7D%0Apre%20%7B%0A%20%20white%2Dspace%3A%20pre%2Dwrap%3B%20%20%20%20%2F%2A%20Wrap%20long%20lines%20%2A%2F%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20margin%3A%205px%200px%2010px%200px%3B%0A%20%20padding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Acode%20%7B%0A%20%20font%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0A%20%20font%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0A%20%20padding%3A%202px%200px%3B%0A%7D%0A%0Adiv%2Efigure%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0A%20%20background%2Dcolor%3A%20%23FFFFFF%3B%0A%20%20padding%3A%202px%3B%0A%20%20border%3A%201px%20solid%20%23DDDDDD%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20margin%3A%200%205px%3B%0A%7D%0A%0Ah1%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%20%20font%2Dsize%3A%2035px%3B%0A%20%20line%2Dheight%3A%2040px%3B%0A%7D%0A%0Ah2%20%7B%0A%20%20border%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20padding%2Dbottom%3A%202px%3B%0A%20%20font%2Dsize%3A%20145%25%3B%0A%7D%0A%0Ah3%20%7B%0A%20%20border%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20font%2Dsize%3A%20120%25%3B%0A%7D%0A%0Ah4%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0A%20%20margin%2Dleft%3A%208px%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Ah5%2C%20h6%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23ccc%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Aa%20%7B%0A%20%20color%3A%20%230033dd%3B%0A%20%20text%2Ddecoration%3A%20none%3B%0A%7D%0A%20%20a%3Ahover%20%7B%0A%20%20%20%20color%3A%20%236666ff%3B%20%7D%0A%20%20a%3Avisited%20%7B%0A%20%20%20%20color%3A%20%23800080%3B%20%7D%0A%20%20a%3Avisited%3Ahover%20%7B%0A%20%20%20%20color%3A%20%23BB00BB%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%0A%2F%2A%20Class%20described%20in%20https%3A%2F%2Fbenjeffrey%2Ecom%2Fposts%2Fpandoc%2Dsyntax%2Dhighlighting%2Dcss%0A%20%20%20Colours%20from%20https%3A%2F%2Fgist%2Egithub%2Ecom%2Frobsimmons%2F1172277%20%2A%2F%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Keyword%20%2A%2F%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%2F%2A%20DataType%20%2A%2F%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%2F%2A%20DecVal%20%28decimal%20values%29%20%2A%2F%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20BaseN%20%2A%2F%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Float%20%2A%2F%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Char%20%2A%2F%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20String%20%2A%2F%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%2F%2A%20Comment%20%2A%2F%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%2F%2A%20OtherToken%20%2A%2F%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20AlertToken%20%2A%2F%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Function%20calls%20%2A%2F%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%2F%2A%20ErrorTok%20%2A%2F%0A%0A" rel="stylesheet" type="text/css" />
+<link href="data:text/css,body%20%7B%0A%20%20background%2Dcolor%3A%20%23fff%3B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20max%2Dwidth%3A%20700px%3B%0A%20%20overflow%3A%20visible%3B%0A%20%20padding%2Dleft%3A%202em%3B%0A%20%20padding%2Dright%3A%202em%3B%0A%20%20font%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0A%20%20font%2Dsize%3A%2014px%3B%0A%20%20line%2Dheight%3A%201%2E35%3B%0A%7D%0A%0A%23header%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0A%0A%23TOC%20%7B%0A%20%20clear%3A%20both%3B%0A%20%20margin%3A%200%200%2010px%2010px%3B%0A%20%20padding%3A%204px%3B%0A%20%20width%3A%20400px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20border%2Dradius%3A%205px%3B%0A%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20font%2Dsize%3A%2013px%3B%0A%20%20line%2Dheight%3A%201%2E3%3B%0A%7D%0A%20%20%23TOC%20%2Etoctitle%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%20%20font%2Dsize%3A%2015px%3B%0A%20%20%20%20margin%2Dleft%3A%205px%3B%0A%20%20%7D%0A%0A%20%20%23TOC%20ul%20%7B%0A%20%20%20%20padding%2Dleft%3A%2040px%3B%0A%20%20%20%20margin%2Dleft%3A%20%2D1%2E5em%3B%0A%20%20%20%20margin%2Dtop%3A%205px%3B%0A%20%20%20%20margin%2Dbottom%3A%205px%3B%0A%20%20%7D%0A%20%20%23TOC%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dleft%3A%20%2D2em%3B%0A%20%20%7D%0A%20%20%23TOC%20li%20%7B%0A%20%20%20%20line%2Dheight%3A%2016px%3B%0A%20%20%7D%0A%0Atable%20%7B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dcolor%3A%20%23DDDDDD%3B%0A%20%20border%2Dstyle%3A%20outset%3B%0A%20%20border%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0A%20%20border%2Dwidth%3A%202px%3B%0A%20%20padding%3A%205px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%20%20line%2Dheight%3A%2018px%3B%0A%20%20padding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0A%20%20border%2Dleft%2Dstyle%3A%20none%3B%0A%20%20border%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Ap%20%7B%0A%20%20margin%3A%200%2E5em%200%3B%0A%7D%0A%0Ablockquote%20%7B%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20padding%3A%200%2E25em%200%2E75em%3B%0A%7D%0A%0Ahr%20%7B%0A%20%20border%2Dstyle%3A%20solid%3B%0A%20%20border%3A%20none%3B%0A%20%20border%2Dtop%3A%201px%20solid%20%23777%3B%0A%20%20margin%3A%2028px%200%3B%0A%7D%0A%0Adl%20%7B%0A%20%20margin%2Dleft%3A%200%3B%0A%7D%0A%20%20dl%20dd%20%7B%0A%20%20%20%20margin%2Dbottom%3A%2013px%3B%0A%20%20%20%20margin%2Dleft%3A%2013px%3B%0A%20%20%7D%0A%20%20dl%20dt%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%7D%0A%0Aul%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%7D%0A%20%20ul%20li%20%7B%0A%20%20%20%20list%2Dstyle%3A%20circle%20outside%3B%0A%20%20%7D%0A%20%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dbottom%3A%200%3B%0A%20%20%7D%0A%0Apre%2C%20code%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20color%3A%20%23333%3B%0A%20%20white%2Dspace%3A%20pre%2Dwrap%3B%20%20%20%20%2F%2A%20Wrap%20long%20lines%20%2A%2F%0A%7D%0Apre%20%7B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20margin%3A%205px%200px%2010px%200px%3B%0A%20%20padding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Acode%20%7B%0A%20%20font%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0A%20%20font%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0A%20%20padding%3A%202px%200px%3B%0A%7D%0A%0Adiv%2Efigure%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0A%20%20background%2Dcolor%3A%20%23FFFFFF%3B%0A%20%20padding%3A%202px%3B%0A%20%20border%3A%201px%20solid%20%23DDDDDD%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20margin%3A%200%205px%3B%0A%7D%0A%0Ah1%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%20%20font%2Dsize%3A%2035px%3B%0A%20%20line%2Dheight%3A%2040px%3B%0A%7D%0A%0Ah2%20%7B%0A%20%20border%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20padding%2Dbottom%3A%202px%3B%0A%20%20font%2Dsize%3A%20145%25%3B%0A%7D%0A%0Ah3%20%7B%0A%20%20border%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20font%2Dsize%3A%20120%25%3B%0A%7D%0A%0Ah4%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0A%20%20margin%2Dleft%3A%208px%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Ah5%2C%20h6%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23ccc%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Aa%20%7B%0A%20%20color%3A%20%230033dd%3B%0A%20%20text%2Ddecoration%3A%20none%3B%0A%7D%0A%20%20a%3Ahover%20%7B%0A%20%20%20%20color%3A%20%236666ff%3B%20%7D%0A%20%20a%3Avisited%20%7B%0A%20%20%20%20color%3A%20%23800080%3B%20%7D%0A%20%20a%3Avisited%3Ahover%20%7B%0A%20%20%20%20color%3A%20%23BB00BB%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%0A%2F%2A%20Class%20described%20in%20https%3A%2F%2Fbenjeffrey%2Ecom%2Fposts%2Fpandoc%2Dsyntax%2Dhighlighting%2Dcss%0A%20%20%20Colours%20from%20https%3A%2F%2Fgist%2Egithub%2Ecom%2Frobsimmons%2F1172277%20%2A%2F%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Keyword%20%2A%2F%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%2F%2A%20DataType%20%2A%2F%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%2F%2A%20DecVal%20%28decimal%20values%29%20%2A%2F%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20BaseN%20%2A%2F%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Float%20%2A%2F%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Char%20%2A%2F%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20String%20%2A%2F%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%2F%2A%20Comment%20%2A%2F%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%2F%2A%20OtherToken%20%2A%2F%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20AlertToken%20%2A%2F%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Function%20calls%20%2A%2F%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%2F%2A%20ErrorTok%20%2A%2F%0A%0A" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -51,10 +47,13 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 
 
-<div id="header">
+<div class="fluid-row" id="header">
+
+
 <h1 class="title">Creating and Manipulating gtypes Objects</h1>
 <h4 class="author"><em>Eric Archer</em></h4>
-<h4 class="date"><em>2016-02-10</em></h4>
+<h4 class="date"><em>2016-03-07</em></h4>
+
 </div>
 
 
@@ -93,7 +92,7 @@ dloop &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st"
 </div>
 <div id="df2gtypes---convert-a-data.frame-or-matrix" class="section level3">
 <h3><em>df2gtypes</em> - Convert a data.frame or matrix</h3>
-<p>The <em>df2gtypes</em> function assumes that you have a matrix or data.frame with columns for individual ids, stratification, and locus data. You then specify the columns in the data.frame where this information can be found.</p>
+<p>The <em>df2gtypes</em> function assumes that you have a matrix or data.frame with columns for individual ids, stratification, and locus data. You then specify the columns in the data.frame where this information can be found. <em>df2gtypes</em> can be used for data with multiple alleles per locus, like this:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create a single data.frame with the msat data and stratification</span>
 msats.merge &lt;-<span class="st"> </span><span class="kw">merge</span>(dolph.strata, dolph.msats, <span class="dt">all.y =</span> <span class="ot">TRUE</span>, <span class="dt">description =</span> <span class="kw">date</span>())
 <span class="kw">str</span>(msats.merge)</code></pre>
@@ -112,19 +111,87 @@ msats.merge &lt;-<span class="st"> </span><span class="kw">merge</span>(dolph.st
 ##  $ Ttr11.2: chr  &quot;209&quot; &quot;197&quot; &quot;213&quot; &quot;215&quot; ...
 ##  $ Ttr34.1: chr  &quot;185&quot; &quot;185&quot; &quot;185&quot; &quot;189&quot; ...
 ##  $ Ttr34.2: chr  &quot;187&quot; &quot;187&quot; &quot;191&quot; &quot;195&quot; ...</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># creat the gtypes object</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create the gtypes object</span>
 msats.fine &lt;-<span class="st"> </span><span class="kw">df2gtypes</span>(msats.merge, <span class="dt">ploidy =</span> <span class="dv">2</span>, <span class="dt">id.col =</span> <span class="dv">1</span>, <span class="dt">strata.col =</span> <span class="dv">3</span>, <span class="dt">loc.col =</span> <span class="dv">5</span>)</code></pre>
+<p>…or for haploid data, like this:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(dolph.seqs)
+
+seq.df &lt;-<span class="st"> </span>dolph.strata[ <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;broad&quot;</span>, <span class="st">&quot;id&quot;</span>)]
+<span class="kw">colnames</span>(seq.df)[<span class="dv">3</span>] &lt;-<span class="st"> &quot;D-loop&quot;</span>
+dl.g &lt;-<span class="st"> </span><span class="kw">df2gtypes</span>(seq.df, <span class="dt">ploidy =</span> <span class="dv">1</span>, <span class="dt">sequences =</span> dolph.seqs)
+dl.g</code></pre>
+<pre><code>## 
+## &lt;&lt;&lt; gtypes created on 2016-03-07 14:16:24 &gt;&gt;&gt;
+## 
+## Contents: 126 samples, 1 locus, 2 strata
+## 
+## Strata summary:
+##          num.samples num.missing num.alleles pct.unique.alleles
+## Coastal           68           0          68                  1
+## Offshore          58           0          58                  1
+##          heterozygosity
+## Coastal               1
+## Offshore              1
+## 
+## Sequence summary:
+##        num.seqs min.length mean.length max.length         a         c
+## D-loop      126        402         402        402 0.3011288 0.2293531
+##                g         t
+## D-loop 0.1289702 0.3405479</code></pre>
 </div>
 <div id="sequence2gtypes---convert-dna-sequences" class="section level3">
 <h3><em>sequence2gtypes</em> - Convert DNA sequences</h3>
-<p>The sequence2gtypes function assumes that you have some DNA sequences and perhaps a stratification scheme.</p>
+<p>The <em>sequence2gtypes</em> function creates an unstratified <em>gtype</em> object with just a set of DNA sequences:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(dolph.haps)
+
+haps.g &lt;-<span class="st"> </span><span class="kw">sequence2gtypes</span>(dolph.haps)
+haps.g</code></pre>
+<pre><code>## 
+## &lt;&lt;&lt; gtypes created on 2016-03-07 14:16:24 &gt;&gt;&gt;
+## 
+## Contents: 33 samples, 1 locus, 1 stratum
+## 
+## Strata summary:
+##         num.samples num.missing num.alleles pct.unique.alleles
+## Default          33           0          33                  1
+##         heterozygosity
+## Default              1
+## 
+## Sequence summary:
+##       num.seqs min.length mean.length max.length         a         c
+## gene1       33        402         402        402 0.3011738 0.2293071
+##               g         t
+## gene1 0.1291935 0.3403256</code></pre>
+<p>If you have a vector that identifies strata designations for the sequences, that can be supplied as well:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># extract and name the stratification scheme</span>
 strata &lt;-<span class="st"> </span>dolph.strata$fine
 <span class="kw">names</span>(strata) &lt;-<span class="st"> </span>dolph.strata$ids
 
 <span class="co"># create the gtypes object</span>
 dloop.fine &lt;-<span class="st"> </span><span class="kw">sequence2gtypes</span>(dolph.seqs, strata, <span class="dt">seq.names =</span> <span class="st">&quot;dLoop&quot;</span>,
-  <span class="dt">description =</span> <span class="st">&quot;dLoop: fine-scale stratification&quot;</span>)</code></pre>
+  <span class="dt">description =</span> <span class="st">&quot;dLoop: fine-scale stratification&quot;</span>)
+dloop.fine</code></pre>
+<pre><code>## 
+## &lt;&lt;&lt; dLoop: fine-scale stratification &gt;&gt;&gt;
+## 
+## Contents: 126 samples, 1 locus, 3 strata
+## 
+## Strata summary:
+##                num.samples num.missing num.alleles pct.unique.alleles
+## Coastal                 68           0          68                  1
+## Offshore.North          40           0          40                  1
+## Offshore.South          18           0          18                  1
+##                heterozygosity
+## Coastal                     1
+## Offshore.North              1
+## Offshore.South              1
+## 
+## Sequence summary:
+##       num.seqs min.length mean.length max.length         a         c
+## dLoop      126        402         402        402 0.3011288 0.2293531
+##               g         t
+## dLoop 0.1289702 0.3405479</code></pre>
+<p>Note that stratification is generally provided for individuals, thus if you want to stratify the resulting <em>gtypes</em> object from <em>sequence2gtypes</em>, one sequence for each individual should be provided, rather than just a set of unique haplotypes.</p>
 </div>
 <div id="genind2gtypes---convert-genind-object" class="section level3">
 <h3><em>genind2gtypes</em> - Convert genind object</h3>
@@ -156,7 +223,7 @@ obj</code></pre>
 gi.g &lt;-<span class="st"> </span><span class="kw">genind2gtypes</span>(obj)
 gi.g</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-02-10 23:15:55 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2016-03-07 14:16:24 &gt;&gt;&gt;
 ## 
 ## Contents: 4 samples, 3 loci, 1 stratum
 ## 
@@ -171,10 +238,10 @@ gi.g</code></pre>
 ## locusA             4           3          0.3333333
 ## locusB             3           4          0.7500000
 ## locusC             4           2          0.5000000
-##        observed.heterozygosity hwe.p.value
-## locusA               0.5000000       0.437
-## locusB               0.6666667       0.607
-## locusC               0.2500000       1.000</code></pre>
+##        observed.heterozygosity
+## locusA               0.5000000
+## locusB               0.6666667
+## locusC               0.2500000</code></pre>
 </div>
 </div>
 <div id="accessor-functions" class="section level2">
@@ -203,59 +270,50 @@ gi.g</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>msats.fine[<span class="kw">sample</span>(<span class="kw">nInd</span>(msats.fine), <span class="dv">10</span>), , ]
 sub.msats</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-02-10 23:15:55 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2016-03-07 14:16:23 &gt;&gt;&gt;
 ## 
 ## Contents: 10 samples, 5 loci, 2 strata
 ## 
 ## Strata summary:
 ##          num.samples num.missing num.alleles pct.unique.alleles
-## Coastal            6         0.4         3.4          0.1800000
-## Offshore           4         0.0         4.8          0.6133333
+## Coastal            6           0         3.4               0.22
+## Offshore           4           0         4.6               0.59
 ##          heterozygosity
-## Coastal       0.7133333
-## Offshore      0.7000000
+## Coastal       0.6666667
+## Offshore      0.9000000
 ## 
 ## Locus summary:
 ##       num.genotyped num.alleles pct.unique.alleles observed.heterozygosity
-## D11t              9           5          0.6000000               0.5555556
-## EV37              9           6          0.3333333               0.6666667
-## EV94             10           8          0.2500000               0.9000000
-## Ttr11            10           6          0.3333333               0.8000000
-## Ttr34            10           5          0.4000000               0.6000000
-##       hwe.p.value
-## D11t        0.245
-## EV37        0.026
-## EV94        0.759
-## Ttr11       0.406
-## Ttr34       0.227</code></pre>
+## D11t             10           5          0.4000000                     0.8
+## EV37             10           9          0.5555556                     0.7
+## EV94             10           6          0.5000000                     0.5
+## Ttr11            10           5          0.2000000                     0.8
+## Ttr34            10           7          0.1428571                     1.0</code></pre>
 <p>…or to return specific loci:</p>
 <pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>sub.msats[, <span class="kw">c</span>(<span class="st">&quot;D11t&quot;</span>, <span class="st">&quot;EV37&quot;</span>, <span class="st">&quot;TV7&quot;</span>), ]
 sub.msats</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-02-10 23:15:55 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2016-03-07 14:16:23 &gt;&gt;&gt;
 ## 
 ## Contents: 10 samples, 2 loci, 2 strata
 ## 
 ## Strata summary:
 ##          num.samples num.missing num.alleles pct.unique.alleles
-## Coastal            6           1         3.0               0.25
-## Offshore           4           0         4.5               0.65
+## Coastal            6           0         3.0          0.2500000
+## Offshore           4           0         5.5          0.7333333
 ##          heterozygosity
-## Coastal             0.7
-## Offshore            0.5
+## Coastal       0.5833333
+## Offshore      1.0000000
 ## 
 ## Locus summary:
 ##      num.genotyped num.alleles pct.unique.alleles observed.heterozygosity
-## D11t             9           5          0.6000000               0.5555556
-## EV37             9           6          0.3333333               0.6666667
-##      hwe.p.value
-## D11t       0.247
-## EV37       0.031</code></pre>
+## D11t            10           5          0.4000000                     0.8
+## EV37            10           9          0.5555556                     0.7</code></pre>
 <p>…or some loci in a specific stratum:</p>
 <pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>msats.fine[, <span class="kw">c</span>(<span class="st">&quot;Ttr11&quot;</span>, <span class="st">&quot;D11t&quot;</span>), <span class="st">&quot;Coastal&quot;</span>]
 sub.msats</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-02-10 23:15:55 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2016-03-07 14:16:23 &gt;&gt;&gt;
 ## 
 ## Contents: 68 samples, 2 loci, 1 stratum
 ## 
@@ -268,10 +326,7 @@ sub.msats</code></pre>
 ## Locus summary:
 ##       num.genotyped num.alleles pct.unique.alleles observed.heterozygosity
 ## Ttr11            68           4                  0               0.6323529
-## D11t             67           3                  0               0.5223881
-##       hwe.p.value
-## Ttr11       0.883
-## D11t        0.491</code></pre>
+## D11t             67           3                  0               0.5223881</code></pre>
 </div>
 <div id="summary" class="section level2">
 <h2>Summary</h2>
@@ -313,11 +368,11 @@ sub.msats</code></pre>
 ##   .. ..$ : chr [1:2] &quot;Coastal&quot; &quot;Offshore&quot;
 ##   .. ..$ : chr [1:5] &quot;num.samples&quot; &quot;num.missing&quot; &quot;num.alleles&quot; &quot;pct.unique.alleles&quot; ...
 ##  $ unstratified: int 0
-##  $ locus.smry  : num [1:5, 1:9] 125 119 125 125 126 ...
+##  $ locus.smry  : num [1:5, 1:7] 125 119 125 125 126 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : chr [1:5] &quot;D11t&quot; &quot;EV37&quot; &quot;EV94&quot; &quot;Ttr11&quot; ...
-##   .. ..$ : chr [1:9] &quot;num.genotyped&quot; &quot;pct.genotyped&quot; &quot;num.alleles&quot; &quot;allelic.richness&quot; ...
-##  - attr(*, &quot;description&quot;)= chr &quot;gtypes created on 2016-02-10 23:15:55&quot;
+##   .. ..$ : chr [1:7] &quot;num.genotyped&quot; &quot;pct.genotyped&quot; &quot;num.alleles&quot; &quot;allelic.richness&quot; ...
+##  - attr(*, &quot;description&quot;)= chr &quot;gtypes created on 2016-03-07 14:16:23&quot;
 ##  - attr(*, &quot;class&quot;)= chr [1:2] &quot;gtypeSummary&quot; &quot;list&quot;</code></pre>
 <p>For just the by-locus summary statistics:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarizeLoci</span>(msats.fine)</code></pre>
@@ -332,13 +387,7 @@ sub.msats</code></pre>
 ## EV37          0.13636364               0.8270751               0.6974790
 ## EV94          0.06666667               0.8304900               0.7760000
 ## Ttr11         0.22222222               0.7953414               0.7040000
-## Ttr34         0.20000000               0.8144248               0.6984127
-##           theta hwe.p.value
-## D11t  0.5563279       0.001
-## EV37  0.6164407       0.000
-## EV94  0.6190022       0.039
-## Ttr11 0.5926503       0.000
-## Ttr34 0.6069539       0.000</code></pre>
+## Ttr34         0.20000000               0.8144248               0.6984127</code></pre>
 </div>
 <div id="stratifying-samples" class="section level2">
 <h2>Stratifying samples</h2>
@@ -347,8 +396,8 @@ sub.msats</code></pre>
 <span class="kw">strata</span>(msats) &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;Pop1&quot;</span>, <span class="st">&quot;Pop2&quot;</span>), <span class="kw">nInd</span>(msats), <span class="dt">rep =</span> <span class="ot">TRUE</span>)
 <span class="kw">summary</span>(msats)$strata.smry</code></pre>
 <pre><code>##      num.samples num.missing num.alleles pct.unique.alleles heterozygosity
-## Pop1          67         1.4        11.6          0.2095951      0.7006288
-## Pop2          59         0.6        12.6          0.2145238      0.7329345</code></pre>
+## Pop1          61         0.8        11.8          0.1549624      0.7137064
+## Pop2          65         1.2        11.6          0.2003846      0.7185601</code></pre>
 <p>or, if there is a stratification scheme data.frame in the @schemes slot, you can use the <em>stratify</em> function to choose a stratification scheme:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># choose &quot;broad&quot; stratification scheme</span>
 msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <span class="st">&quot;broad&quot;</span>)
@@ -364,7 +413,7 @@ msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <spa
 <p>NOTE: Filling or changing the @schemes slot does not affect the current stratification of the samples. You must then select a new stratification scheme or fill the @strata slot as above.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stratify</span>(dloop, <span class="st">&quot;fine&quot;</span>)</code></pre>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-02-10 23:15:55 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2016-03-07 14:16:23 &gt;&gt;&gt;
 ## 
 ## Contents: 126 samples, 1 locus, 3 strata
 ## 
@@ -390,11 +439,11 @@ x[<span class="kw">sample</span>(<span class="kw">indNames</span>(msats), <span 
 <span class="kw">strata</span>(msats) &lt;-<span class="st"> </span>x
 <span class="kw">summary</span>(msats)$strata.smry</code></pre>
 <pre><code>##          num.samples num.missing num.alleles pct.unique.alleles
-## Coastal           63         1.2         4.8         0.08571429
-## Offshore          53         0.8        13.2         0.15717172
+## Coastal           62         0.8         4.6         0.06666667
+## Offshore          54         0.8        13.6         0.19747475
 ##          heterozygosity
-## Coastal       0.6337641
-## Offshore      0.8004738</code></pre>
+## Coastal       0.6372636
+## Offshore      0.8191851</code></pre>
 <p>You can also randomly permute the current stratification scheme using the <em>permuteStrata</em> function like this:</p>
 <pre class="sourceCode r"><code class="sourceCode r">msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <span class="st">&quot;fine&quot;</span>)
 
@@ -412,13 +461,13 @@ x[<span class="kw">sample</span>(<span class="kw">indNames</span>(msats), <span 
 ran.msats &lt;-<span class="st"> </span><span class="kw">permuteStrata</span>(msats)
 <span class="kw">summary</span>(ran.msats)$strata.smry</code></pre>
 <pre><code>##                num.samples num.missing num.alleles pct.unique.alleles
-## Coastal                 68         1.8        11.8          0.1652137
-## Offshore.North          40         0.2        10.6          0.2042247
-## Offshore.South          18         0.0        10.0          0.3283333
+## Coastal                 68         1.0        12.4          0.1843700
+## Offshore.North          40         0.8        10.6          0.1644444
+## Offshore.South          18         0.2         7.4          0.3415584
 ##                heterozygosity
-## Coastal             0.6956003
-## Offshore.North      0.7079487
-## Offshore.South      0.8111111</code></pre>
+## Coastal             0.6921767
+## Offshore.North      0.7811573
+## Offshore.South      0.6627451</code></pre>
 <p>NOTE: Only samples assigned to strata are permuted with <em>permuteStrata</em>. Those not assigned (NAs) remain unassigned.</p>
 </div>
 <div id="exporting" class="section level2">
