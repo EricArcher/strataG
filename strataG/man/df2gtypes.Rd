@@ -58,11 +58,11 @@ ms.g <- df2gtypes(dolph.msats, ploidy = 2, strata.col = NULL, loc.col = 2)
 ms.g
 
 #' #--- create a haploid sequence (mtDNA) gtypes object
-data(dolph.seqs)
+data(dolph.haps)
 data(dolph.msats)
 
 seq.df <- dolph.strata[ c("id", "broad", "dLoop")]
-dl.g <- df2gtypes(seq.df, ploidy = 1, sequences = dolph.seqs)
+dl.g <- df2gtypes(seq.df, ploidy = 1, sequences = dolph.haps)
 dl.g
 
 }
