@@ -38,6 +38,10 @@ dl.g <- df2gtypes(seq.df, ploidy = 1, sequences = dolph.seqs)
 dl.g
 
 ## ------------------------------------------------------------------------
+dl.haps <- labelHaplotypes(dl.g)
+dl.haps$gtype
+
+## ------------------------------------------------------------------------
 data(dolph.haps)
 
 haps.g <- sequence2gtypes(dolph.haps)

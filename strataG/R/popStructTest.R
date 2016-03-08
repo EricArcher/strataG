@@ -63,7 +63,7 @@
 #' @importFrom utils write.csv
 #' @export
 #' 
-popStructTest <- function(g, nrep = 100, stats = "all", 
+popStructTest <- function(g, nrep = 1000, stats = "all", 
                           type = c("both", "overall", "pairwise"),
                           keep.null = FALSE, quietly = FALSE, 
                           write.output = FALSE, ...) {
@@ -114,7 +114,7 @@ popStructTest <- function(g, nrep = 100, stats = "all",
 #' @importFrom swfscMisc pVal
 #' @export
 #' 
-overallTest <- function(g, nrep = 100, stats = "all", 
+overallTest <- function(g, nrep = 1000, stats = "all", 
                         keep.null = FALSE, quietly = FALSE, ...) {  
   
   stat.list <- statList(stats)
@@ -226,7 +226,7 @@ overallTest <- function(g, nrep = 100, stats = "all",
 #' @rdname popStructTest
 #' @export
 #' 
-pairwiseTest <- function(g, nrep = 100, stats = "all", 
+pairwiseTest <- function(g, nrep = 1000, stats = "all", 
                          keep.null = FALSE, quietly = FALSE, ...) { 
   
   if(nStrata(g) == 1) stop("'g' must have more than one stratum defined.")

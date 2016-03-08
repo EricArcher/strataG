@@ -130,6 +130,9 @@ setMethod("initialize", "gtypes",
   rownames(loci) <- paste(row.ids, row.nums, sep = ".")
   rm(gen.data, locus.cols, row.ids, row.nums)
   
+  # create valid locus names
+  colnames(loci) <- make.names(colnames(loci))
+  
   # check sequences
   if(!is.null(sequences)) {
     sequences <- as.multidna(sequences)

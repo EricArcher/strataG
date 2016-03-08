@@ -2,6 +2,7 @@
 #' @export
 #' 
 statGst <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...) {
+  if(is.null(strata.mat)) g <- g[, , strataNames(g)]
   if(ploidy(g) < 2 | nStrata(g) == 1) {
     return(list(
       stat.name = "Gst", 
@@ -35,6 +36,7 @@ statGst <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...) {
 #' 
 statGstPrime <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE,
                          prime.type = c("nei", "hedrick"), ...) { 
+  if(is.null(strata.mat)) g <- g[, , strataNames(g)]
   if(ploidy(g) < 2 | nStrata(g) == 1) {
     return(list(
       stat.name = "G'st", 
@@ -74,6 +76,7 @@ statGstPrime <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE,
 #' @export
 #' 
 statGstDblPrime <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...) {
+  if(is.null(strata.mat)) g <- g[, , strataNames(g)]
   if(ploidy(g) < 2 | nStrata(g) == 1) {
     return(list(
       stat.name = "G''st", 

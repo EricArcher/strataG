@@ -15,6 +15,7 @@ double harmonicMean_C(NumericVector x) {
     double varX = var(x);
     result = 1 / (invMeanX + varX * pow(invMeanX, 3));
   }
+  if(std::isnan(result)) result = NA_REAL;
   return result;
 }
 

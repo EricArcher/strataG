@@ -35,7 +35,13 @@ NumericVector statJostD_C(IntegerMatrix loci, IntegerMatrix strataMat, int ploid
     for(int i = 0; i < terms.size(); i++) {
       if(terms[i] < 0) terms[i] = 0;
     }
-    double est(harmonicMean_C(terms));
+    
+    double est;
+    if(terms.size() > 1) {
+      est = harmonicMean_C(terms);
+    } else {
+      est = terms[0];
+    }
     if(std::isnan(est)) est = NA_REAL;
     estVec[idx] = est;
   }

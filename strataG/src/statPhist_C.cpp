@@ -88,13 +88,17 @@ NumericVector statPhist_C(IntegerMatrix hapMat, IntegerMatrix strataMat, List ha
   NumericVector geneVec(hapMat.ncol());
   for(int idx = 0; idx < estVec.size(); idx++) {
     IntegerVector strata(strataMat(_, idx));
-    LogicalVector strataGood = !is_na(strata);
+    //LogicalVector strataGood = !is_na(strata);
     for(int gene = 0; gene < hapMat.ncol(); gene++) {
-      LogicalVector toUse = hapsGood(_, gene) & strataGood;
+      LogicalVector toUse = hapsGood(_, gene); //& strataGood;
       IntegerVector haps = hapMat(_, gene);
       geneVec[gene] = phistCalc(haps[toUse], strata[toUse], hapDist[gene]);
     }
-    estVec[idx] = harmonicMean_C(geneVec);
+    if(geneVec.size() > 1) {
+      estVec[idx] = harmonicMean_C(geneVec);
+    } else {
+      estVec[idx] = geneVec[0];
+    }
   }
   return estVec;
 }

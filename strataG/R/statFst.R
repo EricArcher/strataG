@@ -2,6 +2,7 @@
 #' @export
 #' 
 statFst <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...) {   
+  if(is.null(strata.mat)) g <- g[, , strataNames(g)]
   if(ploidy(g) == 1 | nStrata(g) == 1) {
     g@sequences <- NULL
     result <- statPhist(g, nrep = nrep, strata.mat = strata.mat, keep.null = keep.null)
@@ -114,6 +115,7 @@ statFst <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...) {
 #' @export
 #' 
 statFstPrime <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...) {  
+  if(is.null(strata.mat)) g <- g[, , strataNames(g)]
   if(ploidy(g) == 1 | nStrata(g) == 1) {
     return(list(
       stat.name = "F'st", 

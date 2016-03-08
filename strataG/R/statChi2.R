@@ -2,6 +2,7 @@
 #' @export
 #' 
 statChi2 <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...) {
+  if(is.null(strata.mat)) g <- g[, , strataNames(g)]
   strata.mat <- .checkStrataMat(strata.mat, g, nrep)
   
   result <- statChi2_C(

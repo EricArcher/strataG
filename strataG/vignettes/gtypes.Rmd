@@ -71,6 +71,12 @@ dl.g <- df2gtypes(seq.df, ploidy = 1, sequences = dolph.seqs)
 dl.g
 ```
 
+Note that since each sequence in _dolph.seqs_ is for a given individual, the _pct.unique.alleles_ and _heterozygosity_ values are for every stratum 1 and _num.samples_ equals _num.alleles_. In order to convert the sequences to unique haplotypes, use the _labelHaplotypes_ function:
+
+```{r}
+dl.haps <- labelHaplotypes(dl.g)
+dl.haps$gtype
+```
 
 ### _sequence2gtypes_ - Convert DNA sequences
 

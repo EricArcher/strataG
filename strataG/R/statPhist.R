@@ -3,6 +3,7 @@
 #' 
 statPhist <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE,
                       model = "K80", gamma = FALSE, pairwise.deletion = TRUE, ...)  {
+  if(is.null(strata.mat)) g <- g[, , strataNames(g)]
   if(ploidy(g) != 1 | nStrata(g) == 1) {
     return(list(
       stat.name = "PHIst", 
@@ -24,10 +25,13 @@ statPhist <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE,
     })
   } else {
     lapply(locNames(g), function(gene) {
-      dist.dna(
-        getSequences(sequences(g, gene), simplify = TRUE), model = model, 
-        gamma = gamma, pairwise.deletion = pairwise.deletion, as.matrix = TRUE
+      haps <- levels(loci(g)[, gene])
+      dna <- as.list(getSequences(sequences(g, gene), simplify = TRUE))[haps]
+      hd <- dist.dna(
+        dna, model = model, gamma = gamma, 
+        pairwise.deletion = pairwise.deletion, as.matrix = TRUE
       )
+      hd[haps, haps]
     })
   }
   names(hap.dist) <- locNames(g)

@@ -3,6 +3,7 @@
 #' @export
 #' 
 statJostD <- function(g, nrep = NULL, strata.mat = NULL, keep.null = FALSE, ...) {
+  if(is.null(strata.mat)) g <- g[, , strataNames(g)]
   if(ploidy(g) < 2 | nStrata(g) == 1) {
     return(list(
       stat.name = "D", 

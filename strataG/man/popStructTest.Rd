@@ -7,14 +7,14 @@
 \alias{statList}
 \title{Population Differentiation Tests}
 \usage{
-popStructTest(g, nrep = 100, stats = "all", type = c("both", "overall",
+popStructTest(g, nrep = 1000, stats = "all", type = c("both", "overall",
   "pairwise"), keep.null = FALSE, quietly = FALSE, write.output = FALSE,
   ...)
 
-overallTest(g, nrep = 100, stats = "all", keep.null = FALSE,
+overallTest(g, nrep = 1000, stats = "all", keep.null = FALSE,
   quietly = FALSE, ...)
 
-pairwiseTest(g, nrep = 100, stats = "all", keep.null = FALSE,
+pairwiseTest(g, nrep = 1000, stats = "all", keep.null = FALSE,
   quietly = FALSE, ...)
 
 statList(stats = "all")
