@@ -153,9 +153,13 @@ overallTest <- function(g, nrep = 1000, stats = "all",
   
   # run each statistic and store in list
   strata.mat <- .permStrata(g, nrep) 
-  result <- lapply(stat.list, function(stat.func) {
-    stat.func(g, strata.mat = strata.mat, keep.null = keep.null, ...)
-  })
+  stat.func <- function(f, strata.mat, keep.null, ...) {
+    f(g, strata.mat = strata.mat, keep.null = keep.null, ...)
+  }
+  cl <- .setupClusters(length(stat.list))
+  result <- tryCatch({
+    parLapply(cl, stat.list, stat.func, strata.mat = strata.mat, keep.null = keep.null, ...)
+  }, finally = stopCluster(cl))
   
   # create matrix of estimates and p-values
   result.mat <- t(sapply(result, function(x) x$result))

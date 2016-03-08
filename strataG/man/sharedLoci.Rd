@@ -7,7 +7,7 @@
 \alias{sharedLoci}
 \title{Shared Loci}
 \usage{
-propSharedLoci(g, type = c("strata", "ids"), num.cores = 1)
+propSharedLoci(g, type = c("strata", "ids"), num.cores = NULL)
 
 sharedAlleles(g, smry = c("num", "which"))
 
@@ -19,7 +19,8 @@ propSharedIds(ids, g)
 \item{type}{a character vector determining type of pairwise comparsion. Can 
 be "strata" for strata or "ids" for individuals.}
 
-\item{num.cores}{number of CPU cores to use.}
+\item{num.cores}{number of CPU cores to use. Defaults to the number reported 
+by \code{\link[parallel]{detectCores}} - 1.}
 
 \item{smry}{a character vector determining type of summary for 
 \code{sharedAlleles}. "which" returns the names of the alleles shared. 

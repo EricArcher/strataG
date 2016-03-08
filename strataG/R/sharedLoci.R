@@ -10,7 +10,8 @@
 #'   \code{sharedAlleles}. "which" returns the names of the alleles shared. 
 #'   "num" returns the number of alleles shared.
 #' @param ids character vector of two sample ids to compare.
-#' @param num.cores number of CPU cores to use.
+#' @param num.cores number of CPU cores to use. Defaults to the number reported 
+#'  by \code{\link[parallel]{detectCores}} - 1.
 #' 
 #' @return data.frame summary of pairwise shared loci.
 #' 
@@ -29,7 +30,7 @@
 #' @importFrom parallel parLapply stopCluster
 #' @export
 #' 
-propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = 1) {
+propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = NULL) {
   type <- match.arg(type)
   type.pairs <- if(type == "strata") {
     as.matrix(.strataPairs(g))
@@ -38,8 +39,8 @@ propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = 1) {
     if(length(id.vec) < 2) stop("'g' must have at least two individuals")
     t(combn(id.vec, 2))
   }
+  
   cl <- .setupClusters(num.cores)
-
   shared <- tryCatch({
     prop.func <- if(type == "strata") {
       function(f, type.pair) {

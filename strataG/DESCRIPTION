@@ -33,7 +33,7 @@ Collate:
     gtypes.accessors.R
     gtypes.class.R
     initialize.gtypes.R
-    setupClusters.R
+    internals.R
     alleleFreqFormat.R
     alleleFreqs.R
     alleleSplit.R
@@ -99,7 +99,6 @@ Collate:
     statGst.R
     statJostD.R
     statPhist.R
-    strataPairs.R
     strataSplit.R
     stratify.R
     structure.R
