@@ -50,13 +50,13 @@
 #' msats.g <- stratify(msats.g, "fine")
 #' 
 #' # Conduct an overall Chi-squared test
-#' ovl <- overallTest(msats.g, nrep = 5, stats = "chi2", quietly = FALSE)
+#' ovl <- overallTest(msats.g, stats = "chi2")
 #'
 #' # Conduct a pairwise test for Gst
-#' pws <- pairwiseTest(msats.g, nrep = 5, stats = list(statGst), quietly = FALSE)
+#' pws <- pairwiseTest(msats.g, stats = list(statGst))
 #'
 #' # Conduct both overall and pairwise tests for Fst and F'st
-#' full <- popStructTest(msats.g, nrep = 5, stats = c("fst", "fst.prime"))
+#' full <- popStructTest(msats.g, stats = c("fst", "fst.prime"))
 #' print(full$overall)
 #' print(full$pairwise)
 #' 
@@ -156,10 +156,14 @@ overallTest <- function(g, nrep = 1000, stats = "all",
   stat.func <- function(f, strata.mat, keep.null, ...) {
     f(g, strata.mat = strata.mat, keep.null = keep.null, ...)
   }
-  cl <- .setupClusters(length(stat.list))
-  result <- tryCatch({
-    parLapply(cl, stat.list, stat.func, strata.mat = strata.mat, keep.null = keep.null, ...)
-  }, finally = stopCluster(cl))
+  result <- if(length(stat.list) == 1) {
+    lapply(stat.list, stat.func, strata.mat = strata.mat, keep.null = keep.null, ...)
+  } else {
+    cl <- .setupClusters(length(stat.list))
+    tryCatch({
+      parLapply(cl, stat.list, stat.func, strata.mat = strata.mat, keep.null = keep.null, ...)
+    }, finally = stopCluster(cl))
+  }
   
   # create matrix of estimates and p-values
   result.mat <- t(sapply(result, function(x) x$result))

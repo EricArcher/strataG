@@ -21,7 +21,7 @@
 #' data(msats.g)
 #' msats.g <- stratify(msats.g, "fine")
 #' 
-#' propSharedLoci(msats.g)
+#' propSharedLoci(msats.g, num.cores = 2)
 #' 
 #' sharedAlleles(msats.g)
 #' 
@@ -54,7 +54,7 @@ propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = NULL) {
     if(type == "strata") {  
       freqs <- alleleFreqs(g, TRUE)
       sharedStrataList <- lapply(1:nrow(type.pairs), function(i) {
-        prop.shared.loci <- if(num.cores > 1) {
+        prop.shared.loci <- if(!is.null(cl)) {
           parLapply(cl, freqs, prop.func, type.pair = type.pairs[i, ])
         } else {
           lapply(freqs, prop.func, type.pair = type.pairs[i, ])
@@ -65,14 +65,14 @@ propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = NULL) {
       })
       do.call(rbind, sharedStrataList)
     } else {
-      sharedIDlist <- if(num.cores > 1) {
+      sharedIDlist <- if(!is.null(cl)) {
         parLapply(cl, 1:nrow(type.pairs), prop.func, type.pairs = type.pairs, g = g)
       } else {
         lapply(1:nrow(type.pairs), prop.func, type.pairs = type.pairs, g = g)
       }
       do.call(rbind, sharedIDlist)
     }
-  }, finally = if(num.cores > 1) stopCluster(cl))
+  }, finally = if(!is.null(cl)) stopCluster(cl))
   
   shared.summary <- do.call(rbind, lapply(1:nrow(shared), function(i) {  
     num.same <- sum(na.omit(shared[i, ]) == 1) 

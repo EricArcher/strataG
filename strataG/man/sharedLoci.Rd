@@ -39,7 +39,7 @@ Calculate proportion of alleles and number of loci shared
 data(msats.g)
 msats.g <- stratify(msats.g, "fine")
 
-propSharedLoci(msats.g)
+propSharedLoci(msats.g, num.cores = 2)
 
 sharedAlleles(msats.g)
 

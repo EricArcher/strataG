@@ -22,32 +22,21 @@ msats <- msats[, locNames(msats)[1:4], ]
 
 There are several ways that population structure analyses can be conducted. For each population structure metric, there is a function starting with "stat" (e.g., _statFst_, _statChi2_, _statGst_). A full list can be found in _?popStructStat_.
 
-Each of these functions takes a gtypes object and produces a single named estimate for the requested test statistic. As an example:
+Each of these functions takes a gtypes object and produces a list which contains the name of the statistic, the value of the estimate, the permutation p-value (based on 1000 replicates by default), and if `keep.null = TRUE`, the permutation null distribution:
 ```{r}
 statFst(msats)
-statGst(msats)
+
+statGst(msats, nrep = 10, keep.null = TRUE)
 ```
 
-By default, stratification is taken from the @strata slot of the object. Alternative stratification can be provided as a vector when the function is called:
+Population structure tests can be conducted in an "overall" manner which estimates the degree of differentiation due to the specified stratification scheme, or in a "pairwise" manner, which tests differentiation between all pairs of strata. The overall test is run via _overallTest_. By default, all statistics are run and NAs are returned if they are not appropriate to the type of data (e.g., PHIst for diploid data). Tests for specified statistics can be conducted by listing them in the `stats` argument:
 ```{r}
-ran.strata <- sample(1:3, size = nInd(msats), replace = TRUE)
-statFst(msats, ran.strata)
-statGst(msats, ran.strata)
+ovl <- overallTest(msats, stats = c("Fst", "Chi2"), nrep = 1000)
 ```
 
-Permutation tests can be conducted in an "overall" manner which addreses the question of whether or not there is significant stratification in all samples given the specified stratification scheme, or in a "pairwise" manner, which tests differentiation between all pairs of strata. The overall test can be run via _overallTest_, like this:
+Pairwise tests are conducted with _pairwiseTest_ in a similar fashion. You can provide either the statistic names or the names of the functions.
 ```{r}
-ovl <- overallTest(msats, nrep = 100)
-```
-
-This conducts tests for all available statistics. Tests for specified statistics can be conducted by listing them in the 'stat.list' argument:
-```{r}
-ovl <- overallTest(msats, stats = c(statFst, statChi2), nrep = 100)
-```
-
-Pairwise tests are conducted with _pairwiseTest_ in a similar fashion:
-```{r}
-pws <- pairwiseTest(msats, stats = c(statFstPrime, statGst), nrep = 100)
+pws <- pairwiseTest(msats, stats = c(statFstPrime, statGst), nrep = 1000)
 ```
 
 The result of a pairwise test contains both a data.frame formatted for each pairwise comparison and pairwise matrices for each statistic with statistic estimates in the lower left, and p-values in the upper right.
@@ -57,6 +46,6 @@ pws
 
 Both overall and pairwise tests can be conducted at once with _popStructTest_: 
 ```{r}
-popStruct <- popStructTest(msats, stats = c(statFst, statFstPrime), nrep = 100, quietly = TRUE)
+popStruct <- popStructTest(msats, stats = c(statFst, statFstPrime), nrep = 1000, quietly = TRUE)
 popStruct
 ```
