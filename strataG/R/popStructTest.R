@@ -119,14 +119,13 @@ overallTest <- function(g, nrep = 1000, stats = "all",
   
   stat.list <- statList(stats)
   if(length(stat.list) == 0)
-  if(is.null(nrep)) nrep <- 0
-  if(nrep < 1) keep.null <- FALSE
-  
+    
   # check replicates
+  if(is.null(nrep)) nrep <- 0
   if(!is.numeric(nrep) & length(nrep) != 1) {
     stop("'nrep' must be a single-element numeric vector")
   }
-  if(nrep < 1) keep.null = FALSE
+  if(nrep < 1) keep.null <- FALSE
   
   # remove unstratified samples
   if(any(is.na(strata(g)))) g <- g[, , strataNames(g)]
