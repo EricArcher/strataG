@@ -15,6 +15,10 @@
 #' @param type character determining type of test to conduct. Can be "overall", 
 #'   "pairwise", or "both". If "pairwise" or "both" are chosen and there are 
 #'   only two strata, then only an overall test will be conducted.
+#' @param max.cores The maximum number of cores to use to distribute separate 
+#'   statistics over. Default (NULL) sets value to what is reported by 
+#'   \code{\link[parallel]{detectCores} - 1}. Any value greater than this will 
+#'   be set to this value.
 #' @param keep.null logical. Keep the null distribution from the 
 #'   permutation test?
 #' @param quietly logical. Print progress and results?
@@ -43,6 +47,11 @@
 #'    }}
 #' }
 #' 
+#' @note On multi-core systems, runs of separate statistics are automatically 
+#'   distributed over as many cores as available (minus one). This can be 
+#'   controlled by the \code{max.cores} argument if less core usage is 
+#'   desired. 
+#' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @examples
@@ -66,7 +75,7 @@
 popStructTest <- function(g, nrep = 1000, stats = "all", 
                           type = c("both", "overall", "pairwise"),
                           keep.null = FALSE, quietly = FALSE, 
-                          write.output = FALSE, ...) {
+                          max.cores = NULL, write.output = FALSE, ...) {
   # check arguments
   type <- match.arg(type)
     
@@ -75,7 +84,7 @@ popStructTest <- function(g, nrep = 1000, stats = "all",
   if(type %in% c("both", "overall")) {
     overall <- overallTest(
       g = g, nrep = nrep, stats = stats, keep.null = keep.null, 
-      quietly = quietly, ...
+      quietly = quietly, max.cores = max.cores, ...
     )    
   }
   
@@ -84,7 +93,7 @@ popStructTest <- function(g, nrep = 1000, stats = "all",
   if(type %in% c("both", "pairwise") & nStrata(g) > 2) {
     pairwise <- pairwiseTest(
       g = g, nrep = nrep, stats = stats, keep.null = keep.null, 
-      quietly = quietly, ...
+      quietly = quietly, max.cores = max.cores, ...
     )
   }
 
@@ -110,15 +119,17 @@ popStructTest <- function(g, nrep = 1000, stats = "all",
 
 
 #' @rdname popStructTest
-#' @importFrom parallel parLapply stopCluster
+#' @importFrom parallel parLapply stopCluster detectCores
 #' @importFrom swfscMisc pVal
 #' @export
 #' 
-overallTest <- function(g, nrep = 1000, stats = "all", 
-                        keep.null = FALSE, quietly = FALSE, ...) {  
+overallTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE, 
+                        quietly = FALSE, max.cores = NULL, ...) {  
   
   stat.list <- statList(stats)
-  if(length(stat.list) == 0)
+  if(length(stat.list) == 0) stop("no stats specified. NULL returned.")
+  if(is.null(max.cores)) max.cores <- detectCores() - 1
+  if(max.cores < 1) max.cores <- 1
     
   # check replicates
   if(is.null(nrep)) nrep <- 0
@@ -158,7 +169,7 @@ overallTest <- function(g, nrep = 1000, stats = "all",
   result <- if(length(stat.list) == 1) {
     lapply(stat.list, stat.func, strata.mat = strata.mat, keep.null = keep.null, ...)
   } else {
-    cl <- .setupClusters(length(stat.list))
+    cl <- .setupClusters(min(length(stat.list), max.cores))
     tryCatch({
       parLapply(cl, stat.list, stat.func, strata.mat = strata.mat, keep.null = keep.null, ...)
     }, finally = stopCluster(cl))
@@ -233,8 +244,8 @@ overallTest <- function(g, nrep = 1000, stats = "all",
 #' @rdname popStructTest
 #' @export
 #' 
-pairwiseTest <- function(g, nrep = 1000, stats = "all", 
-                         keep.null = FALSE, quietly = FALSE, ...) { 
+pairwiseTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE, 
+                         quietly = FALSE, max.cores = NULL, ...) { 
   
   if(nStrata(g) == 1) stop("'g' must have more than one stratum defined.")
   
@@ -255,8 +266,9 @@ pairwiseTest <- function(g, nrep = 1000, stats = "all",
       cat("  ", format(Sys.time()), ":", paste(pair, collapse = " v. "), "\n")
     }
     
-    pair.list[[i]] <- overallTest(g = g[ , , pair], nrep = nrep,
-      stats = stats, keep.null = keep.null, quietly = TRUE, ...
+    pair.list[[i]] <- overallTest(
+      g = g[ , , pair], nrep = nrep, stats = stats, keep.null = keep.null, 
+      quietly = TRUE, max.cores = max.cores, ...
     )
   }
   

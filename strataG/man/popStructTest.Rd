@@ -8,14 +8,14 @@
 \title{Population Differentiation Tests}
 \usage{
 popStructTest(g, nrep = 1000, stats = "all", type = c("both", "overall",
-  "pairwise"), keep.null = FALSE, quietly = FALSE, write.output = FALSE,
-  ...)
+  "pairwise"), keep.null = FALSE, quietly = FALSE, max.cores = NULL,
+  write.output = FALSE, ...)
 
 overallTest(g, nrep = 1000, stats = "all", keep.null = FALSE,
-  quietly = FALSE, ...)
+  quietly = FALSE, max.cores = NULL, ...)
 
 pairwiseTest(g, nrep = 1000, stats = "all", keep.null = FALSE,
-  quietly = FALSE, ...)
+  quietly = FALSE, max.cores = NULL, ...)
 
 statList(stats = "all")
 }
@@ -40,6 +40,11 @@ only two strata, then only an overall test will be conducted.}
 permutation test?}
 
 \item{quietly}{logical. Print progress and results?}
+
+\item{max.cores}{The maximum number of cores to use to distribute separate 
+statistics over. Default (NULL) sets value to what is reported by 
+\code{\link[parallel]{detectCores} - 1}. Any value greater than this will 
+be set to this value.}
 
 \item{write.output}{logical. Write a .csv file with results?}
 
@@ -70,6 +75,12 @@ differentiation functions.}
 \description{
 Conduct overall and/or pairwise tests of 
   population differentiation.
+}
+\note{
+On multi-core systems, runs of separate statistics are automatically 
+  distributed over as many cores as available (minus one). This can be 
+  controlled by the \code{max.cores} argument if less core usage is 
+  desired.
 }
 \examples{
 data(msats.g)
