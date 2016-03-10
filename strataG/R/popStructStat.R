@@ -11,7 +11,8 @@
 #'   permutation test?
 #' @param prime.type type of G'st to calculate. Can be "nei" or "hedrick".
 #' @param model,gamma,pairwise.deletion parameters passed to 
-#'   \code{\link[ape]{dist.dna}}.
+#'   \code{\link[ape]{dist.dna}}. Note that defaults for these arguments 
+#'   (in particular \code{model}) are the same as in \code{dist.dna}.
 #' @param ... optional arguments passed to or from other functions.
 #'
 #' @return A list with three elements:

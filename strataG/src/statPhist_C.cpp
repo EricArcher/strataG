@@ -9,12 +9,15 @@ double ssWPCalc(IntegerVector strataFreq, IntegerMatrix strataHapFreq,
   
   // Calculate sums of squares within strata (Eqn 8a)
   NumericVector ssWPvec(strataFreq.size());
+  double d;
   for(int i = 0; i < ssWPvec.size(); i++) {
     IntegerVector hapFreq = strataHapFreq(_, i);
     IntegerMatrix freqProd = intOuterC(hapFreq, hapFreq);
     for(int r = 0; r < freqProd.nrow(); r++) {
       for(int c = 0; c < freqProd.ncol(); c++) {
-        ssWPvec[i] += freqProd(r, c) * hapDist(r, c);
+        d = hapDist(r, c);
+        if(std::isnan(d)) return NA_REAL;
+        ssWPvec[i] += freqProd(r, c) * d;
       }
     }
     ssWPvec[i] /= (2 * strataFreq[i]);
@@ -30,12 +33,15 @@ double ssAPCalc(IntegerVector strataFreq, IntegerMatrix strataHapFreq,
   
   // Calculate sums of squares among strata (Eqn 8b)
   double ssAP(0);
+  double d;
   for(int i = 0; i < strataHapFreq.ncol(); i++) {
     for(int j = 0; j < strataHapFreq.ncol(); j++) {
       IntegerMatrix freqProd = intOuterC(strataHapFreq(_, i), strataHapFreq(_, j));
       for(int r = 0; r < freqProd.nrow(); r++) {
         for(int c = 0; c < freqProd.ncol(); c++) {
-          ssAP += freqProd(r, c) * hapDist(r, c);
+          d = hapDist(r, c);
+          if(std::isnan(d)) return NA_REAL;
+          ssAP += freqProd(r, c) * d;
         }
       }
     }
@@ -88,9 +94,8 @@ NumericVector statPhist_C(IntegerMatrix hapMat, IntegerMatrix strataMat, List ha
   NumericVector geneVec(hapMat.ncol());
   for(int idx = 0; idx < estVec.size(); idx++) {
     IntegerVector strata(strataMat(_, idx));
-    //LogicalVector strataGood = !is_na(strata);
     for(int gene = 0; gene < hapMat.ncol(); gene++) {
-      LogicalVector toUse = hapsGood(_, gene); //& strataGood;
+      LogicalVector toUse = hapsGood(_, gene);
       IntegerVector haps = hapMat(_, gene);
       geneVec[gene] = phistCalc(haps[toUse], strata[toUse], hapDist[gene]);
     }

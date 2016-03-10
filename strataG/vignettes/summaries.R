@@ -1,6 +1,8 @@
-## ------------------------------------------------------------------------
+## ----echo = FALSE, message = FALSE---------------------------------------
 options(digits = 2)
 library(strataG)
+
+## ------------------------------------------------------------------------
 data(msats.g)
 msats <- stratify(msats.g, "broad")
 msats <- msats[, locNames(msats)[1:4], ]

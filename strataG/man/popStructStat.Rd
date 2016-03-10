@@ -53,7 +53,8 @@ permutation test?}
 \item{prime.type}{type of G'st to calculate. Can be "nei" or "hedrick".}
 
 \item{model, gamma, pairwise.deletion}{parameters passed to 
-\code{\link[ape]{dist.dna}}.}
+\code{\link[ape]{dist.dna}}. Note that defaults for these arguments 
+(in particular \code{model}) are the same as in \code{dist.dna}.}
 }
 \value{
 A list with three elements:
