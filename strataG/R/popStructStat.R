@@ -72,6 +72,7 @@ NULL
 .formatResult <- function(result, stat.name, keep.null) {
   if(length(result) == 1) keep.null <- FALSE
   p.val <- if(length(result) == 1) NA else mean(result >= result[1], na.rm = TRUE) 
+  if(is.nan(p.val)) p.val <- NA
   return(list(
     stat.name = stat.name, 
     result = c(estimate = result[1], p.val = p.val),
