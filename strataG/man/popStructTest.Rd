@@ -44,7 +44,8 @@ permutation test?}
 \item{max.cores}{The maximum number of cores to use to distribute separate 
 statistics over. Default (NULL) sets value to what is reported by 
 \code{\link[parallel]{detectCores} - 1}. Any value greater than this will 
-be set to this value.}
+be set to this value. If \code{detectCores} reports \code{NA}, 
+\code{max.cores} will be set to 1.}
 
 \item{write.output}{logical. Write a .csv file with results?}
 

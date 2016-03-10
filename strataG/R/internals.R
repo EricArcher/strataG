@@ -3,6 +3,7 @@
 .setupClusters <- function(num.cores = NULL) {
   # setup clusters
   if(is.null(num.cores)) num.cores <- detectCores() - 1
+  if(is.na(num.cores)) num.cores <- 1
   num.cores <- max(1, num.cores)
   num.cores <- min(num.cores, detectCores() - 1)
   if(num.cores > 1) {

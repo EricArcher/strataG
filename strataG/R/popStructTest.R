@@ -18,7 +18,8 @@
 #' @param max.cores The maximum number of cores to use to distribute separate 
 #'   statistics over. Default (NULL) sets value to what is reported by 
 #'   \code{\link[parallel]{detectCores} - 1}. Any value greater than this will 
-#'   be set to this value.
+#'   be set to this value. If \code{detectCores} reports \code{NA}, 
+#'   \code{max.cores} will be set to 1.
 #' @param keep.null logical. Keep the null distribution from the 
 #'   permutation test?
 #' @param quietly logical. Print progress and results?
@@ -129,8 +130,10 @@ overallTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE,
   stat.list <- statList(stats)
   if(length(stat.list) == 0) stop("no stats specified. NULL returned.")
   if(is.null(max.cores)) max.cores <- detectCores() - 1
+  if(is.na(max.cores)) max.cores <- 1
   if(max.cores < 1) max.cores <- 1
-    
+  num.cores <- min(length(stat.list), max.cores)
+  
   # check replicates
   if(is.null(nrep)) nrep <- 0
   if(!is.numeric(nrep) & length(nrep) != 1) {
@@ -161,15 +164,15 @@ overallTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE,
     format(Sys.time()), ": Overall test :", nrep, "permutations\n"
   )
   
-  # run each statistic and store in list
+  # run each statistic and store results in a list
   strata.mat <- .permStrata(g, nrep) 
   stat.func <- function(f, strata.mat, keep.null, ...) {
     f(g, strata.mat = strata.mat, keep.null = keep.null, ...)
   }
-  result <- if(length(stat.list) == 1) {
+  result <- if(num.cores == 1) {
     lapply(stat.list, stat.func, strata.mat = strata.mat, keep.null = keep.null, ...)
   } else {
-    cl <- .setupClusters(min(length(stat.list), max.cores))
+    cl <- .setupClusters(num.cores)
     tryCatch({
       parLapply(cl, stat.list, stat.func, strata.mat = strata.mat, keep.null = keep.null, ...)
     }, finally = stopCluster(cl))
