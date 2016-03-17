@@ -58,6 +58,11 @@
 #'  }
 #' }
 #' 
+#' @note STRUCTURE is not included with \code{strataG} and must be downloaded 
+#'   separately. Additionally, it must be installed such that it can be run from 
+#'   the command line in the current working directory. See the vignette 
+#'   for \code{external.programs}.
+#' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @references Pritchard, J.K., M. Stephens, P. Donnelly. 2000. Inference of 

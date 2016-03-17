@@ -100,6 +100,12 @@ STRUCTURE file.}
 \description{
 Run STRUCTURE to assess group membership of samples.
 }
+\note{
+STRUCTURE is not included with \code{strataG} and must be downloaded 
+  separately. Additionally, it must be installed such that it can be run from 
+  the command line in the current working directory. See the vignette 
+  for \code{external.programs}.
+}
 \examples{
 \dontrun{
 data(dolph.strata)

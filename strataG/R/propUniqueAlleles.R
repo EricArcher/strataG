@@ -1,9 +1,9 @@
-#' @title Percent Unique Alleles
-#' @description Calculate the percent of alleles that are unique.
+#' @title Proportion Unique Alleles
+#' @description Calculate the proportion of alleles that are unique.
 #' 
 #' @param g a \linkS4class{gtypes} object.
 #' 
-#' @return a vector of the number of unique (occuring only in one individual) 
+#' @return a vector of the proportion of unique (occuring only in one individual) 
 #'   alleles for each locus.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
@@ -16,11 +16,11 @@
 #' dloop <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop")
 #' dloop <- labelHaplotypes(dloop)$gtypes
 #' 
-#' pctUniqueAlleles(dloop)
+#' propUniqueAlleles(dloop)
 #' 
 #' @export
 #' 
-pctUniqueAlleles <- function(g) { 
+propUniqueAlleles <- function(g) { 
   id.rows <- sub("\\.[[:digit:]]*$", "", rownames(loci(g)))
   apply(loci(g), 2, function(locus) {
     id.a.freqs <- table(id.rows, locus)

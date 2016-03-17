@@ -11,7 +11,7 @@
 
 <meta name="author" content="Eric Archer" />
 
-<meta name="date" content="2016-03-10" />
+<meta name="date" content="2016-03-17" />
 
 <title>By-Locus Summaries</title>
 
@@ -52,7 +52,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 <h1 class="title">By-Locus Summaries</h1>
 <h4 class="author"><em>Eric Archer</em></h4>
-<h4 class="date"><em>2016-03-10</em></h4>
+<h4 class="date"><em>2016-03-17</em></h4>
 
 </div>
 
@@ -85,8 +85,8 @@ msats &lt;-<span class="st"> </span>msats[, <span class="kw">locNames</span>(msa
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">exptdHet</span>(msats)</code></pre>
 <pre><code>##  D11t  EV37  EV94 Ttr11 
 ##  0.75  0.83  0.83  0.80</code></pre>
-<p>The percent of alleles that are unique (present in only one sample):</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pctUniqueAlleles</span>(msats)</code></pre>
+<p>The proportion of alleles that are unique (present in only one sample):</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">propUniqueAlleles</span>(msats)</code></pre>
 <pre><code>##  D11t  EV37  EV94 Ttr11 
 ## 0.250 0.136 0.067 0.222</code></pre>
 <p>The value of theta based on heterozygosity:</p>
@@ -95,40 +95,40 @@ msats &lt;-<span class="st"> </span>msats[, <span class="kw">locNames</span>(msa
 ##  0.56  0.62  0.62  0.59</code></pre>
 <p>These measures are all calculated in the <em>summarizeLoci</em> function and returned as a matrix. This function also allows you to calculate the measures for each stratum separately, which returns a list for each stratum:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarizeLoci</span>(msats)</code></pre>
-<pre><code>##       num.genotyped pct.genotyped num.alleles allelic.richness
-## D11t            125          0.99          12            0.096
-## EV37            119          0.94          22            0.185
-## EV94            125          0.99          15            0.120
-## Ttr11           125          0.99           9            0.072
-##       pct.unique.alleles expected.heterozygosity observed.heterozygosity
-## D11t               0.250                    0.75                    0.70
-## EV37               0.136                    0.83                    0.70
-## EV94               0.067                    0.83                    0.78
-## Ttr11              0.222                    0.80                    0.70</code></pre>
+<pre><code>##       num.genotyped prop.genotyped num.alleles allelic.richness
+## D11t            125           0.99          12            0.096
+## EV37            119           0.94          22            0.185
+## EV94            125           0.99          15            0.120
+## Ttr11           125           0.99           9            0.072
+##       prop.unique.alleles exptd.heterozygosity obsvd.heterozygosity
+## D11t                0.250                 0.75                 0.70
+## EV37                0.136                 0.83                 0.70
+## EV94                0.067                 0.83                 0.78
+## Ttr11               0.222                 0.80                 0.70</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarizeLoci</span>(msats, <span class="dt">by.strata =</span> <span class="ot">TRUE</span>)</code></pre>
 <pre><code>## $Coastal
-##       num.genotyped pct.genotyped num.alleles allelic.richness
-## D11t             67          0.99           3            0.045
-## EV37             63          0.93           7            0.111
-## EV94             68          1.00           5            0.074
-## Ttr11            68          1.00           4            0.059
-##       pct.unique.alleles expected.heterozygosity observed.heterozygosity
-## D11t                0.00                    0.49                    0.52
-## EV37                0.43                    0.61                    0.62
-## EV94                0.00                    0.77                    0.74
-## Ttr11               0.00                    0.66                    0.63
+##       num.genotyped prop.genotyped num.alleles allelic.richness
+## D11t             67           0.99           3            0.045
+## EV37             63           0.93           7            0.111
+## EV94             68           1.00           5            0.074
+## Ttr11            68           1.00           4            0.059
+##       prop.unique.alleles exptd.heterozygosity obsvd.heterozygosity
+## D11t                 0.00                 0.49                 0.52
+## EV37                 0.43                 0.61                 0.62
+## EV94                 0.00                 0.77                 0.74
+## Ttr11                0.00                 0.66                 0.63
 ## 
 ## $Offshore
-##       num.genotyped pct.genotyped num.alleles allelic.richness
-## D11t             58          1.00          12             0.21
-## EV37             56          0.97          22             0.39
-## EV94             57          0.98          15             0.26
-## Ttr11            57          0.98           9             0.16
-##       pct.unique.alleles expected.heterozygosity observed.heterozygosity
-## D11t               0.250                    0.86                    0.91
-## EV37               0.136                    0.94                    0.79
-## EV94               0.067                    0.86                    0.82
-## Ttr11              0.222                    0.82                    0.79</code></pre>
+##       num.genotyped prop.genotyped num.alleles allelic.richness
+## D11t             58           1.00          12             0.21
+## EV37             56           0.97          22             0.39
+## EV94             57           0.98          15             0.26
+## Ttr11            57           0.98           9             0.16
+##       prop.unique.alleles exptd.heterozygosity obsvd.heterozygosity
+## D11t                0.250                 0.86                 0.91
+## EV37                0.136                 0.94                 0.79
+## EV94                0.067                 0.86                 0.82
+## Ttr11               0.222                 0.82                 0.79</code></pre>
 <p>One can also obtain the allelic frequencies for each locus overall and by-strata by:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">alleleFreqs</span>(msats)</code></pre>
 <pre><code>## $D11t

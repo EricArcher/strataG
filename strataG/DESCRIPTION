@@ -80,12 +80,12 @@ Collate:
     numGensEq.R
     numMissing.R
     parseLocusNames.R
-    pctUniqueAlleles.R
     permuteStrata.R
     phase.R
     popStructStat.R
     popStructTest.R
     privateAlleles.R
+    propUniqueAlleles.R
     qaqc.R
     RcppExports.R
     readGenData.R

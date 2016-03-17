@@ -36,7 +36,7 @@ setMethod("summary", "gtypes",
       c(num.samples = nInd(g),
         num.missing = mean(numMissing(g)),
         num.alleles = mean(numAlleles(g)),
-        pct.unique.alleles = mean(pctUniqueAlleles(g)),
+        prop.unique.alleles = mean(propUniqueAlleles(g)),
         heterozygosity = if(ploidy(g) == 1) {
           mean(exptdHet(g))
         } else {

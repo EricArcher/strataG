@@ -46,9 +46,9 @@ obsvdHet(msats)
 exptdHet(msats)
 ```
 
-The percent of alleles that are unique (present in only one sample):
+The proportion of alleles that are unique (present in only one sample):
 ```{r}
-pctUniqueAlleles(msats)
+propUniqueAlleles(msats)
 ```
 
 The value of theta based on heterozygosity:

@@ -2,12 +2,17 @@
 % Please edit documentation in R/gtypes2loci.R
 \name{gtypes2loci}
 \alias{gtypes2loci}
+\alias{loci2gtypes}
 \title{Convert Between \code{gtypes} And \code{loci} objects.}
 \usage{
 gtypes2loci(x)
+
+loci2gtypes(x, description = NULL)
 }
 \arguments{
-\item{x}{a \linkS4class{gtypes} object.}
+\item{x}{a \linkS4class{gtypes} or \code{loci} formatted object.}
+
+\item{description}{a label for the \code{gtypes} object (optional).}
 }
 \description{
 Convert a \code{gtypes} object to a \code{\link[pegas]{loci}} object.

@@ -6,8 +6,16 @@
 #'   for each stratum.
 #' @param ... arguments to be passed on to summary functions.
 #' 
-#' @return A matrix with rows for each locus and columns containing summary
-#'   statistics.
+#' @return A matrix with rows for each locus and columns containing summaries of:
+#'   \tabular{ll}{
+#'     \code{num.genotyped} \tab The number of samples genotyped.\cr
+#'     \code{prop.genotyped} \tab The proportion of samples genotyped.\cr
+#'     \code{num.alleles} \tab The number of alleles in the locus.\cr
+#'     \code{allelic.richness} \tab The allelic richness of the locus.\cr
+#'     \code{prop.unique.alleles} \tab Proportion of alleles found in a single sample.\cr
+#'     \code{expt.heterozygosity} \tab Expected heterozygosity.\cr
+#'     \code{obsvd.heterozygosity} \tab Observed heterozygosity.\cr
+#'   }
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
@@ -24,12 +32,12 @@ summarizeLoci <- function(g, by.strata = FALSE, ...) {
     n.genotyped <- nInd(x) - numMissing(x)
     cbind(
       num.genotyped = n.genotyped,
-      pct.genotyped = n.genotyped / nInd(x),
+      prop.genotyped = n.genotyped / nInd(x),
       num.alleles = numAlleles(x),
       allelic.richness = allelicRichness(x),
-      pct.unique.alleles = pctUniqueAlleles(x),
-      expected.heterozygosity = exptdHet(x),
-      observed.heterozygosity = obsvdHet(x)
+      prop.unique.alleles = propUniqueAlleles(x),
+      exptd.heterozygosity = exptdHet(x),
+      obsvd.heterozygosity = obsvdHet(x)
     )
   }
   

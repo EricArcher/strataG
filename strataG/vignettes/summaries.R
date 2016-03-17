@@ -24,7 +24,7 @@ obsvdHet(msats)
 exptdHet(msats)
 
 ## ------------------------------------------------------------------------
-pctUniqueAlleles(msats)
+propUniqueAlleles(msats)
 
 ## ------------------------------------------------------------------------
 theta(msats)
