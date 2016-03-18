@@ -11,10 +11,4 @@ test haps.R
 *.Rcheck/
 inst/doc
 .RData
-old and test code/
-Literature
-strataG ms.docx
-strataG_ms.docx
-Documents
-strataG_MER_ms*
-MER ms*
+devel/

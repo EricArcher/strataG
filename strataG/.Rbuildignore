@@ -2,3 +2,7 @@
 ^README-.*\.png$
 ^NEWS\.Rmd$
 ^NEWS\.md$
+^devel*
+^strataG.Rcheck\*
+^strataG_\.tar.gz$
+.gitignore
