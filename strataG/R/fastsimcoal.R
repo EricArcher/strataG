@@ -17,11 +17,10 @@
 #' @param exec name of fastsimcoal executable.
 #' @param num.cores number of cores to use.
 #' 
-#' @note Assumes that the program \code{fastsimcoal} is properly installed and 
-#'   available on the command line. On PC's, this requires having it in a 
-#'   folder in the PATH environmental variable. On Macs, the executable 
-#'   should be installed in a folder like \code{/usr/local/bin}. The actual name of 
-#'   the executable should be specified with the \code{exec} argument.
+#' @note fastsimcoal is not included with \code{strataG} and must be downloaded 
+#'   separately. Additionally, it must be installed such that it can be run from 
+#'   the command line in the current working directory. See the vignette 
+#'   for \code{external.programs} for installation instructions.
 #' 
 #' @references Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time 
 #'   coalescent simulator of genomic diversity under arbitrarily complex 

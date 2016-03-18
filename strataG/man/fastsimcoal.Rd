@@ -36,11 +36,10 @@ Run a fastsimcoal simulation and load results into a
   \linkS4class{gtypes} object.
 }
 \note{
-Assumes that the program \code{fastsimcoal} is properly installed and 
-  available on the command line. On PC's, this requires having it in a 
-  folder in the PATH environmental variable. On Macs, the executable 
-  should be installed in a folder like \code{/usr/local/bin}. The actual name of 
-  the executable should be specified with the \code{exec} argument.
+fastsimcoal is not included with \code{strataG} and must be downloaded 
+  separately. Additionally, it must be installed such that it can be run from 
+  the command line in the current working directory. See the vignette 
+  for \code{external.programs} for installation instructions.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

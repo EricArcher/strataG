@@ -61,7 +61,7 @@
 #' @note STRUCTURE is not included with \code{strataG} and must be downloaded 
 #'   separately. Additionally, it must be installed such that it can be run from 
 #'   the command line in the current working directory. See the vignette 
-#'   for \code{external.programs}.
+#'   for \code{external.programs} for installation instructions.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 

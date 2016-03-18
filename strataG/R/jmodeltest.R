@@ -18,8 +18,10 @@
 #' @param path path where \code{jModelTest.jar} is located.
 #' @param java.opts options to \code{java} command line.
 #' 
-#' @details Requires that jModelTest is properly installed on the system 
-#'   in \code{path}.
+#' @note jModelTest is not included with \code{strataG} and must be downloaded 
+#'   separately. Additionally, it must be installed such that it can be run from 
+#'   the command line in the current working directory. See the vignette 
+#'   for \code{external.programs} for installation instructions.
 #' 
 #' @references Darriba D, Taboada GL, Doallo R, Posada D. 2012. 
 #'   jModelTest 2: more models, new heuristics and parallel computing. 

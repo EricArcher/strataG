@@ -35,8 +35,10 @@ a \code{\link[ape]{DNAbin}} object with aligned sequences.
 Align a set of sequences using the MAFFT executable.
 }
 \note{
-Formats and executes a call to the executable \code{mafft}, 
-  assuming that is installed on the system and available at the command line.
+MAFFT is not included with \code{strataG} and must be downloaded 
+  separately. Additionally, it must be installed such that it can be run from 
+  the command line in the current working directory. See the vignette 
+  for \code{external.programs} for installation instructions.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

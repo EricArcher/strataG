@@ -25,6 +25,11 @@
 #' @param label label to use for input and output files.
 #' @param delete.files logical. Delete all files when CLUMPP is finished?
 #' 
+#' @note CLUMPP is not included with \code{strataG} and must be downloaded 
+#'   separately. Additionally, it must be installed such that it can be run from 
+#'   the command line in the current working directory. See the vignette 
+#'   for \code{external.programs}.
+#' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @references Mattias Jakobsson and Noah A. Rosenberg. 2007. CLUMPP: a cluster 

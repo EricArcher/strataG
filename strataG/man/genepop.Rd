@@ -43,11 +43,10 @@ arguments.}
 Format output files and run GENEPOP.
 }
 \note{
-Assumes that the the command line version of GENEPOP v.4 is properly 
-  installed and available on the command line, so it is executable from 
-  any directory. On PC's, this requires having it in a folder in 
-  the PATH environmental variable. On Macs, the executable should be 
-  installed in a folder like \code{/usr/local/bin}.
+GENEPOP is not included with \code{strataG} and must be downloaded 
+  separately. Additionally, it must be installed such that it can be run from 
+  the command line in the current working directory. See the vignette 
+  for \code{external.programs} for installation instructions.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
