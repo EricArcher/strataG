@@ -22,7 +22,7 @@ a data.frame with the following columns:
   \code{num.loci.genotyped} \tab number of loci genotyped for both 
     samples.\cr
   \code{num.loci.shared} \tab number of loci shared between both samples.\cr
-  \code{percent.loci.shared} \tab percent of loci genotyped for both samples 
+  \code{prop.loci.shared} \tab proportion of loci genotyped for both samples 
     that are shared.\cr
   \code{mismatch.loci} \tab loci where the two samples do not match.\cr
 }

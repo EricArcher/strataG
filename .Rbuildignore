@@ -1,8 +1,9 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^devel/*
 ^README\.Rmd$
 ^README-.*\.png$
 ^NEWS\.Rmd$
 ^NEWS\.md$
-^devel*
-^strataG.Rcheck\*
-^strataG_\.tar.gz$
+tar.gz$
 .gitignore

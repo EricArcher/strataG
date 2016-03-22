@@ -13,7 +13,7 @@
 #'   \code{num.loci.genotyped} \tab number of loci genotyped for both 
 #'     samples.\cr
 #'   \code{num.loci.shared} \tab number of loci shared between both samples.\cr
-#'   \code{percent.loci.shared} \tab percent of loci genotyped for both samples 
+#'   \code{prop.loci.shared} \tab proportion of loci genotyped for both samples 
 #'     that are shared.\cr
 #'   \code{mismatch.loci} \tab loci where the two samples do not match.\cr
 #' }
@@ -37,15 +37,15 @@ dupGenotypes <- function(g, num.shared = 0.8, num.cores = 1) {
       paste(names(is.same)[is.same], collapse = ", ")
     })
     colnames(dup.df)[c(3:5)] <- c(
-      "num.loci.shared", "num.loci.genotyped", "percent.loci.shared"
+      "num.loci.shared", "num.loci.genotyped", "prop.loci.shared"
     )
     dup.df <- dup.df[, c("ids.1", "ids.2", "strata.1", "strata.2", 
                          "num.loci.genotyped", "num.loci.shared", 
-                         "percent.loci.shared", "mismatch.loci")]
+                         "prop.loci.shared", "mismatch.loci")]
   } 
   
   if(nrow(dup.df) > 0) {
-    sort.order <- order(dup.df$percent.loci.shared, dup.df$num.loci.shared, 
+    sort.order <- order(dup.df$prop.loci.shared, dup.df$num.loci.shared, 
                         rev(dup.df$ids.1), rev(dup.df$ids.2), decreasing = TRUE
     )
     dup.df <- dup.df[sort.order, ]
