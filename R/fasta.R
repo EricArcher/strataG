@@ -5,7 +5,7 @@
 #' @param file a FASTA-formatted file of sequences.
 #' @param x a list or a matrix of DNA sequences (see \code{\link[ape]{write.dna}}).
 #' 
-#' @return from \code{read.fasta}, a list of DNA sequences.
+#' @return for \code{read.fasta}, a set of sequences in DNAbin format.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 

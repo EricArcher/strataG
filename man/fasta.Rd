@@ -16,7 +16,7 @@ write.fasta(x, file = "sequences.fasta")
 \item{x}{a list or a matrix of DNA sequences (see \code{\link[ape]{write.dna}}).}
 }
 \value{
-from \code{read.fasta}, a list of DNA sequences.
+for \code{read.fasta}, a set of sequences in DNAbin format.
 }
 \description{
 Read and write FASTA formatted files of sequences.
