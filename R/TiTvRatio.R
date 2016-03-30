@@ -3,17 +3,15 @@
 #' @description Calculate transition/transversion ratio. Test substitution 
 #'   type of two bases.
 #' 
-#' @param x sequence of DNA.
+#' @param x a \linkS4class{gtypes} object with aligned sequences or a list of 
+#'   aligned DNA sequences.
 #' @param b1,b2 two bases to be compared.
 #' 
-#' @return For \code{TiTvRatio}, a vector providing: \cr
-#' \tabular{ll}{
-#'   \code{Ti} \tab the number of transitions.\cr
-#'   \code{Tv} \tab the number of transversions.\cr
-#'   \code{Ti.Tv.ratio} \tab the transition/transversion ratio.\cr
-#' }
-#' For \code{subType} either "ti" for transition, or "tv" for transversion.\cr
-#' For \code{isTi} and \code{isTv} a logical identifying whether 
+#' @return \code{TiTvRatio}: a vector providing the number of 
+#'   transitions (\code{Ti}), transversions (\code{Tv}), and the 
+#'   transition/transversion ratio (\code{Ti.Tv.ratio}).\cr
+#' \code{subType}: either "ti" for transition, or "tv" for transversion.\cr
+#' \code{isTi} and \code{isTv}: a logical identifying whether 
 #'   the \code{b1} to \code{b2} is a transition or transversion.
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
