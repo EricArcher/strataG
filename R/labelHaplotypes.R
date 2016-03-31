@@ -83,20 +83,24 @@ labelHaplotypes <- function(x, prefix = NULL, use.indels = FALSE) {
 labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
   if(!inherits(x, "DNAbin")) stop("'x' must be a DNAbin object.")
   x <- as.matrix(x)
-
+  
+  # return same data if only one sequence exists
+  if(nrow(x) == 1) {
+    haps <- rownames(x)
+    names(haps) <- haps
+    return(list(haps = haps, hap.seqs = x, unassigned = NULL))
+  }
+  
   # find sequences without Ns
-  no.ns <- apply(as.character(x), 1, function(bases) !"n" %in% tolower(bases))
-  if(sum(no.ns) < 2) {
-    haps <- rep(NA, length(no.ns))
-    names(haps) <- names(no.ns)
-    haps[no.ns] <- names(haps)[no.ns]
-    warning("Fewer than 2 sequences have no ambiguities (N's). Can't assign haplotypes. NULL returned.",
+  has.ns <- apply(as.character(x), 1, function(bases) "n" %in% tolower(bases))
+  if(sum(!has.ns) == 1) {  
+    warning("There is only one sequence without ambiguities (N's). Can't assign haplotypes. NULL returned.",
             call. = FALSE, immediate. = TRUE)
     return(NULL)
   }
 
   # get pairwise distances and set all non-0 distances to 1
-  x.no.ns <- x[no.ns, ]
+  x.no.ns <- x[!has.ns, ]
   hap.dist <- dist.dna(x.no.ns, model = "N", pairwise.deletion = TRUE)
   if(use.indels) hap.dist <- hap.dist + dist.dna(x.no.ns, model = "indelblock")
   hap.dist <- as.matrix(hap.dist)
@@ -125,13 +129,13 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
 
   # get sequences for each haplotype
   unique.codes <- hap.code[!duplicated(hap.code)]
-  hap.seqs <- x[names(unique.codes), ]
+  hap.seqs <- x[names(unique.codes), , drop = FALSE]
   rownames(hap.seqs) <- unique.codes
-  hap.seqs <- hap.seqs[order(rownames(hap.seqs)), ]
+  hap.seqs <- hap.seqs[order(rownames(hap.seqs)), , drop = FALSE]
 
-  unassigned.df <- if(!all(no.ns)) {
+  unassigned.df <- if(!all(!has.ns)) {
     # calculate distance between haplotypes and samples with Ns
-    with.ns.seqs <- x[!no.ns, ]
+    with.ns.seqs <- x[has.ns, ]
     haps.and.ns <- rbind(hap.seqs, with.ns.seqs)
     hap.dist <- dist.dna(haps.and.ns, model = "N", pairwise.deletion = TRUE)
     if(use.indels) hap.dist <- hap.dist + dist.dna(haps.and.ns, model = "indelblock")
