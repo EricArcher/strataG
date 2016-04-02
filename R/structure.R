@@ -414,7 +414,7 @@ structureRead <- function(file, pops = NULL) {
                      stringsAsFactors = FALSE
     )
     pop.prob <- as.data.frame(rbind(as.numeric(x[-(1:4)])))
-    colnames(pop.prob) <- paste("prob", 1:ncol(pop.prob), sep = ".")
+    colnames(pop.prob) <- paste("Group", 1:ncol(pop.prob), sep = ".")
     cbind(df, pop.prob) 
   }))
 }
