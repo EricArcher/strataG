@@ -6,94 +6,79 @@
 #' @param pop.col column number identifying original population designations.
 #' @param prob.col column number of first assignment probabilities to first 
 #'  group. It is assumed that the remainder of columns 
-#'  (\code{prob.col:ncol(q.mat)}) contain all assignment probabilities, 
-#'  and thus \emph{k} = \code{ncol(q.mat) - prob.col + 1}.
+#'  (\code{prob.col:ncol(q.mat)}) contain all assignment probabilities.
 #' @param sort.probs logical. Sort individuals by probabilities within 
-#'   populations? 
-#' If \code{FALSE} individuals will be plotted as in \code{q.mat}.
-#' @param label.pops logical. Label the populations on the plot? If 
-#'   \code{FALSE}, then population labels are omitted so the user can 
-#'   customize their format.
+#'   populations? If \code{FALSE} individuals will be plotted as in \code{q.mat}.
+#' @param label.pops logical. Label the populations on the plot?
 #' @param col colors to use for each group.
-#' @param horiz logical. Plot horizontal bars?
-#' @param legend logical. Include a legend?
-#' @param cex font size value for axis labels.
-#' @param ... optional arguments to be passed to 
-#'   \code{\link[graphics]{barplot}}.
+#' @param horiz logical. Plot bars horizontally.
+#' @param legend.position the position of the legend (\code{"top", "left", 
+#'   "right", "bottom"}, or two-element numeric vector)
 #' 
-#' @return invisibly, a list containing:
-#' \tabular{ll}{
-#'   \code{q.mat} \tab the sorted matrix or data.frame of assignment 
-#'     probabilities used in the plot.\cr
-#'   \code{bar.centers} \tab a vector of the centers of bars for each 
-#'     individual.\cr
-#'   \code{pop.ticks} \tab a vector of the tick marks separating populations.\cr
-#'  }
+#' @return invisibly, the ggplot object
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @seealso \code{\link{structure}}, \code{\link{clumpp}}
 #'
-#' @importFrom graphics par strwidth barplot axis mtext
-#' @importFrom grDevices rainbow
+#' @importFrom ggplot2 ggplot aes_string geom_area ylab theme geom_vline 
+#'   scale_x_continuous xlab coord_flip scale_fill_manual element_blank
+#' @importFrom reshape2 melt
 #' @importFrom RColorBrewer brewer.pal
 #' @export
 #' 
 structurePlot <- function(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
                           label.pops = TRUE, col = NULL, horiz = TRUE,
-                          legend = TRUE, cex = NA, ...) {
-  # sort q.mat within strata by probability
+                          legend.position = c("top", "left", "right", "bottom", "none")) {
+  
+  legend.position <- match.arg(legend.position)
+  
+  # convert q.mat to sorted data.frame
   prob.cols <- prob.col:ncol(q.mat)
-  q.mat <- data.frame(q.mat)
-  q.mat[, pop.col] <- factor(q.mat[, pop.col])
-  if(horiz) q.mat[, pop.col] <- factor(q.mat[, pop.col], levels = rev(levels(q.mat[, pop.col])))
-  q.mat <- q.mat[order(q.mat[, pop.col]), ]
-  if(sort.probs) {
-    q.mat <- do.call(rbind, by(q.mat, list(q.mat[, pop.col]), function(x) {
-      prob.list <- lapply(prob.cols, function(i) x[, i])
-      x[do.call(order, prob.list), ]
-    }, simplify = FALSE))
-  }
+  qm <- data.frame(q.mat)
+  qm[, pop.col] <- factor(
+    qm[, pop.col], 
+    levels = sort(unique(qm[, pop.col]), decreasing = horiz)
+  )
+  sort.cols <- c(pop.col, if(sort.probs) rev(prob.cols) else NULL)
+  i <- do.call(order, qm[, sort.cols, drop = FALSE])
+  qm <- qm[i, ]
+  qm$x <- 1:nrow(qm)
   
-  # make sure probs sum to 1 and get matrix
-  q.mat[, prob.cols] <- prop.table(as.matrix(q.mat[, prob.cols, drop = FALSE]), 1)
-  assign.mat <- t(q.mat[, prob.cols, drop = FALSE])
+  # Get population frequencies, centers and dividing points
+  pop.freq <- table(qm[, pop.col])
+  levels(qm[, pop.col]) <- paste(
+    levels(qm[, pop.col]), "\n(n = ", pop.freq, ")", sep = ""
+  )
+  pop.cntr <- tapply(qm$x, qm[, pop.col], mean)
+  pop.div <- tapply(qm$x, qm[, pop.col], min)[-1] - 0.5
   
-  # create barplot
-  if(is.null(col)) col <- brewer.pal(12, "Set3")[1:length(prob.cols)]
-  mai <- par("mai")
-  mai[1] = 0.7
-  mai[3] = 0.2
-  if(horiz) {
-    mai[2] <- max(strwidth(unique(q.mat[, pop.col]), "inches")) + 0.4
-  }
-  mai[4] <- if(legend) {
-    text.width <- max(strwidth(colnames(q.mat)[prob.cols], "inches"))
-    text.width + 0.8
-  } else 0.5
-  op <- par(mai = mai, las = 1)
-  if(legend) par(xpd = TRUE)
-  bp <- barplot(assign.mat, axes = FALSE, axisnames = FALSE, col = col, horiz = horiz, ...)
-  prob.side <- if(horiz) 1 else 2
-  pop.side <- if(horiz) 2 else 1
-  tx <- tapply(bp, q.mat[, pop.col], min) + 0.1
-  tx <- c(tx - tx[1], max(bp) + tx[1])
-  cex.axis <- if(is.na(cex)) NULL else cex
-  axis(prob.side, pos = min(tx) - 1.5, cex.axis = cex.axis)
-  axis(pop.side, at = tx, pos = -0.005, labels = FALSE)
-  if(label.pops) {
-    lbl.x <- sapply(1:(length(tx) - 1),
-                    function(i) tx[i] + (tx[i + 1] - tx[i]) / 2
+  # Create data.frame for plotting
+  df.cols <- colnames(qm)[c(pop.col, prob.cols)]
+  df.cols <- c("x", df.cols)
+  df <- melt(qm[, df.cols], id.vars = c(1, 2),
+             variable.name = "Group", value.name = "probability")
+  colnames(df)[1:2] <- c("x", "population")
+  df <- df[order(-as.numeric(df$Group), df$probability), ]
+  
+  # Plot stacked bar graphs
+  g <- ggplot(df, aes_string("x", "probability")) + 
+    geom_area(aes_string(fill = "Group"), stat = "identity") +
+    ylab("Pr(Group Membership)") +
+    theme(
+      axis.ticks.x = element_blank(),
+      legend.position = legend.position,
+      legend.title = element_blank()
     )
-    names(lbl.x) <- names(tx)[1:(length(tx) - 1)]
-    mtext(names(lbl.x), side = pop.side, at = lbl.x, line = 1, cex = cex)
+  if(label.pops) {
+    g <- g + geom_vline(xintercept = pop.div) +
+      scale_x_continuous(breaks = pop.cntr, labels = names(pop.cntr))
+  } else {
+    g <- g + xlab("") + theme(axis.text.x = element_blank())
   }
-  if(legend) {
-    x <- if(horiz) par("usr")[2] else max(tx)
-    y <- if(horiz) max(tx) else par("usr")[4]
-    legend(x, y, colnames(q.mat)[prob.cols],
-           fill = col)
-  }
-  par(op)
-  invisible(list(q.mat = q.mat, bar.centers = bp, pop.ticks = tx))
+  if(horiz) g <- g + coord_flip()
+  if(!is.null(col)) g <- g + scale_fill_manual(values = col)
+  
+  print(g)
+  invisible(g)
 }

@@ -5,8 +5,8 @@
 \title{Plot STRUCTURE Results}
 \usage{
 structurePlot(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
-  label.pops = TRUE, col = NULL, horiz = TRUE, legend = TRUE,
-  cex = NA, ...)
+  label.pops = TRUE, col = NULL, horiz = TRUE,
+  legend.position = c("top", "left", "right", "bottom", "none"))
 }
 \arguments{
 \item{q.mat}{matrix or data.frame of assignment probabilities.}
@@ -15,37 +15,22 @@ structurePlot(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
 
 \item{prob.col}{column number of first assignment probabilities to first 
 group. It is assumed that the remainder of columns 
-(\code{prob.col:ncol(q.mat)}) contain all assignment probabilities, 
-and thus \emph{k} = \code{ncol(q.mat) - prob.col + 1}.}
+(\code{prob.col:ncol(q.mat)}) contain all assignment probabilities.}
 
 \item{sort.probs}{logical. Sort individuals by probabilities within 
-  populations? 
-If \code{FALSE} individuals will be plotted as in \code{q.mat}.}
+populations? If \code{FALSE} individuals will be plotted as in \code{q.mat}.}
 
-\item{label.pops}{logical. Label the populations on the plot? If 
-\code{FALSE}, then population labels are omitted so the user can 
-customize their format.}
+\item{label.pops}{logical. Label the populations on the plot?}
 
 \item{col}{colors to use for each group.}
 
-\item{horiz}{logical. Plot horizontal bars?}
+\item{horiz}{logical. Plot bars horizontally.}
 
-\item{legend}{logical. Include a legend?}
-
-\item{cex}{font size value for axis labels.}
-
-\item{...}{optional arguments to be passed to 
-\code{\link[graphics]{barplot}}.}
+\item{legend.position}{the position of the legend (\code{"top", "left", 
+"right", "bottom"}, or two-element numeric vector)}
 }
 \value{
-invisibly, a list containing:
-\tabular{ll}{
-  \code{q.mat} \tab the sorted matrix or data.frame of assignment 
-    probabilities used in the plot.\cr
-  \code{bar.centers} \tab a vector of the centers of bars for each 
-    individual.\cr
-  \code{pop.ticks} \tab a vector of the tick marks separating populations.\cr
- }
+invisibly, the ggplot object
 }
 \description{
 Plot Q-matrix from a call to \code{\link{structure}} or 

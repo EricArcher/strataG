@@ -108,10 +108,7 @@ STRUCTURE is not included with \code{strataG} and must be downloaded
 }
 \examples{
 \dontrun{
-data(dolph.strata)
-data(dolph.msats)
-msats.merge <- merge(dolph.strata[, c("ids", "fine")], dolph.msats, all.y = TRUE)
-msats <- df2gtypes(msats.merge, ploidy = 2)
+data(msats.g)
 
 # Run STRUCTURE
 sr <- structureRun(msats, k.range = 1:4, num.k.rep = 10)
@@ -121,11 +118,11 @@ evno <- evanno(sr)
 evno
 
 # Run CLUMPP to combine runs for K = 2
-clumpp <- clumpp(sr, k = 3)
-clumpp
+q.mat <- clumpp(sr, k = 3)
+q.mat
 
 # Plot CLUMPP results
-structurePlot(clumpp)
+structurePlot(q.mat)
 }
 
 }

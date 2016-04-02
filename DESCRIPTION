@@ -17,8 +17,8 @@ Suggests:
 Imports:
     ape,
     copula,
+    ggplot2,
     graphics,
-    grDevices,
     Hmisc,
     methods,
     pegas,

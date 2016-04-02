@@ -45,8 +45,8 @@ evanno <- function(sr, plot = TRUE) {
   result <- data.frame(
     k = as.numeric(names(ln.k)),
     reps = as.numeric(table(sr.smry[, "k"])),
-    mean.ln.k = ln.k,
-    sd.ln.k = sd.ln.k,
+    mean.ln.k = as.numeric(ln.k),
+    sd.ln.k = as.numeric(sd.ln.k),
     ln.pk = c(NA, ln.pk),
     ln.ppk = c(NA, ln.ppk, NA),
     delta.k = c(NA, delta.k,  NA)
