@@ -60,13 +60,13 @@
 #' msats.g <- stratify(msats.g, "fine")
 #' 
 #' # Conduct an overall Chi-squared test
-#' ovl <- overallTest(msats.g, stats = "chi2")
+#' ovl <- overallTest(msats.g, stats = "chi2", nrep = 100)
 #'
 #' # Conduct a pairwise test for Gst
-#' pws <- pairwiseTest(msats.g, stats = list(statGst))
+#' pws <- pairwiseTest(msats.g, stats = list(statGst), nrep = 100)
 #'
 #' # Conduct both overall and pairwise tests for Fst and F'st
-#' full <- popStructTest(msats.g, stats = c("fst", "fst.prime"))
+#' full <- popStructTest(msats.g, stats = c("fst", "fst.prime"), nrep = 100)
 #' print(full$overall)
 #' print(full$pairwise)
 #' 
