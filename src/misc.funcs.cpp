@@ -99,11 +99,11 @@ NumericMatrix numOuterC(NumericVector x, NumericVector y) {
 // [[Rcpp::export]]
 IntegerMatrix intVecToMat(IntegerVector x, int ncol) {
   int len(x.size()), r, c;
-  int n(len / ncol);
+  double n(len / ncol);
   IntegerMatrix mat(n, ncol);
   for(int i = 0; i < len; i++) {
-    c = floor(i / n);
-    r = i - (n * c);
+    c = std::floor(double(i) / n);
+    r = i - (int(n) * c);
     mat(r, c) = x[i];
   }
   return mat;
@@ -112,11 +112,11 @@ IntegerMatrix intVecToMat(IntegerVector x, int ncol) {
 // [[Rcpp::export]]
 NumericMatrix numVecToMat(NumericVector x, int ncol) {
   int len(x.size()), r, c;
-  int n(len / ncol);
+  double n(len / ncol);
   NumericMatrix mat(n, ncol);
   for(int i = 0; i < len; i++) {
-    c = floor(i / n);
-    r = i - (n * c);
+    c = std::floor(double(i) / n);
+    r = i - (int(n) * c);
     mat(r, c) = x[i];
   }
   return mat;
