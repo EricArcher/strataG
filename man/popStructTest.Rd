@@ -87,16 +87,20 @@ On multi-core systems, runs of separate statistics are automatically
 data(msats.g)
 msats.g <- stratify(msats.g, "fine")
 
-# Conduct an overall Chi-squared test
+# Just an overall Chi-squared test
 ovl <- overallTest(msats.g, stats = "chi2", nrep = 100)
+ovl
 
-# Conduct a pairwise test for Gst
+#' Just a pairwise test for Gst
 pws <- pairwiseTest(msats.g, stats = list(statGst), nrep = 100)
+pws
 
-# Conduct both overall and pairwise tests for Fst and F'st
-full <- popStructTest(msats.g, stats = c("fst", "fst.prime"), nrep = 100)
+\dontrun{
+#' Both overall and pairwise tests for Fst and F'st
+full <- popStructTest(msats.g, stats = c("fst", "fst.prime"))
 print(full$overall)
 print(full$pairwise)
+}
 
 }
 \author{

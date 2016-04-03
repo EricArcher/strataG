@@ -17,13 +17,15 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @examples
+#' @examples 
 #' data(msats.g)
 #' msats.g <- stratify(msats.g, "fine")
 #' 
-#' propSharedLoci(msats.g, num.cores = 2)
-#' 
 #' sharedAlleles(msats.g)
+#' 
+#' \dontrun{
+#' propSharedLoci(msats.g, num.cores = 2)
+#' }
 #' 
 #' @importFrom utils combn
 #' @importFrom stats na.omit
@@ -44,15 +46,14 @@ propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = NULL) {
   shared <- tryCatch({
     prop.func <- if(type == "strata") {
       function(f, type.pair) {
-        pair.f <- f[, "prop", type.pair]
-        sum(apply(pair.f, 1, function(x) !all(x == 0))) / nrow(pair.f)
+        mean(apply(f[, "prop", type.pair], 1, function(x) all(x > 0)))
       }
     } else {
       function(i, type.pairs, g) propSharedIds(type.pairs[i, ], g)
     }
     
     if(type == "strata") {  
-      freqs <- alleleFreqs(g, TRUE)
+      freqs <- alleleFreqs(g, by.strata = TRUE)
       sharedStrataList <- lapply(1:nrow(type.pairs), function(i) {
         prop.shared.loci <- if(!is.null(cl)) {
           parLapply(cl, freqs, prop.func, type.pair = type.pairs[i, ])
