@@ -6,7 +6,7 @@
 
 ## Installation
 
-To install the stable version from CRAN:
+To install the stable version (v. 1.0) from CRAN:
 
 ```r
 install.packages('strataG')
