@@ -68,7 +68,7 @@ double phistCalc(IntegerVector haps, IntegerVector strata, NumericMatrix hapDist
   int numSamples = sum(strataFreq);
   int numStrata = strataFreq.size();
   NumericVector n2(numStrata);
-  for(int i = 0; i < n2.size(); i++) n2[i] = pow(strataFreq[i], 2) / numSamples;
+  for(int i = 0; i < n2.size(); i++) n2[i] = std::pow(strataFreq[i], 2) / numSamples;
   double n = (numSamples - sum(n2)) / (numStrata - 1);
   
   // Calculate variance components (Table 1)

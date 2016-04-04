@@ -106,7 +106,7 @@ double fstCalc(IntegerMatrix loci, IntegerVector strata, int ploidy) {
     if(r < 2) continue;
     double nbar = mean(nvec);
     double rnbar = r * nbar;
-    double nc = (rnbar - (sum(pow(nvec, 2)) / rnbar)) / (r - 1);
+    double nc = (rnbar - (sum(Rcpp::pow(nvec, 2)) / rnbar)) / (r - 1);
     NumericMatrix alleleFreq = alleleFreqCalc(locVec, strata, ploidy);
     NumericMatrix prHet = prHetCalc(alleles, nvec, locusMat, strata, ploidy);
     NumericMatrix varcompMat = varCompCalc(nvec, alleleFreq, prHet, r, nbar, rnbar, nc);
