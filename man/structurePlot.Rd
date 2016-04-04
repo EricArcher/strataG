@@ -27,7 +27,7 @@ populations? If \code{FALSE} individuals will be plotted as in \code{q.mat}.}
 \item{horiz}{logical. Plot bars horizontally.}
 
 \item{legend.position}{the position of the legend (\code{"top", "left", 
-"right", "bottom"}, or two-element numeric vector)}
+"right", "bottom"}, or two-element numeric vector).}
 }
 \value{
 invisibly, the ggplot object

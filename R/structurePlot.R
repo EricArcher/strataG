@@ -13,7 +13,7 @@
 #' @param col colors to use for each group.
 #' @param horiz logical. Plot bars horizontally.
 #' @param legend.position the position of the legend (\code{"top", "left", 
-#'   "right", "bottom"}, or two-element numeric vector)
+#'   "right", "bottom"}, or two-element numeric vector).
 #' 
 #' @return invisibly, the ggplot object
 #' 
