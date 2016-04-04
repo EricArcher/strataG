@@ -1,7 +1,7 @@
 Package: strataG
 Title: Summaries and Population Structure Analyses of Genetic Data
 Description: A toolkit for analyzing stratified population genetic data.
-Version: 1.0.2
+Version: 1.0.3
 License: GNU General Public License
 Authors@R: c(
   EA = person("Eric", "Archer", email = "eric.archer@noaa.gov", role = c("aut", "cre")),
