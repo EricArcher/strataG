@@ -72,7 +72,7 @@ structurePlot <- function(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
     )
   if(label.pops) {
     g <- g + geom_vline(xintercept = pop.div) +
-      scale_x_continuous(breaks = pop.cntr, labels = names(pop.cntr))
+      scale_x_continuous(name = "", breaks = pop.cntr, labels = names(pop.cntr))
   } else {
     g <- g + xlab("") + theme(axis.text.x = element_blank())
   }
