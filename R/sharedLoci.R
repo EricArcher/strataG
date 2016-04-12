@@ -127,6 +127,7 @@ propSharedIds <- function(ids, g) {
   sapply(locNames(g), function(x) {
     g1 <- unlist(loci(g, ids[1], x))
     g2 <- unlist(loci(g, ids[2], x))
+    if(any(is.na(g1) | is.na(g2))) return(NA)
     sum(g1 %in% g2) + sum(g2 %in% g1)
   }) / (2 * ploidy(g))
 }
