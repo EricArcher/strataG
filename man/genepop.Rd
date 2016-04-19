@@ -7,7 +7,7 @@
 \usage{
 genepop(g, output.ext = "", show.output = F, label = "genepop.run",
   dem = 10000, batches = 100, iter = 5000, other.settings = "",
-  input.fname = "loc_data.txt")
+  input.fname = "loc_data.txt", exec = "Genepop")
 
 genepopWrite(g, label = "genepop.write", input.fname = "loc_data.txt")
 }
@@ -30,6 +30,8 @@ genepopWrite(g, label = "genepop.write", input.fname = "loc_data.txt")
 arguments.}
 
 \item{input.fname}{character string to use for input file name.}
+
+\item{exec}{name of Genepop executable}
 }
 \value{
 \tabular{ll}{

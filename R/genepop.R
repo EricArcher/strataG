@@ -12,6 +12,7 @@
 #' @param other.settings character string of optional GENEPOP command line 
 #'   arguments.
 #' @param input.fname character string to use for input file name.
+#' @param exec name of Genepop executable
 #' 
 #' @note GENEPOP is not included with \code{strataG} and must be downloaded 
 #'   separately. Additionally, it must be installed such that it can be run from 
@@ -34,7 +35,8 @@
 #' 
 genepop <- function(g, output.ext = "", show.output = F, label = "genepop.run",
                     dem = 10000, batches = 100, iter = 5000, 
-                    other.settings = "", input.fname = "loc_data.txt") {
+                    other.settings = "", input.fname = "loc_data.txt",
+                    exec = "Genepop") {
   
   locus.names <- genepopWrite(g, label, input.fname)
   
@@ -50,7 +52,7 @@ genepop <- function(g, output.ext = "", show.output = F, label = "genepop.run",
   ), file = settings.fname)
   
   # Run Genepop
-  genepop.cmd <- paste("Genepop settingsFile=", settings.fname, sep = "")
+  genepop.cmd <- paste(exec, " settingsFile=", settings.fname, sep = "")
   
   # If user is on Windows, supply show.output.on.console = F, minimized = F, 
   #   invisible = T, else don't
