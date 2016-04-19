@@ -6,7 +6,7 @@
 
 ## Installation
 
-To install the stable version (v. 1.0) from CRAN:
+To install the stable version (v. 1.0.4) from CRAN:
 
 ```r
 install.packages('strataG')
@@ -18,7 +18,7 @@ To install the latest version from GitHub:
 # make sure you have Rtools installed
 if (!require('devtools')) install.packages('devtools')
 # install from GitHub
-devtools::install_github('ericarcher/strataG')
+devtools::install_github('ericarcher/strataG', build_vignettes = TRUE)
 ```
 
 ## Contact
