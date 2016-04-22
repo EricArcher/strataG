@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Eric Archer" />
+
+<meta name="date" content="2016-04-22" />
+
+<title>Creating and Manipulating gtypes Objects</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+<div class="fluid-row" id="header">
+
+
+<h1 class="title">Creating and Manipulating gtypes Objects</h1>
+<h4 class="author"><em>Eric Archer</em></h4>
+<h4 class="date"><em>2016-04-22</em></h4>
+
+</div>
+
+
+<div id="construction" class="section level2">
+<h2>Construction</h2>
+<p>For most functions in <em>strataG</em>, you will need to load your data into a <em>gtypes</em> object. A <em>gtypes</em> object is an R S4 class with the following slots:</p>
+<ul>
+<li><strong>@loci</strong> a data.frame containing the allelic data as one column per locus. Alleles are on multiple rows per column with samples listed in the same order for each allele. rownames are sample names plus allele number formatted as 12345.1 and 12345.2 where 12345 is the sample name and 1 and 2 are the first and second alleles. colnames are unique locus names.</li>
+<li><strong>@sequences</strong> a <em>multidna</em> object, which is a list of <em>DNAbin</em> objects (from the <em>apex</em> and <em>ape</em> packages, respectively).</li>
+<li><strong>@ploidy</strong> integer representing the ploidy of the data. There are ploidy * the number of samples rows in ‘loci’.</li>
+<li><strong>@strata</strong> a factor or vector that can be coerced as to a factor as long as the number of samples representing the current stratification scheme.</li>
+<li><strong>@schemes</strong> schemes a data.frame with stratification schemes in each column. Sample names are in the rownames and must match the first part of the sample names (rownames) of the ‘loci’ slot. Each column is a factor.</li>
+<li><strong>@description</strong> a label for the object.</li>
+<li><strong>@other</strong> a slot to carry other optional related data - unused in package analyses.</li>
+</ul>
+<div id="new-constructor" class="section level3">
+<h3><em>new</em> constructor</h3>
+<p>A gtypes object can be created with the standard S4 <em>new</em> constructor function, like this:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#--- create a diploid (microsatellite) gtypes object</span>
+<span class="kw">data</span>(dolph.msats)
+<span class="kw">data</span>(dolph.strata)
+strata.schemes &lt;-<span class="st"> </span>dolph.strata[, <span class="kw">c</span>(<span class="st">&quot;broad&quot;</span>, <span class="st">&quot;fine&quot;</span>)]
+<span class="kw">rownames</span>(strata.schemes) &lt;-<span class="st"> </span>dolph.strata$id
+msats &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;gtypes&quot;</span>, <span class="dt">gen.data =</span> dolph.msats[, -<span class="dv">1</span>], <span class="dt">ploidy =</span> <span class="dv">2</span>,
+  <span class="dt">ind.names =</span> dolph.msats[, <span class="dv">1</span>], <span class="dt">schemes =</span> strata.schemes)
+
+<span class="co">#--- create a haploid sequence (mtDNA) gtypes object</span>
+<span class="kw">data</span>(dolph.seqs)
+dloop.haps &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="dt">haps =</span> dolph.strata$id)
+<span class="kw">rownames</span>(dloop.haps) &lt;-<span class="st"> </span>dolph.strata$id
+dloop &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;gtypes&quot;</span>, <span class="dt">gen.data =</span> dloop.haps, <span class="dt">ploidy =</span> <span class="dv">1</span>, 
+  <span class="dt">sequences =</span> dolph.seqs)</code></pre></div>
+<p>Both of these examples create a <em>gtypes</em> where every individual is in a single default stratum. To stratify samples when created, supply either a vector, factor, or stratification scheme name to the ‘strata’ argument in <em>new</em>, like so:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">msats.fine &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;gtypes&quot;</span>, <span class="dt">gen.data =</span> dolph.msats[, -<span class="dv">1</span>], <span class="dt">ploidy =</span> <span class="dv">2</span>,
+  <span class="dt">ind.names =</span> dolph.msats[, <span class="dv">1</span>], <span class="dt">schemes =</span> strata.schemes, <span class="dt">strata =</span> <span class="st">&quot;fine&quot;</span>)</code></pre></div>
+</div>
+<div id="df2gtypes---convert-a-data.frame-or-matrix" class="section level3">
+<h3><em>df2gtypes</em> - Convert a data.frame or matrix</h3>
+<p>The <em>df2gtypes</em> function assumes that you have a matrix or data.frame with columns for individual ids, stratification, and locus data. You then specify the columns in the data.frame where this information can be found. <em>df2gtypes</em> can be used for data with multiple alleles per locus, like this:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create a single data.frame with the msat data and stratification</span>
+msats.merge &lt;-<span class="st"> </span><span class="kw">merge</span>(dolph.strata, dolph.msats, <span class="dt">all.y =</span> <span class="ot">TRUE</span>, <span class="dt">description =</span> <span class="kw">date</span>())
+<span class="kw">str</span>(msats.merge)</code></pre></div>
+<pre><code>## 'data.frame':    126 obs. of  14 variables:
+##  $ id     : chr  &quot;18650&quot; &quot;18651&quot; &quot;18652&quot; &quot;18653&quot; ...
+##  $ dLoop  : chr  &quot;Hap.06&quot; &quot;Hap.14&quot; &quot;Hap.23&quot; &quot;Hap.24&quot; ...
+##  $ broad  : chr  &quot;Offshore&quot; &quot;Offshore&quot; &quot;Offshore&quot; &quot;Offshore&quot; ...
+##  $ fine   : chr  &quot;Offshore.South&quot; &quot;Offshore.South&quot; &quot;Offshore.South&quot; &quot;Offshore.South&quot; ...
+##  $ D11t.1 : chr  &quot;131&quot; &quot;137&quot; &quot;131&quot; &quot;133&quot; ...
+##  $ D11t.2 : chr  &quot;133&quot; &quot;143&quot; &quot;133&quot; &quot;139&quot; ...
+##  $ EV37.1 : chr  &quot;212&quot; &quot;200&quot; &quot;212&quot; &quot;202&quot; ...
+##  $ EV37.2 : chr  &quot;222&quot; &quot;228&quot; &quot;218&quot; &quot;220&quot; ...
+##  $ EV94.1 : chr  &quot;263&quot; &quot;249&quot; &quot;249&quot; &quot;229&quot; ...
+##  $ EV94.2 : chr  &quot;265&quot; &quot;251&quot; &quot;251&quot; &quot;245&quot; ...
+##  $ Ttr11.1: chr  &quot;197&quot; &quot;197&quot; &quot;211&quot; &quot;197&quot; ...
+##  $ Ttr11.2: chr  &quot;209&quot; &quot;197&quot; &quot;213&quot; &quot;215&quot; ...
+##  $ Ttr34.1: chr  &quot;185&quot; &quot;185&quot; &quot;185&quot; &quot;189&quot; ...
+##  $ Ttr34.2: chr  &quot;187&quot; &quot;187&quot; &quot;191&quot; &quot;195&quot; ...</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create the gtypes object</span>
+msats.fine &lt;-<span class="st"> </span><span class="kw">df2gtypes</span>(msats.merge, <span class="dt">ploidy =</span> <span class="dv">2</span>, <span class="dt">id.col =</span> <span class="dv">1</span>, <span class="dt">strata.col =</span> <span class="dv">3</span>, <span class="dt">loc.col =</span> <span class="dv">5</span>)</code></pre></div>
+<p>…or for haploid data, like this:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(dolph.seqs)
+
+seq.df &lt;-<span class="st"> </span>dolph.strata[ <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;broad&quot;</span>, <span class="st">&quot;id&quot;</span>)]
+<span class="kw">colnames</span>(seq.df)[<span class="dv">3</span>] &lt;-<span class="st"> &quot;D-loop&quot;</span>
+dl.g &lt;-<span class="st"> </span><span class="kw">df2gtypes</span>(seq.df, <span class="dt">ploidy =</span> <span class="dv">1</span>, <span class="dt">sequences =</span> dolph.seqs)
+dl.g</code></pre></div>
+<pre><code>## 
+## &lt;&lt;&lt; gtypes created on 2016-04-22 08:11:39 &gt;&gt;&gt;
+## 
+## Contents: 126 samples, 1 locus, 2 strata
+## 
+## Strata summary:
+##          num.samples num.missing num.alleles prop.unique.alleles
+## Coastal           68           0          68                   1
+## Offshore          58           0          58                   1
+##          heterozygosity
+## Coastal               1
+## Offshore              1
+## 
+## Sequence summary:
+##        num.seqs min.length mean.length max.length         a         c
+## D.loop      126        402         402        402 0.3011288 0.2293531
+##                g         t
+## D.loop 0.1289702 0.3405479</code></pre>
+<p>Note that since each sequence in <em>dolph.seqs</em> is for a given individual, the <em>pct.unique.alleles</em> and <em>heterozygosity</em> values are for every stratum 1 and <em>num.samples</em> equals <em>num.alleles</em>. In order to convert the sequences to unique haplotypes, use the <em>labelHaplotypes</em> function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dl.haps &lt;-<span class="st"> </span><span class="kw">labelHaplotypes</span>(dl.g)
+dl.haps$gtype</code></pre></div>
+<pre><code>## 
+## &lt;&lt;&lt; gtypes created on 2016-04-22 08:11:39 &gt;&gt;&gt;
+## 
+## Contents: 126 samples, 1 locus, 2 strata
+## 
+## Strata summary:
+##          num.samples num.missing num.alleles prop.unique.alleles
+## Coastal           68           0           5           0.0000000
+## Offshore          58           0          29           0.4827586
+##          heterozygosity
+## Coastal       0.7427568
+## Offshore      0.9594676
+## 
+## Sequence summary:
+##        num.seqs min.length mean.length max.length         a         c
+## D.loop       33        402         402        402 0.3011738 0.2293071
+##                g         t
+## D.loop 0.1291935 0.3403256</code></pre>
+</div>
+<div id="sequence2gtypes---convert-dna-sequences" class="section level3">
+<h3><em>sequence2gtypes</em> - Convert DNA sequences</h3>
+<p>The <em>sequence2gtypes</em> function creates an unstratified <em>gtype</em> object with just a set of DNA sequences:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(dolph.haps)
+
+haps.g &lt;-<span class="st"> </span><span class="kw">sequence2gtypes</span>(dolph.haps)
+haps.g</code></pre></div>
+<pre><code>## 
+## &lt;&lt;&lt; gtypes created on 2016-04-22 08:11:40 &gt;&gt;&gt;
+## 
+## Contents: 33 samples, 1 locus, 1 stratum
+## 
+## Strata summary:
+##         num.samples num.missing num.alleles prop.unique.alleles
+## Default          33           0          33                   1
+##         heterozygosity
+## Default              1
+## 
+## Sequence summary:
+##       num.seqs min.length mean.length max.length         a         c
+## gene1       33        402         402        402 0.3011738 0.2293071
+##               g         t
+## gene1 0.1291935 0.3403256</code></pre>
+<p>If you have a vector that identifies strata designations for the sequences, that can be supplied as well:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># extract and name the stratification scheme</span>
+strata &lt;-<span class="st"> </span>dolph.strata$fine
+<span class="kw">names</span>(strata) &lt;-<span class="st"> </span>dolph.strata$ids
+
+<span class="co"># create the gtypes object</span>
+dloop.fine &lt;-<span class="st"> </span><span class="kw">sequence2gtypes</span>(dolph.seqs, strata, <span class="dt">seq.names =</span> <span class="st">&quot;dLoop&quot;</span>,
+  <span class="dt">description =</span> <span class="st">&quot;dLoop: fine-scale stratification&quot;</span>)
+dloop.fine</code></pre></div>
+<pre><code>## 
+## &lt;&lt;&lt; dLoop: fine-scale stratification &gt;&gt;&gt;
+## 
+## Contents: 126 samples, 1 locus, 3 strata
+## 
+## Strata summary:
+##                num.samples num.missing num.alleles prop.unique.alleles
+## Coastal                 68           0          68                   1
+## Offshore.North          40           0          40                   1
+## Offshore.South          18           0          18                   1
+##                heterozygosity
+## Coastal                     1
+## Offshore.North              1
+## Offshore.South              1
+## 
+## Sequence summary:
+##       num.seqs min.length mean.length max.length         a         c
+## dLoop      126        402         402        402 0.3011288 0.2293531
+##               g         t
+## dLoop 0.1289702 0.3405479</code></pre>
+<p>Note that stratification is generally provided for individuals, thus if you want to stratify the resulting <em>gtypes</em> object from <em>sequence2gtypes</em>, one sequence for each individual should be provided, rather than just a set of unique haplotypes.</p>
+</div>
+<div id="genind2gtypes---convert-genind-object" class="section level3">
+<h3><em>genind2gtypes</em> - Convert genind object</h3>
+<p>This converts from a <em>genind</em> object from the <em>adegenet</em> package.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(adegenet)
+<span class="co"># from example(df2genind)</span>
+df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">locusA=</span><span class="kw">c</span>(<span class="st">&quot;11&quot;</span>,<span class="st">&quot;11&quot;</span>,<span class="st">&quot;12&quot;</span>,<span class="st">&quot;32&quot;</span>),
+                 <span class="dt">locusB=</span><span class="kw">c</span>(<span class="ot">NA</span>,<span class="st">&quot;34&quot;</span>,<span class="st">&quot;55&quot;</span>,<span class="st">&quot;15&quot;</span>),
+                 <span class="dt">locusC=</span><span class="kw">c</span>(<span class="st">&quot;22&quot;</span>,<span class="st">&quot;22&quot;</span>,<span class="st">&quot;21&quot;</span>,<span class="st">&quot;22&quot;</span>))
+<span class="kw">row.names</span>(df) &lt;-<span class="st"> </span><span class="kw">.genlab</span>(<span class="st">&quot;genotype&quot;</span>,<span class="dv">4</span>)
+obj &lt;-<span class="st"> </span><span class="kw">df2genind</span>(df, <span class="dt">ploidy=</span><span class="dv">2</span>, <span class="dt">ncode=</span><span class="dv">1</span>)
+obj</code></pre></div>
+<pre><code>## /// GENIND OBJECT /////////
+## 
+##  // 4 individuals; 3 loci; 9 alleles; size: 6.1 Kb
+## 
+##  // Basic content
+##    @tab:  4 x 9 matrix of allele counts
+##    @loc.n.all: number of alleles per locus (range: 2-4)
+##    @loc.fac: locus factor for the 9 columns of @tab
+##    @all.names: list of allele names for each locus
+##    @ploidy: ploidy of each individual  (range: 2-2)
+##    @type:  codom
+##    @call: df2genind(X = df, ncode = 1, ploidy = 2)
+## 
+##  // Optional content
+##    - empty -</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># convert to gtypes</span>
+gi.g &lt;-<span class="st"> </span><span class="kw">genind2gtypes</span>(obj)
+gi.g</code></pre></div>
+<pre><code>## 
+## &lt;&lt;&lt; gtypes created on 2016-04-22 08:11:40 &gt;&gt;&gt;
+## 
+## Contents: 4 samples, 3 loci, 1 stratum
+## 
+## Strata summary:
+##         num.samples num.missing num.alleles prop.unique.alleles
+## Default           4   0.3333333           3           0.5277778
+##         heterozygosity
+## Default      0.4722222
+## 
+## Locus summary:
+##        num.genotyped num.alleles prop.unique.alleles obsvd.heterozygosity
+## locusA             4           3           0.3333333            0.5000000
+## locusB             3           4           0.7500000            0.6666667
+## locusC             4           2           0.5000000            0.2500000</code></pre>
+</div>
+</div>
+<div id="accessor-functions" class="section level2">
+<h2>Accessor functions</h2>
+<p>There are several functions for getting basic information from a <em>gtypes</em> object:</p>
+<ul>
+<li><strong>nInd(g)</strong> Returns the number of individuals.</li>
+<li><strong>nLoc(g)</strong> Returns the number of loci.</li>
+<li><strong>nStrata(g)</strong> Returns the number of strata in the current scheme.</li>
+<li><strong>indNames(g)</strong> Returns the names of the individuals.</li>
+<li><strong>locNames(g)</strong> Returns the names of the loci or genes.</li>
+<li><strong>strataNames(g)</strong> Returns the names of the strata in the current scheme.</li>
+<li><strong>ploidy(g)</strong> Returns the ploidy of each locus.</li>
+<li><strong>strata(g)</strong> Returns the current strata to which each individual belongs. Can be set with strata(g) &lt;- value as below.</li>
+<li><strong>schemes(g)</strong> Returns a data.frame of potential stratification schemes. Can be set with schemes(g) &lt;- value as below.</li>
+<li><strong>loci(g, ids = NULL, loci = NULL)</strong> Returns a data.frame of the allelic for specified individuals and loci.</li>
+<li><strong>seqNames(g)</strong> Returns the names of seat of sequences.</li>
+<li><strong>sequences(g)</strong> Returns the <em>multidna</em> object in the @sequences slot.</li>
+<li><strong>description(g)</strong> Returns the label describing the object.</li>
+<li><strong>other(g)</strong> Returns the optional data stored in the @other slot.</li>
+</ul>
+</div>
+<div id="subsettingindexing" class="section level2">
+<h2>Subsetting/Indexing</h2>
+<p>A <em>gtypes</em> object can be subset using the standard R ‘[’ indexing operation, with three slots: [i, j, k]. The first (i) specifies the desired individuals, the second (j) is the loci to return, and the third (k) is the strata. All standard R indexing operations involving numerical, character, or logical vectors work for each argument. For example, to return 10 random individuals:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>msats.fine[<span class="kw">sample</span>(<span class="kw">nInd</span>(msats.fine), <span class="dv">10</span>), , ]
+sub.msats</code></pre></div>
+<pre><code>## 
+## &lt;&lt;&lt; gtypes created on 2016-04-22 08:11:39 &gt;&gt;&gt;
+## 
+## Contents: 10 samples, 5 loci, 2 strata
+## 
+## Strata summary:
+##          num.samples num.missing num.alleles prop.unique.alleles
+## Coastal            3           0         2.6           0.3333333
+## Offshore           7           0         8.0           0.5700000
+##          heterozygosity
+## Coastal       0.6666667
+## Offshore      0.9142857
+## 
+## Locus summary:
+##       num.genotyped num.alleles prop.unique.alleles obsvd.heterozygosity
+## D11t             10           8           0.5000000                  0.9
+## EV37             10          11           0.4545455                  1.0
+## EV94             10           9           0.5555556                  0.7
+## Ttr11            10           8           0.2500000                  0.8
+## Ttr34            10           7           0.2857143                  0.8</code></pre>
+<p>…or to return specific loci:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>sub.msats[, <span class="kw">c</span>(<span class="st">&quot;D11t&quot;</span>, <span class="st">&quot;EV37&quot;</span>, <span class="st">&quot;TV7&quot;</span>), ]
+sub.msats</code></pre></div>
+<pre><code>## 
+## &lt;&lt;&lt; gtypes created on 2016-04-22 08:11:39 &gt;&gt;&gt;
+## 
+## Contents: 10 samples, 2 loci, 2 strata
+## 
+## Strata summary:
+##          num.samples num.missing num.alleles prop.unique.alleles
+## Coastal            3           0         2.0           0.0000000
+## Offshore           7           0         8.5           0.5857143
+##          heterozygosity
+## Coastal       0.8333333
+## Offshore      1.0000000
+## 
+## Locus summary:
+##      num.genotyped num.alleles prop.unique.alleles obsvd.heterozygosity
+## D11t            10           8           0.5000000                  0.9
+## EV37            10          11           0.4545455                  1.0</code></pre>
+<p>…or some loci in a specific stratum:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>msats.fine[, <span class="kw">c</span>(<span class="st">&quot;Ttr11&quot;</span>, <span class="st">&quot;D11t&quot;</span>), <span class="st">&quot;Coastal&quot;</span>]
+sub.msats</code></pre></div>
+<pre><code>## 
+## &lt;&lt;&lt; gtypes created on 2016-04-22 08:11:39 &gt;&gt;&gt;
+## 
+## Contents: 68 samples, 2 loci, 1 stratum
+## 
+## Strata summary:
+##         num.samples num.missing num.alleles prop.unique.alleles
+## Coastal          68         0.5         3.5                   0
+##         heterozygosity
+## Coastal      0.5773705
+## 
+## Locus summary:
+##       num.genotyped num.alleles prop.unique.alleles obsvd.heterozygosity
+## Ttr11            68           4                   0            0.6323529
+## D11t             67           3                   0            0.5223881</code></pre>
+</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>A <em>summary</em> function has been defined for <em>gtypes</em>, and the return value provides the number of individuals, loci, strata, allele frequencies, a by-strata summary, and a by-locus summary:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">msats.smry &lt;-<span class="st"> </span><span class="kw">summary</span>(msats.fine)
+<span class="kw">str</span>(msats.smry)</code></pre></div>
+<pre><code>## List of 7
+##  $ num.ind     : num 126
+##  $ num.loc     : int 5
+##  $ num.strata  : int 2
+##  $ allele.freqs:List of 5
+##   ..$ D11t : num [1:12, 1:2, 1:2] 0 0 0 0 0 0 48 83 3 0 ...
+##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
+##   .. .. ..$ : chr [1:12] &quot;117&quot; &quot;119&quot; &quot;121&quot; &quot;127&quot; ...
+##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
+##   .. .. ..$ : chr [1:2] &quot;Coastal&quot; &quot;Offshore&quot;
+##   ..$ EV37 : num [1:22, 1:2, 1:2] 0 0 0 0 0 0 0 1 71 33 ...
+##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
+##   .. .. ..$ : chr [1:22] &quot;190&quot; &quot;200&quot; &quot;202&quot; &quot;204&quot; ...
+##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
+##   .. .. ..$ : chr [1:2] &quot;Coastal&quot; &quot;Offshore&quot;
+##   ..$ EV94 : num [1:15, 1:2, 1:2] 0 0 0 12 0 47 30 0 0 25 ...
+##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
+##   .. .. ..$ : chr [1:15] &quot;229&quot; &quot;239&quot; &quot;243&quot; &quot;245&quot; ...
+##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
+##   .. .. ..$ : chr [1:2] &quot;Coastal&quot; &quot;Offshore&quot;
+##   ..$ Ttr11: num [1:9, 1:2, 1:2] 0 0 42 0 0 59 33 2 0 0 ...
+##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
+##   .. .. ..$ : chr [1:9] &quot;193&quot; &quot;197&quot; &quot;207&quot; &quot;209&quot; ...
+##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
+##   .. .. ..$ : chr [1:2] &quot;Coastal&quot; &quot;Offshore&quot;
+##   ..$ Ttr34: num [1:10, 1:2, 1:2] 0 0 33 19 0 65 8 11 0 0 ...
+##   .. ..- attr(*, &quot;dimnames&quot;)=List of 3
+##   .. .. ..$ : chr [1:10] &quot;179&quot; &quot;183&quot; &quot;185&quot; &quot;187&quot; ...
+##   .. .. ..$ : chr [1:2] &quot;freq&quot; &quot;prop&quot;
+##   .. .. ..$ : chr [1:2] &quot;Coastal&quot; &quot;Offshore&quot;
+##  $ strata.smry : num [1:2, 1:5] 68 58 1.2 0.8 4.8 ...
+##   ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. ..$ : chr [1:2] &quot;Coastal&quot; &quot;Offshore&quot;
+##   .. ..$ : chr [1:5] &quot;num.samples&quot; &quot;num.missing&quot; &quot;num.alleles&quot; &quot;prop.unique.alleles&quot; ...
+##  $ unstratified: int 0
+##  $ locus.smry  : num [1:5, 1:7] 125 119 125 125 126 ...
+##   ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. ..$ : chr [1:5] &quot;D11t&quot; &quot;EV37&quot; &quot;EV94&quot; &quot;Ttr11&quot; ...
+##   .. ..$ : chr [1:7] &quot;num.genotyped&quot; &quot;prop.genotyped&quot; &quot;num.alleles&quot; &quot;allelic.richness&quot; ...
+##  - attr(*, &quot;description&quot;)= chr &quot;gtypes created on 2016-04-22 08:11:39&quot;
+##  - attr(*, &quot;class&quot;)= chr [1:2] &quot;gtypeSummary&quot; &quot;list&quot;</code></pre>
+<p>For just the by-locus summary statistics:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarizeLoci</span>(msats.fine)</code></pre></div>
+<pre><code>##       num.genotyped prop.genotyped num.alleles allelic.richness
+## D11t            125      0.9920635          12       0.09600000
+## EV37            119      0.9444444          22       0.18487395
+## EV94            125      0.9920635          15       0.12000000
+## Ttr11           125      0.9920635           9       0.07200000
+## Ttr34           126      1.0000000          10       0.07936508
+##       prop.unique.alleles exptd.heterozygosity obsvd.heterozygosity
+## D11t           0.25000000            0.7468273            0.7040000
+## EV37           0.13636364            0.8270751            0.6974790
+## EV94           0.06666667            0.8304900            0.7760000
+## Ttr11          0.22222222            0.7953414            0.7040000
+## Ttr34          0.20000000            0.8144248            0.6984127</code></pre>
+</div>
+<div id="stratifying-samples" class="section level2">
+<h2>Stratifying samples</h2>
+<p>You can specify the stratification scheme when creating a <em>gtypes</em> object as in the examples above. Once a <em>gtypes</em> object has been created, you can also change the stratification scheme by either supplying a new vector for the @strata slot:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># randomly stratify individuals to two populations</span>
+<span class="kw">strata</span>(msats) &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;Pop1&quot;</span>, <span class="st">&quot;Pop2&quot;</span>), <span class="kw">nInd</span>(msats), <span class="dt">rep =</span> <span class="ot">TRUE</span>)
+<span class="kw">summary</span>(msats)$strata.smry</code></pre></div>
+<pre><code>##      num.samples num.missing num.alleles prop.unique.alleles
+## Pop1          70         1.4        12.4           0.1918022
+## Pop2          56         0.6        12.0           0.2502137
+##      heterozygosity
+## Pop1      0.7233578
+## Pop2      0.7066712</code></pre>
+<p>or, if there is a stratification scheme data.frame in the @schemes slot, you can use the <em>stratify</em> function to choose a stratification scheme:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># choose &quot;broad&quot; stratification scheme</span>
+msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <span class="st">&quot;broad&quot;</span>)
+<span class="kw">summary</span>(msats)$strata.smry</code></pre></div>
+<pre><code>##          num.samples num.missing num.alleles prop.unique.alleles
+## Coastal           68         1.2         4.8          0.08571429
+## Offshore          58         0.8        13.6          0.17505051
+##          heterozygosity
+## Coastal       0.6312283
+## Offshore      0.8144326</code></pre>
+<p>If the @schemes slot is empty (NULL), you can fill it with a proper data.frame like this:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">schemes</span>(dloop) &lt;-<span class="st"> </span>strata.schemes</code></pre></div>
+<p>NOTE: Filling or changing the @schemes slot does not affect the current stratification of the samples. You must then select a new stratification scheme or fill the @strata slot as above.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stratify</span>(dloop, <span class="st">&quot;fine&quot;</span>)</code></pre></div>
+<pre><code>## 
+## &lt;&lt;&lt; gtypes created on 2016-04-22 08:11:39 &gt;&gt;&gt;
+## 
+## Contents: 126 samples, 1 locus, 3 strata
+## 
+## Strata summary:
+##                num.samples num.missing num.alleles prop.unique.alleles
+## Coastal                 68           0          68                   1
+## Offshore.North          40           0          40                   1
+## Offshore.South          18           0          18                   1
+##                heterozygosity
+## Coastal                     1
+## Offshore.North              1
+## Offshore.South              1
+## 
+## Sequence summary:
+##      num.seqs min.length mean.length max.length         a         c
+## haps      126        402         402        402 0.3011288 0.2293531
+##              g         t
+## haps 0.1289702 0.3405479</code></pre>
+<p>If some samples should be unstratified (excluded from any stratified analyses), they should have NAs in the appropriate position in the @strata slot. For example:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># unstratify a random 10 samples</span>
+x &lt;-<span class="st"> </span><span class="kw">strata</span>(msats)
+x[<span class="kw">sample</span>(<span class="kw">indNames</span>(msats), <span class="dv">10</span>)] &lt;-<span class="st"> </span><span class="ot">NA</span>
+<span class="kw">strata</span>(msats) &lt;-<span class="st"> </span>x
+<span class="kw">summary</span>(msats)$strata.smry</code></pre></div>
+<pre><code>##          num.samples num.missing num.alleles prop.unique.alleles
+## Coastal           62         1.0         4.8          0.08571429
+## Offshore          54         0.8        13.4          0.20015873
+##          heterozygosity
+## Coastal       0.6421817
+## Offshore      0.8193275</code></pre>
+<p>You can also randomly permute the current stratification scheme using the <em>permuteStrata</em> function like this:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <span class="st">&quot;fine&quot;</span>)
+
+<span class="co"># original</span>
+<span class="kw">summary</span>(msats)$strata.smry</code></pre></div>
+<pre><code>##                num.samples num.missing num.alleles prop.unique.alleles
+## Coastal                 68         1.2         4.8          0.08571429
+## Offshore.North          40         0.8        12.6          0.22398990
+## Offshore.South          18         0.0        11.0          0.25098291
+##                heterozygosity
+## Coastal             0.6312283
+## Offshore.North      0.7901822
+## Offshore.South      0.8666667</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># permuted</span>
+ran.msats &lt;-<span class="st"> </span><span class="kw">permuteStrata</span>(msats)
+<span class="kw">summary</span>(ran.msats)$strata.smry</code></pre></div>
+<pre><code>##                num.samples num.missing num.alleles prop.unique.alleles
+## Coastal                 68         1.8        13.0           0.2296825
+## Offshore.North          40         0.2        10.2           0.2041667
+## Offshore.South          18         0.0         7.4           0.3353175
+##                heterozygosity
+## Coastal             0.7097808
+## Offshore.North      0.7384615
+## Offshore.South      0.6888889</code></pre>
+<p>NOTE: Only samples assigned to strata are permuted with <em>permuteStrata</em>. Those not assigned (NAs) remain unassigned.</p>
+</div>
+<div id="exporting" class="section level2">
+<h2>Exporting</h2>
+<p>The allelic data in a <em>gtypes</em> object can be converted back to a matrix with <em>as.matrix</em>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gen.mat &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(msats)
+<span class="kw">head</span>(gen.mat)</code></pre></div>
+<pre><code>##      D11t.1 D11t.2 EV37.1 EV37.2 EV94.1 EV94.2 Ttr11.1 Ttr11.2 Ttr34.1
+## 4495 &quot;133&quot;  &quot;133&quot;  NA     NA     NA     NA     &quot;211&quot;   &quot;211&quot;   &quot;185&quot;  
+## 4496 &quot;137&quot;  &quot;141&quot;  NA     NA     &quot;243&quot;  &quot;251&quot;  NA      NA      &quot;189&quot;  
+## 4498 &quot;133&quot;  &quot;133&quot;  &quot;220&quot;  &quot;220&quot;  &quot;245&quot;  &quot;265&quot;  &quot;209&quot;   &quot;211&quot;   &quot;189&quot;  
+## 5814 &quot;135&quot;  &quot;139&quot;  &quot;210&quot;  &quot;226&quot;  &quot;251&quot;  &quot;265&quot;  &quot;209&quot;   &quot;209&quot;   &quot;185&quot;  
+## 5815 &quot;139&quot;  &quot;139&quot;  &quot;212&quot;  &quot;212&quot;  &quot;249&quot;  &quot;261&quot;  &quot;207&quot;   &quot;213&quot;   &quot;185&quot;  
+## 5816 &quot;135&quot;  &quot;137&quot;  &quot;214&quot;  &quot;220&quot;  &quot;249&quot;  &quot;253&quot;  &quot;207&quot;   &quot;209&quot;   &quot;187&quot;  
+##      Ttr34.2
+## 4495 &quot;191&quot;  
+## 4496 &quot;189&quot;  
+## 4498 &quot;189&quot;  
+## 5814 &quot;187&quot;  
+## 5815 &quot;185&quot;  
+## 5816 &quot;195&quot;</code></pre>
+<p>By default, this function splits each allele into its own column. One can make a matrix with one locus per column and alleles separated by a specified character by setting the <em>one.col</em> argument to <em>TRUE</em>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gen.mat &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(msats, <span class="dt">one.col =</span> <span class="ot">TRUE</span>)
+<span class="kw">head</span>(gen.mat)</code></pre></div>
+<pre><code>##      D11t      EV37      EV94      Ttr11     Ttr34    
+## 4495 &quot;133/133&quot; NA        NA        &quot;211/211&quot; &quot;185/191&quot;
+## 4496 &quot;137/141&quot; NA        &quot;243/251&quot; NA        &quot;189/189&quot;
+## 4498 &quot;133/133&quot; &quot;220/220&quot; &quot;245/265&quot; &quot;209/211&quot; &quot;189/189&quot;
+## 5814 &quot;135/139&quot; &quot;210/226&quot; &quot;251/265&quot; &quot;209/209&quot; &quot;185/187&quot;
+## 5815 &quot;139/139&quot; &quot;212/212&quot; &quot;249/261&quot; &quot;207/213&quot; &quot;185/185&quot;
+## 5816 &quot;135/137&quot; &quot;214/220&quot; &quot;249/253&quot; &quot;207/209&quot; &quot;187/195&quot;</code></pre>
+<p>The contents of a <em>gtypes</em> object can be written to a file with the <em>write.gtypes</em> function. This will write a .csv file with the allelic information and a .fasta file for any sequence data if it exists.</p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
