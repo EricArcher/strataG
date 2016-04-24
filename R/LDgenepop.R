@@ -7,6 +7,8 @@
 #' @param label character string to use to label GENEPOP input and output files.
 #' @param ... other arguments to be passed to \code{\link{genepop}}.
 #' 
+#' @return data.frame of disequilibrium estimates between pairs of individuals
+#' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @export

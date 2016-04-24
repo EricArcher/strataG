@@ -114,23 +114,22 @@ or strata (\code{k}). See Details for more information.}
 \item{drop}{if \code{TRUE} the return object will have unused sequences removed.}
 }
 \value{
-\tabular{ll}{
-  \code{nInd} \tab number of individuals.\cr
-  \code{nLoc} \tab number of loci.\cr
-  \code{nStrata} \tab number of strata.\cr
-  \code{indNames} \tab vector of individual/sample names.\cr
-  \code{locNames} \tab vector of locus names.\cr
-  \code{strataNames} \tab vector of strata names for current scheme.\cr
-  \code{ploidy} \tab number of alleles at each locus.\cr
-  \code{other} \tab contents of \code{@other} slot.\cr
-  \code{strata} \tab return or modify the current stratification.\cr
-  \code{schemes} \tab return or modify the current stratification schemes.\cr
-  \code{loci} \tab return a data.frame of the alleles for the specified ids 
-    and loci.\cr
-  \code{sequences} \tab return the \linkS4class{multidna} object in 
-    the \code{@sequences} slot.\cr See \code{\link[apex]{getSequences}} to 
-    extract individual genes or sequences from this object.
-  \code{description} \tab return the object's description.\cr
+\describe{
+  \item{\code{nInd}}{number of individuals}
+  \item{\code{nLoc}}{number of loci}
+  \item{\code{nStrata}}{number of strata}
+  \item{\code{indNames}}{vector of individual/sample names}
+  \item{\code{locNames}}{vector of locus names}
+  \item{\code{strataNames}}{vector of strata names for current scheme}
+  \item{\code{ploidy}}{number of alleles at each locus}
+  \item{\code{other}}{contents of \code{@other} slot}
+  \item{\code{strata}}{return or modify the current stratification}
+  \item{\code{schemes}}{return or modify the current stratification schemes}
+  \item{\code{loci}}{return a data.frame of the alleles for the specified ids and loci}
+  \item{\code{sequences}}{return the \linkS4class{multidna} object in 
+    the \code{@sequences} slot. See \code{\link[apex]{getSequences}} to 
+    extract individual genes or sequences from this object}
+  \item{\code{description}}{return the object's description}
 }
 }
 \description{

@@ -18,6 +18,9 @@ LDgenepop(g, show.output = FALSE, delete.files = TRUE,
 
 \item{...}{other arguments to be passed to \code{\link{genepop}}.}
 }
+\value{
+data.frame of disequilibrium estimates between pairs of individuals
+}
 \description{
 Calculate linkage disequilibrium p-values using GENEPOP.
 }

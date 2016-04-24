@@ -34,11 +34,11 @@ arguments.}
 \item{exec}{name of Genepop executable}
 }
 \value{
-\tabular{ll}{
-  \code{genepop.write} \tab a vector of the locus names used in the 
-    input file, and from.\cr
-  \code{genepop.run} \tab a list containing the same vector of locus 
-    names and a vector of the filenames used. Both returned invisibly.\cr
+\describe{
+  \item{\code{genepop}}{a list with a vector of the locus names and a vector 
+    of the input and output filenames}
+  \item{\code{genepopWrite}}{a vector of the locus names used in the 
+    input file}
 }
 }
 \description{

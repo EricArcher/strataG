@@ -19,11 +19,11 @@
 #'   the command line in the current working directory. See the vignette 
 #'   for \code{external.programs} for installation instructions.
 #' 
-#' @return \tabular{ll}{
-#'   \code{genepop.write} \tab a vector of the locus names used in the 
-#'     input file, and from.\cr
-#'   \code{genepop.run} \tab a list containing the same vector of locus 
-#'     names and a vector of the filenames used. Both returned invisibly.\cr
+#' @return \describe{
+#'   \item{\code{genepop}}{a list with a vector of the locus names and a vector 
+#'     of the input and output filenames}
+#'   \item{\code{genepopWrite}}{a vector of the locus names used in the 
+#'     input file}
 #' }
 #' 
 #' @references GENEPOP 4.3 (08 July 2014; Rousset, 2008)\cr

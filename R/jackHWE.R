@@ -15,35 +15,36 @@
 #' @param main main title for influential sample plots from 
 #'   \code{plot.jack.influential}.
 #' 
-#' @details \tabular{ll}{
-#'   \code{jack.hwe} \tab performs a HWE jackknife where all combinations 
-#'     of \code{exclude.num} samples are left out and HWE is recalculated.\cr
-#'   \code{jack.influential} \tab calculates odds.ratios between jackknife 
+#' @details \describe{
+#'   \item{\code{jackHWE}}{performs a HWE jackknife where all combinations 
+#'     of \code{exclude.num} samples are left out and HWE is recalculated}
+#'   \item{\code{jackInfluential}}{calculates odds.ratios between jackknife 
 #'     HWE and observed HWE and identifies "influential" samples. Samples 
 #'     are "influential" if the observed HWE p-value is < \code{alpha}, but 
-#'     is > \code{alpha} when the samples are not present.\cr
-#'   \code{plot.jack.influential} \tab creates a cumulative frequency plot 
+#'     is > \code{alpha} when the samples are not present}
+#'   \item{\code{plot.jack.influential}}{creates a cumulative frequency plot 
 #'     of all odds-ratios from \code{jack.influential}. A vertical dashed 
-#'     line marks the smallest influential exclusion.\cr
+#'     line marks the smallest influential exclusion}
 #' }
 #' 
+#' @return \code{jackHWE} returns a list with:
+#' \item{obs}{a named vector of HWE p-values for each locus.}
+#' \item{jack}{a \code{data.frame} of HWE p-values where each row is an 
+#'   exclusion and columns are loci.}
+#' \item{gtypes}{the original \code{gtypes} object.}\cr
+#' \code{jackInfluential} returns a list with:
+#' \item{influential}{a \code{data.frame} of influential exclusions.}
+#' \item{allele.freqs}{a \code{data.frame} listing the allele frequencies of 
+#'   influential exclusions.}
+#' \item{odds.ratio}{a \code{matrix} of odds ratios between exclusions (rows) 
+#'   and loci (columns).}
+#'   
 #' @note If \code{use.genepop = TRUE}, the command line version of GENEPOP v.4 
 #'   must be properly installed and available on the command line, so it is 
 #'   executable from any directory. On PC's, this requires having it in a 
 #'   folder in the PATH environmental variable. On Macs, the executable should 
 #'   be installed in a folder like \code{/usr/local/bin}.
 #' 
-#' @return \code{jack.hwe} returns a list with:
-#' \item{obs}{a named vector of HWE p-values for each locus.}
-#' \item{jack}{a \code{data.frame} of HWE p-values where each row is an 
-#'   exclusion and columns are loci.}
-#' \item{gtypes}{the original \code{gtypes} object.}\cr
-#' \code{jack.influential} returns a list with:
-#' \item{influential}{a \code{data.frame} of influential exclusions.}
-#' \item{allele.freqs}{a \code{data.frame} listing the allele frequencies of 
-#'   influential exclusions.}
-#' \item{odds.ratio}{a \code{matrix} of odds ratios between exclusions (rows) 
-#'   and loci (columns).}
 #' 
 #' @references Morin, P.A., R.G. LeDuc, F.I. Archer, K.K. Martien, 
 #'   R. Huebinger, J.W. Bickham, and B.L. Taylor. 2009. Significant deviations 

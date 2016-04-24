@@ -16,15 +16,15 @@ for each stratum.}
 }
 \value{
 A matrix with rows for each locus and columns containing summaries of:
-  \tabular{ll}{
-    \code{num.genotyped} \tab The number of samples genotyped.\cr
-    \code{prop.genotyped} \tab The proportion of samples genotyped.\cr
-    \code{num.alleles} \tab The number of alleles in the locus.\cr
-    \code{allelic.richness} \tab The allelic richness of the locus.\cr
-    \code{prop.unique.alleles} \tab Proportion of alleles found in a single sample.\cr
-    \code{expt.heterozygosity} \tab Expected heterozygosity.\cr
-    \code{obsvd.heterozygosity} \tab Observed heterozygosity.\cr
-  }
+\describe{
+  \item{\code{num.genotyped}}{The number of samples genotyped}
+  \item{\code{prop.genotyped}}{The proportion of samples genotyped}
+  \item{\code{num.alleles}}{The number of alleles in the locus}
+  \item{\code{allelic.richness}}{The allelic richness of the locus}
+  \item{\code{prop.unique.alleles}}{Proportion of alleles found in a single sample}
+  \item{\code{expt.heterozygosity}}{Expected heterozygosity}
+  \item{\code{obsvd.heterozygosity}}{Observed heterozygosity}
+}
 }
 \description{
 Compile standard by-locus summaries.

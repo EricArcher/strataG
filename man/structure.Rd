@@ -80,19 +80,17 @@ STRUCTURE file.}
 }
 \value{
 \describe{
- \item{structure.run}{a list where each element is a list with results 
-   from \code{structure.read} and a vector of the filenames used.}
- \item{structure.write}{a vector of the filenames used by STRUCTURE.}
- \item{structure.read}{a list containing:
-   \tabular{ll}{
-     \code{summary} \tab new locus name, which is a combination of loci 
-       in group.\cr
-     \code{q.mat} \tab data.frame of assignment probabilities for 
-       each id.\cr
-     \code{prior.anc} \tab list of prior ancestry estimates for each 
-       individual where population priors were used.\cr
-     \code{files} \tab vector of input and output files used by STRUCTURE.\cr
-     \code{label} \tab label for the run.\cr
+ \item{\code{structure.run}}{a list where each element is a list with results 
+   from \code{structure.read} and a vector of the filenames used}
+ \item{\code{structure.write}}{a vector of the filenames used by STRUCTURE}
+ \item{\code{structure.read}}{a list containing:
+   \describe{
+     \item{\code{summary}}{new locus name, which is a combination of loci in group}
+     \item{\code{q.mat}}{data.frame of assignment probabilities for each id}
+     \item{\code{prior.anc}}{list of prior ancestry estimates for each 
+       individual where population priors were used}
+     \item{\code{files}}{vector of input and output files used by STRUCTURE}
+     \item{\code{label}}{label for the run}
    }
  }
 }
