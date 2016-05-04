@@ -7,17 +7,16 @@
 #'  
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \link{initialize.gtypes}, \link{df2gtypes}, \link{sequence2gtypes}, 
-#'   \link{gtypes2df}, \link{gtypes2genind}
+#' @seealso \link{initialize.gtypes}, \link{df2gtypes}, 
+#'   \link{sequence2gtypes}, \link{as.data.frame.gtypes}, 
+#'   \link{gtypes2genind}
 #' 
 #' @importFrom pegas as.loci
 #' @export
 #' 
 gtypes2loci <- function(x) {
-  mat <- as.matrix(x, one.col = TRUE, sep = "/")
-  mat <- data.frame(cbind(as.character(strata(x)), mat))
-  mat <- data.frame(lapply(mat, factor))
-  as.loci(mat, col.pop = 1)
+  df <- as.data.frame(x, one.col = TRUE, sep = "/", ids = F)
+  as.loci(df, col.pop = 1)
 }
 
 #' @rdname gtypes2loci

@@ -12,8 +12,9 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \link{initialize.gtypes}, \link{df2gtypes}, \link{sequence2gtypes}, 
-#'   \link{gtypes2df}, \link{gtypes2loci}
+#' @seealso \link{initialize.gtypes}, \link{df2gtypes}, 
+#'   \link{sequence2gtypes}, \link{as.data.frame.gtypes}, 
+#'   \link{gtypes2loci}
 #' 
 #' @export
 #' 

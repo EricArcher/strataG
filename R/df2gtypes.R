@@ -34,8 +34,8 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \link{initialize.gtypes}, \link{sequence2gtypes}, \link{gtypes2df},
-#'   \link{gtypes2genind}, \link{gtypes2loci}
+#' @seealso \link{initialize.gtypes}, \link{sequence2gtypes}, 
+#'   \link{as.data.frame.gtypes}, \link{gtypes2genind}, \link{gtypes2loci}
 #' 
 #' @examples
 #' #--- create a diploid (microsatellite) gtypes object

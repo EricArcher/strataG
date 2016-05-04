@@ -37,7 +37,7 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
-#' @seealso \link{df2gtypes}, \link{sequence2gtypes}, \link{gtypes2df},
+#' @seealso \link{df2gtypes}, \link{sequence2gtypes}, \link{as.data.frame.gtypes},
 #'   \link{gtypes2genind}, \link{gtypes2loci}
 #'
 #' @aliases initialize.gtypes new

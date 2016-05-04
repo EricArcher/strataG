@@ -203,7 +203,7 @@ labelHaplotypes.gtypes <- function(x, ...) {
   }
   
   # create haplotype data.frame
-  hap.df <- gtypes2df(x)
+  hap.df <- as.data.frame(x)
   for(gene in names(new.haps)) {
     old.haps <- hap.df[, gene]
     hap.df[, gene] <- new.haps[[gene]]$haps[old.haps]

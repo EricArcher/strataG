@@ -39,6 +39,7 @@ Collate:
     alleleSplit.R
     allelicRichness.R
     arlequin.R
+    as.data.frame.gtypes.R
     as.matrix.gtypes.R
     as.multidna.R
     baseFreqs.R
@@ -115,7 +116,6 @@ Collate:
     wrightFst.R
     write.gtypes.R
     write.nexus.snapp.R
-    gtypes2df.R
     gtypes2genind.R
     gtypes2loci.R
     df2gtypes.R

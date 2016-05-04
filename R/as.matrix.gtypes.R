@@ -1,25 +1,27 @@
 #' @title Convert \code{gtypes} To \code{matrix}
-#' @description Convert genotypic data in the \code{@@loci} slot of a 
-#'   \linkS4class{gtypes} object to a \code{matrix}.
+#' @description Create a matrix from a \linkS4class{gtypes} object.
 #'   
 #' @param x a \linkS4class{gtypes} object.
 #' @param one.col logical. If \code{TRUE}, then result has one column per 
 #'   locus.
 #' @param sep character to use to separate alleles if \code{one.col} is 
 #'   \code{TRUE}.
+#' @param ids logical. include a column for individual identifiers (\code{ids})?
+#' @param strata logical. include a column for current statification (\code{strata})?
 #' @param ... additional arguments ot be passed to or from methods.
 #'   
-#' @return A \code{matrix} or \code{data.frame} with one row per sample.
+#' @return A \code{matrix} with one row per sample.
 #' 
 #' @author Eric Archer \email{eric.archer@@noa.gov}
 #' 
-#' @seealso \link{df2gtypes}
+#' @seealso \link{df2gtypes}, \link{as.data.frame.gtypes}
 #' 
 #' @aliases as.matrix.gtypes
 #' 
 #' @export
 #' 
-setMethod("as.matrix", "gtypes", function(x, one.col = FALSE, sep = "/", ...) {
+setMethod("as.matrix", "gtypes", function(x, one.col = FALSE, sep = "/", 
+                                          ids = TRUE, strata = TRUE, ...) {
   # create matrix identifying which rows (columns) each sample (row) is in 
   #   in the @loci slot
   id.mat <- matrix(1:nrow(x@loci), ncol = ploidy(x))
@@ -44,5 +46,7 @@ setMethod("as.matrix", "gtypes", function(x, one.col = FALSE, sep = "/", ...) {
     this.loc
   }))
   rownames(gen.mat) <- indNames(x)
+  if(strata) gen.mat <- cbind(strata = as.character(strata(x)), gen.mat)
+  if(ids) gen.mat <- cbind(ids = indNames(x), gen.mat)
   gen.mat    
 })
