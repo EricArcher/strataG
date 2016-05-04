@@ -1,4 +1,4 @@
-## Changes to strataG v 1.4
+## Changes to strataG v 1.0.5
 
 * Fixed error in dupGenotypes, propSharedLoci, and propSharedIDs where missing genotypes were not being properly counted.
 * Added as.data.frame.gtypes.
