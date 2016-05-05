@@ -6,7 +6,7 @@
 \alias{labelHaplotypes.gtypes}
 \title{Find and label haplotypes}
 \usage{
-labelHaplotypes(x, prefix = NULL, use.indels = FALSE)
+labelHaplotypes(x, prefix = NULL, use.indels = TRUE)
 
 \method{labelHaplotypes}{default}(x, prefix = NULL, use.indels = TRUE)
 

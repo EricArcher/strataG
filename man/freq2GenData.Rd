@@ -4,14 +4,16 @@
 \alias{freq2GenData}
 \title{Convert Haplotype Frequency Matrices}
 \usage{
-freq2GenData(freq.mat, hap.col, freq.col, id.label = NULL, hap.label = NULL)
+freq2GenData(freq.mat, hap.col = NULL, freq.col = 1, id.label = NULL,
+  hap.label = NULL)
 }
 \arguments{
 \item{freq.mat}{a matrix or data.frame containing haplotypic 
 frequencies with strata as column names.}
 
 \item{hap.col}{a number giving the column providing haplotype 
-labels or a vector the same length as freq.mat.}
+labels or a vector the same length as freq.mat. If \code{NULL} rownames 
+are used.}
 
 \item{freq.col}{a number giving the first column containing 
 haplotype frequencies.}

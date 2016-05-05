@@ -5,7 +5,8 @@
 #' @param freq.mat a matrix or data.frame containing haplotypic 
 #'   frequencies with strata as column names.
 #' @param hap.col a number giving the column providing haplotype 
-#'   labels or a vector the same length as freq.mat.
+#'   labels or a vector the same length as freq.mat. If \code{NULL} rownames 
+#'   are used.
 #' @param freq.col a number giving the first column containing 
 #'   haplotype frequencies.
 #' @param id.label character to label sample IDs with in resulting 
@@ -33,9 +34,13 @@
 #' @importFrom stats complete.cases
 #' @export
 #' 
-freq2GenData <- function(freq.mat, hap.col, freq.col, id.label = NULL, 
+freq2GenData <- function(freq.mat, hap.col = NULL, freq.col = 1, id.label = NULL, 
                          hap.label = NULL) {
-  haps <- if(length(hap.col) == 1) freq.mat[, hap.col] else hap.col
+  haps <- if(is.null(hap.col)) {
+    if(is.null(rownames(freq.mat))) 1:nrow(freq.mat) else rownames(freq.mat)
+  } else {
+    if(length(hap.col) == 1) freq.mat[, hap.col] else hap.col
+  }
   df <- do.call(rbind, lapply(freq.col:ncol(freq.mat), function(i) {
     freq.sub <- cbind(haps, freq.mat[, i])
     freq.sub <- freq.sub[complete.cases(freq.sub), , drop = FALSE]

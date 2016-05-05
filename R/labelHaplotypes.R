@@ -73,7 +73,7 @@
 #' @importFrom swfscMisc zero.pad
 #' @export
 #'
-labelHaplotypes <- function(x, prefix = NULL, use.indels = FALSE) {
+labelHaplotypes <- function(x, prefix = NULL, use.indels = TRUE) {
   UseMethod("labelHaplotypes")
 }
 
