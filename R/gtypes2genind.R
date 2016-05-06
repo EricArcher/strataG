@@ -19,7 +19,7 @@
 #' @export
 #' 
 gtypes2genind <- function(x, type = c("codom", "PA")) {
-  df2genind(X = as.matrix(x, one.col = TRUE, sep = "/"),
+  df2genind(X = as.matrix(x, one.col = TRUE, sep = "/", ids = FALSE, strata = FALSE),
             sep = "/", 
             pop = strata(x),
             NA.char = NA,

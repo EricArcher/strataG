@@ -15,7 +15,7 @@
 #' @export
 #' 
 gtypes2loci <- function(x) {
-  df <- as.data.frame(x, one.col = TRUE, sep = "/", ids = F)
+  df <- as.data.frame(x, one.col = TRUE, sep = "/", ids = FALSE)
   as.loci(df, col.pop = 1)
 }
 
