@@ -23,6 +23,8 @@ a list with the following elements:
   \item{\code{num.ind}}{number of individuals}
   \item{\code{num.loc}}{number of loci}
   \item{\code{num.strata}}{number of strata}
+  \item{\code{unstratified}}{number of unstratified samples}
+  \item{\code{schemes}}{names of stratification schemes}
   \item{\code{allele.freqs}}{a list with tables of allele frequencies by strata}
   \item{\code{strata.smry}}{a by-strata data.frame summarizing haplotypes or loci}
   \item{\code{locus.smry}}{a data.frame summarizing each locus for 
