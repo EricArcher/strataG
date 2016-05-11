@@ -55,8 +55,7 @@ gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5,
   # loop through every unknown strata
   result <- sapply(unknown.strata, function(unknown) {
     unknown.gtypes <- g[, , unknown]
-    unknown.mat <- as.matrix(unknown.gtypes)
-    unknown.mat <- cbind(strata = unknown, unknown.mat)
+    unknown.mat <- as.matrix(unknown.gtypes, ids = FALSE)
     unknown.n <- nInd(unknown.gtypes)
     
     # loop through each known population and calculate distribution
@@ -73,11 +72,11 @@ gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5,
           known.sample <- known.gtypes[known.to.keep, , ]
           
           # gtypes for observed Fst
-          known.mat <- as.matrix(known.sample)
-          known.mat <- cbind(strata = known, known.mat)
-          obs.gtypes <- df2gtypes(rbind(known.mat, unknown.mat), ploidy = 2,
-                                  id.col = NULL, strata.col = 1, loc.col = 2,
-                                  sequences = sequences(g))
+          known.mat <- as.matrix(known.sample, ids = FALSE)
+          obs.gtypes <- df2gtypes(
+            rbind(known.mat, unknown.mat), ploidy = ploidy(g),
+            id.col = NULL, strata.col = 1, loc.col = 2, sequences = sequences(g)
+          )
 
           # gtypes for null Fst
           st <- as.character(strata(known.gtypes))
