@@ -302,7 +302,7 @@ pairwiseTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE,
   
   # create pairwise matrices - lower left is estimate, upper right is p-value 
   stat.cols <- seq(6, ncol(result), 2)
-  strata <- sort(levels(strata(g)))
+  strata <- levels(strata(g))
   mat <- matrix(nrow = length(strata), ncol = length(strata), 
     dimnames = list(strata, strata)
   )

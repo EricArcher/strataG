@@ -17,9 +17,9 @@
 #' @importFrom utils combn
 #' 
 .strataPairs <- function(g) {
-  if(nlevels(strata(g)) < 2) return(NULL)
-  strata.vec <- sort(unique(as.character(strata(g))))
-  strata.pairs <- t(combn(strata.vec, 2))
+  st <- strataNames(g)
+  if(length(st) < 2) return(NULL)
+  strata.pairs <- t(combn(st, 2))
   colnames(strata.pairs) <- c("strata.1", "strata.2")
   as.data.frame(strata.pairs, stringsAsFactors = FALSE)
 }
