@@ -120,9 +120,7 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
     names(sort(hap.order))
   } else {
     # if no prefix, use first sequence name for each haplotype
-    hap.code.sort <- hap.code[order(names(hap.code))]
-    names(sort(hap.code[!duplicated(hap.code.sort)]))
-    names(hap.code[!duplicated(hap.code)])
+    names(hap.code)[!duplicated(hap.code)]
   }
   hap.code <- hap.labels[hap.code]
   names(hap.code) <- rownames(hap.dist)
