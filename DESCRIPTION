@@ -30,17 +30,17 @@ Imports:
     utils
 Collate:
     strataG-package.R
-    gtypes.accessors.R
     gtypes.class.R
+    gtypes.accessors.R
     initialize.gtypes.R
     internals.R
+    as.matrix.gtypes.R
+    as.data.frame.gtypes.R
     alleleFreqFormat.R
     alleleFreqs.R
     alleleSplit.R
     allelicRichness.R
     arlequin.R
-    as.data.frame.gtypes.R
-    as.matrix.gtypes.R
     as.multidna.R
     baseFreqs.R
     clumpp.R

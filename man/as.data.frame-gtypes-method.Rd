@@ -25,7 +25,7 @@ locus.}
 \item{...}{additional arguments ot be passed to or from methods.}
 }
 \value{
-\code{data.frame} with one row per sample.
+A \code{data.frame} with one row per sample.
 }
 \description{
 Create a data.frame from a \linkS4class{gtypes} object.
@@ -34,6 +34,6 @@ Create a data.frame from a \linkS4class{gtypes} object.
 Eric Archer \email{eric.archer@noa.gov}
 }
 \seealso{
-\link{df2gtypes}, \link{as.matrix.gtypes}
+\link{df2gtypes}
 }
 

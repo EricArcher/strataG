@@ -22,8 +22,8 @@
 #' data(dolph.seqs)
 #' strata <- dolph.strata$fine
 #' names(strata) <- dolph.strata$ids
-#' dloop.fine <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop",
-#'   description = "dLoop: fine-scale stratification")
+#' dloop.fine <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop", 
+#' description = "dLoop: fine-scale stratification")
 #' 
 #' @importFrom methods new
 #' @export

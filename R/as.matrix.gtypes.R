@@ -14,39 +14,42 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noa.gov}
 #' 
-#' @seealso \link{df2gtypes}, \link{as.data.frame.gtypes}
+#' @seealso \link{df2gtypes}
 #' 
 #' @aliases as.matrix.gtypes
 #' 
 #' @export
 #' 
-setMethod("as.matrix", "gtypes", function(x, one.col = FALSE, sep = "/", 
-                                          ids = TRUE, strata = TRUE, ...) {
-  # create matrix identifying which rows (columns) each sample (row) is in 
-  #   in the @loci slot
-  id.mat <- matrix(1:nrow(x@loci), ncol = ploidy(x))
-  # loop through each locus
-  gen.mat <- do.call(cbind, lapply(locNames(x), function(locus) {
-    # extract alleles for this locus as a matrix with one allele per colum
-    this.loc <- x@loci[[locus]]
-    this.loc <- apply(id.mat, 1, function(i) as.character(this.loc[i]))
-    this.loc <- if(is.vector(this.loc)) cbind(this.loc) else t(this.loc)  
-    # collapse alleles to create a one column matrix if one.col == TRUE
-    if(one.col & x@ploidy > 1) {
-      this.loc <- cbind(apply(this.loc, 1, function(alleles) {
-        if(any(is.na(alleles))) NA else paste(alleles, collapse = sep)
-      }))
-    }
-    # assign column names
-    colnames(this.loc) <- if(ncol(this.loc) > 1) {
-      paste(locus, 1:ncol(this.loc), sep = ".")
-    } else {
-      locus
-    }
-    this.loc
-  }))
-  rownames(gen.mat) <- indNames(x)
-  if(strata) gen.mat <- cbind(strata = as.character(strata(x)), gen.mat)
-  if(ids) gen.mat <- cbind(ids = indNames(x), gen.mat)
-  gen.mat    
-})
+#' 
+setMethod(
+  "as.matrix", "gtypes",
+  function(x, one.col = FALSE, sep = "/", ids = TRUE, strata = TRUE, ...) {
+    # create matrix identifying which rows (columns) each sample (row) is in 
+    #   in the @loci slot
+    id.mat <- matrix(1:nrow(x@loci), ncol = ploidy(x))
+    # loop through each locus
+    gen.mat <- do.call(cbind, lapply(locNames(x), function(locus) {
+      # extract alleles for this locus as a matrix with one allele per colum
+      this.loc <- x@loci[[locus]]
+      this.loc <- apply(id.mat, 1, function(i) as.character(this.loc[i]))
+      this.loc <- if(is.vector(this.loc)) cbind(this.loc) else t(this.loc)  
+      # collapse alleles to create a one column matrix if one.col == TRUE
+      if(one.col & x@ploidy > 1) {
+        this.loc <- cbind(apply(this.loc, 1, function(alleles) {
+          if(any(is.na(alleles))) NA else paste(alleles, collapse = sep)
+        }))
+      }
+      # assign column names
+      colnames(this.loc) <- if(ncol(this.loc) > 1) {
+        paste(locus, 1:ncol(this.loc), sep = ".")
+      } else {
+        locus
+      }
+      this.loc
+    }))
+    rownames(gen.mat) <- indNames(x)
+    if(strata) gen.mat <- cbind(strata = as.character(strata(x)), gen.mat)
+    if(ids) gen.mat <- cbind(ids = indNames(x), gen.mat)
+    gen.mat    
+  }
+)

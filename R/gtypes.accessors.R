@@ -49,6 +49,8 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @aliases accessors
+#' @importFrom adegenet nInd
+#' @importFrom methods setGeneric setMethod
 #' 
 #' @examples
 #' #--- create a diploid (microsatellite) gtypes object
@@ -92,21 +94,7 @@
 #' gene1.dnabin <- getSequences(sequences(gene1))
 #' class(gene1.dnabin) # "DNAbin"
 #' 
-setClass("gtypes")
 
-
-#' @rdname gtypes.accessors
-#' @aliases nInd
-#' @export
-#' 
-setMethod("nInd", "gtypes", function(x, ...) nrow(x@loci) / x@ploidy)
-
-
-#' @rdname gtypes.accessors
-#' @aliases nLoc
-#' @export
-#' 
-setMethod("nLoc", "gtypes", function(x, ...) ncol(x@loci))
 
 
 #' @rdname gtypes.accessors
@@ -119,6 +107,18 @@ setGeneric("nStrata", function(x, ...) standardGeneric("nStrata"))
 #' @export
 #' 
 setMethod("nStrata", "gtypes", function(x, ...) nlevels(x@strata))
+
+#' @rdname gtypes.accessors
+#' @aliases nLoc
+#' @export
+#' 
+setMethod("nLoc", "gtypes", function(x, ...) ncol(x@loci))
+
+#' @rdname gtypes.accessors
+#' @aliases nInd
+#' @export
+#' 
+setMethod("nInd", "gtypes", function(x, ...) nrow(x@loci) / x@ploidy)
 
 
 #' @rdname gtypes.accessors

@@ -62,7 +62,7 @@ same names as column names in \code{X} from \code{loc.col} to the end.
 Eric Archer \email{eric.archer@noaa.gov}
 }
 \seealso{
-\link{df2gtypes}, \link{sequence2gtypes}, \link{as.data.frame.gtypes},
+\link{df2gtypes}, \link{sequence2gtypes},
   \link{gtypes2genind}, \link{gtypes2loci}
 }
 

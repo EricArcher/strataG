@@ -34,6 +34,6 @@ Create a matrix from a \linkS4class{gtypes} object.
 Eric Archer \email{eric.archer@noa.gov}
 }
 \seealso{
-\link{df2gtypes}, \link{as.data.frame.gtypes}
+\link{df2gtypes}
 }
 

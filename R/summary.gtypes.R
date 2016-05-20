@@ -24,8 +24,7 @@
 #' 
 #' @export
 #' 
-setMethod("summary", "gtypes",
-  function(object, ...) { 
+setMethod("summary", "gtypes", function(object, ...) { 
     x <- object
   
     smry <- list(num.ind = nInd(x), num.loc = nLoc(x), num.strata = nStrata(x))

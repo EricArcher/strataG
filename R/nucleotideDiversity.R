@@ -3,6 +3,8 @@
 #' 
 #' @param x a set of sequences or a \linkS4class{gtypes} object with sequences.
 #' @param bases nucleotides to consider when calculating diversity.
+#' @param simplify if \code{TRUE} and only one loci exists, return a vector, 
+#'   otherwise, a list of vectors with one element per locus will be returned.
 #' 
 #' @return Nucleotide diversity by site. 
 #' 
@@ -20,9 +22,15 @@
 #' @importFrom swfscMisc diversity
 #' @export
 #' 
-nucleotideDiversity <- function(x, bases = c("a", "c", "g", "t")) {
-  x <- as.multidna(x)
+nucleotideDiversity <- function(x, bases = c("a", "c", "g", "t"), simplify = TRUE) {
   bases <- tolower(bases)
+  
+  x <- if(inherits(x, "gtypes")) {
+    sequences(x, as.haplotypes = FALSE)
+  } else {
+    as.multidna(x)
+  }
+  
   result <- lapply(getSequences(x, simplify = FALSE), function(dna) {  
     dna <- as.character(as.matrix(dna))
     site.div <- apply(dna, 2, function(b) {
@@ -32,7 +40,7 @@ nucleotideDiversity <- function(x, bases = c("a", "c", "g", "t")) {
     site.div
   })
   
-  if(length(result) == 1) {
+  if(length(result) == 1 & simplify) {
     result[[1]]
   } else {
     names(result) <- getLocusNames(x)
