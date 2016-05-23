@@ -22,7 +22,6 @@ Calculate the expected number of alleles in a sample of a
   given size and value of theta.
 }
 \examples{
-
 exptdNumAlleles(20, 1, 2)
 
 # double the samples

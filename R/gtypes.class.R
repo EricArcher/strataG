@@ -47,7 +47,7 @@ setClassUnion("dnaSequences", c("multidna", "NULL"))
 #' dloop.g
 #' dloop.g <- labelHaplotypes(dloop.g, "Hap.")$gtypes
 #' dloop.g
-#'
+#' 
 #' @aliases gtypes
 #' @import adegenet ape apex
 #' @importFrom methods setClass

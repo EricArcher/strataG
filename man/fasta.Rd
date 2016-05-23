@@ -13,10 +13,14 @@ write.fasta(x, file = "sequences.fasta")
 \arguments{
 \item{file}{a FASTA-formatted file of sequences.}
 
-\item{x}{a list or a matrix of DNA sequences (see \code{\link[ape]{write.dna}}).}
+\item{x}{a list or a matrix of DNA sequences (see \code{\link[ape]{write.dna}}), 
+or a \code{\link{gtypes}} object with sequences.}
 }
 \value{
-for \code{read.fasta}, a set of sequences in DNAbin format.
+\describe{
+  \item{read.fasta}{a set of sequences in DNAbin format}
+  \item{write.fasta}{invisbly, name(s) of file(s) written}
+}
 }
 \description{
 Read and write FASTA formatted files of sequences.

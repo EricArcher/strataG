@@ -1,4 +1,3 @@
-#' @name fastsimcoal.input
 #' @title Input functions for fastsimcoal parameters
 #' @description Functions to create \code{pop.info}, \code{locus.params}, and 
 #'   \code{hist.ev} input matrices for fastsimcoal function.
@@ -17,11 +16,11 @@
 #' 
 #' @seealso \code{\link{fastsimcoal}}
 #' 
+#' @name fastsimcoal.input
+#' 
 NULL
 
 
-#' @rdname fastsimcoal.input
-#' 
 #' @param pop.size a vector giving size of each populaiton.
 #' @param sample.size a vector giving the number of samples to take from each
 #'   population.
@@ -29,6 +28,7 @@ NULL
 #'   at which samples are taken.
 #' @param growth.rate a vector giving the growth rate of each population.
 #' 
+#' @rdname fastsimcoal.input
 #' @export
 #' 
 fscPopInfo <- function(pop.size, sample.size, sample.times = 0, growth.rate = 0) {
@@ -38,8 +38,6 @@ fscPopInfo <- function(pop.size, sample.size, sample.times = 0, growth.rate = 0)
   )
 }
 
-
-#' @rdname fastsimcoal.input
 
 #' @param locus.type a character representation of what type of marker to simulate.
 #'   Can be "dna", "msat", or "snp".
@@ -65,7 +63,8 @@ fscPopInfo <- function(pop.size, sample.size, sample.times = 0, growth.rate = 0)
 #'   column. Any non-\code{NULL} integer will cause the value in \code{chromosome}.
 #' @param ploidy positive integer giving the ploidy of the marker type to 
 #'   be simulated.
-#'   
+#' 
+#' @rdname fastsimcoal.input
 #' @export
 #' 
 fscLocusParams <- function(locus.type = c("dna", "msat", "snp"),
@@ -113,8 +112,6 @@ fscLocusParams <- function(locus.type = c("dna", "msat", "snp"),
 }
 
 
-#' @rdname fastsimcoal.input
-#' 
 #' @param num.gen Number of generations, t, before present at which the
 #'   historical event happened.
 #' @param source.deme Source deme (the first listed deme has index 0)
@@ -125,6 +122,7 @@ fscLocusParams <- function(locus.type = c("dna", "msat", "snp"),
 #' @param new.sink.growth New growth rate for the sink deme.
 #' @param new.mig.mat New migration matrix to be used further back in time.
 #' 
+#' @rdname fastsimcoal.input
 #' @export
 #' 
 fscHistEv <- function(num.gen = 0, source.deme = 0, sink.deme = 0,

@@ -20,11 +20,22 @@ calculating frequencies.}
 For each gene, a list containing:
 \tabular{ll}{
   \code{site.freqs} \tab a matrix of base frequencies at each site.\cr
-  \code{base.freqs} \tab a vector of overall base frequencies.\cr
+  \code{base.freqs} \tab a vector of overall base proportion composition.\cr
 }
 }
 \description{
 Calculate nucleotide base frequencies along a sequence.
+}
+\examples{
+data(dloop.g)
+bf <- baseFreqs(dloop.g)
+
+# Frequencies of first 10 sites
+bf$site.freqs[, 1:10]
+
+# Base composition
+bf$base.freqs
+
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

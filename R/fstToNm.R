@@ -7,6 +7,11 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
+#' @examples 
+#' fst <- seq(0.001, 0.2, length.out = 100)
+#' Nm <- fstToNm(fst, 2)
+#' plot(fst, Nm, type = "l")
+#'
 #' @export
 #' 
 fstToNm <- function(fst, ploidy) {

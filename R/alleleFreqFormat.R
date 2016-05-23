@@ -5,14 +5,15 @@
 #'   second colum is locus name.
 #' @param g a \linkS4class{gtypes} object.
 #' 
-#' @return data.frame of original samples, loci, and formatted alleles and 
-#'   frequencies.
+#' @return matrix of original samples, loci, and a formatted character 
+#'   string giving alleles and their overall frequencies in the data.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @seealso \link{alleleFreqs}
+#' 
 #' @examples
 #' data(msats.g)
-#' msats.g <- stratify(msats.g, "fine")
 #' 
 #' x <- cbind(
 #'  id = sample(indNames(msats.g), 10, rep = TRUE),
@@ -21,7 +22,7 @@
 #' alleleFreqFormat(x, msats.g)
 #' 
 #' @export
-#' 
+
 alleleFreqFormat <- function(x, g) {
   if(!(is.data.frame(x) | is.matrix(x))) {
     stop("'x' must be a data.frame or matrix")

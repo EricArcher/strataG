@@ -15,6 +15,12 @@ fstToNm(fst, ploidy)
 Calculate Nm (number of migrants per generation) for a 
   given value of Fst.
 }
+\examples{
+fst <- seq(0.001, 0.2, length.out = 100)
+Nm <- fstToNm(fst, 2)
+plot(fst, Nm, type = "l")
+
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

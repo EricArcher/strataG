@@ -13,12 +13,23 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \code{\link{structure}}
+#' @seealso \code{\link{structure}} \code{\link{clumpp}}
+#' 
+#' @examples \dontrun{
+#' data(msats.g)
+#' 
+#' # Run STRUCTURE
+#' sr <- structureRun(msats, k.range = 1:4, num.k.rep = 10)
+#' 
+#' # Calculate Evanno metrics
+#' evno <- evanno(sr)
+#' evno
+#' }
 #' 
 #' @importFrom stats sd
 #' @importFrom graphics par layout segments axis box text
 #' @export
- 
+#' 
 evanno <- function(sr, plot = TRUE) {
   if(!"structure.result" %in% class(sr)) {
     stop("'sr' is not a result from 'structure.run'.")

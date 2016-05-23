@@ -32,6 +32,7 @@ Collate:
     strataG-package.R
     gtypes.class.R
     gtypes.accessors.R
+    is.gtypes.R
     initialize.gtypes.R
     internals.R
     as.matrix.gtypes.R

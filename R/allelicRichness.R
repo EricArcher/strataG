@@ -15,7 +15,7 @@
 #'
 #' @importFrom stats na.omit
 #' @export
-#' 
+
 allelicRichness <- function(g) {
   apply(g@loci, 2, function(locus) {
     locus <- na.omit(locus)

@@ -9,16 +9,19 @@
 #' @param bases a character vector of valid bases to consider.
 #' 
 #' @return a list with components:
-#' \tabular{ll}{
-#'   \code{sites} \tab list of sites with fixed differences for each pair of 
-#'     strata \cr
-#'   \code{num.fixed} \tab data.frame of number of sites fixed between each 
-#'     pair of strata \cr
+#' \describe{
+#'   \item{sites}{list of sites with fixed differences for each pair of strata}
+#'   \item{num.fixed}{data.frame of number of sites fixed between each pair of strata}
 #' }
 #' 
 #' @author Eric Archer <eric.archer@@noaa.gov>
 #' 
 #' @seealso \code{\link{fixedSites}}, \code{\link{variableSites}}
+#' 
+#' @examples 
+#' data(dloop.g)
+#' fd <- fixedDifferences(dloop.g)
+#' fd
 #' 
 #' @export
 #' 

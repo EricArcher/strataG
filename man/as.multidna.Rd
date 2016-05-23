@@ -14,7 +14,22 @@ character vectors, \code{\link{DNAbin}} object or list of them,
 \description{
 Convert a set of sequences to a multidna object if possible.
 }
+\examples{
+# convert list of character vectors
+data(dolph.seqs)
+list.mdna <- as.multidna(dolph.seqs)
+list.mdna
+
+# convert gtypes object
+data(dloop.g)
+gtype.mdna <- as.multidna(dloop.g)
+gtype.mdna
+
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
+}
+\seealso{
+\link{sequences}, \link{getSequences}
 }
 

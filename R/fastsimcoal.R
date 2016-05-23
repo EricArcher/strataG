@@ -1,4 +1,3 @@
-#' @name fastsimcoal
 #' @title Run fastsimcoal
 #' @description Run a fastsimcoal simulation and load results into a 
 #'   \linkS4class{gtypes} object.
@@ -28,6 +27,8 @@
 #'   \url{http://cmpg.unibe.ch/software/fastsimcoal2/}
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' 
+#' @name fastsimcoal
 #' 
 NULL
 

@@ -15,7 +15,7 @@
 #'   resulting data.frame.
 #' 
 #' @return a data.frame with one row per sample and columns for id, strata, 
-#'   and haplotype.
+#'   and haplotype, suitable for use in \link{df2gtypes}.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 

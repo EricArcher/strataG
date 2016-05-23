@@ -12,17 +12,19 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
+#' @seealso \link{alleleFreqFormat}
+#'
 #' @examples
 #' data(msats.g)
 #' 
 #' f <- alleleFreqs(msats.g)
-#' f[[1]]
+#' f$D11t # Frequencies for Locus D11t
 #' 
 #' f.pop <- alleleFreqs(msats.g, TRUE)
-#' f.pop[[1]]
+#' f.pop$EV94[, , "Coastal"] # Frequencies for EV94 in the Coastal population
 #' 
 #' @export
-#' 
+
 alleleFreqs <- function(g, by.strata = FALSE) {
   freqs <- vector("list", length = ncol(g@loci))
   strata <- rep(g@strata, g@ploidy)

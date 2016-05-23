@@ -18,6 +18,19 @@ a data.frame with Evanno log-likelihood metrics for each value of K.
 Calculate first and second order rates of changes of LnPr(K) 
   from STRUCTURE results based on Evanno et al. 2005.
 }
+\examples{
+\dontrun{
+data(msats.g)
+
+# Run STRUCTURE
+sr <- structureRun(msats, k.range = 1:4, num.k.rep = 10)
+
+# Calculate Evanno metrics
+evno <- evanno(sr)
+evno
+}
+
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
@@ -27,6 +40,6 @@ Evanno, G., Regnaut, S., and J. Goudet. 2005. Detecting the
   simulation study. Molecular Ecology 14:2611-2620.
 }
 \seealso{
-\code{\link{structure}}
+\code{\link{structure}} \code{\link{clumpp}}
 }
 

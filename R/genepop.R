@@ -95,9 +95,8 @@ genepopWrite <- function(g, label = "genepop.write",
     max.width <- max(2, nchar(x))
     formatC(x, width = max.width, flag = "0")
   })
-  id.rows <- idRows(indNames(g), rownames(g@loci))
   
-  loc_dat <- apply(id.rows, 1, function(x) {
+  loc_dat <- apply(idRows(g), 1, function(x) {
     x.loc <- apply(g.mat, 2, function(loc) paste(loc[x], collapse = ""))
     paste(x.loc, collapse = " ")
   })

@@ -19,9 +19,9 @@
 #' @export
 #' 
 createConsensus <- function(x, ignore.gaps = FALSE) { 
-  x <- as.multidna(x)
+  x <- getSequences(as.multidna(x), simplify = FALSE)
   
-  result <- lapply(getSequences(x, simplify = FALSE), function(dna) {
+  result <- lapply(x, function(dna) {
     dna <- as.character(as.matrix(dna))
     apply(dna, 2, iupacCode, ignore.gaps = ignore.gaps)
   })
@@ -29,7 +29,7 @@ createConsensus <- function(x, ignore.gaps = FALSE) {
   if(length(result) == 1) {
     result[[1]]
   } else {
-    names(result) <- getLocusNames(x)
+    names(result) <- names(x)
     result
   }
 }

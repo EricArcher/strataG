@@ -20,6 +20,13 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @examples
+#' data(msats.g)
+#' 
+#' # identify potential duplicates in Coastal strata
+#' dupes <- dupGenotypes(msats.g[, , "Coastal"])
+#' dupes
+#' 
 #' @export
 #' 
 dupGenotypes <- function(g, num.shared = 0.8, num.cores = 1) {

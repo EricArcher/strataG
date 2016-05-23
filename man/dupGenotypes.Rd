@@ -30,6 +30,14 @@ a data.frame with the following columns:
 \description{
 Identify duplicate or very similar genotypes.
 }
+\examples{
+data(msats.g)
+
+# identify potential duplicates in Coastal strata
+dupes <- dupGenotypes(msats.g[, , "Coastal"])
+dupes
+
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

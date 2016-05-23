@@ -39,13 +39,17 @@
 \alias{subset}
 \title{\code{gtypes} Accessors}
 \usage{
-nStrata(x, ...)
+nInd(x, ...)
 
-\S4method{nStrata}{gtypes}(x, ...)
+\S4method{nInd}{gtypes}(x, ...)
+
+nLoc(x, ...)
 
 \S4method{nLoc}{gtypes}(x, ...)
 
-\S4method{nInd}{gtypes}(x, ...)
+nStrata(x, ...)
+
+\S4method{nStrata}{gtypes}(x, ...)
 
 \S4method{indNames}{gtypes}(x, ...)
 

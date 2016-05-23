@@ -20,15 +20,19 @@ consecutive indels as a a single indel?}
 }
 \value{
 a list with components:
-\tabular{ll}{
-  \code{sites} \tab list of sites with fixed differences for each pair of 
-    strata \cr
-  \code{num.fixed} \tab data.frame of number of sites fixed between each 
-    pair of strata \cr
+\describe{
+  \item{sites}{list of sites with fixed differences for each pair of strata}
+  \item{num.fixed}{data.frame of number of sites fixed between each pair of strata}
 }
 }
 \description{
 Summarize fixed base pair differences between strata.
+}
+\examples{
+data(dloop.g)
+fd <- fixedDifferences(dloop.g)
+fd
+
 }
 \author{
 Eric Archer <eric.archer@noaa.gov>

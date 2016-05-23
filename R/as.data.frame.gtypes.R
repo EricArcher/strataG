@@ -1,3 +1,4 @@
+#' @name as.data.frame.gtypes
 #' @title Convert \code{gtypes} To \code{data.frame}
 #' @description Create a data.frame from a \linkS4class{gtypes} object.
 #'   
@@ -12,12 +13,27 @@
 #'   
 #' @return A \code{data.frame} with one row per sample.
 #' 
-#' @author Eric Archer \email{eric.archer@@noa.gov}
+#' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \link{df2gtypes}
+#' @seealso \link{df2gtypes} \link[strataG]{as.matrix}
+#' 
+#' @examples 
+#' data(msats.g)
+#' 
+#' # with defaults (alleles in multiple columns, with ids and stratification)
+#' df <- as.data.frame(msats.g)
+#' str(df)
+#' 
+#' # one column per locus
+#' onecol.df <- as.data.frame(msats.g, one.col = TRUE)
+#' str(onecol.df)
+#' 
+#' # just the genotypes
+#' genotypes.df <- as.data.frame(msats.g, one.col = TRUE, ids = FALSE, strata = FALSE)
+#' str(genotypes.df)
 #' 
 #' @importFrom methods setMethod
-#' @aliases as.data.frame.gtypes
+#' @aliases as.data.frame,gtypes-method as.data.frame.gtypes as.data.frame
 #' 
 #' @export
 #' 

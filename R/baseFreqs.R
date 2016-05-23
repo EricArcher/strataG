@@ -11,15 +11,24 @@
 #' @return For each gene, a list containing:
 #' \tabular{ll}{
 #'   \code{site.freqs} \tab a matrix of base frequencies at each site.\cr
-#'   \code{base.freqs} \tab a vector of overall base frequencies.\cr
+#'   \code{base.freqs} \tab a vector of overall base proportion composition.\cr
 #' }
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @examples
+#' data(dloop.g)
+#' bf <- baseFreqs(dloop.g)
+#' 
+#' # Frequencies of first 10 sites
+#' bf$site.freqs[, 1:10]
+#' 
+#' # Base composition
+#' bf$base.freqs
+#' 
 #' @export
 #' 
 baseFreqs <- function(x, bases = NULL, ignore = c("n", "x", "-", ".")) {
-  
   bases <- if(is.null(bases)) {
     rownames(iupac.mat)
   } else {

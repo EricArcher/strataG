@@ -15,7 +15,6 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
 #' @examples
-#'
 #' exptdNumAlleles(20, 1, 2)
 #'
 #' # double the samples

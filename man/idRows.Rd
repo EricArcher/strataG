@@ -4,27 +4,40 @@
 \alias{idRows}
 \title{\code{gtypes} ID Rows}
 \usage{
-idRows(ids, rowNames)
+idRows(g, ids = NULL, as.names = FALSE)
 }
 \arguments{
-\item{ids}{character vector of sample ids.}
+\item{g}{a \linkS4class{gtypes} object.}
 
-\item{rowNames}{a vector of rownames from the \code{@loci} slot of a 
-\linkS4class{gtypes} object.}
+\item{ids}{character vector of sample ids. If \code{NULL}, returns marix of 
+all ids.}
+
+\item{as.names}{\code{FALSE} returns numeric matrix of row numbers. \code{TRUE} 
+returns character matrix of rownames.}
 }
 \value{
-a vector of row numbers in \code{g@loci} where data for \code{ids}
-  are stored.
+a matrix of rownames or row numbers for sample ids in the \code{loci} 
+  slot of a gtypes object.
 }
 \description{
-Return row numbers of \code{@loci} slot for a set of
-  sample ids.
+Return lookup matrix of row numbers or row names of 
+  \code{@loci} slot for sample ids.
 }
 \examples{
 data(msats.g)
 
+# lookup table of all samples by number
+by.num <- idRows(msats.g)
+head(by.num)
+
+# lookup table of all samples by name
+by.name <- idRows(msats.g, as.name = TRUE)
+head(by.name)
+
+# lookup table of selected ids
 ran.ids <- sample(indNames(msats.g), 5)
-idRows(ran.ids, rownames(loci(msats.g)))
+ran.by.num <- idRows(msats.g, ids = ran.ids, as.name = TRUE)
+ran.ids
 
 }
 \author{

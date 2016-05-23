@@ -48,10 +48,6 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @aliases accessors
-#' @importFrom adegenet nInd
-#' @importFrom methods setGeneric setMethod
-#' 
 #' @examples
 #' #--- create a diploid (microsatellite) gtypes object
 #' data(msats.g)
@@ -94,7 +90,31 @@
 #' gene1.dnabin <- getSequences(sequences(gene1))
 #' class(gene1.dnabin) # "DNAbin"
 #' 
+#' @aliases accessors
+#' @importFrom adegenet nInd
+#' @importFrom methods setGeneric setMethod
+#' 
 
+#' @rdname gtypes.accessors
+#' 
+setGeneric("nInd")
+
+#' @rdname gtypes.accessors
+#' @aliases nInd,gtypes-method nInd
+#' @export
+#' 
+setMethod("nInd", "gtypes", function(x, ...) nrow(x@loci) / x@ploidy)
+
+
+#' @rdname gtypes.accessors
+#' 
+setGeneric("nLoc")
+
+#' @rdname gtypes.accessors
+#' @aliases nLoc
+#' @export
+#' 
+setMethod("nLoc", "gtypes", function(x, ...) ncol(x@loci))
 
 
 #' @rdname gtypes.accessors
@@ -107,18 +127,6 @@ setGeneric("nStrata", function(x, ...) standardGeneric("nStrata"))
 #' @export
 #' 
 setMethod("nStrata", "gtypes", function(x, ...) nlevels(x@strata))
-
-#' @rdname gtypes.accessors
-#' @aliases nLoc
-#' @export
-#' 
-setMethod("nLoc", "gtypes", function(x, ...) ncol(x@loci))
-
-#' @rdname gtypes.accessors
-#' @aliases nInd
-#' @export
-#' 
-setMethod("nInd", "gtypes", function(x, ...) nrow(x@loci) / x@ploidy)
 
 
 #' @rdname gtypes.accessors
@@ -162,7 +170,6 @@ setMethod("ploidy", "gtypes", function(x, ...) x@ploidy)
 #' @export
 #' 
 setMethod("other", "gtypes", function(x, ...) x@other)
-
 
 #' @rdname gtypes.accessors
 #' @aliases strata
@@ -229,11 +236,12 @@ setGeneric("loci", function(x, ...) standardGeneric("loci"))
 #' @export
 #' 
 setMethod("loci", "gtypes", function(x, ids = NULL, loci = NULL) {
-  if(is.null(ids)) ids <- indNames(x)
+  x.ids <- indNames(x)
+  if(is.null(ids)) ids <- x.ids
   if(is.null(loci)) loci <- locNames(x)
-  if(!all(ids %in% indNames(x))) stop("some 'ids' not found in 'x'")
+  if(!all(ids %in% x.ids)) stop("some 'ids' not found in 'x'")
   if(!all(loci %in% locNames(x))) stop("some 'loci' not found in 'x'")
-  x@loci[idRows(ids, rownames(x@loci)), loci, drop = FALSE]
+  x@loci[idRows(x, ids = ids), loci, drop = FALSE]
 })
 
 
@@ -342,7 +350,7 @@ setMethod("[",
   if(length(k) == 0) stop("no strata selected")
   
   i <- i[order(match(i, ids))]
-  x@loci <- x@loci[idRows(i, rownames(x@loci)), j, drop = FALSE]
+  x@loci <- x@loci[idRows(x, i), j, drop = FALSE]
   x@loci <- droplevels(x@loci)
   x@strata <- droplevels(x@strata[i])
   if(!is.null(x@sequences)) {
@@ -360,7 +368,7 @@ setMethod("[",
     warning("The following samples are missing data for all loci and have been removed: ", 
             paste(to.remove, collapse = ", "))
   }
-  x@loci <- x@loci[idRows(to.keep, rownames(x@loci)), , drop = FALSE]
+  x@loci <- x@loci[idRows(x, to.keep), , drop = FALSE]
   x@loci <- droplevels(x@loci)
   x@strata <- droplevels(x@strata[to.keep])
   

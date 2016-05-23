@@ -2,6 +2,7 @@
 % Please edit documentation in R/as.matrix.gtypes.R
 \docType{methods}
 \name{as.matrix,gtypes-method}
+\alias{as.matrix}
 \alias{as.matrix,gtypes-method}
 \alias{as.matrix.gtypes}
 \title{Convert \code{gtypes} To \code{matrix}}
@@ -30,10 +31,26 @@ A \code{matrix} with one row per sample.
 \description{
 Create a matrix from a \linkS4class{gtypes} object.
 }
+\examples{
+data(msats.g)
+
+# with defaults (alleles in multiple columns, with ids and stratification)
+mat <- as.matrix(msats.g)
+head(mat)
+
+# one column per locus
+onecol.mat <- as.matrix(msats.g, one.col = TRUE)
+head(onecol.mat)
+
+# just the genotypes
+genotypes.mat <- as.matrix(msats.g, one.col = TRUE, ids = FALSE, strata = FALSE)
+head(genotypes.mat)
+
+}
 \author{
 Eric Archer \email{eric.archer@noa.gov}
 }
 \seealso{
-\link{df2gtypes}
+\link{df2gtypes} \link[strataG]{as.data.frame}
 }
 
