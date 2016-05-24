@@ -2,8 +2,15 @@
 % Please edit documentation in R/fastsimcoal.R
 \name{fastsimcoal}
 \alias{fastsimcoal}
+\alias{fscRead}
+\alias{fscWrite}
 \title{Run fastsimcoal}
 \usage{
+fscWrite(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL,
+  label = NULL)
+
+fscRead(file, locus.params)
+
 fastsimcoal(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL,
   label = NULL, quiet = TRUE, delete.files = TRUE, exec = "fsc252",
   num.cores = NULL)
@@ -22,6 +29,8 @@ between pairs of populations.}
 \code{\link{fscHistEv}} function.}
 
 \item{label}{character string to label files with.}
+
+\item{file}{filename to write to.}
 
 \item{quiet}{logical. Run quietly?}
 

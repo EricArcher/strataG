@@ -15,6 +15,7 @@
 #' @param delete.files logical. Delete files when done?
 #' @param exec name of fastsimcoal executable.
 #' @param num.cores number of cores to use.
+#' @param file filename to write to.
 #' 
 #' @note fastsimcoal is not included with \code{strataG} and must be downloaded 
 #'   separately. Additionally, it must be installed such that it can be run from 
@@ -33,7 +34,10 @@
 NULL
 
 
-.fscWrite <- function(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL, label = NULL) {
+#' @rdname fastsimcoal
+#' @export
+#' 
+fscWrite <- function(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL, label = NULL) {
   opt <- options(scipen = 999)
   
   ploidy <- attr(locus.params, "ploidy")
@@ -97,7 +101,10 @@ NULL
 }
 
 
-.fscRead <- function(file, locus.params) {
+#' @rdname fastsimcoal
+#' @export
+#' 
+fscRead <- function(file, locus.params) {
   formatGenotypes <- function(x, ploidy) {
     # reformat matrix to have alleles side-by-side
     nloci <- ncol(x) - 2
@@ -187,7 +194,7 @@ fastsimcoal <- function(pop.info, locus.params, mig.rates = NULL,
   if(file.exists(label)) for(f in dir(label, full.names = T)) file.remove(f)
   
   # Write fastsimcoal input file
-  infile <- .fscWrite(
+  infile <- fscWrite(
     pop.info = pop.info, locus.params = locus.params,
     mig.rates = mig.rates, hist.ev = hist.ev, label = label
   )
@@ -218,7 +225,7 @@ fastsimcoal <- function(pop.info, locus.params, mig.rates = NULL,
   # Read and parse output
   arp.file <- file.path(label, paste(label, "_1_1.arp", sep = ""))
   if(!file.exists(arp.file)) stop("fastsimcoal did not generate output")
-  g <- .fscRead(arp.file, locus.params)
+  g <- fscRead(arp.file, locus.params)
   
   # Cleanup
   if(delete.files) {

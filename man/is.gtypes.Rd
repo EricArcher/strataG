@@ -12,6 +12,9 @@ is.gtypes(x)
 \value{
 Logical stating if 'x' is a \code{\linkS4class{gtypes}} object.
 }
+\description{
+Test if object is \code{gtypes}
+}
 \examples{
 data(msats.g)
 is.gtypes(msats.g) # TRUE

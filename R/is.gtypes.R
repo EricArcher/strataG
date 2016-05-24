@@ -1,4 +1,5 @@
 #' @title Test if object is \code{gtypes}
+#' @description Test if object is \code{gtypes}
 #' 
 #' @param x R object to be tested.
 #' 
