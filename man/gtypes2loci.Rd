@@ -17,6 +17,18 @@ loci2gtypes(x, description = NULL)
 \description{
 Convert a \code{gtypes} object to a \code{\link[pegas]{loci}} object.
 }
+\examples{
+data(msats.g)
+
+# Convert to loci
+lc <- gtypes2loci(msats.g)
+lc
+
+# Convert to gtypes
+gt <-loci2gtypes(lc)
+gt 
+
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

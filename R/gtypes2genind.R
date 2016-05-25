@@ -1,4 +1,3 @@
-#' @name gtypes2genind
 #' @title Convert Between \code{gtypes} And \code{genind} objects.
 #' @description Convert a \code{gtypes} object to a \code{genind} object 
 #'   and vice-versa.
@@ -16,17 +15,30 @@
 #'   \link{sequence2gtypes}, \link{as.data.frame.gtypes}, 
 #'   \link{gtypes2loci}
 #' 
+#' @examples
+#' data(msats.g)
+#' 
+#' # Convert to genind
+#' gi <- gtypes2genind(msats.g)
+#' gi
+#' 
+#' # Convert to gtypes
+#' gt <- genind2gtypes(gi)
+#' gt
+#' 
+#' @name gtypes2genind
 #' @export
 #' 
 gtypes2genind <- function(x, type = c("codom", "PA")) {
+  x.mat <- as.matrix(x, one.col = TRUE, sep = "/", ids = FALSE, strata = FALSE)
   df2genind(
-    X = as.matrix(x, one.col = TRUE, sep = "/", ids = FALSE, strata = FALSE),
+    X = x.mat,
     sep = "/", 
-    pop = strata(x),
+    pop = strata(x)[rownames(x.mat)],
     NA.char = NA,
     ploidy = ploidy(x),
     type = match.arg(type),
-    strata = schemes(x)
+    strata = schemes(x)[rownames(x.mat), ]
   )
 }
 

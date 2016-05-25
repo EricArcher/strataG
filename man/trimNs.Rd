@@ -7,13 +7,26 @@
 trimNs(x)
 }
 \arguments{
-\item{x}{a \code{\link[ape]{DNAbin}} object.}
+\item{x}{a \code{\link[ape]{DNAbin}} object or list or matrix that can be
+coerced into one.}
 }
 \value{
 sequences with beginning and trailing N's removed.
 }
 \description{
 Removes N's from beginning and end of sequences.
+}
+\examples{
+ test.seqs <- list(
+   A = c(rep("n", 5), "a", "c", "g", "t", rep("n", 3)),
+   B = c(rep("n", 3), "a", "c", "g", "t", rep("n", 5)),
+   C = c("a", "c", "g", "t", rep("n", 8))
+ )
+
+test.seqs
+trimmed <- trimNs(test.seqs)  
+as.character(trimmed)
+ 
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

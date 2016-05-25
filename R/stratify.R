@@ -15,23 +15,18 @@
 #'   samples in \code{g} or values in \code{scheme} will be recycled as 
 #'   necessary.
 #'   
-#' @return A new \linkS4class{gtypes} object with an updated \code{strata}
-#'   slot.
+#' @return A new \linkS4class{gtypes} object with an updated \code{strata} slot.
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' 
+#' @seealso \link{schemes}
 #'
 #' @examples
-#' data(dolph.msats)
-#' data(dolph.strata)
-#' strata.schemes <- dolph.strata[, c("broad", "fine")]
-#' rownames(strata.schemes) <- dolph.strata$id
-#' msats <- new("gtypes", gen.data = dolph.msats[, -1], ploidy = 2,
-#'              ind.names = dolph.msats[, 1], schemes = strata.schemes)
-#' msats <- stratify(msats, "fine")
-#' msats
+#' data(msats.g)
+#' msats.g
 #' 
-#' msats <- stratify(msats, "broad")
-#' msats
+#' broad.msats <- stratify(msats.g, "broad")
+#' broad.msats
 #' 
 #' @export
 #' 

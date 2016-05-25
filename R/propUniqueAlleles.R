@@ -8,15 +8,12 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @examples
-#' data(dolph.strata)
-#' data(dolph.seqs)
-#' strata <- dolph.strata$fine
-#' names(strata) <- dolph.strata$ids
-#' dloop <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop")
-#' dloop <- labelHaplotypes(dloop)$gtypes
+#' @seealso \link{privateAlleles}
 #' 
-#' propUniqueAlleles(dloop)
+#' @examples
+#' data(msats.g)
+#' 
+#' propUniqueAlleles(msats.g)
 #' 
 #' @export
 #' 

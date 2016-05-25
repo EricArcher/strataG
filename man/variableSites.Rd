@@ -13,10 +13,9 @@ a \code{\link[ape]{DNAbin}} object, or a list of sequences.}
 \item{bases}{character vector of bases to consider.}
 }
 \value{
-A list with: \tabular{ll}{
-  \code{site} \tab a a \code{\link[ape]{DNAbin}} object composed 
-    of variable sites. \cr
-  \code{site.freqs} \tab a matrix of base pair frequencies by site. \cr
+A list with: \describe{
+  \item{site}{a \code{\link[ape]{DNAbin}} object composed of variable sites.}
+  \item{site.freqs}{a matrix of base pair frequencies by site.}
 }
 }
 \description{

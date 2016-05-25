@@ -1,5 +1,6 @@
 #' @title Valid IUPAC Codes
-#' @description Get all possible valid IUPAC codes.
+#' @description Get all possible valid IUPAC ambiguity codes for a set 
+#'   of nucleotide bases and ambiguity codes.
 #' 
 #' @param bases character vector of nucleotides or IUPAC codes to be checked.
 #' 

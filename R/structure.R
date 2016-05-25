@@ -1,4 +1,4 @@
-#' @name structure
+
 #' @title STRUCTURE
 #' @description Run STRUCTURE to assess group membership of samples.
 #' 
@@ -89,6 +89,11 @@
 #' structurePlot(q.mat)
 #' }
 #' 
+#' @name structure
+#' 
+NULL
+
+#' @rdname structure
 #' @importFrom utils file_test
 #' @export
 #' 

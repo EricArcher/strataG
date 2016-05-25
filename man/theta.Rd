@@ -19,6 +19,12 @@ Calculate theta from heterozygosity of each locus.
 Calculates theta for each locus using the 
   \code{\link[pegas]{theta.h}} function.
 }
+\examples{
+data(msats.g)
+
+theta(msats.g)
+
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

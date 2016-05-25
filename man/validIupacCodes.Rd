@@ -13,7 +13,8 @@ validIupacCodes(bases)
 character vector of valid IUPAC codes for \code{bases}.
 }
 \description{
-Get all possible valid IUPAC codes.
+Get all possible valid IUPAC ambiguity codes for a set 
+  of nucleotide bases and ambiguity codes.
 }
 \examples{
 validIupacCodes(c("c", "t", "c", "c"))

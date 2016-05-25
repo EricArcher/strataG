@@ -1,7 +1,7 @@
 #' @title Number of Alleles
 #' @description Return the number of alleles for each locus.
 #'
-#' @param g a \code{\link{gtypes}} object.
+#' @param g a \linkS4class{gtypes} object.
 #'
 #' @return vector of number of alleles per locus.
 #'

@@ -23,7 +23,10 @@ For a measure of haplotypic diversity (haploid "heterozygosity"),
 \examples{
 data(msats.g)
 
+# Expected heterozygosity
 exptdHet(msats.g)
+
+# Observed heterozygosity
 obsvdHet(msats.g)
 
 }

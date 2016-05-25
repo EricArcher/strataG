@@ -23,6 +23,10 @@
 #' 
 #' @seealso \code{\link{genepop}}, \code{\link[pegas]{hw.test}}
 #' 
+#' @examples
+#' data(msats.g)
+#' hweTest(msats.g)
+#' 
 #' @aliases hwe HWE
 #' @importFrom pegas hw.test
 #' @export

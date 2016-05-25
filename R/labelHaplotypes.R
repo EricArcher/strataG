@@ -1,4 +1,3 @@
-#' @name labelHaplotypes
 #' @title Find and label haplotypes
 #' @description Identify and group sequences that share the same haplotype.
 #'
@@ -19,24 +18,22 @@
 #'   \code{unassigned} element.
 #'
 #' @return
-#'   \code{DNAbin} or \code{multidna}, a list with the following elements:
-#'     \tabular{ll}{
-#'       \code{haps} \tab named vector (\code{DNAbin}) or list of named vectors
-#'         (\code{multidina}) of haplotypes for each sequence in \code{x}.\cr
-#'       \code{hap.seqs} \tab \code{DNAbin} or \code{multidna} object
-#'         containing sequences for each haplotype.\cr
-#'       \code{unassigned} \tab \code{data.frame} listing closest matching
-#'         haplotypes and the number of substitutions different. Will be
-#'         \code{NULL} if no sequences remain unassigned.
-#'     }
-#'   \code{gtypes}, a list with the following elements:
-#'     \tabular{ll}{
-#'       \code{gtypes} \tab the new \code{gtypes} object with the haplotypes
-#'         reassigned.\cr
-#'       \code{unassigned} \tab a list containing the \code{unassigned}
-#'         attribute \code{data.frame} for each gene if present,
-#'         otherwise \code{NULL}.\cr
-#'      }
+#'  \code{DNAbin} or \code{multidna}, a list with the following elements:
+#'  \describe{
+#'    \item{haps}{named vector (\code{DNAbin}) or list of named vectors
+#'      (\code{multidina}) of haplotypes for each sequence in \code{x}.}
+#'    \item{hap.seqs}{\code{DNAbin} or \code{multidna} object containing 
+#'      sequences for each haplotype.}
+#'    \item{unassigned}{\code{data.frame} listing closest matching haplotypes 
+#'      and the number of substitutions different. Will be \code{NULL} if no 
+#'      sequences remain unassigned.}
+#'  }
+#'  \code{gtypes}, a list with the following elements:
+#'  \describe{
+#'    \item{gtypes}{the new \code{gtypes} object with the haplotypes reassigned.}
+#'    \item{unassigned}{a list containing the \code{unassigned} attribute 
+#'      \code{data.frame} for each gene if present, otherwise \code{NULL}.}
+#'  }
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
@@ -69,7 +66,8 @@
 #'
 #' hap.assign <- labelHaplotypes(sample.seqs, prefix = "Hap.")
 #' hap.assign
-#'
+#' 
+#' @name labelHaplotypes
 #' @importFrom swfscMisc zero.pad
 #' @export
 #'

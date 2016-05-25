@@ -19,7 +19,7 @@
 #' @importFrom graphics layout par curve hist box
 #' @importFrom stats dgamma
 #' @export
-
+#' 
 simGammaHaps <- function(pop.size, num.haps, shape, scale,
                          return.freq = TRUE, plot = TRUE) {
   if(num.haps > pop.size) stop("'num.haps' must be smaller than 'pop.size'.")

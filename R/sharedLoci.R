@@ -1,4 +1,3 @@
-#' @name sharedLoci
 #' @title Shared Loci
 #' @description Calculate proportion of alleles and number of loci shared 
 #'   between pairs of individuals or strata.
@@ -29,6 +28,11 @@
 #' propSharedLoci(msats.g, num.cores = 2)
 #' }
 #' 
+#' @name sharedLoci
+#' 
+NULL
+
+#' @rdname sharedLoci
 #' @importFrom utils combn
 #' @importFrom stats na.omit
 #' @importFrom parallel parLapply stopCluster

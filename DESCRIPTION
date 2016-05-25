@@ -34,7 +34,7 @@ Collate:
     gtypes.accessors.R
     is.gtypes.R
     initialize.gtypes.R
-    internals.R
+    strataG-internal.R
     as.matrix.gtypes.R
     as.data.frame.gtypes.R
     alleleFreqFormat.R
@@ -81,7 +81,6 @@ Collate:
     numAlleles.R
     numGensEq.R
     numMissing.R
-    parseLocusNames.R
     permuteStrata.R
     phase.R
     popStructStat.R

@@ -1,4 +1,3 @@
-#' @name summary,gtypes-method
 #' @title Summarize gtypes Object
 #' @description Generate a summary of a \code{gtypes} object.
 #'  
@@ -22,6 +21,12 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @name summary,gtypes-method
+#' @aliases summary
+#' 
+NULL
+
+#' @rdname summary-gtypes-method
 #' @export
 #' 
 setMethod("summary", "gtypes", function(object, ...) { 

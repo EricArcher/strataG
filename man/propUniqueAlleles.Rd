@@ -17,17 +17,15 @@ a vector of the proportion of unique (occuring only in one individual)
 Calculate the proportion of alleles that are unique.
 }
 \examples{
-data(dolph.strata)
-data(dolph.seqs)
-strata <- dolph.strata$fine
-names(strata) <- dolph.strata$ids
-dloop <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop")
-dloop <- labelHaplotypes(dloop)$gtypes
+data(msats.g)
 
-propUniqueAlleles(dloop)
+propUniqueAlleles(msats.g)
 
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
+}
+\seealso{
+\link{privateAlleles}
 }
 

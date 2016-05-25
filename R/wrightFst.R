@@ -9,6 +9,11 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @examples 
+#' dispersal <- seq(0.05, 0.8, by = 0.05)
+#' fst <- wrightFst(100, dispersal, 20, 2)
+#' plot(dispersal, fst, type = "l")
+#' 
 #' @export
 #' 
 wrightFst <- function(Ne, dispersal, gen.time, ploidy) {

@@ -22,6 +22,14 @@ A named list where each element is a \code{gtypes} object
 \description{
 Return a list of \code{gtypes} for each stratum.
 }
+\examples{
+data(msats.g)
+
+# Proportion of unique alleles in each stratum
+msats.list <- strataSplit(msats.g)
+sapply(msats.list, propUniqueAlleles)
+
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

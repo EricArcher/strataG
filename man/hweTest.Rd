@@ -39,6 +39,11 @@ If \code{use.genepop = TRUE}, the command line version of GENEPOP v.4
   folder in the PATH environmental variable. On Macs, the executable should 
   be installed in a folder like \code{/usr/local/bin}.
 }
+\examples{
+data(msats.g)
+hweTest(msats.g)
+
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

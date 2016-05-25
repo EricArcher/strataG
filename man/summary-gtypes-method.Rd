@@ -3,6 +3,7 @@
 \docType{methods}
 \name{summary,gtypes-method}
 \alias{print.gtypeSummary}
+\alias{summary}
 \alias{summary,gtypes-method}
 \title{Summarize gtypes Object}
 \usage{

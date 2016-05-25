@@ -65,8 +65,7 @@ haplotypeLikelihoods <- function(x, model = "raw", pairwise.deletion = FALSE,
   n <- min(c(plot.n, length(delta.log.lik)))
   if(plot.n > 0) {
     dotchart(rev(delta.log.lik[1:n]), pch = 19, bg = "black", 
-             xlab = expression(paste(Delta, "lnL")), 
-             main = "Haplotype delta(log-Likelihoods)"
+             xlab = expression(paste(Delta, "lnL"))
     )
   }
   

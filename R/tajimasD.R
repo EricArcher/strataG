@@ -13,6 +13,11 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @examples
+#' data(dolph.seqs)
+#' 
+#' tajimasD(dolph.seqs)
+#' 
 #' @importFrom stats qbeta integrate
 #' @export
 #' 

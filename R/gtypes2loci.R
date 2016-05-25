@@ -1,4 +1,3 @@
-#' @name gtypes2loci
 #' @title Convert Between \code{gtypes} And \code{loci} objects.
 #' @description Convert a \code{gtypes} object to a \code{\link[pegas]{loci}} object.
 #' 
@@ -11,6 +10,18 @@
 #'   \link{sequence2gtypes}, \link{as.data.frame.gtypes}, 
 #'   \link{gtypes2genind}
 #' 
+#' @examples
+#' data(msats.g)
+#' 
+#' # Convert to loci
+#' lc <- gtypes2loci(msats.g)
+#' lc
+#' 
+#' # Convert to gtypes
+#' gt <-loci2gtypes(lc)
+#' gt 
+#' 
+#' @name gtypes2loci 
 #' @importFrom pegas as.loci
 #' @export
 #' 

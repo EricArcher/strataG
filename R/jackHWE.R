@@ -56,7 +56,6 @@
 #' @seealso \code{\link{hweTest}}
 #' 
 #' @importFrom utils combn
-#' @importFrom pegas hw.test
 #' @export
 #' 
 jackHWE <- function(g, exclude.num = 1, min.hwe.samples = 5, 

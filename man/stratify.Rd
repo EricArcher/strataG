@@ -17,8 +17,7 @@ factor identifying which stratum each sample belongs to.}
 in stratification scheme)}
 }
 \value{
-A new \linkS4class{gtypes} object with an updated \code{strata}
-  slot.
+A new \linkS4class{gtypes} object with an updated \code{strata} slot.
 }
 \description{
 Choose a new stratification scheme from the \code{schemes}
@@ -32,20 +31,17 @@ If \code{scheme} is a vector or factor and has names, then the
   necessary.
 }
 \examples{
-data(dolph.msats)
-data(dolph.strata)
-strata.schemes <- dolph.strata[, c("broad", "fine")]
-rownames(strata.schemes) <- dolph.strata$id
-msats <- new("gtypes", gen.data = dolph.msats[, -1], ploidy = 2,
-             ind.names = dolph.msats[, 1], schemes = strata.schemes)
-msats <- stratify(msats, "fine")
-msats
+data(msats.g)
+msats.g
 
-msats <- stratify(msats, "broad")
-msats
+broad.msats <- stratify(msats.g, "broad")
+broad.msats
 
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
+}
+\seealso{
+\link{schemes}
 }
 

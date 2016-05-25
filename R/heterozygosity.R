@@ -1,4 +1,3 @@
-#' @name heterozygosity
 #' @title Observed and Expected Heterozygosity 
 #' @description Calculate observed heterozygosity for diploid data.
 #' 
@@ -12,8 +11,13 @@
 #' @examples
 #' data(msats.g)
 #' 
+#' # Expected heterozygosity
 #' exptdHet(msats.g)
+#' 
+#' # Observed heterozygosity
 #' obsvdHet(msats.g)
+#' 
+#' @name heterozygosity
 #' 
 NULL
 
@@ -33,8 +37,8 @@ exptdHet <- function(g) {
 #' 
 obsvdHet <- function(g) {
   apply(loci(g), 2, function(locus) {
-    locus.mat <- na.omit(matrix(locus, ncol = ploidy(g)))
-    is.homozgt <- apply(locus.mat, 1, function(x) length(unique(x)) == 1)
-    1 - (sum(is.homozgt) / nrow(locus.mat))
+    locus <- na.omit(matrix(locus, ncol = ploidy(g)))
+    is.homozgt <- apply(locus, 1, function(x) length(unique(x)) == 1)
+    1 - (sum(is.homozgt) / nrow(locus))
   })
 }

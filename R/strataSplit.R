@@ -12,6 +12,13 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @examples
+#' data(msats.g)
+#' 
+#' # Proportion of unique alleles in each stratum
+#' msats.list <- strataSplit(msats.g)
+#' sapply(msats.list, propUniqueAlleles)
+#' 
 #' @export
 #' 
 strataSplit <- function(g, strata = NULL, remove.sequences = FALSE) {

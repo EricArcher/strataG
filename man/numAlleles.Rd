@@ -7,7 +7,7 @@
 numAlleles(g)
 }
 \arguments{
-\item{g}{a \code{\link{gtypes}} object.}
+\item{g}{a \linkS4class{gtypes} object.}
 }
 \value{
 vector of number of alleles per locus.

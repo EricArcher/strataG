@@ -4,7 +4,8 @@
 \alias{write.gtypes}
 \title{Write \code{gtypes}}
 \usage{
-write.gtypes(g, label = NULL, folder = NULL, as.frequency = FALSE)
+write.gtypes(g, label = NULL, folder = NULL, as.frequency = FALSE,
+  by.strata = TRUE, freq.type = c("freq", "prop"), ...)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
@@ -17,9 +18,23 @@ files are written to current working directory.}
 
 \item{as.frequency}{logical indicating if haploid data should be output 
 as frequency tables.}
+
+\item{by.strata}{if \code{as.frequency == TRUE}, calculate frequencies by strata?}
+
+\item{freq.type}{if \code{as.frequency == TRUE}, write absolute frequencies 
+(\code{"freq"}) or proportions (\code{"prop"}).}
+
+\item{...}{optional arguments controlling what information is included in the 
+genotype file and how it is formatted passed to \link[strataG]{as.matrix}.}
 }
 \description{
 Write a \linkS4class{gtypes} object to file(s).
+}
+\details{
+Writes a comma-delimited (.csv) file of genotypes and if sequences 
+  are present, a .fasta file for each locus. If haploid and \code{as.frequency} 
+  is \code{TRUE}, then frequency tables for each locus are written to 
+  separate files.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

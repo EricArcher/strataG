@@ -1,4 +1,3 @@
-#' @name popStructStat
 #' @title Population structure statistics
 #' @description Population structure statistics
 #'
@@ -33,6 +32,7 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @name popStructStat
 #' @useDynLib strataG
 #' @importFrom Rcpp sourceCpp
 #'

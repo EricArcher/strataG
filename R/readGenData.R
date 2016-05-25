@@ -13,9 +13,7 @@
 #' @importFrom utils read.csv
 #' @export
 #' 
-readGenData <- function(file,
-                          na.strings = c(NA, "NA", "", " ", "?", "."),
-                          ...) {
+readGenData <- function(file, na.strings = c(NA, "NA", "", " ", "?", "."), ...) {
   df <- read.csv(file = file, na.strings = na.strings,
                  colClasses = "character", stringsAsFactors = FALSE, ...
   )

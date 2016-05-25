@@ -1,4 +1,3 @@
-#' @name mega
 #' @title Read and Write MEGA
 #' @description Read and write MEGA formatted files.
 #' 
@@ -9,13 +8,14 @@
 #' @param locus number or name of locus to write.
 #' 
 #' @return for \code{read.mega}, a list of:
-#' \tabular{ll}{
-#'   \code{title} \tab title of MEGA file.\cr
-#'   \code{dna.seq} \tab a list of DNA sequences.\cr
+#' \describe{
+#'   \item{title}{title of MEGA file.}
+#'   \item{dna.seq}{list of DNA sequences.}
 #' }
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @name mega
 #' @aliases mega, MEGA
 #' @export
 #' 

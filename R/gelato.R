@@ -1,4 +1,3 @@
-#' @name gelato
 #' @title GELATo - Group ExcLusion and Assignment Test
 #' @description Run a GELATo test to evaluate assignment likelihoods of 
 #'   groups of samples.
@@ -11,8 +10,6 @@
 #'   knowns. If the known sample size would be smaller than this after drawing 
 #'   an equivalent number of unknowns for self-assignment, then the comparison 
 #'   is not done.
-#' @param num.cores number of CPU cores to use. Value is passed to 
-#'   \code{\link[parallel]{mclapply}}.
 #' @param gelato.result the result of a call to \code{gelato}.
 #' @param unknown the name of an unknown stratum in the \code{x$likelihoods} 
 #'   element.
@@ -32,18 +29,19 @@
 #' 
 #' @examples
 #' data(msats.g)
-#' stratify(msats.g, "fine")
 #' 
+#' # Run GELATo analysis
 #' gelato.fine <- gelato(msats.g, unk = "Offshore.South", nrep = 10)
+#' gelato.fine
 #' 
+#' # Plot results
 #' gelatoPlot(gelato.fine, "Offshore.South")
 #' 
-#' @importFrom parallel mclapply
+#' @name gelato
 #' @importFrom stats sd dnorm median
 #' @export
 #' 
-gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5, 
-                   num.cores = 1) { 
+gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5) { 
   # Check unknown strata
   all.strata <- strata(g)
   unknown.strata <- unique(as.character(unknown.strata))
@@ -63,7 +61,7 @@ gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5,
     unknown.result <- sapply(knowns, function(known) {
       known.gtypes <- g[, , known]
       if((nInd(known.gtypes) - unknown.n) >= min.sample.size) {
-        fst.dist <- do.call(rbind, mclapply(1:nrep, function(i) {
+        fst.dist <- do.call(rbind, lapply(1:nrep, function(i) {
           # select samples to self assign
           ran.sample <- sample(indNames(known.gtypes), unknown.n)
           
@@ -84,10 +82,10 @@ gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5,
           st[ran.sample] <- "<gelato.unknown>"
           null.gtypes <- stratify(known.gtypes, st)
           
-          c(obs = unname(statFst(obs.gtypes)$result["estimate"]), 
-            null = unname(statFst(null.gtypes)$result["estimate"])
+          c(obs = unname(statFst(obs.gtypes, nrep = 0)$result["estimate"]), 
+            null = unname(statFst(null.gtypes, nrep = 0)$result["estimate"])
           )
-        }, mc.cores = num.cores))
+        }))
         fst.dist <- fst.dist[apply(fst.dist, 1, function(x) all(!is.na(x))), ]
 
         if(nrow(fst.dist) < 2) {

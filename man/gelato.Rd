@@ -5,7 +5,7 @@
 \alias{gelatoPlot}
 \title{GELATo - Group ExcLusion and Assignment Test}
 \usage{
-gelato(g, unknown.strata, nrep = 1000, min.sample.size = 5, num.cores = 1)
+gelato(g, unknown.strata, nrep = 1000, min.sample.size = 5)
 
 gelatoPlot(gelato.result, unknown, main = NULL)
 }
@@ -21,9 +21,6 @@ occur in \code{g}.}
 knowns. If the known sample size would be smaller than this after drawing 
 an equivalent number of unknowns for self-assignment, then the comparison 
 is not done.}
-
-\item{num.cores}{number of CPU cores to use. Value is passed to 
-\code{\link[parallel]{mclapply}}.}
 
 \item{gelato.result}{the result of a call to \code{gelato}.}
 
@@ -45,10 +42,12 @@ Run a GELATo test to evaluate assignment likelihoods of
 }
 \examples{
 data(msats.g)
-stratify(msats.g, "fine")
 
+# Run GELATo analysis
 gelato.fine <- gelato(msats.g, unk = "Offshore.South", nrep = 10)
+gelato.fine
 
+# Plot results
 gelatoPlot(gelato.fine, "Offshore.South")
 
 }

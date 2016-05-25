@@ -18,6 +18,12 @@ A named vector with the estimate for \code{D} and
 Calculate Tajima's D for a set of sequences to test 
   for selection.
 }
+\examples{
+data(dolph.seqs)
+
+tajimasD(dolph.seqs)
+
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

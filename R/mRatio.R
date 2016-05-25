@@ -33,7 +33,7 @@
 #' 
 #' @importFrom Hmisc all.is.numeric
 #' @export
-
+#' 
 mRatio <- function(g, by.strata = TRUE, rpt.size = 8:2) {
   # function takes a matrix of allele frequencies (can be more than one column)
   # rownames represent allele sizes

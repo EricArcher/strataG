@@ -10,7 +10,8 @@ privateAlleles(g)
 \item{g}{a \linkS4class{gtypes} object.}
 }
 \value{
-matrix with the number of private alleles in each strata at each locus.
+matrix with the number of private alleles in each strata at each 
+  locus. This is the number of alleles only present in one stratum.
 }
 \description{
 The number of private alleles in each strata and locus.
@@ -23,5 +24,8 @@ privateAlleles(msats.g)
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
+}
+\seealso{
+\link{propUniqueAlleles}
 }
 

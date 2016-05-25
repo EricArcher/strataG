@@ -3,9 +3,12 @@
 #' 
 #' @param g a \linkS4class{gtypes} object.
 #' 
-#' @return matrix with the number of private alleles in each strata at each locus.
+#' @return matrix with the number of private alleles in each strata at each 
+#'   locus. This is the number of alleles only present in one stratum.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' 
+#' @seealso \link{propUniqueAlleles}
 #' 
 #' @examples
 #' data(msats.g)

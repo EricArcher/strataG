@@ -22,6 +22,18 @@ markers (e.g. AFLP, RAPD).}
 Convert a \code{gtypes} object to a \code{genind} object 
   and vice-versa.
 }
+\examples{
+data(msats.g)
+
+# Convert to genind
+gi <- gtypes2genind(msats.g)
+gi
+
+# Convert to gtypes
+gt <- genind2gtypes(gi)
+gt
+
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

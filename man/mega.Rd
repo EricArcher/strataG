@@ -25,9 +25,9 @@ write.mega(g, file = NULL, title = NULL, line.width = 60, locus = 1)
 }
 \value{
 for \code{read.mega}, a list of:
-\tabular{ll}{
-  \code{title} \tab title of MEGA file.\cr
-  \code{dna.seq} \tab a list of DNA sequences.\cr
+\describe{
+  \item{title}{title of MEGA file.}
+  \item{dna.seq}{list of DNA sequences.}
 }
 }
 \description{

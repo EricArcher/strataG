@@ -19,6 +19,12 @@ migrating in a generation.}
 \description{
 Calcualte Wright's Fst from Ne, dispersal, and generation time.
 }
+\examples{
+dispersal <- seq(0.05, 0.8, by = 0.05)
+fst <- wrightFst(100, dispersal, 20, 2)
+plot(dispersal, fst, type = "l")
+
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

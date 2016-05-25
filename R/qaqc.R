@@ -14,13 +14,13 @@
 #'   identifying low frequency substitutions and haplotype likelihoods.\cr
 #'   The return value is a list with the following elements:
 #'   
-#'   \describe{
-#'     \item{\code{by.sample}}{data.frame of by-sample summaries}
-#'     \item{\code{by.locus}}{data.frame of by-locus summaries}
-#'     \item{\code{dup.df}}{data.frame identifying potential duplicates}
-#'     \item{\code{by.seq}}{list of low frequency substitutions and haplotype 
-#'       likelihoods for each gene}
-#'    }
+#' \describe{
+#'   \item{by.sample}{data.frame of by-sample summaries}
+#'   \item{\code{by.locus}}{data.frame of by-locus summaries}
+#'   \item{\code{dup.df}}{data.frame identifying potential duplicates}
+#'   \item{\code{by.seq}}{list of low frequency substitutions and haplotype 
+#'     likelihoods for each gene}
+#' }
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 

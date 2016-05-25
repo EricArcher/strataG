@@ -10,6 +10,11 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @examples
+#' data(msats.g)
+#' 
+#' theta(msats.g)
+#' 
 #' @importFrom pegas theta.h
 #' @importFrom stats na.omit
 #' @export
