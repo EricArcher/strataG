@@ -3,5 +3,6 @@
 language: R
 cache: packages
 r: devel
-warnings_are_errors: false
 r_github_packages: thibautjombart/apex
+before_install:
+  - sudo apt-get install gsl-devel
