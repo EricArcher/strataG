@@ -1,5 +1,7 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: R
-sudo: true
 cache: packages
+r: devel
+warnings_are_errors: false
+r_github_packages: thibautjombart/apex
