@@ -30,3 +30,5 @@ devtools::install_github('ericarcher/strataG', build_vignettes = TRUE)
 ## Available functions:
 
 You can see the most recent changes to the package in the NEWS.md file: https://github.com/EricArcher/strataG/blob/master/NEWS.md
+
+[![Travis-CI Build Status](https://travis-ci.org/EricArcher/strataG.svg?branch=master)](https://travis-ci.org/EricArcher/strataG)
