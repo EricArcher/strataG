@@ -13,7 +13,8 @@ Depends:
     apex,
     adegenet
 Suggests:
-    knitr
+    knitr,
+    rmarkdown
 Imports:
     ape,
     copula,

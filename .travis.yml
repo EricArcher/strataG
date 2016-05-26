@@ -2,10 +2,14 @@
 
 language: R
 cache: packages
-sudo: false
+sudo: required
 warnings_are_errors: false
+r_packages: 
+  - knitr
+  - rmarkdown
 r_github_packages: thibautjombart/apex
-addons:
-  apt:
-    packages:
-      - libgsl0-dev # for topicmodels
+apt_packages:
+  - gsl-bin
+  - libgsl0-dbg
+  - libgsl0-dev
+  - libgsl0ldbl
