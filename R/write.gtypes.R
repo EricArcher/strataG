@@ -59,6 +59,7 @@ write.gtypes <- function(g, label = NULL, folder = NULL, as.frequency = FALSE,
     names(x) <- label
     x
   }
+  names(g.mats) <- paste(names(g.mats), ".csv", sep = "")
   if(!is.null(folder)) names(g.mats) <- file.path(folder, names(g.mats))
   for(f in names(g.mats)) write.csv(g.mats[[f]], file = f, row.names = FALSE)
   out.files <- names(g.mats)

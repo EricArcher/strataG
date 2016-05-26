@@ -76,7 +76,36 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <div id="raw-data" class="section level2">
 <h2>Raw data</h2>
-<p>The raw data that</p>
+<p>It is easiest to load raw genotype data from the disk if it is available as a text file, usually in comma-delimited (.csv) format. The standard R functions <em>read.table</em> or <em>read.csv</em> can be used to accomplish this. However, in <em>strataG</em>, the <em>readGenData</em> function has been provided for .csv files, which is a wrapper for <em>read.csv</em> that sets commonly used values for missing data and removes blank lines.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gen.data &lt;-<span class="st"> </span><span class="kw">readGenData</span>(<span class="st">&quot;msats.csv&quot;</span>)
+<span class="kw">str</span>(gen.data)</code></pre></div>
+<pre><code>## 'data.frame':    126 obs. of  12 variables:
+##  $ ids    : chr  &quot;4495&quot; &quot;4496&quot; &quot;4498&quot; &quot;5814&quot; ...
+##  $ strata : chr  &quot;Offshore.North&quot; &quot;Offshore.North&quot; &quot;Offshore.North&quot; &quot;Offshore.North&quot; ...
+##  $ D11t.1 : chr  &quot;133&quot; &quot;137&quot; &quot;133&quot; &quot;135&quot; ...
+##  $ D11t.2 : chr  &quot;133&quot; &quot;141&quot; &quot;133&quot; &quot;139&quot; ...
+##  $ EV37.1 : chr  NA NA &quot;220&quot; &quot;210&quot; ...
+##  $ EV37.2 : chr  NA NA &quot;220&quot; &quot;226&quot; ...
+##  $ EV94.1 : chr  NA &quot;243&quot; &quot;245&quot; &quot;251&quot; ...
+##  $ EV94.2 : chr  NA &quot;251&quot; &quot;265&quot; &quot;265&quot; ...
+##  $ Ttr11.1: chr  &quot;211&quot; NA &quot;209&quot; &quot;209&quot; ...
+##  $ Ttr11.2: chr  &quot;211&quot; NA &quot;211&quot; &quot;209&quot; ...
+##  $ Ttr34.1: chr  &quot;185&quot; &quot;189&quot; &quot;189&quot; &quot;185&quot; ...
+##  $ Ttr34.2: chr  &quot;191&quot; &quot;189&quot; &quot;189&quot; &quot;187&quot; ...</code></pre>
+<p>For sequence data stored in FASTA format, the <em>read.fasta</em> function is available, which is a wrapper for the <em>read.dna</em> function in the <em>ape</em> package with standard FASTA arguments set. This will create a DNAbin object in the workspace:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fname &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/dolph.seqs.fasta&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;strataG&quot;</span>)
+x &lt;-<span class="st"> </span><span class="kw">read.fasta</span>(fname) 
+x</code></pre></div>
+<pre><code>## 126 DNA sequences in binary format stored in a list.
+## 
+## All sequences of same length: 402 
+## 
+## Labels: 4495 4496 4498 5814 5815 5816 ...
+## 
+## Base composition:
+##     a     c     g     t 
+## 0.301 0.229 0.129 0.341</code></pre>
+<p>For sequences stored in other formats, <em>read.dna</em> should be used directly.</p>
 </div>
 <div id="construction" class="section level2">
 <h2>Construction</h2>
@@ -142,7 +171,7 @@ seq.df &lt;-<span class="st"> </span>dolph.strata[ <span class="kw">c</span>(<sp
 dl.g &lt;-<span class="st"> </span><span class="kw">df2gtypes</span>(seq.df, <span class="dt">ploidy =</span> <span class="dv">1</span>, <span class="dt">sequences =</span> dolph.seqs)
 dl.g</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-05-25 16:04:02 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2016-05-25 17:30:54 &gt;&gt;&gt;
 ## 
 ## Contents: 126 samples, 1 locus, 2 strata
 ## 
@@ -163,7 +192,7 @@ dl.g</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dl.haps &lt;-<span class="st"> </span><span class="kw">labelHaplotypes</span>(dl.g)
 dl.haps$gtype</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-05-25 16:04:02 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2016-05-25 17:30:54 &gt;&gt;&gt;
 ## 
 ## Contents: 126 samples, 1 locus, 2 strata
 ## 
@@ -189,7 +218,7 @@ dl.haps$gtype</code></pre></div>
 haps.g &lt;-<span class="st"> </span><span class="kw">sequence2gtypes</span>(dolph.haps)
 haps.g</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-05-25 16:04:02 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2016-05-25 17:30:54 &gt;&gt;&gt;
 ## 
 ## Contents: 33 samples, 1 locus, 1 stratum
 ## 
@@ -265,7 +294,7 @@ obj</code></pre></div>
 gi.g &lt;-<span class="st"> </span><span class="kw">genind2gtypes</span>(obj)
 gi.g</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-05-25 16:04:02 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2016-05-25 17:30:55 &gt;&gt;&gt;
 ## 
 ## Contents: 4 samples, 3 loci, 1 stratum
 ## 
@@ -308,50 +337,50 @@ gi.g</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>msats.fine[<span class="kw">sample</span>(<span class="kw">nInd</span>(msats.fine), <span class="dv">10</span>), , ]
 sub.msats</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-05-25 16:04:02 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2016-05-25 17:30:54 &gt;&gt;&gt;
 ## 
 ## Contents: 10 samples, 5 loci, 2 strata
 ## 
 ## Strata summary:
 ##          num.samples num.missing num.alleles prop.unique.alleles
-## Coastal            5         0.4         3.2           0.2200000
-## Offshore           5         0.0         5.6           0.5664286
+## Coastal            4           0         3.6               0.400
+## Offshore           6           0         7.0               0.565
 ##          heterozygosity
-## Coastal       0.5866667
-## Offshore      0.7600000
+## Coastal       0.8000000
+## Offshore      0.8333333
 ## 
 ## Locus summary:
 ##       num.genotyped num.alleles prop.unique.alleles obsvd.heterozygosity
-## D11t             10           5           0.4000000                0.600
-## EV37              8           9           0.7777778                0.625
-## EV94             10           8           0.5000000                0.800
-## Ttr11            10           5           0.2000000                0.800
-## Ttr34            10           7           0.2857143                0.600</code></pre>
+## D11t             10           8           0.6250000                  0.7
+## EV37             10           8           0.3750000                  0.7
+## EV94             10          10           0.6000000                  1.0
+## Ttr11            10           7           0.5714286                  0.8
+## Ttr34            10           6           0.0000000                  0.9</code></pre>
 <p>…or to return specific loci:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>sub.msats[, <span class="kw">c</span>(<span class="st">&quot;D11t&quot;</span>, <span class="st">&quot;EV37&quot;</span>, <span class="st">&quot;TV7&quot;</span>), ]
 sub.msats</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-05-25 16:04:02 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2016-05-25 17:30:54 &gt;&gt;&gt;
 ## 
 ## Contents: 10 samples, 2 loci, 2 strata
 ## 
 ## Strata summary:
 ##          num.samples num.missing num.alleles prop.unique.alleles
-## Coastal            5           1         2.0              0.0000
-## Offshore           5           0         6.5              0.7375
+## Coastal            4           0         2.5           0.3333333
+## Offshore           6           0         8.0           0.6875000
 ##          heterozygosity
-## Coastal       0.3666667
-## Offshore      0.8000000
+## Coastal       0.5000000
+## Offshore      0.8333333
 ## 
 ## Locus summary:
 ##      num.genotyped num.alleles prop.unique.alleles obsvd.heterozygosity
-## D11t            10           5           0.4000000                0.600
-## EV37             8           9           0.7777778                0.625</code></pre>
+## D11t            10           8               0.625                  0.7
+## EV37            10           8               0.375                  0.7</code></pre>
 <p>…or some loci in a specific stratum:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>msats.fine[, <span class="kw">c</span>(<span class="st">&quot;Ttr11&quot;</span>, <span class="st">&quot;D11t&quot;</span>), <span class="st">&quot;Coastal&quot;</span>]
 sub.msats</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-05-25 16:04:02 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2016-05-25 17:30:54 &gt;&gt;&gt;
 ## 
 ## Contents: 68 samples, 2 loci, 1 stratum
 ## 
@@ -410,7 +439,7 @@ sub.msats</code></pre></div>
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : chr [1:5] &quot;D11t&quot; &quot;EV37&quot; &quot;EV94&quot; &quot;Ttr11&quot; ...
 ##   .. ..$ : chr [1:7] &quot;num.genotyped&quot; &quot;prop.genotyped&quot; &quot;num.alleles&quot; &quot;allelic.richness&quot; ...
-##  - attr(*, &quot;description&quot;)= chr &quot;gtypes created on 2016-05-25 16:04:02&quot;
+##  - attr(*, &quot;description&quot;)= chr &quot;gtypes created on 2016-05-25 17:30:54&quot;
 ##  - attr(*, &quot;class&quot;)= chr [1:2] &quot;gtypeSummary&quot; &quot;list&quot;</code></pre>
 <p>For just the by-locus summary statistics:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarizeLoci</span>(msats.fine)</code></pre></div>
@@ -434,11 +463,11 @@ sub.msats</code></pre></div>
 <span class="kw">strata</span>(msats) &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;Pop1&quot;</span>, <span class="st">&quot;Pop2&quot;</span>), <span class="kw">nInd</span>(msats), <span class="dt">rep =</span> <span class="ot">TRUE</span>)
 <span class="kw">summary</span>(msats)$strata.smry</code></pre></div>
 <pre><code>##      num.samples num.missing num.alleles prop.unique.alleles
-## Pop1          59           1        11.4           0.1151211
-## Pop2          67           1        12.4           0.2222897
+## Pop1          60         0.4        12.0           0.1337302
+## Pop2          66         1.6        11.8           0.2510317
 ##      heterozygosity
-## Pop1      0.6962511
-## Pop2      0.7334669</code></pre>
+## Pop1      0.7149153
+## Pop2      0.7176224</code></pre>
 <p>or, if there is a stratification scheme data.frame in the @schemes slot, you can use the <em>stratify</em> function to choose a stratification scheme:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># choose &quot;broad&quot; stratification scheme</span>
 msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <span class="st">&quot;broad&quot;</span>)
@@ -454,7 +483,7 @@ msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <spa
 <p>NOTE: Filling or changing the @schemes slot does not affect the current stratification of the samples. You must then select a new stratification scheme or fill the @strata slot as above.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stratify</span>(dloop, <span class="st">&quot;fine&quot;</span>)</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-05-25 16:04:02 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2016-05-25 17:30:54 &gt;&gt;&gt;
 ## 
 ## Contents: 126 samples, 1 locus, 3 strata
 ## Stratification schemes: broad, fine
@@ -481,11 +510,11 @@ x[<span class="kw">sample</span>(<span class="kw">indNames</span>(msats), <span 
 <span class="kw">strata</span>(msats) &lt;-<span class="st"> </span>x
 <span class="kw">summary</span>(msats)$strata.smry</code></pre></div>
 <pre><code>##          num.samples num.missing num.alleles prop.unique.alleles
-## Coastal           62         1.0         4.6          0.06666667
-## Offshore          54         0.8        13.2          0.16196970
+## Coastal           65         1.2         4.8          0.08571429
+## Offshore          51         0.8        12.6          0.14303030
 ##          heterozygosity
-## Coastal       0.6389360
-## Offshore      0.8156964</code></pre>
+## Coastal       0.6264583
+## Offshore      0.8046739</code></pre>
 <p>You can also randomly permute the current stratification scheme using the <em>permuteStrata</em> function like this:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <span class="st">&quot;fine&quot;</span>)
 
@@ -503,13 +532,13 @@ x[<span class="kw">sample</span>(<span class="kw">indNames</span>(msats), <span 
 ran.msats &lt;-<span class="st"> </span><span class="kw">permuteStrata</span>(msats)
 <span class="kw">summary</span>(ran.msats)$strata.smry</code></pre></div>
 <pre><code>##                num.samples num.missing num.alleles prop.unique.alleles
-## Coastal                 68         0.4        12.4           0.1272222
-## Offshore.North          40         1.2        11.2           0.3032051
-## Offshore.South          18         0.4         8.4           0.3142857
+## Coastal                 68         1.8        12.4           0.2214258
+## Offshore.North          40         0.2        10.4           0.2655649
+## Offshore.South          18         0.0         9.6           0.2785714
 ##                heterozygosity
-## Coastal             0.6832309
-## Offshore.North      0.7313675
-## Offshore.South      0.8069444</code></pre>
+## Coastal             0.7342958
+## Offshore.North      0.6730769
+## Offshore.South      0.7444444</code></pre>
 <p>NOTE: Only samples assigned to strata are permuted with <em>permuteStrata</em>. Those not assigned (NAs) remain unassigned.</p>
 </div>
 <div id="exporting" class="section level2">

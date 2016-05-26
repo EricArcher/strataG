@@ -2,6 +2,15 @@
 library(strataG)
 
 ## ------------------------------------------------------------------------
+gen.data <- readGenData("msats.csv")
+str(gen.data)
+
+## ------------------------------------------------------------------------
+fname <- system.file("extdata/dolph.seqs.fasta", package = "strataG")
+x <- read.fasta(fname) 
+x
+
+## ------------------------------------------------------------------------
 #--- create a diploid (microsatellite) gtypes object
 data(dolph.msats)
 data(dolph.strata)

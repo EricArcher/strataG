@@ -14,7 +14,22 @@ library(strataG)
 
 ## Raw data
 
-The raw data that 
+It is easiest to load raw genotype data from the disk if it is available as a text file, usually in comma-delimited (.csv) format. The standard R functions _read.table_ or _read.csv_ can be used to accomplish this. However, in _strataG_, the _readGenData_ function has been provided for .csv files, which is a wrapper for _read.csv_ that sets commonly used values for missing data and removes blank lines.
+
+```{r}
+gen.data <- readGenData("msats.csv")
+str(gen.data)
+```
+
+For sequence data stored in FASTA format, the _read.fasta_ function is available, which is a wrapper for the _read.dna_ function in the _ape_ package with standard FASTA arguments set. This will create a DNAbin object in the workspace:
+
+```{r}
+fname <- system.file("extdata/dolph.seqs.fasta", package = "strataG")
+x <- read.fasta(fname) 
+x
+```
+
+For sequences stored in other formats, _read.dna_ should be used directly.
 
 ## Construction
 
