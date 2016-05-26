@@ -4,5 +4,7 @@ language: R
 cache: packages
 r: devel
 r_github_packages: thibautjombart/apex
-before_install:
-  - sudo apt-get install gsl-devel
+addons:
+  apt:
+    packages:
+      - libgs10-dev
