@@ -11,6 +11,14 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @seealso \link{genepop}
+#' 
+#' @examples \dontrun{
+#' data(msats.g)
+#' msats.ld <- LDgenepop(msats.g)
+#' head(msats.ld)
+#' }
+#' 
 #' @export
 #' 
 LDgenepop <- function(g, show.output = FALSE, delete.files = TRUE, 

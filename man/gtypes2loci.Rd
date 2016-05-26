@@ -25,7 +25,7 @@ lc <- gtypes2loci(msats.g)
 lc
 
 # Convert to gtypes
-gt <-loci2gtypes(lc)
+gt <- loci2gtypes(lc)
 gt 
 
 }

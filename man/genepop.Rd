@@ -42,7 +42,8 @@ arguments.}
 }
 }
 \description{
-Format output files and run GENEPOP.
+Format output files and run GENEPOP. Filenames used are returned 
+  so that output files can be viewed or read and parsed into R.
 }
 \note{
 GENEPOP is not included with \code{strataG} and must be downloaded 
@@ -50,11 +51,27 @@ GENEPOP is not included with \code{strataG} and must be downloaded
   the command line in the current working directory. See the vignette 
   for \code{external.programs} for installation instructions.
 }
+\examples{
+\dontrun{
+# Estimate Nm for the microsatellite data
+data(msats.g)
+# Run Genepop for Option 4
+results <- genepop(msats.g, output.ext = ".PRI", other.settings = "MenuOptions=4")
+# Locus name mapping and files
+results
+# Show contents of output file
+file.show(results$files["output.fname"])
+}
+
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
 \references{
 GENEPOP 4.3 (08 July 2014; Rousset, 2008)\cr
   \url{http://kimura.univ-montp2.fr/~rousset/Genepop.htm}
+}
+\seealso{
+\link{hweTest}, \link{LDgenepop}
 }
 

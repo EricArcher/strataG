@@ -36,6 +36,18 @@ Writes a comma-delimited (.csv) file of genotypes and if sequences
   is \code{TRUE}, then frequency tables for each locus are written to 
   separate files.
 }
+\examples{
+\dontrun{
+# Write microsatellites with one column per locus
+data(msats.g)
+write.gtypes(msats.g, one.col = TRUE)
+
+# Write control region data as frequency tables
+data(dloop.g)
+write.gtypes(dloop.g, as.frequency = TRUE)
+}
+
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

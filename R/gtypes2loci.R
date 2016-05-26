@@ -18,7 +18,7 @@
 #' lc
 #' 
 #' # Convert to gtypes
-#' gt <-loci2gtypes(lc)
+#' gt <- loci2gtypes(lc)
 #' gt 
 #' 
 #' @name gtypes2loci 

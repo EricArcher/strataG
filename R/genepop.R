@@ -1,6 +1,7 @@
 #' @name genepop
 #' @title Run GENEPOP
-#' @description Format output files and run GENEPOP.
+#' @description Format output files and run GENEPOP. Filenames used are returned 
+#'   so that output files can be viewed or read and parsed into R.
 #' 
 #' @param g a \code{\link{gtypes}} object.
 #' @param output.ext character string to use as extension for output files.
@@ -30,6 +31,19 @@
 #'   \url{http://kimura.univ-montp2.fr/~rousset/Genepop.htm}
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' 
+#' @seealso \link{hweTest}, \link{LDgenepop}
+#' 
+#' @examples \dontrun{
+#' # Estimate Nm for the microsatellite data
+#' data(msats.g)
+#' # Run Genepop for Option 4
+#' results <- genepop(msats.g, output.ext = ".PRI", other.settings = "MenuOptions=4")
+#' # Locus name mapping and files
+#' results
+#' # Show contents of output file
+#' file.show(results$files["output.fname"])
+#' }
 #' 
 #' @export
 #' 

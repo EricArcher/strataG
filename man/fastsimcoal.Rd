@@ -50,6 +50,33 @@ fastsimcoal is not included with \code{strataG} and must be downloaded
   the command line in the current working directory. See the vignette 
   for \code{external.programs} for installation instructions.
 }
+\examples{
+\dontrun{
+# Set fastsimcoal parameters
+# Population information: 3 populations with Ne = 10,000, drawing 100 samples from each.
+pop.info <- fscPopInfo(pop.size = rep(10000, 3), sample.size = rep(100, 3))
+
+# Migration rates among the 3 populations
+mig.rates <- matrix(c(0, 0.5, 0.005, 0.5, 0, 0.0005, 0.005, 0.0005, 0), ncol = 3)
+
+# Define historical events in which populations diverged 2000 generations in past
+hist.ev <- fscHistEv(
+  num.gen = c(2000, 2000), source.deme = c(2, 1),
+  sink.deme = c(1, 0), prop.migrants = 1
+)
+
+# Define 10 microsatellite loci, with random mutation rates
+msat.params <- fscLocusParams(
+  locus.type = "msat", num.loci = 1, 
+  mut.rate = runif(10, 1e-7, 1e-4)
+)
+
+# Run simulation and display locus summary
+sim.msats <- fastsimcoal(pop.info, msat.params, mig.rates, hist.ev)
+summarizeLoci(sim.msats)
+}
+
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

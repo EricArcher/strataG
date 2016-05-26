@@ -24,7 +24,18 @@ data.frame of disequilibrium estimates between pairs of individuals
 \description{
 Calculate linkage disequilibrium p-values using GENEPOP.
 }
+\examples{
+\dontrun{
+data(msats.g)
+msats.ld <- LDgenepop(msats.g)
+head(msats.ld)
+}
+
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
+}
+\seealso{
+\link{genepop}
 }
 

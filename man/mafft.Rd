@@ -40,6 +40,14 @@ MAFFT is not included with \code{strataG} and must be downloaded
   the command line in the current working directory. See the vignette 
   for \code{external.programs} for installation instructions.
 }
+\examples{
+\dontrun{
+data(dolph.seqs)
+dolph.aln <- mafft(dolph.seqs, op = 3, ep = 2)
+dolph.aln
+}
+
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

@@ -26,6 +26,12 @@
 #'   alignment based on fast Fourier transform. Nucleic Acids Res. 30:3059-3066.\cr 
 #'   Available at: \url{http://mafft.cbrc.jp/alignment/software}
 #' 
+#' @examples \dontrun{
+#' data(dolph.seqs)
+#' dolph.aln <- mafft(dolph.seqs, op = 3, ep = 2)
+#' dolph.aln
+#' }
+#' 
 #' @export
 #' 
 mafft <- function(x, run.label = "align.mafft", delete.output = TRUE, 

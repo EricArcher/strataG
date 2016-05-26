@@ -75,7 +75,7 @@
 #' data(msats.g)
 #' 
 #' # Run STRUCTURE
-#' sr <- structureRun(msats, k.range = 1:4, num.k.rep = 10)
+#' sr <- structureRun(msats.g, k.range = 1:4, num.k.rep = 10)
 #' 
 #' # Calculate Evanno metrics
 #' evno <- evanno(sr)

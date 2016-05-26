@@ -11,6 +11,11 @@ vignette: >
 ```{r echo = FALSE, message = FALSE}
 library(strataG)
 ```
+
+## Raw data
+
+The raw data that 
+
 ## Construction
 
 For most functions in _strataG_, you will need to load your data into a _gtypes_ object. A _gtypes_ object is an R S4 class with the following slots:

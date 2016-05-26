@@ -22,6 +22,7 @@ Imports:
     Hmisc,
     methods,
     pegas,
+    phangorn,
     RColorBrewer,
     Rcpp,
     reshape2,
@@ -66,7 +67,6 @@ Collate:
     idRows.R
     iupacCode.R
     jackHWE.R
-    jmodeltest.R
     labelHaplotypes.R
     LDgenepop.R
     lowFreqSubs.R
@@ -120,6 +120,7 @@ Collate:
     gtypes2loci.R
     df2gtypes.R
     sequence2gtypes.R
+    gtypes2phyDat.R
 LazyData: true
 VignetteBuilder: knitr
 LinkingTo: Rcpp
