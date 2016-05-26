@@ -9,7 +9,4 @@ r_packages:
   - rmarkdown
 r_github_packages: thibautjombart/apex
 apt_packages:
-  - gsl-bin
-  - libgsl0-dbg
   - libgsl0-dev
-  - libgsl0ldbl
