@@ -5,7 +5,8 @@ cache: packages
 r: devel
 r_github_packages: thibautjombart/apex
 sudo: false
-addons:
-  apt:
-    packages:
-      - libgs10-dev
+
+ addons:
+   apt:
+     packages:
+       - libgsl0-dev
