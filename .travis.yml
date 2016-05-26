@@ -2,11 +2,10 @@
 
 language: R
 cache: packages
-r: devel
-r_github_packages: thibautjombart/apex
 sudo: false
-
- addons:
-   apt:
-     packages:
-       - libgsl0-dev
+warnings_are_errors: false
+r_github_packages: thibautjombart/apex
+addons:
+  apt:
+    packages:
+      - libgsl0-dev # for topicmodels
