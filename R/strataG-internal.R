@@ -13,6 +13,24 @@
 #' @name strataG-internal
 NULL
 
+
+#' @rdname strataG-internal
+#' @param g a \linkS4class{gtypes} object.
+#' @param label label for filename(s). Default is the gtypes description 
+#'   if present.
+#' @keywords internal
+#' 
+.getFileLabel <- function(g, label = NULL) {
+  desc <- description(g)
+  label <- if(!is.null(label)) {
+    label 
+  } else if(!is.null(desc)) {
+    desc 
+  } else "strataG.gtypes"
+  gsub("[[:punct:]]", ".", label)
+}
+  
+
 #' @rdname strataG-internal
 #' @param locus.names a vector of column names, where each locus must be
 #'   named with the same roots. For example, diploid locus 'ABCD' would have
@@ -47,6 +65,7 @@ NULL
   })
 }
 
+
 #' @rdname strataG-internal
 #' @param num.cores number of cores for multithreading. If \code{NULL}, the number 
 #'   used is set to the value of \code{detectCores() - 1}.
@@ -65,6 +84,7 @@ NULL
     cl.func(num.cores)
   } else NULL
 }
+
 
 #' @rdname strataG-internal
 #' @param g a \linkS4class{gtypes} object.

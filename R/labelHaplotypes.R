@@ -18,7 +18,7 @@
 #'   \code{unassigned} element.
 #'
 #' @return
-#'  \code{DNAbin} or \code{multidna}, a list with the following elements:
+#'  For \code{DNAbin} or \code{multidna}, a list with the following elements:
 #'  \describe{
 #'    \item{haps}{named vector (\code{DNAbin}) or list of named vectors
 #'      (\code{multidina}) of haplotypes for each sequence in \code{x}.}
@@ -27,8 +27,8 @@
 #'    \item{unassigned}{\code{data.frame} listing closest matching haplotypes 
 #'      and the number of substitutions different. Will be \code{NULL} if no 
 #'      sequences remain unassigned.}
-#'  }
-#'  \code{gtypes}, a list with the following elements:
+#'  } \cr
+#'  For \code{gtypes}, a list with the following elements:
 #'  \describe{
 #'    \item{gtypes}{the new \code{gtypes} object with the haplotypes reassigned.}
 #'    \item{unassigned}{a list containing the \code{unassigned} attribute 

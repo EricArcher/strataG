@@ -8,19 +8,21 @@
 \usage{
 read.arlequin(file)
 
-write.arlequin(g, file = "gtypes.prj", title = "gtypes from R",
-  data.type = c("DNA", "MICROSAT", "RFLP"), locus = 1)
+write.arlequin(g, label = NULL, data.type = c("DNA", "MICROSAT", "RFLP"),
+  locus = 1)
 }
 \arguments{
 \item{file}{filename for output file.}
 
 \item{g}{a \linkS4class{gtypes} object.}
 
-\item{title}{title for data in file.}
+\item{label}{label for filename(s). Default is the gtypes description 
+if present.}
 
 \item{data.type}{type of data. Can be "DNA", "RFLP", or "MICROSAT".}
 
-\item{locus}{numeric or character designation of which locus to write.}
+\item{locus}{numeric or character designation of which locus to write for 
+haploid data.}
 }
 \description{
 Read and write an Arlequin-formatted files.

@@ -4,9 +4,11 @@
 #' 
 #' @param file filename for output file.
 #' @param g a \linkS4class{gtypes} object.
-#' @param title title for data in file.
+#' @param label label for filename(s). Default is the gtypes description 
+#'   if present.
 #' @param data.type type of data. Can be "DNA", "RFLP", or "MICROSAT".
-#' @param locus numeric or character designation of which locus to write.
+#' @param locus numeric or character designation of which locus to write for 
+#'   haploid data.
 #' 
 #' @references Excoffier, L.G. Laval, and S. Schneider (2005) 
 #'   Arlequin ver. 3.0: An integrated software package for population genetics 
@@ -54,12 +56,69 @@ read.arlequin <- function(file) {
   list(freq.df = freq.df, dna.seq = seq.lt)
 }
 
+.writeArlequinHeader <- function(g, file, data.type) {
+  write("[Profile]", file = file)
+  write(paste("Title = \"", description(g), "\"", sep = ""), file = file, append = TRUE)
+  write(paste("NbSamples =", nInd(g)), file = file, append = TRUE)
+  write(paste("DataType =", data.type), file = file, append = TRUE)
+  g.data <- paste("GenotypicData =", ifelse(ploidy(g) == 1, 0, 1))
+  write(g.data, file = file, append = TRUE)
+  write("MissingData='?'", file = file, append = TRUE)
+  write("LocusSeparator=WHITESPACE", file = file, append = TRUE)
+}
+
+.writeArlequinSequences <- function(g, file, locus) {      
+  write("[[HaplotypeDefinition]]", file = file, append = TRUE)
+  write("HaplListName=\"Haplotypes\"", file = file, append = TRUE)
+  write("HaplList={", file = file, append = TRUE)
+  dna <- as.character(as.matrix(sequences(g, locus)))
+  for(x in rownames(dna)) {
+    x.seq <- paste(dna[x, ], collapse = "")
+    write(paste(x, x.seq), file = file, append = TRUE)
+  }
+  write("}", file = file, append = TRUE)
+}
+
+.writeArlequinMsats <- function(g, file) {
+  write("[[Samples]]", file = file, append = TRUE)
+  for(st in strataSplit(g)) {
+    write(paste("SampleName=\"", strata(st)[1], "\"", sep = ""), file = file, append = TRUE)
+    write(paste("SampleSize=\"", nInd(st), "\"", sep = ""), file = file, append = TRUE)
+    write("SampleData={", file = file, append = TRUE)
+    for(id in indNames(st)) {
+      id.mat <- sapply(loci(st, ids = id), as.character)
+      id.mat <- id.mat[is.na(id.mat)] <- "?"
+      for(i in 1:nrow(id.mat)) {
+        hdr <- if(i == 1) paste(id, "1") else ""
+        als <- paste(c(hdr, id.mat[i, ]), collapse = " ")
+        write(als, file = file, append = TRUE)
+      }
+      write("}", file = file, append = TRUE)
+    }
+  }
+}
+
+.writeArlequinStructure <- function(g, file, data.type) {
+  write("[[Structure]]", file = file, append = TRUE)
+  st.name <- paste(
+    "StructureName=\"A group of", nStrata(g), "populations analyzed for", data.type
+  )
+  write(st.name, file = file, append = TRUE)
+  write("NbGroups=1", file = file, append = TRUE)
+  write("Group= {", file = file, append = TRUE)
+  for(st in strataNames(g)) {
+    write(paste("\"", st, "\"", sep = ""), file = file, append = TRUE)
+  }
+  write("}", file = file, append = TRUE)
+}
+
 #' @rdname arlequin
 #' @export
 #' 
-write.arlequin <- function(g, file = "gtypes.prj", title = "gtypes from R", 
-                           data.type = c("DNA", "MICROSAT", "RFLP"),
+write.arlequin <- function(g, label = NULL, data.type = c("DNA", "MICROSAT", "RFLP"),
                            locus = 1) {
+  label <- .getFileLabel(g, label)
+  file <- paste(label, ".arp", sep = "")
   
   data.type <- match.arg(data.type)
   if(ploidy(g) > 1 & data.type == "DNA") {
@@ -69,25 +128,15 @@ write.arlequin <- function(g, file = "gtypes.prj", title = "gtypes from R",
     stop("'data.type' cannot be RFLP or MICROSAT if 'g' is haploid.")
   }
   
-  write("[Profile]", file = file)
-  write(paste("Title = \"", title, "\"", sep = ""), file = file, append = TRUE)
-  write(paste("NbSamples =", nInd(g)), file = file, append = TRUE)
-  write(paste("DataType =", data.type), file = file, append = TRUE)
-  write(paste("GenotypicData =", ifelse(ploidy(g) == 1, 0, 1)), 
-        file = file, append = TRUE)
+  .writeArlequinHeader(g, file, data.type)
   
   write("[Data]", file = file, append = TRUE)
-  if(!is.null(sequences(g))) {
-    write("[[HaplotypeDefinition]]", file = file, append = TRUE)
-    write("HaplListName=\"Haplotypes\"", file = file, append = TRUE)
-    write("HaplList={", file = file, append = TRUE)
-    dna <- as.character(as.matrix(sequences(g, locus)))
-    for(x in rownames(dna)) {
-      x.seq <- paste(dna[x, ], collapse = "")
-      write(paste(x, x.seq), file = file, append = TRUE)
-    }
-    write("}", file = file, append = TRUE)
+  if(ploidy(g) == 1) {
+    if(!is.null(sequences(g))) .writeArlequinSequences(g, file, locus)
+  } else {
+    .writeArlequinMsats(g, file)
   }
+  .writeArlequinStructure(g, file, data.type)
   
   invisible(NULL)
 }

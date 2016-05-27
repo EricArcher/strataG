@@ -36,13 +36,7 @@
 #' 
 write.gtypes <- function(g, label = NULL, folder = NULL, as.frequency = FALSE, 
                          by.strata = TRUE, freq.type = c("freq", "prop"), ...) {
-  desc <- description(g)
-  label <- if(!is.null(label)) {
-    label 
-  } else if(!is.null(desc)) {
-    desc 
-  } else "strataG.gtypes"
-  label <- gsub("[[:punct:]]", ".", label)
+  label <- .getFileLabel(g, label)
   
   g.mats <- if(ploidy(g) == 1 & as.frequency) {
     freq.list <- alleleFreqs(g, by.strata = by.strata) 
