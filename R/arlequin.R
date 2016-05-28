@@ -58,10 +58,10 @@ read.arlequin <- function(file) {
 
 .writeArlequinHeader <- function(g, file, data.type) {
   write("[Profile]", file = file)
-  write(paste("Title = \"", description(g), "\"", sep = ""), file = file, append = TRUE)
-  write(paste("NbSamples =", nInd(g)), file = file, append = TRUE)
-  write(paste("DataType =", data.type), file = file, append = TRUE)
-  g.data <- paste("GenotypicData =", ifelse(ploidy(g) == 1, 0, 1))
+  write(paste("Title=\"", description(g), "\"", sep = ""), file = file, append = TRUE)
+  write(paste("NbSamples=", nInd(g), sep = ""), file = file, append = TRUE)
+  write(paste("DataType=", data.type, sep = ""), file = file, append = TRUE)
+  g.data <- paste("GenotypicData=", ifelse(ploidy(g) == 1, 0, 1))
   write(g.data, file = file, append = TRUE)
   write("MissingData='?'", file = file, append = TRUE)
   write("LocusSeparator=WHITESPACE", file = file, append = TRUE)
