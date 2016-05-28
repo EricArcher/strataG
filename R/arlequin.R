@@ -59,10 +59,11 @@ read.arlequin <- function(file) {
 .writeArlequinHeader <- function(g, file, data.type) {
   write("[Profile]", file = file)
   write(paste("Title=\"", description(g), "\"", sep = ""), file = file, append = TRUE)
-  write(paste("NbSamples=", nInd(g), sep = ""), file = file, append = TRUE)
+  write(paste("NbSamples=", nStrata(g), sep = ""), file = file, append = TRUE)
   write(paste("DataType=", data.type, sep = ""), file = file, append = TRUE)
   g.data <- paste("GenotypicData=", ifelse(ploidy(g) == 1, 0, 1))
   write(g.data, file = file, append = TRUE)
+  write("GameticPhase=0", file = file, append = TRUE)
   write("MissingData='?'", file = file, append = TRUE)
   write("LocusSeparator=WHITESPACE", file = file, append = TRUE)
 }
@@ -86,8 +87,11 @@ read.arlequin <- function(file) {
     write(paste("SampleSize=\"", nInd(st), "\"", sep = ""), file = file, append = TRUE)
     write("SampleData={", file = file, append = TRUE)
     for(id in indNames(st)) {
-      id.mat <- sapply(loci(st, ids = id), as.character)
-      id.mat <- id.mat[is.na(id.mat)] <- "?"
+      id.mat <- sapply(loci(st, ids = id), function(x) {
+        x <- as.character(x)
+        x[is.na(x)] <- "?"
+        x
+      })
       for(i in 1:nrow(id.mat)) {
         hdr <- if(i == 1) paste(id, "1") else ""
         als <- paste(c(hdr, id.mat[i, ]), collapse = " ")

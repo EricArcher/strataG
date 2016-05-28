@@ -27,7 +27,8 @@
 #'    \item{unassigned}{\code{data.frame} listing closest matching haplotypes 
 #'      and the number of substitutions different. Will be \code{NULL} if no 
 #'      sequences remain unassigned.}
-#'  } \cr
+#'  }
+#'  
 #'  For \code{gtypes}, a list with the following elements:
 #'  \describe{
 #'    \item{gtypes}{the new \code{gtypes} object with the haplotypes reassigned.}
