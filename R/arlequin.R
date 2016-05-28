@@ -6,7 +6,8 @@
 #' @param g a \linkS4class{gtypes} object.
 #' @param label label for filename(s). Default is the gtypes description if present.
 #' @param data.type type of data. Can be "DNA", "RFLP", or "MICROSAT".
-#' @param locus numeric or character designation of which locus to write for haploid data.
+#' @param locus numeric or character designation of which locus to write for 
+#'   haploid data.
 #' 
 #' @references Excoffier, L.G. Laval, and S. Schneider (2005) 
 #'   Arlequin ver. 3.0: An integrated software package for population genetics 
@@ -84,28 +85,29 @@ read.arlequin <- function(file) {
     write(paste("SampleName=\"", strata(st)[1], "\"", sep = ""), file = file, append = TRUE)
     write(paste("SampleSize=", nInd(st), sep = ""), file = file, append = TRUE)
     write("SampleData={", file = file, append = TRUE)
-    for(id in indNames(st)) {
+    loc.mat <- do.call(rbind, lapply(indNames(st), function(id) {
       id.mat <- sapply(loci(st, ids = id), function(x) {
         x <- as.character(x)
         x[is.na(x)] <- "?"
         x
       })
-      for(i in 1:nrow(id.mat)) {
-        hdr <- if(i == 1) paste(id, "1") else ""
-        als <- paste(c(hdr, id.mat[i, ]), collapse = " ")
-        write(als, file = file, append = TRUE)
-      }
-      write("}", file = file, append = TRUE)
-    }
+      do.call(rbind, lapply(1:nrow(id.mat), function(i) {
+        line.i <- if(i == 1) c(id, "1") else {
+          id.pad <- paste(rep(" ", nchar(id)), collapse = "")
+          c(id.pad, " ")
+        }
+        c(line.i, id.mat[i, ])
+      }))
+    }))
+    write(t(loc.mat), ncolumns = ncol(loc.mat), sep = "\t", file = file, append = TRUE)
+    write("}", file = file, append = TRUE)
   }
 }
 
 .writeArlequinStructure <- function(g, file, data.type) {
   write("[[Structure]]", file = file, append = TRUE)
-  st.name <- paste(
-    "StructureName=\"A group of", nStrata(g), "populations analyzed for", 
-    data.type, "\""
-  )
+  st.name <- paste("A group of", nStrata(g), "populations analyzed for", data.type)
+  st.name <- paste("StructureName=\"", st.name, "\"", sep = "")
   write(st.name, file = file, append = TRUE)
   write("NbGroups=1", file = file, append = TRUE)
   write("Group= {", file = file, append = TRUE)
