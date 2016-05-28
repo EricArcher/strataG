@@ -3,6 +3,7 @@
 #'   the strataG package.
 #'   
 #' @details \describe{
+#'   \item{.getFileLabel}{}
 #'   \item{.parseLocusNames}{}
 #'   \item{.setupClusters}{}
 #'   \item{.strataPairs}{}
@@ -16,8 +17,7 @@ NULL
 
 #' @rdname strataG-internal
 #' @param g a \linkS4class{gtypes} object.
-#' @param label label for filename(s). Default is the gtypes description 
-#'   if present.
+#' @param label label for filename(s). Default is the gtypes description if present.
 #' @keywords internal
 #' 
 .getFileLabel <- function(g, label = NULL) {

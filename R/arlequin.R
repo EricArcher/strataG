@@ -4,11 +4,9 @@
 #' 
 #' @param file filename for output file.
 #' @param g a \linkS4class{gtypes} object.
-#' @param label label for filename(s). Default is the gtypes description 
-#'   if present.
+#' @param label label for filename(s). Default is the gtypes description if present.
 #' @param data.type type of data. Can be "DNA", "RFLP", or "MICROSAT".
-#' @param locus numeric or character designation of which locus to write for 
-#'   haploid data.
+#' @param locus numeric or character designation of which locus to write for haploid data.
 #' 
 #' @references Excoffier, L.G. Laval, and S. Schneider (2005) 
 #'   Arlequin ver. 3.0: An integrated software package for population genetics 
@@ -61,7 +59,7 @@ read.arlequin <- function(file) {
   write(paste("Title=\"", description(g), "\"", sep = ""), file = file, append = TRUE)
   write(paste("NbSamples=", nStrata(g), sep = ""), file = file, append = TRUE)
   write(paste("DataType=", data.type, sep = ""), file = file, append = TRUE)
-  g.data <- paste("GenotypicData=", ifelse(ploidy(g) == 1, 0, 1))
+  g.data <- paste("GenotypicData=", ifelse(ploidy(g) == 1, 0, 1), sep = "")
   write(g.data, file = file, append = TRUE)
   write("GameticPhase=0", file = file, append = TRUE)
   write("MissingData='?'", file = file, append = TRUE)
@@ -84,7 +82,7 @@ read.arlequin <- function(file) {
   write("[[Samples]]", file = file, append = TRUE)
   for(st in strataSplit(g)) {
     write(paste("SampleName=\"", strata(st)[1], "\"", sep = ""), file = file, append = TRUE)
-    write(paste("SampleSize=\"", nInd(st), "\"", sep = ""), file = file, append = TRUE)
+    write(paste("SampleSize=", nInd(st), sep = ""), file = file, append = TRUE)
     write("SampleData={", file = file, append = TRUE)
     for(id in indNames(st)) {
       id.mat <- sapply(loci(st, ids = id), function(x) {
@@ -105,7 +103,8 @@ read.arlequin <- function(file) {
 .writeArlequinStructure <- function(g, file, data.type) {
   write("[[Structure]]", file = file, append = TRUE)
   st.name <- paste(
-    "StructureName=\"A group of", nStrata(g), "populations analyzed for", data.type
+    "StructureName=\"A group of", nStrata(g), "populations analyzed for", 
+    data.type, "\""
   )
   write(st.name, file = file, append = TRUE)
   write("NbGroups=1", file = file, append = TRUE)

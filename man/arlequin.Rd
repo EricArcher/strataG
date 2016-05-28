@@ -16,13 +16,11 @@ write.arlequin(g, label = NULL, data.type = c("DNA", "MICROSAT", "RFLP"),
 
 \item{g}{a \linkS4class{gtypes} object.}
 
-\item{label}{label for filename(s). Default is the gtypes description 
-if present.}
+\item{label}{label for filename(s). Default is the gtypes description if present.}
 
 \item{data.type}{type of data. Can be "DNA", "RFLP", or "MICROSAT".}
 
-\item{locus}{numeric or character designation of which locus to write for 
-haploid data.}
+\item{locus}{numeric or character designation of which locus to write for haploid data.}
 }
 \description{
 Read and write an Arlequin-formatted files.

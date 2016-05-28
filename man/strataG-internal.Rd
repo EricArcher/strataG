@@ -19,8 +19,7 @@
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
-\item{label}{label for filename(s). Default is the gtypes description 
-if present.}
+\item{label}{label for filename(s). Default is the gtypes description if present.}
 
 \item{locus.names}{a vector of column names, where each locus must be
 named with the same roots. For example, diploid locus 'ABCD' would have
@@ -40,6 +39,7 @@ Functions intended to be used only by functions within
 }
 \details{
 \describe{
+  \item{.getFileLabel}{}
   \item{.parseLocusNames}{}
   \item{.setupClusters}{}
   \item{.strataPairs}{}
