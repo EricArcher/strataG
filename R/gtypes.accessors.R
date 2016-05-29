@@ -29,21 +29,22 @@
 #'
 #' @return
 #' \describe{
-#'   \item{\code{nInd}}{number of individuals}
-#'   \item{\code{nLoc}}{number of loci}
-#'   \item{\code{nStrata}}{number of strata}
-#'   \item{\code{indNames}}{vector of individual/sample names}
-#'   \item{\code{locNames}}{vector of locus names}
-#'   \item{\code{strataNames}}{vector of strata names for current scheme}
-#'   \item{\code{ploidy}}{number of alleles at each locus}
-#'   \item{\code{other}}{contents of \code{@@other} slot}
-#'   \item{\code{strata}}{return or modify the current stratification}
-#'   \item{\code{schemes}}{return or modify the current stratification schemes}
-#'   \item{\code{loci}}{return a data.frame of the alleles for the specified ids and loci}
-#'   \item{\code{sequences}}{return the \linkS4class{multidna} object in 
+#'   \item{nInd}{number of individuals}
+#'   \item{nLoc}{number of loci}
+#'   \item{nStrata}{number of strata}
+#'   \item{indNames}{vector of individual/sample names}
+#'   \item{locNames}{vector of locus names}
+#'   \item{strataNames}{vector of strata names for current scheme}
+#'   \item{ploidy}{number of alleles at each locus}
+#'   \item{other}{contents of \code{@@other} slot}
+#'   \item{strata}{return or modify the current stratification}
+#'   \item{schemes}{return or modify the current stratification schemes}
+#'   \item{loci}{return a data.frame of the alleles for the specified ids and loci}
+#'   \item{alleleNames}{return a list of alleles at each locus}
+#'   \item{sequences}{return the \linkS4class{multidna} object in 
 #'     the \code{@@sequences} slot. See \code{\link[apex]{getSequences}} to 
 #'     extract individual genes or sequences from this object}
-#'   \item{\code{description}}{return the object's description}
+#'   \item{description}{return the object's description}
 #' }
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
@@ -244,6 +245,21 @@ setMethod("loci", "gtypes", function(x, ids = NULL, loci = NULL) {
   x@loci[idRows(x, ids = ids), loci, drop = FALSE]
 })
 
+
+#' @rdname gtypes.accessors
+#' @export
+#' 
+setGeneric("alleleNames", function(x, ...) standardGeneric("alleleNames"))
+
+#' @rdname gtypes.accessors
+#' @aliases loci
+#' @export
+#' 
+setMethod("alleleNames", "gtypes", function(x) {
+  sapply(x@loci, function(l) {
+    as.character(sort(unique(l[!is.na(l)])))
+  }, simplify = FALSE)
+})
 
 #' @rdname gtypes.accessors
 #' @export

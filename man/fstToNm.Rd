@@ -24,4 +24,7 @@ plot(fst, Nm, type = "l")
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
+\seealso{
+\link{wrightFst}, \link{numGensEq}, \link{expectedNumAlleles}
+}
 

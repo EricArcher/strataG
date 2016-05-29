@@ -8,6 +8,8 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
+#' @seealso \link{wrightFst}, \link{fstToNm}, \link{expectedNumAlleles}
+#'
 #' @examples
 #' numGensEq(0.15, 100, 20)
 #' 

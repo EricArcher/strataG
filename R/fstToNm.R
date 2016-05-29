@@ -7,6 +7,8 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
+#' @seealso \link{wrightFst}, \link{numGensEq}, \link{expectedNumAlleles}
+#'
 #' @examples 
 #' fst <- seq(0.001, 0.2, length.out = 100)
 #' Nm <- fstToNm(fst, 2)

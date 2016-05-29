@@ -28,4 +28,7 @@ plot(dispersal, fst, type = "l")
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
+\seealso{
+\link{numGensEq}, \link{fstToNm}, \link{expectedNumAlleles}
+}
 

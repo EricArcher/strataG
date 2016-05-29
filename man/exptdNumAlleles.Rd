@@ -41,4 +41,7 @@ Eric Archer \email{eric.archer@noaa.gov}
 Ewens, W. 1972. The sampling theory of selectively neutral
   alleles. Theoretical Population Biology 3:87-112. Eqns. 11 and 24.
 }
+\seealso{
+\link{wrightFst}, \link{numGensEq}, \link{fstToNm}
+}
 

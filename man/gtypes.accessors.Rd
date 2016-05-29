@@ -4,6 +4,8 @@
 \name{gtypes.accessors}
 \alias{[,gtypes,ANY,ANY,ANY-method}
 \alias{accessors}
+\alias{alleleNames}
+\alias{alleleNames,gtypes-method}
 \alias{description}
 \alias{description,gtypes-method}
 \alias{gtypes.accessors}
@@ -81,6 +83,10 @@ loci(x, ...)
 
 \S4method{loci}{gtypes}(x, ids = NULL, loci = NULL)
 
+alleleNames(x, ...)
+
+\S4method{alleleNames}{gtypes}(x)
+
 sequences(x, ...)
 
 \S4method{sequences}{gtypes}(x, seqName = NULL, as.haplotypes = TRUE, ...)
@@ -119,21 +125,22 @@ or strata (\code{k}). See Details for more information.}
 }
 \value{
 \describe{
-  \item{\code{nInd}}{number of individuals}
-  \item{\code{nLoc}}{number of loci}
-  \item{\code{nStrata}}{number of strata}
-  \item{\code{indNames}}{vector of individual/sample names}
-  \item{\code{locNames}}{vector of locus names}
-  \item{\code{strataNames}}{vector of strata names for current scheme}
-  \item{\code{ploidy}}{number of alleles at each locus}
-  \item{\code{other}}{contents of \code{@other} slot}
-  \item{\code{strata}}{return or modify the current stratification}
-  \item{\code{schemes}}{return or modify the current stratification schemes}
-  \item{\code{loci}}{return a data.frame of the alleles for the specified ids and loci}
-  \item{\code{sequences}}{return the \linkS4class{multidna} object in 
+  \item{nInd}{number of individuals}
+  \item{nLoc}{number of loci}
+  \item{nStrata}{number of strata}
+  \item{indNames}{vector of individual/sample names}
+  \item{locNames}{vector of locus names}
+  \item{strataNames}{vector of strata names for current scheme}
+  \item{ploidy}{number of alleles at each locus}
+  \item{other}{contents of \code{@other} slot}
+  \item{strata}{return or modify the current stratification}
+  \item{schemes}{return or modify the current stratification schemes}
+  \item{loci}{return a data.frame of the alleles for the specified ids and loci}
+  \item{alleleNames}{return a list of alleles at each locus}
+  \item{sequences}{return the \linkS4class{multidna} object in 
     the \code{@sequences} slot. See \code{\link[apex]{getSequences}} to 
     extract individual genes or sequences from this object}
-  \item{\code{description}}{return the object's description}
+  \item{description}{return the object's description}
 }
 }
 \description{

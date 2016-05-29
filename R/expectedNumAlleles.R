@@ -14,6 +14,8 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
+#' @seealso \link{wrightFst}, \link{numGensEq}, \link{fstToNm}
+#'
 #' @examples
 #' exptdNumAlleles(20, 1, 2)
 #'

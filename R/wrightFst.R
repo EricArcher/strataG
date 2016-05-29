@@ -9,6 +9,8 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @seealso \link{numGensEq}, \link{fstToNm}, \link{expectedNumAlleles}
+#' 
 #' @examples 
 #' dispersal <- seq(0.05, 0.8, by = 0.05)
 #' fst <- wrightFst(100, dispersal, 20, 2)

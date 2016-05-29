@@ -28,4 +28,7 @@ numGensEq(0.15, 50, 20)
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
+\seealso{
+\link{wrightFst}, \link{fstToNm}, \link{expectedNumAlleles}
+}
 
