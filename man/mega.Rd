@@ -10,14 +10,13 @@
 \usage{
 read.mega(file)
 
-write.mega(g, file = NULL, title = NULL, line.width = 60, locus = 1)
+write.mega(g, file = NULL, label = NULL, line.width = 60, locus = 1)
 }
 \arguments{
 \item{file}{a MEGA-formatted file of sequences.}
 
-\item{g}{a \linkS4class{gtypes} object.}
-
-\item{title}{title for data in file.}
+\item{label}{label for MEGA filename (.meg). If \code{NULL}, the 
+gtypes description is used if present.}
 
 \item{line.width}{width of sequence lines.}
 
@@ -26,8 +25,8 @@ write.mega(g, file = NULL, title = NULL, line.width = 60, locus = 1)
 \value{
 for \code{read.mega}, a list of:
 \describe{
-  \item{title}{title of MEGA file.}
-  \item{dna.seq}{list of DNA sequences.}
+  \item{title}{title of MEGA file}
+  \item{dna.seq}{DNA sequences in \code{\link[ape]{DNAbin}} format}
 }
 }
 \description{
@@ -35,5 +34,11 @@ Read and write MEGA formatted files.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
+}
+\references{
+Sudhir Kumar, Glen Stecher, and Koichiro Tamura (2015) 
+  MEGA7: Molecular Evolutionary Genetics Analysis version 7.0. 
+  Molecular Biology and Evolution (submitted).
+  Available at: \url{http://www.megasoftware.net}
 }
 

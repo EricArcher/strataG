@@ -43,7 +43,6 @@ Collate:
     alleleFreqs.R
     alleleSplit.R
     allelicRichness.R
-    arlequin.R
     as.multidna.R
     baseFreqs.R
     clumpp.R
@@ -115,6 +114,7 @@ Collate:
     validIupacCodes.R
     variableSites.R
     wrightFst.R
+    write.arlequin.R
     write.gtypes.R
     write.nexus.snapp.R
     gtypes2genind.R
