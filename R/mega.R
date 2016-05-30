@@ -1,6 +1,7 @@
 #' @title Read and Write MEGA
 #' @description Read and write MEGA formatted files.
 #' 
+#' @param g a \linkS4class{gtypes} object.
 #' @param file a MEGA-formatted file of sequences.
 #' @param label label for MEGA filename (.meg). If \code{NULL}, the 
 #'   gtypes description is used if present.

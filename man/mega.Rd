@@ -15,6 +15,8 @@ write.mega(g, file = NULL, label = NULL, line.width = 60, locus = 1)
 \arguments{
 \item{file}{a MEGA-formatted file of sequences.}
 
+\item{g}{a \linkS4class{gtypes} object.}
+
 \item{label}{label for MEGA filename (.meg). If \code{NULL}, the 
 gtypes description is used if present.}
 

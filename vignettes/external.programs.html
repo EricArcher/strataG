@@ -7,13 +7,15 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <meta name="author" content="Eric Archer" />
 
-<meta name="date" content="2016-04-22" />
+<meta name="date" content="2016-05-30" />
 
 <title>Installing External Programs</title>
+
 
 
 
@@ -27,17 +29,14 @@
 
 
 
-<div class="fluid-row" id="header">
 
-
-<h1 class="title">Installing External Programs</h1>
+<h1 class="title toc-ignore">Installing External Programs</h1>
 <h4 class="author"><em>Eric Archer</em></h4>
-<h4 class="date"><em>2016-04-22</em></h4>
-
-</div>
+<h4 class="date"><em>2016-05-30</em></h4>
 
 
-<p><em>strataG</em> provides wrapper functions for several commonly used command-line population genetic programs (mafft, structure, genepop, fastsimcoal, phase, jModelTest). In order for the <em>strataG</em> functions to work properly with these programs, the user must download them from their respective websites (note that they are not included in the distribution of <em>strataG</em>), and ensure that they are properly installed on their system.</p>
+
+<p><em>strataG</em> provides wrapper functions for several commonly used command-line population genetic programs (mafft, structure, genepop, fastsimcoal, phase). In order for the <em>strataG</em> functions to work properly with these programs, the user must download them from their respective websites (note that they are not included in the distribution of <em>strataG</em>), and ensure that they are properly installed on their system.</p>
 <p>In general <em>strataG</em> assumes that the executable for the program can be successfully run from the command line in the current working directory. Rather than continuously move the executable to wherever the current working directory happens to be, or force the working directory to be where the executable resides, it is advised that executables be placed in a directory that are within the system’s search path. One option that can simplify maintenance of a collection of executables is to create a single directory (e.g., <em>C:/Genetics.Programs</em> on Windows systems, or <em>/Users/Shared/Genetics.Programs</em> on Mac OS) where all executables are stored and then include that directory in the PATH.</p>
 <p>Helpful instructions for editing the PATH environmental variable can be found at the following links for <a href="https://www.java.com/en/download/help/path.xml">Windows</a>, <a href="http://osxdaily.com/2014/08/14/add-new-path-to-path-command-line/">Mac OSX</a>, and <a href="http://www.wikihow.com/Change-the-Path-Variable-in-Linux">LINUX</a>. Alternatively on Mac OS or LINUX/UNIX systems, executables can be placed in the <em>/usr/local/bin</em> folder which is usually a default in the PATH.</p>
 

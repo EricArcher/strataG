@@ -9,7 +9,7 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-_strataG_ provides wrapper functions for several commonly used command-line population genetic programs (mafft, structure, genepop, fastsimcoal, phase, jModelTest). In order for the _strataG_ functions to work properly with these programs, the user must download them from their respective websites (note that they are not included in the distribution of _strataG_), and ensure that they are properly installed on their system.
+_strataG_ provides wrapper functions for several commonly used command-line population genetic programs (mafft, structure, genepop, fastsimcoal, phase). In order for the _strataG_ functions to work properly with these programs, the user must download them from their respective websites (note that they are not included in the distribution of _strataG_), and ensure that they are properly installed on their system.
 
 In general _strataG_ assumes that the executable for the program can be successfully run from the command line in the current working directory. Rather than continuously move the executable to wherever the current working directory happens to be, or force the working directory to be where the executable resides, it is advised that executables be placed in a directory that are within the system's search path. One option that can simplify maintenance of a collection of executables is to create a single directory (e.g., _C:/Genetics.Programs_ on Windows systems, or _/Users/Shared/Genetics.Programs_ on Mac OS) where all executables are stored and then include that directory in the PATH.
 
