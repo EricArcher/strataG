@@ -1,3 +1,8 @@
+## Changes to strataG v 1.0.6
+
+* Added read.arlequin back. Fixed missing function error with write.arlequin.
+
+
 ## Changes to strataG v 1.0.5
 
 * Fixed error in dupGenotypes, propSharedLoci, and propSharedIDs where missing genotypes were not being properly counted.
