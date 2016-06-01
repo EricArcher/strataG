@@ -8,6 +8,8 @@
 \alias{alleleNames,gtypes-method}
 \alias{description}
 \alias{description,gtypes-method}
+\alias{description<-}
+\alias{description<-,gtypes-method}
 \alias{gtypes.accessors}
 \alias{indNames}
 \alias{indNames,gtypes-method}
@@ -94,6 +96,10 @@ sequences(x, ...)
 description(x, ...)
 
 \S4method{description}{gtypes}(x, ...)
+
+description(x) <- value
+
+\S4method{description}{gtypes}(x) <- value
 
 \S4method{[}{gtypes,ANY,ANY,ANY}(x, i, j, k, ..., quiet = TRUE,
   drop = FALSE)

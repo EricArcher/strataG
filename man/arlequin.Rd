@@ -11,7 +11,9 @@ read.arlequin(file)
 write.arlequin(g, label = NULL, locus = 1)
 }
 \arguments{
-\item{file}{filename of an arlequin project (.arp) file}
+\item{file}{filename of an input arlequin project (.arp) file.
+\code{read.arlequin} can only read files with DataType of FREQUENCY, DNA, 
+or MICROSAT.}
 
 \item{g}{a \linkS4class{gtypes} object.}
 

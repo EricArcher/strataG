@@ -299,6 +299,23 @@ setMethod("description", "gtypes", function(x, ...) x@description)
 
 
 #' @rdname gtypes.accessors
+#' @export
+#' 
+setGeneric("description<-", function(x, value) standardGeneric("description<-"))
+
+#' @rdname gtypes.accessors
+#' @aliases description
+#' @importFrom methods validObject
+#' @export
+#' 
+setMethod("description<-", "gtypes", function(x, value) {
+  x@description <- value
+  validObject(x)
+  x
+})
+
+
+#' @rdname gtypes.accessors
 #' @aliases index subset
 #' @importFrom methods new
 #' @export
