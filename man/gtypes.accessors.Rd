@@ -43,11 +43,7 @@
 \alias{subset}
 \title{\code{gtypes} Accessors}
 \usage{
-nInd(x, ...)
-
 \S4method{nInd}{gtypes}(x, ...)
-
-nLoc(x, ...)
 
 \S4method{nLoc}{gtypes}(x, ...)
 

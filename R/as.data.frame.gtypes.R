@@ -9,6 +9,8 @@
 #'   \code{TRUE}.
 #' @param ids logical. include a column for individual identifiers (\code{ids})?
 #' @param strata logical. include a column for current statification (\code{strata})?
+#' @param sort.alleles logical. for non-haploid objects, should alleles be sorted 
+#'   in genotypes or left in original order? (only takes affect if \code{one.col = TRUE})
 #' @param ... additional arguments ot be passed to or from methods.
 #'   
 #' @return A \code{data.frame} with one row per sample.
@@ -39,9 +41,9 @@
 #' 
 setMethod(
   "as.data.frame", "gtypes",
-  function(x, one.col = FALSE, sep = "/", ids = TRUE, strata = TRUE, ...) {
+  function(x, one.col = FALSE, sep = "/", ids = TRUE, strata = TRUE, sort.alleles = TRUE, ...) {
     as.data.frame(as.matrix(
-      x, one.col = one.col, sep = sep, ids = ids, strata = strata
+      x, one.col = one.col, sep = sep, ids = ids, strata = strata, sort.alleles = sort.alleles
     ), ...)
   }
 )

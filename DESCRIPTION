@@ -106,6 +106,7 @@ Collate:
     structure.R
     structurePlot.R
     summarizeLoci.R
+    summarizeSamples.R
     summarizeSeqs.R
     summary.gtypes.R
     tajimasD.R

@@ -37,4 +37,9 @@ Conducts a suite of QA/QC tests. Summarizes missing data and
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
+\seealso{
+\code{\link{summarizeSamples}}, \code{\link{summarizeLoci}}, 
+  \code{\link{dupGenotypes}}, \code{\link{lowFreqSubs}}, 
+  \code{\link{haplotypeLikelihoods}}
+}
 

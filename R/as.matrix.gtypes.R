@@ -8,6 +8,8 @@
 #'   \code{TRUE}.
 #' @param ids logical. include a column for individual identifiers (\code{ids})?
 #' @param strata logical. include a column for current statification (\code{strata})?
+#' @param sort.alleles logical. for non-haploid objects, should alleles be sorted 
+#'   in genotypes or left as in original order? (only takes affect if \code{one.col = TRUE})
 #' @param ... additional arguments ot be passed to or from methods.
 #'   
 #' @return A \code{matrix} with one row per sample.
@@ -38,7 +40,7 @@
 #' 
 setMethod(
   "as.matrix", "gtypes",
-  function(x, one.col = FALSE, sep = "/", ids = TRUE, strata = TRUE, ...) {
+  function(x, one.col = FALSE, sep = "/", ids = TRUE, strata = TRUE, sort.alleles = TRUE, ...) {
     # create matrix identifying which rows (columns) each sample (row) is in 
     #   in the @loci slot
     id.mat <- matrix(1:nrow(x@loci), ncol = ploidy(x))
@@ -51,7 +53,10 @@ setMethod(
       # collapse alleles to create a one column matrix if one.col == TRUE
       if(one.col & x@ploidy > 1) {
         this.loc <- cbind(apply(this.loc, 1, function(alleles) {
-          if(any(is.na(alleles))) NA else paste(alleles, collapse = sep)
+          if(any(is.na(alleles))) NA else {
+            if(sort.alleles) alleles <- sort(alleles)
+            paste(alleles, collapse = sep)
+          }
         }))
       }
       # assign column names

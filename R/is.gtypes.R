@@ -16,4 +16,4 @@
 #' 
 #' @export
 #' 
-is.gtypes <- function(x) inherits(x, "gtypes")
+is.gtypes <- function(x) is(x, "gtypes") & validObject(x)

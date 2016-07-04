@@ -8,7 +8,7 @@
 \title{Convert \code{gtypes} To \code{data.frame}}
 \usage{
 \S4method{as.data.frame}{gtypes}(x, one.col = FALSE, sep = "/",
-  ids = TRUE, strata = TRUE, ...)
+  ids = TRUE, strata = TRUE, sort.alleles = TRUE, ...)
 }
 \arguments{
 \item{x}{a \linkS4class{gtypes} object.}
@@ -22,6 +22,9 @@ locus.}
 \item{ids}{logical. include a column for individual identifiers (\code{ids})?}
 
 \item{strata}{logical. include a column for current statification (\code{strata})?}
+
+\item{sort.alleles}{logical. for non-haploid objects, should alleles be sorted 
+in genotypes or left in original order? (only takes affect if \code{one.col = TRUE})}
 
 \item{...}{additional arguments ot be passed to or from methods.}
 }

@@ -24,28 +24,17 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @seealso \code{\link{summarizeSamples}}, \code{\link{summarizeLoci}}, 
+#'   \code{\link{dupGenotypes}}, \code{\link{lowFreqSubs}}, 
+#'   \code{\link{haplotypeLikelihoods}}
+#' 
 #' @importFrom utils write.csv
 #' @export
 #' 
 qaqc <- function(g, label = NULL, ...) {
   cat("\n")
   cat(format(Sys.time()), ": Individual summaries\n")
-  num.loc <- nLoc(g)
-  by.sample <- do.call(rbind, lapply(indNames(g), function(id) {
-    smry <- sapply(locNames(g), function(loc) {
-      gt <- loci(g, id, loc)
-      missing <- any(is.na(gt))
-      hmzgs <- if(missing) NA else length(unique(unlist(gt))) == 1
-      c(missing = missing, hmzgs = hmzgs)
-    })
-    
-    missing <- sum(smry["missing", ], na.rm = TRUE)
-    data.frame(sample = id, 
-      num.loci.missing.genotypes = missing,
-      pct.loci.missing.genotypes = missing / num.loc,
-      pct.loci.homozygous = mean(smry["hmzgs", ], na.rm = TRUE)
-    )
-  }))
+  by.sample <- summarizeSamples(g)
   
   cat(format(Sys.time()), ": Locus summaries\n")
   by.locus <- summarizeLoci(g, TRUE)

@@ -1,4 +1,3 @@
-#' @name gtypes.accessors
 #' @title \code{gtypes} Accessors
 #' @description Accessors for slots in \linkS4class{gtypes} objects.
 #' 
@@ -91,25 +90,19 @@
 #' gene1.dnabin <- getSequences(sequences(gene1))
 #' class(gene1.dnabin) # "DNAbin"
 #' 
+#' @name gtypes.accessors
 #' @aliases accessors
-#' @importFrom adegenet nInd
-#' @importFrom methods setGeneric setMethod
+#' @importFrom methods setGeneric setMethod validObject new
 #' 
+NULL
+
 
 #' @rdname gtypes.accessors
-#' 
-setGeneric("nInd")
-
-#' @rdname gtypes.accessors
-#' @aliases nInd,gtypes-method nInd
+#' @aliases nInd
 #' @export
 #' 
 setMethod("nInd", "gtypes", function(x, ...) nrow(x@loci) / x@ploidy)
 
-
-#' @rdname gtypes.accessors
-#' 
-setGeneric("nLoc")
 
 #' @rdname gtypes.accessors
 #' @aliases nLoc
@@ -172,6 +165,7 @@ setMethod("ploidy", "gtypes", function(x, ...) x@ploidy)
 #' 
 setMethod("other", "gtypes", function(x, ...) x@other)
 
+
 #' @rdname gtypes.accessors
 #' @aliases strata
 #' @export
@@ -186,7 +180,6 @@ setGeneric("strata<-", function(x, value) standardGeneric("strata<-"))
 
 #' @rdname gtypes.accessors
 #' @aliases strata
-#' @importFrom methods validObject
 #' @export
 #' 
 setMethod("strata<-", "gtypes", function(x, value) {
@@ -217,7 +210,6 @@ setGeneric("schemes<-", function(x, value) standardGeneric("schemes<-"))
 
 #' @rdname gtypes.accessors
 #' @aliases schemes
-#' @importFrom methods validObject
 #' @export
 #' 
 setMethod("schemes<-", "gtypes", function(x, value) {
@@ -260,6 +252,7 @@ setMethod("alleleNames", "gtypes", function(x) {
     as.character(sort(unique(l[!is.na(l)])))
   }, simplify = FALSE)
 })
+
 
 #' @rdname gtypes.accessors
 #' @export
@@ -305,7 +298,6 @@ setGeneric("description<-", function(x, value) standardGeneric("description<-"))
 
 #' @rdname gtypes.accessors
 #' @aliases description
-#' @importFrom methods validObject
 #' @export
 #' 
 setMethod("description<-", "gtypes", function(x, value) {
@@ -317,7 +309,6 @@ setMethod("description<-", "gtypes", function(x, value) {
 
 #' @rdname gtypes.accessors
 #' @aliases index subset
-#' @importFrom methods new
 #' @export
 #' 
 setMethod("[", 

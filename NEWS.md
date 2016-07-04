@@ -1,6 +1,7 @@
 ## Changes to strataG v 1.0.6
 
 * Added read.arlequin back. Fixed missing function error with write.arlequin.
+* Added summarizeSamples
 
 
 ## Changes to strataG v 1.0.5
