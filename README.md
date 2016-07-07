@@ -1,4 +1,5 @@
-[![Travis-CI Build Status](https://travis-ci.org/EricArcher/strataG.svg?branch=master)](https://travis-ci.org/EricArcher/strataG)
+
+![](http://www.r-pkg.org/badges/version/strataG) ![](http://cranlogs.r-pkg.org/badges/grand-total/strataG) [![Travis-CI Build Status](https://travis-ci.org/EricArcher/strataG.svg?branch=master)](https://travis-ci.org/EricArcher/strataG)
 
 # strataG
 
