@@ -126,4 +126,4 @@ Collate:
 LazyData: true
 VignetteBuilder: knitr
 LinkingTo: Rcpp
-RoxygenNote: 5.0.1
+RoxygenNote: 5.0.1.9000

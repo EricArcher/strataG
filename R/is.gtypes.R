@@ -14,6 +14,7 @@
 #' data(dolph.msats)
 #' is.gtypes(dolph.msats) # FALSE
 #' 
+#' @importFrom methods is
 #' @export
 #' 
 is.gtypes <- function(x) is(x, "gtypes") & validObject(x)

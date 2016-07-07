@@ -5,6 +5,7 @@
 \alias{print.gtypeSummary}
 \alias{summary}
 \alias{summary,gtypes-method}
+\alias{summary.gtypes}
 \title{Summarize gtypes Object}
 \usage{
 \S4method{summary}{gtypes}(object, ...)

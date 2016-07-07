@@ -22,7 +22,7 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @name summary,gtypes-method
-#' @aliases summary
+#' @aliases summary summary.gtypes
 #' 
 NULL
 
