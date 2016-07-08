@@ -71,66 +71,38 @@ evanno <- function(sr, plot = TRUE) {
   rownames(df) <- NULL
   
   # Build plots
-  xlim <- c(1, max(df$k))
   df$sd.min <- df$mean.ln.k - df$sd.ln.k
   df$sd.max <- df$mean.ln.k + df$sd.ln.k
   
-  p1 <- ggplot(df, aes_string(x = "k", y = "mean.ln.k")) +
-    geom_line() + 
-    geom_segment(aes_string(x = "k", xend = "k", y = "sd.min", yend = "sd.max")) +
-    geom_point(fill = "white", shape = 21, size = 3) +
-    xlim(xlim) +
-    ylab("mean LnP(K)") +
-    theme(axis.title.x = element_blank())
-  
-  p2 <- ggplot(df[!is.na(df$ln.pk), ], aes_string(x = "k", y = "ln.pk")) +
-    geom_line() + 
-    geom_point(fill = "white", shape = 21, size = 3) +
-    xlim(xlim) +
-    ylab("LnP'(K)") +
-    theme(axis.title.x = element_blank())
-  
-  p3 <- ggplot(df[!is.na(df$ln.ppk), ], aes_string(x = "k", y = "ln.ppk")) +
-    geom_line() + 
-    geom_point(fill = "white", shape = 21, size = 3) +
-    xlim(xlim) +
-    ylab("LnP''(K)") +
-    theme(axis.title.x = element_blank())
-  
-  p4 <- if(!all(is.na(df$delta.k))) {
-    ggplot(df[!is.na(df$delta.k), ], aes_string(x = "k", y = "delta.k")) +
-      geom_line() + 
-      geom_point(fill = "white", shape = 21, size = 3) +
-      xlim(xlim) +
-      ylab(expression(Delta(K))) +
-      theme(axis.title.x = element_blank())
-  } else {
-    ggplot(data.frame(x = 0.5, y = 0.5, lbl = "N/A"), aes_string(x = "x", y = "y")) + 
-      geom_text(aes_string(label = "lbl")) +
-      theme_void() +
-      theme(
-        axis.title = element_blank(),
-        axis.text = element_blank(),
-        axis.ticks = element_blank()
-      )
+  plot.list <- list(
+    mean.ln.k = ggplot(df, aes_string(x = "k", y = "mean.ln.k")) +
+      ylab("mean LnP(K)") +
+      geom_segment(aes_string(x = "k", xend = "k", y = "sd.min", yend = "sd.max")),
+    ln.pk = ggplot(df[!is.na(df$ln.pk), ], aes_string(x = "k", y = "ln.pk")) +
+      ylab("LnP'(K)"),
+    ln.ppk = ggplot(df[!is.na(df$ln.ppk), ], aes_string(x = "k", y = "ln.ppk")) +
+      ylab("LnP''(K)")
+  )
+  if(!all(is.na(df$delta.k))) {
+    plot.list$delta.k <- ggplot(df[!is.na(df$delta.k), ], aes_string(x = "k", y = "delta.k")) +
+        ylab(expression(Delta(K)))
   }
   
-  plot.list <- list(mean.ln.pk = p1, ln.pk = p2, ln.ppk = p3, delta.k = p4)
-  
+  for(i in 1:length(plot.list)) {
+    plot.list[[i]] <- plot.list[[i]] + 
+      geom_line() +
+      geom_point(fill = "white", shape = 21, size = 3) +
+      xlim(c(1, max(df$k))) +
+      theme(axis.title.x = element_blank())
+  }
+
   if(plot) {
-    p1 <- ggplot_gtable(ggplot_build(p1))
-    p2 <- ggplot_gtable(ggplot_build(p2))
-    p3 <- ggplot_gtable(ggplot_build(p3))
-    p4 <- ggplot_gtable(ggplot_build(p4))
-    
-    maxWidth <- unit.pmax(p1$widths[2:3], p2$widths[2:3], p3$widths[2:3], p4$widths[2:3])
-    
-    p1$widths[2:3] <- maxWidth
-    p2$widths[2:3] <- maxWidth
-    p3$widths[2:3] <- maxWidth
-    p4$widths[2:3] <- maxWidth
-    
-    grid.arrange(p1, p2, p3, p4, bottom = "K")
+    p <- lapply(plot.list, function(x) ggplot_gtable(ggplot_build(x)))
+    maxWidth <- do.call(unit.pmax, lapply(p, function(x) x$widths[2:3]))
+    for(i in 1:length(p)) p[[i]]$widths[2:3] <- maxWidth
+    p$bottom <- "K"
+    p$ncol <- 2
+    do.call(grid.arrange, p)
   } 
   
   df$sd.min <- df$sd.max <- NULL
