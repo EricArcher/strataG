@@ -2,7 +2,7 @@
 
 * Added read.arlequin back. Fixed missing function error with write.arlequin.
 * Added summarizeSamples
-
+* Changed evanno from base graphics to ggplot2
 
 ## Changes to strataG v 1.0.5
 

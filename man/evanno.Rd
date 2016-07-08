@@ -9,10 +9,14 @@ evanno(sr, plot = TRUE)
 \arguments{
 \item{sr}{output from a call to \code{\link{structure}}.}
 
-\item{plot}{logical. Generate a plot of Evanno metrics.}
+\item{plot}{logical. Generate a plot of Evanno metrics?}
 }
 \value{
-a data.frame with Evanno log-likelihood metrics for each value of K.
+a list with:
+\describe{
+  \item{\code{df}}{data.frame with Evanno log-likelihood metrics for each value of K.}
+  \item{\code{plots}}{list of four ggplot objects for later plotting.}
+}
 }
 \description{
 Calculate first and second order rates of changes of LnPr(K) 

@@ -20,6 +20,8 @@ Imports:
     copula,
     ggplot2,
     graphics,
+    grid,
+    gridExtra,
     Hmisc,
     methods,
     pegas,
