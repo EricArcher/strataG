@@ -1,5 +1,5 @@
-![](http://www.r-pkg.org/badges/version/strataG)
-![](http://cranlogs.r-pkg.org/badges/grand-total/strataG)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/strataG)](https://cran.r-project.org/package=strataG)
+[![](http://cranlogs.r-pkg.org/badges/strataG)](http://cran.rstudio.com/web/packages/strataG/index.html)
 [![Travis-CI Build Status](https://travis-ci.org/EricArcher/strataG.svg?branch=master)](https://travis-ci.org/EricArcher/strataG)
 
 # strataG
