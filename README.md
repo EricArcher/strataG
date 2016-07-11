@@ -31,4 +31,23 @@ devtools::install_github('ericarcher/strataG', build_vignettes = TRUE)
 * send a pull request: <https://github.com/ericarcher/strataG/>
 * e-mail: <eric.archer@noaa.gov>
 
-You can see the most recent changes to the package in the NEWS.md file: https://github.com/EricArcher/strataG/blob/master/NEWS.md
+## Changes to strataG v 1.0.6
+
+* Added read.arlequin back. Fixed missing function error with write.arlequin.
+* Added summarizeSamples
+* Changed evanno from base graphics to ggplot2
+
+## Changes to strataG v 1.0.5
+
+* Fixed error in dupGenotypes, propSharedLoci, and propSharedIDs where missing genotypes were not being properly counted.
+* Added as.data.frame.gtypes.
+* Removed gtypes2df.
+* Added arguments to as.matrix.gtypes to include id and strata columns in output.
+* Removed the jmodeltest function as this functionality is available in the modeltest function in the phangorn package.
+* Added conversion functions gtypes2phyDat and phyDat2gtypes to facilitate interoperability with the phangorn package.
+* Removed read.arlequin.
+* Added alleleNames accessor for gtypes object, which returns list of allele names for each locus.
+
+## Changes to strataG v 1.0
+
+* New version with different gtypes format from previous versions. See vignettes for instructions and examples.
