@@ -29,7 +29,8 @@
 #'      for unassignable sequences with N's and the minimum number of 
 #'      substitutions between the two. Will be \code{NULL} if no sequences 
 #'      remain unassigned.}
-#'  } \cr
+#'  }
+#'  
 #'  
 #'  For \code{gtypes}, a list with the following elements:
 #'  \describe{

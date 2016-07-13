@@ -36,6 +36,7 @@ devtools::install_github('ericarcher/strataG', build_vignettes = TRUE)
 * Added read.arlequin back. Fixed missing function error with write.arlequin.
 * Added summarizeSamples
 * Changed evanno from base graphics to ggplot2
+* Updated logic in labelHaplotypes to assign haplotypes if possible alternative site combinations match a present haplotype
 
 ## Changes to strataG v 1.0.5
 
