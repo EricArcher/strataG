@@ -141,7 +141,7 @@ setMethod("initialize", "gtypes",
     }
     setLocusNames(sequences) <- colnames(loci)
     for(loc in colnames(loci)) {
-      haps <- unique(as.character(loci[, loc]))
+      haps <- na.omit(unique(as.character(loci[, loc])))
       seq.names <- getSequenceNames(sequences)[[loc]]
       missing <- setdiff(haps, seq.names)
       if(length(missing) > 0) {

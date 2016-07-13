@@ -2,19 +2,26 @@
 % Please edit documentation in R/labelHaplotypes.R
 \name{labelHaplotypes}
 \alias{labelHaplotypes}
+\alias{labelHaplotypes.character}
 \alias{labelHaplotypes.default}
 \alias{labelHaplotypes.gtypes}
+\alias{labelHaplotypes.list}
 \title{Find and label haplotypes}
 \usage{
 labelHaplotypes(x, prefix = NULL, use.indels = TRUE)
 
 \method{labelHaplotypes}{default}(x, prefix = NULL, use.indels = TRUE)
 
+\method{labelHaplotypes}{list}(x, ...)
+
+\method{labelHaplotypes}{character}(x, ...)
+
 \method{labelHaplotypes}{gtypes}(x, ...)
 }
 \arguments{
-\item{x}{a \code{\link{DNAbin}} \code{\link{multidna}}, or
-\linkS4class{gtypes} object.}
+\item{x}{sequences in a \code{character matrix}, \code{list},
+or \code{\link{DNAbin}} object, or a haploid \linkS4class{gtypes} object 
+with sequences.}
 
 \item{prefix}{a character string giving prefix to be applied to numbered
 haplotypes. If NULL, haplotypes will be labeled with the first label
@@ -25,22 +32,23 @@ from original sequences.}
 \item{...}{arguments to be passed to \code{labelHaplotypes.default}.}
 }
 \value{
-For \code{DNAbin} or \code{multidna}, a list with the following elements:
+For \code{character}, \code{list}, or \code{DNAbin}, a list with the following elements:
  \describe{
    \item{haps}{named vector (\code{DNAbin}) or list of named vectors
      (\code{multidina}) of haplotypes for each sequence in \code{x}.}
    \item{hap.seqs}{\code{DNAbin} or \code{multidna} object containing 
      sequences for each haplotype.}
    \item{unassigned}{\code{data.frame} listing closest matching haplotypes 
-     and the number of substitutions different. Will be \code{NULL} if no 
-     sequences remain unassigned.}
- }
+     for unassignable sequences with N's and the minimum number of 
+     substitutions between the two. Will be \code{NULL} if no sequences 
+     remain unassigned.}
+ } \cr
  
  For \code{gtypes}, a list with the following elements:
  \describe{
    \item{gtypes}{the new \code{gtypes} object with the haplotypes reassigned.}
-   \item{unassigned}{a list containing the \code{unassigned} attribute 
-     \code{data.frame} for each gene if present, otherwise \code{NULL}.}
+   \item{unassigned}{a list containing the \code{unassigned} \code{data.frame} 
+     for each gene if present, otherwise \code{NULL}.}
  }
 }
 \description{
@@ -70,16 +78,13 @@ ids <- paste(sample.seqs, 1:length(sample.seqs), sep = "_")
 sample.seqs <- lapply(sample.seqs, function(x) strsplit(haps[x], "")[[1]])
 names(sample.seqs) <- ids
 
-# add some random ambiguities
+# add 1-2 random ambiguities
 with.error <- sample(1:length(sample.seqs), 10)
 for(i in with.error) {
-  site <- sample(1:length(sample.seqs[[i]]), 1)
-  sample.seqs[[i]][site] <- "n"
+  num.errors <- sample(1:2, 1)
+  sites <- sample(1:length(sample.seqs[[i]]), num.errors)
+  sample.seqs[[i]][sites] <- "n"
 }
-
-# convert to DNAbin
-library(ape)
-sample.seqs <- as.DNAbin(sample.seqs)
 
 hap.assign <- labelHaplotypes(sample.seqs, prefix = "Hap.")
 hap.assign
