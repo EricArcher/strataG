@@ -20,7 +20,7 @@ read.fasta <- function(file) {
   dna.seq <- read.dna(file, format = "fasta", as.character = TRUE, 
                       as.matrix = FALSE)
   # replace ?s with Ns and convert to lower-case
-  as.DNAbin(lapply(dna.seq, function(x) tolower(gsub("\\?", "n", x))))
+  as.list(as.DNAbin(lapply(dna.seq, function(x) tolower(gsub("\\?", "n", x)))))
 }
 
 

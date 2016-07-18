@@ -31,7 +31,6 @@
 #'      remain unassigned.}
 #'  }
 #'  
-#'  
 #'  For \code{gtypes}, a list with the following elements:
 #'  \describe{
 #'    \item{gtypes}{the new \code{gtypes} object with the haplotypes reassigned.}

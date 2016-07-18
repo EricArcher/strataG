@@ -17,4 +17,6 @@
 #' @importFrom methods is
 #' @export
 #' 
-is.gtypes <- function(x) is(x, "gtypes") & validObject(x)
+is.gtypes <- function(x) {
+  if(is(x, "gtypes")) validObject(x) else FALSE
+}
