@@ -44,7 +44,7 @@ setMethod(
   function(x, one.col = FALSE, sep = "/", ids = TRUE, strata = TRUE, sort.alleles = TRUE, ...) {
     as.data.frame(as.matrix(
       x, one.col = one.col, sep = sep, ids = ids, strata = strata, sort.alleles = sort.alleles
-    ), ...)
+    ), stringsAsFactors = FALSE)
   }
 )
 
