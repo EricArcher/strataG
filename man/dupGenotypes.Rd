@@ -15,7 +15,8 @@ individuals must share to be considered duplicate individuals.}
 \item{num.cores}{number of CPU cores to use.}
 }
 \value{
-a data.frame with the following columns:
+if no duplicates are present, the result is \code{NULL}, otherwise
+  a data.frame with the following columns is returned:
 \tabular{ll}{
   \code{ids.1, ids.2} \tab sample ids.\cr
   \code{strata1, strata2} \tab sample strata.\cr

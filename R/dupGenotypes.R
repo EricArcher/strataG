@@ -6,7 +6,8 @@
 #'   individuals must share to be considered duplicate individuals.
 #' @param num.cores number of CPU cores to use.
 #' 
-#' @return a data.frame with the following columns:
+#' @return if no duplicates are present, the result is \code{NULL}, otherwise
+#'   a data.frame with the following columns is returned:
 #' \tabular{ll}{
 #'   \code{ids.1, ids.2} \tab sample ids.\cr
 #'   \code{strata1, strata2} \tab sample strata.\cr
@@ -59,5 +60,6 @@ dupGenotypes <- function(g, num.shared = 0.8, num.cores = 1) {
     rownames(dup.df) <- NULL
   } else dup.df <- NULL
   
+  if(is.null(dup.df)) cat("No duplicates found. NULL returned.\n")
   dup.df
 }
