@@ -19,6 +19,12 @@ Currently, this function is limited to calculating Fs for fewer than
   approximately 172 sequences due to numerical overflow issues. \code{NaN} will 
   be returned for larger data sets.
 }
+\examples{
+data(dolph.seqs)
+
+fusFs(dolph.seqs)
+
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
