@@ -4,6 +4,10 @@
 #' 
 #' @param x set of DNA sequences or a haploid \linkS4class{gtypes} 
 #'   object with sequences.
+#'   
+#' @note Currently, this function is limited to calculating Fs for fewer than 
+#'   approximately 172 sequences due to numerical overflow issues. \code{NaN} will 
+#'   be returned for larger data sets.
 #' 
 #' @references Fu, Y-X. 1997. Statistical tests of neutrality of mutations 
 #'   against population growth, hitchiking and background selection. 
@@ -21,7 +25,11 @@ fusFs <- function(x) {
     as.multidna(x)
   }
   
-  haps <- lapply(getSequences(dna, simplify = FALSE), labelHaplotypes)
+  haps <- lapply(getSequences(dna, simplify = FALSE), function(d) {
+    d <- as.matrix(x)
+    rownames(d) <- 1:nrow(d)
+    labelHaplotypes(d)
+  })
   
   sapply(haps, function(h) {
     if(is.null(h)) return(NA)
@@ -32,9 +40,9 @@ fusFs <- function(x) {
     
     pws.diff <- dist.dna(h$hap.seqs, model = "N", pairwise.deletion = TRUE, as.matrix = TRUE)
     pws.diff <- pws.diff[h$haps, h$haps]
-    theta.pi <- mean(pws.diff[lower.tri(pws.diff)])
-    Sn.theta.pi <- prod(theta.pi + 0:(n - 1)) # potential typo on page 916 that implies prod(theta.pi - 0:(n + 1))
-    Sk.theta.k <- sapply(k0:n, function(k) abs(Stirling1(n, k)) * (theta.pi ^ k))
+    theta.pi <- mean(pws.diff[lower.tri(pws.diff)])    
+    Sk.theta.k <- sapply(k0:n, function(k) abs(Stirling1(n, k)) * (theta.pi ^ k)) # NaN produced for n > 172 from copula:Stirling1
+    Sn.theta.pi <- prod(theta.pi + 0:(n - 1)) # potential typo on page 916 that implies prod(theta.pi - 0:(n + 1)). See Ewens 1972 Eqn 22.
     s.prime <- sum(Sk.theta.k / Sn.theta.pi)
     
     log(s.prime / (1 - s.prime))

@@ -90,6 +90,13 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
     return(list(haps = haps, hap.seqs = x, unassigned = NULL))
   }
   
+  # throw error if any sequence names are duplicated
+  if(any(duplicated(rownames(x)))) {
+    warning("'x' cannot have duplicate sequence names. NULL returned.",
+            call. = FALSE, immediate. = TRUE)
+    return(NULL)
+  }
+  
   # find sequences without Ns
   has.ns <- apply(as.character(x), 1, function(bases) "n" %in% tolower(bases))
   if(sum(!has.ns) == 1) {
