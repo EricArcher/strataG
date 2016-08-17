@@ -4,6 +4,7 @@
 ![](http://cranlogs.r-pkg.org/badges/last-week/strataG?color=red)
 ![](http://cranlogs.r-pkg.org/badges/strataG?color=red)
 ![](http://cranlogs.r-pkg.org/badges/grand-total/strataG?color=red)  
+[![DOI](https://zenodo.org/badge/23926/EricArcher/strataG.svg)](https://zenodo.org/badge/latestdoi/23926/EricArcher/strataG)  
 # strataG
 
 ## Description
