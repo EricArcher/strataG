@@ -34,7 +34,7 @@ devtools::install_github('ericarcher/strataG', build_vignettes = TRUE)
 * send a pull request: <https://github.com/ericarcher/strataG/>
 * e-mail: <eric.archer@noaa.gov>
 
-## Changes to strataG v 1.0.6
+## version 1.0.6
 
 * Added read.arlequin back. Fixed missing function error with write.arlequin.
 * Added summarizeSamples
@@ -43,7 +43,7 @@ devtools::install_github('ericarcher/strataG', build_vignettes = TRUE)
 * Added Zenodo DOI
 * Added shiny app (`strataGUI`) for creating gtypes objects, QA/QC, and population structure analyses
 
-## Changes to strataG v 1.0.5
+## version 1.0.5
 
 * Fixed error in dupGenotypes, propSharedLoci, and propSharedIDs where missing genotypes were not being properly counted.
 * Added as.data.frame.gtypes.
@@ -54,6 +54,6 @@ devtools::install_github('ericarcher/strataG', build_vignettes = TRUE)
 * Removed read.arlequin.
 * Added alleleNames accessor for gtypes object, which returns list of allele names for each locus.
 
-## Changes to strataG v 1.0
+## version 1.0
 
 * New version with different gtypes format from previous versions. See vignettes for instructions and examples.
