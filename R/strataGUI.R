@@ -4,6 +4,7 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @importFrom shiny runApp
 #' @export
 #' 
 strataGUI <- function() {
@@ -11,5 +12,5 @@ strataGUI <- function() {
   if(appDir == "") {
     stop("shiny app folder could not be found. Try re-installing 'strataG'", call. = FALSE)
   }
-  shiny::runApp(appDir, display.mode = "normal")
+  runApp(appDir, display.mode = "normal")
 }
