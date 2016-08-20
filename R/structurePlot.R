@@ -12,6 +12,10 @@
 #' @param label.pops logical. Label the populations on the plot?
 #' @param col colors to use for each group.
 #' @param horiz logical. Plot bars horizontally.
+#' @param type either \code{"area"} for stacked continuous area plot or 
+#'   \code{"bar"} for discrete stacked bar chart. The latter is prefered for small 
+#'   numbers of samples. If not specified, a bar chart will be used if there are 
+#'   <= 100 samples.
 #' @param legend.position the position of the legend (\code{"top", "left", 
 #'   "right", "bottom"}, or two-element numeric vector).
 #' 
@@ -21,14 +25,14 @@
 #' 
 #' @seealso \code{\link{structure}}, \code{\link{clumpp}}
 #'
-#' @importFrom ggplot2 ggplot aes_string geom_area ylab theme geom_vline 
+#' @importFrom ggplot2 ggplot aes_string geom_area geom_bar ylab theme geom_vline 
 #'   scale_x_continuous xlab coord_flip scale_fill_manual element_blank
 #' @importFrom reshape2 melt
 #' @importFrom RColorBrewer brewer.pal
 #' @export
 #' 
 structurePlot <- function(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
-                          label.pops = TRUE, col = NULL, horiz = TRUE,
+                          label.pops = TRUE, col = NULL, horiz = TRUE, type = NULL,
                           legend.position = c("top", "left", "right", "bottom", "none")) {
   
   legend.position <- match.arg(legend.position)
@@ -61,9 +65,19 @@ structurePlot <- function(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
   colnames(df)[1:2] <- c("x", "population")
   df <- df[order(-as.numeric(df$Group), df$probability), ]
   
+  type <- if(is.null(type)) {
+    if(nrow(df) <= 100) "bar" else "area"
+  } else {
+    match.arg(type, c("bar", "area"))
+  }
+  
   # Plot stacked bar graphs
-  g <- ggplot(df, aes_string("x", "probability")) + 
-    geom_area(aes_string(fill = "Group"), stat = "identity") +
+  g <- ggplot(df, aes_string("x", "probability")) +  
+    switch(
+      type,
+      area = geom_area(aes_string(fill = "Group"), stat = "identity"),
+      bar = geom_bar(aes_string(fill = "Group"), stat = "identity")
+    ) +
     ylab("Pr(Group Membership)") +
     theme(
       axis.ticks.x = element_blank(),
