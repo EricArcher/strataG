@@ -8,4 +8,4 @@
 tar.gz$
 .gitignore
 ^\.travis\.yml$
-appveyor.yml
+^appveyor\.yml$
