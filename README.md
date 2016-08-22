@@ -5,7 +5,7 @@
 ![](http://cranlogs.r-pkg.org/badges/grand-total/strataG?color=red)  
 [![DOI](https://zenodo.org/badge/23926/EricArcher/strataG.svg)](https://zenodo.org/badge/latestdoi/23926/EricArcher/strataG)  
 [![Travis-CI Build Status](https://travis-ci.org/EricArcher/strataG.svg?branch=master)](https://travis-ci.org/EricArcher/strataG)
-![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/EricArcher/strataG?branch=master&svg=true)](https://ci.appveyor.com/project/EricArcher/strataG)  
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/EricArcher/strataG?branch=master&svg=true)](https://ci.appveyor.com/project/EricArcher/strataG)  
 # strataG
 
 ## Description
