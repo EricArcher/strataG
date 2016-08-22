@@ -1,6 +1,6 @@
 ![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/strataG)
 [![Travis-CI Build Status](https://travis-ci.org/EricArcher/strataG.svg?branch=master)](https://travis-ci.org/EricArcher/strataG)
-[![Build status](https://ci.appveyor.com/api/projects/status/ujo7p3krcy2j0lhb?svg=true)](https://ci.appveyor.com/project/EricArcher/stratag)  
+[![Build status](https://ci.appveyor.com/api/projects/status/w6tlgm1yl53js2rq?svg=true)](https://ci.appveyor.com/project/EricArcher/stratag-4j93o)
 ![](http://cranlogs.r-pkg.org/badges/last-day/strataG?color=red)
 ![](http://cranlogs.r-pkg.org/badges/last-week/strataG?color=red)
 ![](http://cranlogs.r-pkg.org/badges/strataG?color=red)
