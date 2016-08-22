@@ -35,7 +35,7 @@ devtools::install_github('ericarcher/strataG', build_vignettes = TRUE)
 * send a pull request: <https://github.com/ericarcher/strataG/>
 * e-mail: <eric.archer@noaa.gov>
 
-## version 1.0.6
+## version 1.0.6 (current on GitHub)
 
 * Added `read.arlequin` back. Fixed missing function error with `write.arlequin`.
 * Added `summarizeSamples`
