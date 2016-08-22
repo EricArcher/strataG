@@ -1,5 +1,5 @@
-#' @title Haplotype Likelihoods
-#' @description Calculate likelihood of each haplotype based on gamma 
+#' @title Sequence Likelihoods
+#' @description Calculate likelihood of each sequence based on gamma 
 #'   distribution of pairwise distances.
 #' 
 #' @param x a \code{\link[ape]{DNAbin}} object.
@@ -8,18 +8,18 @@
 #' @param pairwise.deletion a logical indicating whether to delete the 
 #'   sites with missing data in a pairwise way. Passed to 
 #'   \code{\link[ape]{dist.dna}}.
-#' @param plot.n number of haplotypes with lowest delta(log-likelihoods) to 
-#'   plot. Defaults to all haplotypes. Set to 0 to supress plotting.
+#' @param n number of sequences with lowest delta(log-likelihoods) to 
+#'   plot. Defaults to all sequences Set to 0 to supress plotting.
 #' @param ... arguments passed from other functions (ignored).
 #' 
-#' @details Fits a Gamma distribution to the pairwise distances of haplotypes 
-#'   and calculates the log-likelihood for each haplotype (sum of all pairwise 
-#'   log-likelihoods for that haplotype). Haplotypes that are extremely 
+#' @details Fits a Gamma distribution to the pairwise distances of sequences 
+#'   and calculates the log-likelihood for each (sum of all pairwise 
+#'   log-likelihoods for that sequence). Sequences that are extremely 
 #'   different from all others will have low log-likelihoods. Values returned 
 #'   as delta(log-likelhoods) = difference of log-likelihoods from maximum 
 #'   observed values.
 #' 
-#' @return vector of delta(log-Likelihoods) for each haplotype, sorted from 
+#' @return vector of delta(log-Likelihoods) for each sequence, sorted from 
 #'   smallest to largest, and a plot of their distributions.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
@@ -28,14 +28,14 @@
 #' library(ape)
 #' data(dolph.haps)
 #' 
-#' haplotypeLikelihoods(as.DNAbin(dolph.haps))
+#' sequenceLikelihoods(as.DNAbin(dolph.haps))
 #' 
-#' @importFrom stats sd dgamma
-#' @importFrom graphics dotchart
+#' @importFrom stats sd dgamma reorder
+#' @importFrom ggplot2 ggplot aes_string geom_point xlab theme element_blank
 #' @export
 #' 
-haplotypeLikelihoods <- function(x, model = "raw", pairwise.deletion = FALSE, 
-                                 plot.n = NULL, ...) {
+sequenceLikelihoods <- function(x, model = "raw", pairwise.deletion = FALSE, 
+                                n = NULL, ...) {
   
   if(!inherits(x, "DNAbin")) stop("'x' must be a DNAbin object")
   
@@ -59,15 +59,24 @@ haplotypeLikelihoods <- function(x, model = "raw", pairwise.deletion = FALSE,
     this.dist <- this.dist[names(this.dist) != this.seq]
     sum(log(dgamma(this.dist, shape = shape, scale = scale)), na.rm = TRUE)
   })
-  delta.log.lik <- sort(log.lik - max(log.lik, na.rm = T), decreasing = FALSE)
+  delta.log.lik <- log.lik - max(log.lik, na.rm = T)
+  df <- data.frame(id = names(delta.log.lik), logLik = delta.log.lik)
+  df$id <- reorder(df$id, -df$logLik)
+  rownames(df) <- df$id
   
-  if(is.null(plot.n)) plot.n <- length(delta.log.lik)
-  n <- min(c(plot.n, length(delta.log.lik)))
-  if(plot.n > 0) {
-    dotchart(rev(delta.log.lik[1:n]), pch = 19, bg = "black", 
-             xlab = expression(paste(Delta, "lnL"))
+  if(is.null(n)) n <- nrow(df)
+  n <- min(n, nrow(df))
+  
+  if(n < 1) {
+    print(
+      ggplot(df[1:n, ], aes_string(x = "logLik", y = "id")) +
+        geom_point() +
+        xlab(expression(paste(Delta, "lnL"))) +
+        theme(
+          axis.title.y = element_blank()
+        )
     )
   }
-  
-  delta.log.lik
+    
+  df
 }

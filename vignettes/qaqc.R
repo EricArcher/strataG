@@ -31,5 +31,5 @@ lowFreqSubs(as.DNAbin(dolph.seqs), min.freq = 2)
 
 ## ------------------------------------------------------------------------
 data(dolph.haps)
-haplotypeLikelihoods(as.DNAbin(dolph.haps))
+sequenceLikelihoods(as.DNAbin(dolph.haps))
 

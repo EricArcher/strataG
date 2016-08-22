@@ -53,7 +53,7 @@ lowFreqSubs(as.DNAbin(dolph.seqs), min.freq = 2)
 Unusual sequences can be identified by plotting likelihoods based on pairwise distances:
 ```{r}
 data(dolph.haps)
-haplotypeLikelihoods(as.DNAbin(dolph.haps))
+sequenceLikelihoods(as.DNAbin(dolph.haps))
 ```
 
 All of the above functions can be conducted at once with the _qaqc_ function. Only those functions appropriate to the data type contained (haploid or diploid) will be run. Files are written for each output that are labelled either by the _\@description_ slot of the gtypes object or the optional _label_ argument of the function.

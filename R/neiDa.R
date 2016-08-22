@@ -20,6 +20,7 @@
 #' @export
 #' 
 neiDa <- function(g) {
+  if(ploidy(g) == 1 & !is.null(sequences(g))) g <- labelHaplotypes(g)$gtypes
   st.pairs <- as.matrix(.strataPairs(g))
   st.col <- rep(strata(g), ploidy(g))
 

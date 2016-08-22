@@ -16,6 +16,11 @@ a vector of the proportion of unique (occuring only in one individual)
 \description{
 Calculate the proportion of alleles that are unique.
 }
+\note{
+If \code{g} is a haploid object with sequences, make sure to run 
+  \code{\link{labelHaplotypes}} if sequences aren't already grouped by 
+  haplotype.
+}
 \examples{
 data(msats.g)
 

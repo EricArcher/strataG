@@ -18,6 +18,7 @@
 #' @export
 #' 
 privateAlleles <- function(g) {
+  if(ploidy(g) == 1 & !is.null(sequences(g))) g <- labelHaplotypes(g)$gtypes
   freqs <- alleleFreqs(g, TRUE)
   
   do.call(rbind, lapply(freqs, function(f) {

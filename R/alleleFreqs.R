@@ -9,6 +9,10 @@
 #' @return A list of allele frequencies for each locus. Each element is a
 #'   matrix or array with frequencies by count (\code{freq}) and 
 #'   proportion (\code{prop}) of each allele.
+#'   
+#' @note If \code{g} is a haploid object with sequences, make sure to run 
+#'   \code{\link{labelHaplotypes}} if sequences aren't already grouped by 
+#'   haplotype.
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'

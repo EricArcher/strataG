@@ -66,7 +66,6 @@ Collate:
     fusFs.R
     gelato.R
     genepop.R
-    haplotypeLikelihoods.R
     heterozygosity.R
     Hstats.R
     hweTest.R
@@ -97,6 +96,7 @@ Collate:
     RcppExports.R
     readGenData.R
     removeSequences.R
+    sequenceLikelihoods.R
     sharedLoci.R
     show.gtypes.R
     simGammaHaps.R

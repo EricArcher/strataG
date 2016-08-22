@@ -43,6 +43,8 @@ devtools::install_github('ericarcher/strataG', build_vignettes = TRUE)
 * Added Zenodo DOI
 * Added shiny app (`strataGUI`) for creating gtypes objects, QA/QC, and population structure analyses
 * Added `type` argument to `structurePlot` to select between area and bar charts
+* Changed `haplotypeLikelihoods` to `sequenceLikelihoods`
+* `neiDa` now creates haplotypes before calculating metric
 
 ## version 1.0.5
 

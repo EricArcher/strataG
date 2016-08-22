@@ -5,6 +5,10 @@
 #'
 #' @return vector of number of alleles per locus.
 #'
+#' @note If \code{g} is a haploid object with sequences, make sure to run 
+#'   \code{\link{labelHaplotypes}} if sequences aren't already grouped by 
+#'   haplotype.
+#'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
 #' @examples

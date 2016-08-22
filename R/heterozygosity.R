@@ -4,7 +4,9 @@
 #' @param g a \linkS4class{gtypes} object.
 #' 
 #' @note For a measure of haplotypic diversity (haploid "heterozygosity"), 
-#'   use \code{exptdHet}.
+#'   use \code{exptdHet}. If \code{g} is a haploid object with sequences, make sure to run 
+#'   \code{\link{labelHaplotypes}} if sequences aren't already grouped by 
+#'   haplotype.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
