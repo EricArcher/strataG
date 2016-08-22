@@ -1,5 +1,6 @@
 ![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/strataG)
-[![Travis-CI Build Status](https://travis-ci.org/EricArcher/strataG.svg?branch=master)](https://travis-ci.org/EricArcher/strataG)  
+[![Travis-CI Build Status](https://travis-ci.org/EricArcher/strataG.svg?branch=master)](https://travis-ci.org/EricArcher/strataG)
+[https://ci.appveyor.com/api/projects/status/github/ericarcher/stratag?svg=true](https://ci.appveyor.com/api/projects/status/github/ericarcher/stratag?svg=true)
 ![](http://cranlogs.r-pkg.org/badges/last-day/strataG?color=red)
 ![](http://cranlogs.r-pkg.org/badges/last-week/strataG?color=red)
 ![](http://cranlogs.r-pkg.org/badges/strataG?color=red)
@@ -36,10 +37,10 @@ devtools::install_github('ericarcher/strataG', build_vignettes = TRUE)
 
 ## version 1.0.6
 
-* Added read.arlequin back. Fixed missing function error with write.arlequin.
-* Added summarizeSamples
-* Changed evanno from base graphics to ggplot2
-* Updated logic in labelHaplotypes to assign haplotypes if possible alternative site combinations match a present haplotype
+* Added `read.arlequin` back. Fixed missing function error with `write.arlequin`.
+* Added `summarizeSamples`
+* Changed `evanno` from base graphics to ggplot2
+* Updated logic in `labelHaplotypes` to assign haplotypes if possible alternative site combinations match a present haplotype
 * Added Zenodo DOI
 * Added shiny app (`strataGUI`) for creating gtypes objects, QA/QC, and population structure analyses
 * Added `type` argument to `structurePlot` to select between area and bar charts
