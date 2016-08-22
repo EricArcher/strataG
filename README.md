@@ -1,4 +1,4 @@
-![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/strataG)
+![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/strataG?color=red)
 ![](http://cranlogs.r-pkg.org/badges/last-day/strataG?color=red)
 ![](http://cranlogs.r-pkg.org/badges/last-week/strataG?color=red)
 ![](http://cranlogs.r-pkg.org/badges/strataG?color=red)
