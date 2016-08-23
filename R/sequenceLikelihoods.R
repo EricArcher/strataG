@@ -34,7 +34,7 @@
 #' @importFrom ggplot2 ggplot aes_string geom_point xlab theme element_blank
 #' @export
 #' 
-sequenceLikelihoods <- function(x, model = "raw", pairwise.deletion = FALSE, 
+sequenceLikelihoods <- function(x, model = "N", pairwise.deletion = FALSE, 
                                 n = NULL, ...) {
   
   if(!inherits(x, "DNAbin")) stop("'x' must be a DNAbin object")

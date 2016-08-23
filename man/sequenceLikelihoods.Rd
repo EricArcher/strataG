@@ -4,7 +4,7 @@
 \alias{sequenceLikelihoods}
 \title{Sequence Likelihoods}
 \usage{
-sequenceLikelihoods(x, model = "raw", pairwise.deletion = FALSE, n = NULL,
+sequenceLikelihoods(x, model = "N", pairwise.deletion = FALSE, n = NULL,
   ...)
 }
 \arguments{
