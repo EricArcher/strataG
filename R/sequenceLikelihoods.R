@@ -57,6 +57,7 @@ sequenceLikelihoods <- function(x, model = "N", pairwise.deletion = FALSE,
   log.lik <- sapply(rownames(seq.dist), function(this.seq) {
     this.dist <- seq.dist[this.seq, ]
     this.dist <- this.dist[names(this.dist) != this.seq]
+    this.dist <- this.dist[this.dist != 0]
     sum(log(dgamma(this.dist, shape = shape, scale = scale)), na.rm = TRUE)
   })
   delta.log.lik <- log.lik - max(log.lik, na.rm = T)
