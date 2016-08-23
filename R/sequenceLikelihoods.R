@@ -54,30 +54,29 @@ sequenceLikelihoods <- function(x, model = "N", pairwise.deletion = FALSE,
   scale <- (dist.sd ^ 2) / dist.mean
   shape <- (dist.mean / dist.sd) ^ 2
   
-  log.lik <- sapply(rownames(seq.dist), function(this.seq) {
+  mat <- t(sapply(rownames(seq.dist), function(this.seq) {
     this.dist <- seq.dist[this.seq, ]
     this.dist <- this.dist[names(this.dist) != this.seq]
+    mean.dist <- mean(this.dist, na.rm = TRUE)
     this.dist <- this.dist[this.dist != 0]
-    sum(log(dgamma(this.dist, shape = shape, scale = scale)), na.rm = TRUE)
-  })
-  delta.log.lik <- log.lik - max(log.lik, na.rm = T)
-  df <- data.frame(id = names(delta.log.lik), logLik = delta.log.lik)
-  df$id <- reorder(df$id, -df$logLik)
+    ll <- -sum(log(dgamma(this.dist, shape = shape, scale = scale)), na.rm = TRUE)
+    c(mean.dist = mean.dist, negLogLik = ll)
+  }))
+  mat <- cbind(mat, deltaLogLik = mat[, "negLogLik"] - min(mat[, "negLogLik"], na.rm = T))
+  df <- data.frame(id = rownames(mat), mat)
+  df$id <- reorder(df$id, df$deltaLogLik)
   rownames(df) <- df$id
   
   if(is.null(n)) n <- nrow(df)
   n <- min(n, nrow(df))
   
-  if(n > 1) {
-    df.sort <- df[order(df$logLik), ]
-    print(
-      ggplot(df.sort[1:n, ], aes_string(x = "logLik", y = "id")) +
-        geom_point() +
-        xlab(expression(paste(Delta, "lnL"))) +
-        theme(
-          axis.title.y = element_blank()
-        )
-    )
+  if(n > 0) {
+    df.sort <- df[order(df$deltaLogLik), ]
+    p <- ggplot(df.sort[1:n, ], aes_string(x = "deltaLogLik", y = "id")) +
+      geom_point() +
+      xlab(expression(paste("-", Delta, "lnL"))) +
+      theme(axis.title.y = element_blank())
+    print(p)
   }
     
   df
