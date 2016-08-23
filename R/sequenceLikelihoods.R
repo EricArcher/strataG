@@ -68,8 +68,9 @@ sequenceLikelihoods <- function(x, model = "raw", pairwise.deletion = FALSE,
   n <- min(n, nrow(df))
   
   if(n > 1) {
+    df.sort <- df[order(df$logLik), ]
     print(
-      ggplot(df[1:n, ], aes_string(x = "logLik", y = "id")) +
+      ggplot(df.sort[1:n, ], aes_string(x = "logLik", y = "id")) +
         geom_point() +
         xlab(expression(paste(Delta, "lnL"))) +
         theme(
