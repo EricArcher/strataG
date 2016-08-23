@@ -67,7 +67,7 @@ sequenceLikelihoods <- function(x, model = "raw", pairwise.deletion = FALSE,
   if(is.null(n)) n <- nrow(df)
   n <- min(n, nrow(df))
   
-  if(n < 1) {
+  if(n > 1) {
     print(
       ggplot(df[1:n, ], aes_string(x = "logLik", y = "id")) +
         geom_point() +
