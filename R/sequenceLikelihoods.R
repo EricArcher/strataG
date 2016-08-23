@@ -71,7 +71,7 @@ sequenceLikelihoods <- function(x, model = "N", pairwise.deletion = FALSE,
   n <- min(n, nrow(df))
   
   if(n > 0) {
-    df.sort <- df[order(df$deltaLogLik), ]
+    df.sort <- df[order(-df$deltaLogLik), ]
     p <- ggplot(df.sort[1:n, ], aes_string(x = "deltaLogLik", y = "id")) +
       geom_point() +
       xlab(expression(paste("-", Delta, "lnL"))) +
