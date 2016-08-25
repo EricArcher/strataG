@@ -16,7 +16,7 @@ tabPanel("QA/QC",
                         uiOutput("ui_dup.gen"),
                         
                         uiOutput("ui_checkbox.seq.sum"),
-                        uiOutput("ui_checkbox.hap.like"),
+                        uiOutput("ui_checkbox.seq.like"),
                         uiOutput("ui_checkbox.low.freq"),
                         uiOutput("ui_low.freq"),
                         
@@ -36,12 +36,12 @@ tabPanel("QA/QC",
                          
                          tabPanel("Sequence summary",verbatimTextOutput('stats.seq.sum')),
                          
-                         tabPanel("Haplotype likelihood",
+                         tabPanel("Sequence likelihood",
                                   tabsetPanel(type="tabs",
-                                              tabPanel("Haplotype likelihood plot",
-                                                       plotOutput("plot.hap.like")),
-                                              tabPanel("Haplotype likelihood summary",
-                                                       verbatimTextOutput('stats.hap.like')))),
+                                              tabPanel("Sequence likelihood plot",
+                                                       plotOutput("plot.seq.like")),
+                                              tabPanel("Sequence likelihood summary",
+                                                       verbatimTextOutput('stats.seq.like')))),
                          
                          tabPanel("Low frequency substitutions", verbatimTextOutput('stats.low.freq'))
              ))))

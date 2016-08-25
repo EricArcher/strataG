@@ -1,8 +1,7 @@
 ###reactive interface for qaqc tab###
 #selection input for minimum percentage of shared loci for dup gen
 output$ui_dup.gen <- renderUI({
-  if (is.null(input$checkbox.dup.gen))
-    return()
+  if (is.null(input$checkbox.dup.gen)) return()
   
   switch(input$checkbox.dup.gen,
          "TRUE" = numericInput("percent", label = h5("Choose Minimum Percentage of Shared Loci"), min = 0,
@@ -12,8 +11,7 @@ output$ui_dup.gen <- renderUI({
 
 #selection input for minimum frequency for low freq sub
 output$ui_low.freq <- renderUI({
-  if (is.null(input$checkbox6))
-    return()
+  if (is.null(input$checkbox6)) return()
   
   switch(input$checkbox.low.freq,
          "TRUE" = numericInput("minimum.freq", label = h5("Minimum Frequency"), value = 1, min = 1),
@@ -78,7 +76,6 @@ output$ui_checkbox.seq.sum<-renderUI({
 
 sequence.summary <- eventReactive(input$run_qaqc, {
   if(input$checkboxseq.sum==TRUE){
-    
     seq.smry <- summarizeSeqs(sequences(gtypes.object()))
     seq.smry} else {NULL}
 })
@@ -87,26 +84,25 @@ output$stats.seq.sum <- renderPrint({
   head(sequence.summary())
 })
 
-#Haplotype likelihood
-output$ui_checkbox.hap.like<-renderUI({
+#Sequence likelihood
+output$ui_checkbox.seq.like<-renderUI({
   if(is.null(sequences(gtypes.object()))==FALSE)
-    return(checkboxInput("checkbox.hap.like", "Haplotype likelihood"))
+    return(checkboxInput("checkbox.seq.like", "Sequence likelihood"))
   else (NULL)
 })
 
-haplotype.likelihood <- eventReactive(input$run_qaqc, {
-  if(input$checkbox.hap.like==TRUE){
-    
-    haplotypeLikelihoods(sequences(gtypes.object()))
+sequence.likelihood <- eventReactive(input$run_qaqc, {
+  if(input$checkbox.seq.like==TRUE){
+    sequenceLikelihoods(sequences(gtypes.object()))
   } else {NULL}
 })
 
-output$plot.hap.like <-renderPlot({
-  haplotype.likelihood()
+output$plot.seq.like <-renderPlot({
+  sequence.likelihood()
 })
 
-output$stats.hap.like <-renderPrint({
-  haplotype.likelihood()
+output$stats.seq.like <-renderPrint({
+  sequence.likelihood()
 })
 
 #Low frequency substitutions
@@ -118,7 +114,6 @@ output$ui_checkbox.low.freq<-renderUI({
 
 low.frequency.substitutions <- eventReactive(input$run_qaqc, {
   if(input$checkbox.low.freq==TRUE){
-    
     lowFreqSubs(sequences(gtypes.object()), min.freq = input$minimum.freq)
   } else {NULL}
 })
@@ -143,7 +138,6 @@ save.qaqc <- observeEvent(input$save.qaqc, {
   filename.haplike <- paste(save.directory(), filename.haplike, sep = "/")
   filename.lfs <- paste(description(gtypes.object()),"lowfreq.csv", sep = ".")
   filename.lfs <- paste(save.directory(), filename.lfs, sep = "/")
-  
   
   checkbox.seq.sum <- if(is.null(sequences(gtypes.object()))) {FALSE} else {input$checkbox4}
   checkbox.hap.like <- if(is.null(sequences(gtypes.object()))) {FALSE} else {input$checkbox5}
