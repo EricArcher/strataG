@@ -1,3 +1,57 @@
+source("ui.gtypes.load.data.R", local = TRUE)
+
+output$gtypesLoadData <- renderUI({
+  list(ui.gtypes.csv, ui.gtypes.rdata)[[as.numeric(input$data.type)]]()
+})
+
+output$gtypesFasta <- renderUI({
+  if(input$ploidy == "1") {
+    fileInput(
+      "fasta", label = h4("Choose a FASTA formatted file of sequences"),
+      accept = c(".fasta", ".fas", ".txt")
+    )
+  } else NULL
+})
+
+output$loadedGtype <- renderUI({
+  wellPanel(
+    titlePanel("Loaded gtypes object"),
+    actionButton("save.gtypes", label = "Save"),
+    verbatimTextOutput("gtypeSmry")
+  )
+})
+  
+
+
+# reads/stores genetic data file input 
+output$file.gen.data <- renderDataTable({
+  gen.data <- input$gen.data
+  if(!is.null(gen.data)) {
+    gen.data <- readGenData(gen.data$datapath)
+    DT::datatable(
+      gen.data, rownames = FALSE,
+      options = list(paging = nrow(df) > 20)
+    )
+  } else NULL
+})
+
+output$file.schemes <- renderDataTable({
+  sch <- input$schemes
+  if(!is.null(sch)) {
+    sch <- readGenData(sch$datapath)
+    DT::datatable(
+      sch, rownames = FALSE,
+      options = list(paging = nrow(df) > 20)
+    )
+  } else NULL
+})
+
+output$file.fasta <- renderPrint({
+  fas <- input$fasta
+  if(!is.null(fas)) read.fasta(fas$datapath) else NULL
+})
+
+
 # directory for saved file
 save.directory <- reactive({
   save.directory <- input$save.directory
@@ -6,14 +60,6 @@ save.directory <- reactive({
   save.directory 
 })
 
-# reads/stores genetic data file input 
-gen.data <- reactive({
-  gen.data <- input$genetic.data
-  if(is.null(gen.data))
-    return (NULL)
-  gen.data <- read.csv(gen.data$datapath)
-  gen.data
-})
 
 output$gen.data.head <- renderPrint({
   head(gen.data())
@@ -159,7 +205,7 @@ output$strataColMenu.rds <- renderUI({
   first.item <- c("Do Not Stratify")
   names(items)=items
   strat.options <- c(first.item, items)
-  selectInput("strataOptions.rds", "Stratification schemes",strat.options)
+  selectInput("strataOptions.rds", "Stratification schemes", strat.options)
 })
 ###End###
 

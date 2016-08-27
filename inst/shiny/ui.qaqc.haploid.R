@@ -1,0 +1,2 @@
+qaqcHaploid <- function() {
+}

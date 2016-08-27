@@ -160,26 +160,24 @@ jackInfluential <- function(jack.result, alpha = 0.05) {
 
 #' @rdname jackHWE
 #' @method plot jack.influential
-#' @importFrom graphics abline text
+#' @importFrom ggplot2 ggplot aes_string geom_line labs ggtitle geom_vline
 #' @export
 #' 
-plot.jack.influential <- function(x, main = "", ...) {
+plot.jack.influential <- function(x, main = NULL, ...) {
   or <- as.vector(x$odds.ratio)
   or <- or[!is.na(or) | !is.nan(or) | !is.infinite(or)]
   odds.sort <- sort(or)
   odds.freq <- 1:length(odds.sort) / length(odds.sort)
+  df <- data.frame(x = odds.sort, y = odds.freq)
   
-  plot(odds.sort, odds.freq, type = "l", bty = "l", main = main,
-       xlab = "Odds-ratio", ylab = "Cumulative frequency", ...
-  )
-  if(!all(is.null(x$influential))) {
-    if(nrow(x$influential) > 0) {
-      min.influential <- min(x$influential$odds.ratio)
-      min.freq <- length(or[or < min.influential]) / length(or)
-      abline(v = min.influential, lty = "dashed", lwd = 1)    
-      min.txt <- paste(round(min.influential, 2), " = ", 
-                       round(100 * min.freq, 0), "%", sep = "")
-      text(min.influential, min.freq, min.txt, adj = c(1.1, 1.4), cex = 1)        
-    }
+  p <- ggplot(df, aes_string(x = "x", y = "y")) + 
+    geom_line() +
+    labs(x = "Odds ratio", y = "Cumulative frequency")
+  if(!is.null(main)) p <- p + ggtitle(main)
+  if(!is.null(x$influential)) {
+    min.influential <- min(x$influential$odds.ratio)
+    min.freq <- length(or[or < min.influential]) / length(or)
+    p <- p + geom_vline(xintercept = min.influential, linetype = 2, color = "red") 
   }
+  print(p)
 }

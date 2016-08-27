@@ -1,159 +1,70 @@
-###reactive interface for qaqc tab###
-#selection input for minimum percentage of shared loci for dup gen
-output$ui_dup.gen <- renderUI({
-  if (is.null(input$checkbox.dup.gen)) return()
-  
-  switch(input$checkbox.dup.gen,
-         "TRUE" = numericInput("percent", label = h5("Choose Minimum Percentage of Shared Loci"), min = 0,
-                               value = 0.66, max = 1, step = 0.01),
-         "FALSE" = NULL)
+output$qaqcDiploidStep <- renderUI({
+  list(
+    ui.loci.missing, ui.loci.hmzg, ui.samples.missing, ui.samples.hmzg,
+    ui.dups, ui.hwe.jack, ui.ld
+  )[[qaqc.flow$step]]()
 })
 
-#selection input for minimum frequency for low freq sub
-output$ui_low.freq <- renderUI({
-  if (is.null(input$checkbox6)) return()
-  
-  switch(input$checkbox.low.freq,
-         "TRUE" = numericInput("minimum.freq", label = h5("Minimum Frequency"), value = 1, min = 1),
-         "FALSE" = NULL)
+qaqc.flow <- reactiveValues(step = 1)
+observeEvent(input$btn.qaqc.next, {
+  if(qaqc.flow$step < 7) qaqc.flow$step <- qaqc.flow$step + 1
 })
-###End###
+observeEvent(input$btn.qaqc.reset, qaqc.flow$step <- 1)
 
-###qaqc functions###
-#by sample summary 
-by.sample <- eventReactive(input$run_qaqc, {
-  if(input$checkbox.by.sample==TRUE){
-    sortStrata <- if(nStrata(gtypes.object()) > 1) {TRUE} else {FALSE}
-    
-    smry.sample <- summarizeSamples(gtypes.object(), sort.by.strata = sortStrata)
-    smry.sample}
-})
+reloaded <- reactiveValues(count = 0)
 
-output$stats.by.sample <- renderPrint({  
-  head(by.sample())
+output$gtypes.smry <- renderPrint({
+  reloaded$count
+  options(digits = 2)
+  current.g
+}, width = 120)
+
+by.sample <- reactive({
+  reloaded$count
+  input$btn.run.loci.missing
+  input$btn.run.loci.hmzg
+  if(is.null(current.g)) NULL else summarizeSamples(current.g)
 })
 
-#by locus summary 
-by.locus <- eventReactive(input$run_qaqc, {
-  if(input$checkbox.by.locus==TRUE){
-    sortStrata <- if(nStrata(gtypes.object()) > 1) {TRUE} else {FALSE}
-    
-    if(sortStrata) {
-      smry <- summarizeLoci(gtypes.object(), by.strata = sortStrata)
-      hwe.p <- lapply(strataSplit(gtypes.object()), hweTest)
-      sapply(names(smry), function(x) {
-        cbind(smry[[x]], hwe.p = hwe.p[[x]])
-      }, USE.NAMES = TRUE, simplify = FALSE)
-    } else {
-      smry <- summarizeLoci(gtypes.object(), by.strata = sortStrata)
-      hwe.p <- hweTest(gtypes.object())
-      cbind(smry, hwe.p = hwe.p)
-    }
+by.locus <- reactive({
+  reloaded$count
+  input$btn.run.samples.missing
+  input$btn.run.samples.hmzg
+  if(is.null(current.g)) NULL else {
+    df <- data.frame(summarizeLoci(current.g))
+    df$num.missing <- nInd(current.g) - df$num.genotyped
+    df$pct.missing <- df$num.missing / nInd(current.g)
+    df$pct.hmzg <- 1 - df$obsvd.heterozygosity
+    df$num.hmzg <- df$pct.hmzg * df$num.genotyped
+    cbind(locus = rownames(df), df)
   }
 })
 
-output$stats.by.locus <- renderPrint({  
-  head(by.locus())
+dups <- reactive({
+  input$btn.run.dups
+  if(is.null(current.g)) NULL else dupGenotypes(current.g, 0, detectCores(logical = F) - 1)
 })
 
-#Duplicate genotypes
-duplicate.genotypes <- eventReactive(input$run_qaqc, {
-  if(input$checkbox.dup.gen==TRUE){
-    #Find samples that share alleles at 2/3rds of the loci
-    dupGenotypes(gtypes.object(), num.shared = input$percent)}
+hw.jack <- reactive({
+  input$btn.run.hwe.jack
+  if(is.null(current.g)) NULL else jackHWE(current.g, show.progress = FALSE)
 })
 
-output$stats.dup.gen <- renderPrint({  
-  duplicate.genotypes()
+hwe <- reactive({
+  input$btn.run.hwe
+  if(is.null(current.g)) NULL else hweTest(current.g)
 })
 
-#sequence Summary 
-output$ui_checkbox.seq.sum<-renderUI({
-  if(is.null(sequences(gtypes.object()))==FALSE)
-    return(checkboxInput("checkbox.seq.sum", "Sequence summary"))
-  else (NULL)
+ld <- reactive({
+  input$btn.run.ld
+  if(is.null(current.g)) NULL else LDgenepop(current.g)
 })
-
-sequence.summary <- eventReactive(input$run_qaqc, {
-  if(input$checkboxseq.sum==TRUE){
-    seq.smry <- summarizeSeqs(sequences(gtypes.object()))
-    seq.smry} else {NULL}
-})
-
-output$stats.seq.sum <- renderPrint({  
-  head(sequence.summary())
-})
-
-#Sequence likelihood
-output$ui_checkbox.seq.like<-renderUI({
-  if(is.null(sequences(gtypes.object()))==FALSE)
-    return(checkboxInput("checkbox.seq.like", "Sequence likelihood"))
-  else (NULL)
-})
-
-sequence.likelihood <- eventReactive(input$run_qaqc, {
-  if(input$checkbox.seq.like==TRUE){
-    sequenceLikelihoods(sequences(gtypes.object()))
-  } else {NULL}
-})
-
-output$plot.seq.like <-renderPlot({
-  sequence.likelihood()
-})
-
-output$stats.seq.like <-renderPrint({
-  sequence.likelihood()
-})
-
-#Low frequency substitutions
-output$ui_checkbox.low.freq<-renderUI({
-  if(is.null(sequences(gtypes.object()))==FALSE)
-    return(checkboxInput("checkbox.low.freq", "Low frequency substitutions"))
-  else (NULL)
-})
-
-low.frequency.substitutions <- eventReactive(input$run_qaqc, {
-  if(input$checkbox.low.freq==TRUE){
-    lowFreqSubs(sequences(gtypes.object()), min.freq = input$minimum.freq)
-  } else {NULL}
-})
-
-output$stats.low.freq <- renderPrint({  
-  low.frequency.substitutions()
-})
-###END###
-
-###save button for qaqc###
-save.qaqc <- observeEvent(input$save.qaqc, {
-  filename.by.sample <- paste(description(gtypes.object()),"bysample.csv", sep = ".")
-  filename.by.sample <- paste(save.directory(), filename.by.sample, sep = "/")
-  filename.by.locus <- paste(description(gtypes.object()),"bylocus.csv", sep = ".")
-  filename.by.locus <- paste(save.directory(), filename.by.locus, sep = "/")
   
-  filename.dup.gen <- paste(description(gtypes.object()),"dupgen.csv", sep = ".")
-  filename.dup.gen <- paste(save.directory(), filename.dup.gen, sep = "/")
-  filename.seqsum <- paste(description(gtypes.object()),"seqsum.csv", sep = ".")
-  filename.seqsum <- paste(save.directory(), filename.seqsum, sep = "/")
-  filename.haplike <- paste(description(gtypes.object()),"haplike.csv", sep = ".")
-  filename.haplike <- paste(save.directory(), filename.haplike, sep = "/")
-  filename.lfs <- paste(description(gtypes.object()),"lowfreq.csv", sep = ".")
-  filename.lfs <- paste(save.directory(), filename.lfs, sep = "/")
-  
-  checkbox.seq.sum <- if(is.null(sequences(gtypes.object()))) {FALSE} else {input$checkbox4}
-  checkbox.hap.like <- if(is.null(sequences(gtypes.object()))) {FALSE} else {input$checkbox5}
-  checkbox.low.freq <- if(is.null(sequences(gtypes.object()))) {FALSE} else {input$checkbox6}
-  
-  if(input$checkbox.by.sample==TRUE){
-    write.csv(by.sample(), file = filename.by.sample)}
-  if(input$checkbox.by.locus==TRUE){
-    write.csv(by.locus(), file = filename.by.locus)}
-  if(input$checkbox.dup.gen==TRUE){
-    write.csv(duplicate.genotypes(), file= filename.dup.gen)}
-  if(checkbox.seq.sum==TRUE){
-    write.csv(sequence.summary(), file = filename.seqsum)}
-  if(checkbox.hap.like==TRUE){
-    write.csv(haplotype.likelihood(), file = filename.haplike)}
-  if(checkbox.low.freq==TRUE){
-    write.csv(low.frequency.substitutions(), file = filename.lfs)}
-})
-###End###
+source("server.qaqc.01.loci.missing.R", local = TRUE)
+source("server.qaqc.02.loci.hmzg.R", local = TRUE)
+source("server.qaqc.03.samples.missing.R", local = TRUE)
+source("server.qaqc.04.samples.hmzg.R", local = TRUE)
+source("server.qaqc.05.dups.R", local = TRUE)
+source("server.qaqc.06.hwe.jack.R", local = TRUE)
+source("server.qaqc.07.ld.R", local = TRUE)
+source("server.qaqc.remove.samples.loci.R", local = TRUE)

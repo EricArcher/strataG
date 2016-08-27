@@ -11,7 +11,7 @@ jackHWE(g, exclude.num = 1, min.hwe.samples = 5, show.progress = TRUE,
 
 jackInfluential(jack.result, alpha = 0.05)
 
-\method{plot}{jack.influential}(x, main = "", ...)
+\method{plot}{jack.influential}(x, main = NULL, ...)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
