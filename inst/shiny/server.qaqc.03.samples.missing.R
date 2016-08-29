@@ -1,29 +1,23 @@
 ui.samples.missing <- function() {
-  fluidPage(
-    splitLayout(
-      cellWidths = c("50%", "50%"),
-      wellPanel(
-        titlePanel("3) Percent of missing samples"),
-        actionButton("btn.run.samples.missing", label = "Refresh"),
-        sliderInput(
-          "sl.samples.missing", label = NULL,
-          min = 0, max = 1, value = 0.05
-        ),
-        textOutput("txt.samples.missing"),
-        plotOutput("plot.samples.missing")
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(
+        "sl.samples.missing", label = h4("3) Percent of missing samples"),
+        min = 0, max = 1, value = 0.05
       ),
-      verticalLayout(
-        actionButton("btn.remove.samples.missing", label = "Remove loci"),
-        dataTableOutput("dt.samples.missing")
-      )
+      textOutput("txt.samples.missing"),
+      plotOutput("plot.samples.missing")
+    ),
+    mainPanel(
+      dataTableOutput("dt.samples.missing"),
+      actionButton("btn.remove.samples.missing", label = "Remove loci")
     )
   )
 }
 
-updateSliderInput(session, "sl.samples.missing", step = 1 / nInd(current.g))
-
 output$txt.samples.missing <- renderPrint({
-  cat("Number of samples:", input$sl.samples.missing * nInd(current.g))
+  if(is.null(user.data$current.g)) return()
+  cat("Number of samples:", input$sl.samples.missing * nInd(user.data$current.g))
 })
 
 output$dt.samples.missing <- renderDataTable({
@@ -37,7 +31,7 @@ output$dt.samples.missing <- renderDataTable({
   }
   DT::datatable(
     df, rownames = FALSE,
-    options = list(paging = nrow(df) > 10, searching = FALSE)
+    options = list(paging = nrow(df) > 10, searching = FALSE, scrollX = TRUE)
   )
 })
 
@@ -59,11 +53,10 @@ observeEvent(input$btn.remove.samples.missing, {
   i <- which(df$pct.missing >= input$sl.samples.missing)
   if(length(i) > 0) {
     loc <- df$locus[i]
-    all.loci <- locNames(current.g)
+    all.loci <- locNames(user.data$current.g)
     to.keep <- setdiff(all.loci, loc)
     if(length(to.keep) > 0) {
-      current.g <<- current.g[ ,to.keep , ]
-      reloaded$count <- reloaded$count + 1
+      user.data$current.g <- user.data$current.g[ ,to.keep , ]
     }
   }
 })

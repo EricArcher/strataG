@@ -1,33 +1,26 @@
 ui.ld <- function() {
-  fluidPage(
-    splitLayout(
-      cellWidths = c("50%", "50%"),
-      wellPanel(
-        titlePanel("7) Linkage disequilibrium p-values"),
-        actionButton("btn.run.ld", label = "Refresh"),
-        wellPanel(
-          sliderInput(
-            "sl.ld", label = NULL,
-            min = 0, max = 0.2, value = 0.05
-          ),
-          plotOutput("plot.ld")
-        )
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(
+        "sl.ld", label = h4("7) Linkage disequilibrium p-values"),
+        min = 0, max = 0.2, value = 0.05
       ),
-      dataTableOutput("dt.ld")
-    )
+      plotOutput("plot.ld")
+    ),
+    mainPanel(dataTableOutput("dt.ld"))
   )
 }
             
 output$dt.ld <- renderDataTable({
   df <- ld()
   if(!is.null(df)) {
-    df <- round(df, 3)
+    df <- round(df, 4)
     df <- df[df$p.value <= input$sl.ld, ]
     df <- df[order(df$p.value, df$Locus.1, df$Locus.2), 1:4]
   }
   DT::datatable(
     df, rownames = FALSE,
-    options = list(paging = nrow(df) > 10, searching = FALSE)
+    options = list(paging = nrow(df) > 10, searching = FALSE, scrollX = TRUE)
   )
 })
 

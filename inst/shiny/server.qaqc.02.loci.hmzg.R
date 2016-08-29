@@ -1,44 +1,40 @@
 ui.loci.hmzg <- function() {
-  fluidPage(
-    splitLayout(
-      cellWidths = c("50%", "50%"),
-      wellPanel(
-        titlePanel("2) Percent of homozygous genotypes"),
-        actionButton("btn.run.loci.hmzg", label = "Refresh"),
-        sliderInput(
-          "sl.loci.hmzg", label = NULL,
-          min = 0, max = 1, value = 0.8
-        ),
-        textOutput("txt.loci.hmzg"),
-        plotOutput("plot.loci.hmzg")
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(
+        "sl.loci.hmzg", label = h4("2) Percent of homozygous genotypes"),
+        min = 0, max = 1, value = 0.8
       ),
-      verticalLayout(
-        actionButton("btn.remove.loci.hmzg", label = "Remove samples"),
-        dataTableOutput("dt.loci.hmzg")
-      )
+      textOutput("txt.loci.hmzg"),
+      plotOutput("plot.loci.hmzg")
+    ),
+    mainPanel(
+      dataTableOutput("dt.loci.hmzg"),
+      actionButton("btn.remove.loci.hmzg", label = "Remove samples")
     )
   )
 }
 
-updateSliderInput(session, "sl.loci.hmzg", step = 1 / nLoc(current.g))
-
 output$txt.loci.hmzg <- renderPrint({
-  cat("Number of loci:", input$sl.loci.hmzg * nLoc(current.g))
+  if(is.null(user.data$current.g)) return()
+  cat("Number of loci:", input$sl.loci.hmzg * nLoc(user.data$current.g))
 })
 
 output$dt.loci.hmzg <- renderDataTable({
   df <- by.sample()
   if(!is.null(df)) {
-    num.hmzg <- with(df, pct.loci.homozygous * (nLoc(current.g) - num.loci.missing.genotypes))
+    num.genotyped <- nLoc(user.data$current.g) - df$num.loci.missing.genotypes
+    num.hmzg <- df$pct.loci.homozygous * num.genotyped
     df <- df[, c("id", "strata", "pct.loci.homozygous")]
     df <- cbind(df, '# Homozygous' = num.hmzg)
     colnames(df) <- c("ID", "Strata", "% Homozygous", "# Homozygous")
     df <- df[order(df[, 3], decreasing = TRUE), ]
     df <- df[df[, 3] >= input$sl.loci.hmzg, ]
+    df <- round(df, 4)
   }
   DT::datatable(
     df, rownames = FALSE,
-    options = list(paging = nrow(df) > 10, searching = FALSE)
+    options = list(paging = nrow(df) > 10, searching = FALSE, scrollX = TRUE)
   )
 })
 
@@ -60,11 +56,10 @@ observeEvent(input$btn.remove.loci.hmzg, {
   i <- which(df$pct.loci.homozygous >= input$sl.loci.hmzg)
   if(length(i) > 0) {
     id <- df$id[i]
-    all.inds <- indNames(current.g)
+    all.inds <- indNames(user.data$current.g)
     to.keep <- setdiff(all.inds, id)
     if(length(to.keep) > 0) {
-      current.g <<- current.g[to.keep, , ]
-      reloaded$count <- reloaded$count + 1
+      user.data$current.g <- user.data$current.g[to.keep, , ]
     }
   }
 })

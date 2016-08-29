@@ -3,7 +3,7 @@ output$dt.by.sample <- renderDataTable({
   if(!is.null(df)) df <- round(df, 4)
   DT::datatable(
     df, rownames = FALSE,
-    selection = list(mode = "multiple", target = "row")
+    selection = list(mode = "multiple", target = "row", scrollX = TRUE)
   )
 })
 
@@ -12,7 +12,7 @@ output$dt.by.locus <- renderDataTable({
   if(!is.null(df)) df <- round(df, 4)
   DT::datatable(
     df, rownames = FALSE,
-    selection = list(mode = "multiple", target = "row")
+    selection = list(mode = "multiple", target = "row", scrollX = TRUE)
   )
 })
 
@@ -21,11 +21,10 @@ observeEvent(input$btn.remove.samples, {
   if(!is.null(i)) {
     df <- by.sample()
     id <- df$id[i]
-    all.inds <- indNames(current.g)
+    all.inds <- indNames(user.data$current.g)
     to.keep <- setdiff(all.inds, id)
     if(length(to.keep) > 0) {
-      current.g <<- current.g[to.keep, , ]
-      reloaded$count <- reloaded$count + 1
+      user.data$current.g <- user.data$current.g[to.keep, , ]
     }
   }
 })
@@ -35,11 +34,10 @@ observeEvent(input$btn.remove.loci, {
   if(!is.null(i)) {
     df <- by.locus()
     loc <- df$locus[i]
-    all.loci <- locNames(current.g)
+    all.loci <- locNames(user.data$current.g)
     to.keep <- setdiff(all.loci, loc)
     if(length(to.keep) > 0) {
-      current.g <<- current.g[ ,to.keep , ]
-      reloaded$count <- reloaded$count + 1
+      user.data$current.g <- user.data$current.g[ ,to.keep , ]
     }
   }
 })

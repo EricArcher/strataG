@@ -1,25 +1,16 @@
 ui.hwe.jack <- function() {
-  fluidPage(
-    wellPanel(
-      titlePanel("6) Hardy-Weinberg p-values"),
-      actionButton("btn.run.hwe", label = "Refresh"),
-      dataTableOutput("dt.hwe")
-    ),
-    splitLayout(
-      cellWidths = c("50%", "50%"),
-      wellPanel(
-        titlePanel("Hardy-Weinberg jackknife critical alpha"),
-        actionButton("btn.run.hwe.jack", label = "Refresh"),
-        wellPanel(
-          sliderInput(
-            "sl.hwe.jack", label = NULL,
-            min = 0, max = 0.2, value = 0.05
-          ),
-          plotOutput("plot.hwe.jack")
-        )
+  sidebarLayout(
+    sidebarPanel(
+      titlePanel(h4("6) Hardy-Weinberg p-values")),
+      dataTableOutput("dt.hwe"),
+      hr(),
+      sliderInput(
+        "sl.hwe.jack", label = h4("Hardy-Weinberg jackknife critical alpha"),
+        min = 0, max = 0.2, value = 0.05
       ),
-      dataTableOutput("dt.hwe.jack")
-    )
+      plotOutput("plot.hwe.jack")
+    ),
+    mainPanel(dataTableOutput("dt.hwe.jack"))
   )
 }
 
@@ -32,21 +23,25 @@ output$dt.hwe <- renderDataTable({
   }
   DT::datatable(
     df, rownames = FALSE,
-    options = list(paging = nrow(df) > 10, searching = FALSE)
+    options = list(paging = nrow(df) > 10, searching = FALSE, scrollX = TRUE)
   )
 })
             
 output$dt.hwe.jack <- renderDataTable({
-  infl <- jackInfluential(hw.jack(), alpha = input$sl.hwe.jack)
+  jack.result <- hw.jack()
+  if(is.null(jack.result)) return()
+  infl <- jackInfluential(jack.result, alpha = input$sl.hwe.jack)
   df <- infl$influential
   if(!is.null(df)) df <- round(df, 4)
   DT::datatable(
     df, rownames = FALSE,
-    options = list(paging = nrow(df) > 25, searching = FALSE)
+    options = list(paging = nrow(df) > 25, searching = FALSE, scrollX = TRUE)
   )
 })
 
 output$plot.hwe.jack <- renderPlot({
-  infl <- jackInfluential(hw.jack(), alpha = input$sl.hwe.jack)
+  jack.result <- hw.jack()
+  if(is.null(jack.result)) return()
+  infl <- jackInfluential(jack.result, alpha = input$sl.hwe.jack)
   plot(infl)
 })

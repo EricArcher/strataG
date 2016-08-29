@@ -1,29 +1,23 @@
 ui.loci.missing <- function() {
-  fluidPage(
-    splitLayout(
-      cellWidths = c("50%", "50%"),
-      wellPanel(
-        titlePanel("1) Percent of missing genotypes"),
-        actionButton("btn.run.loci.missing", label = "Refresh"),
-        sliderInput(
-          "sl.loci.missing", label = NULL,
-          min = 0, max = 1, value = 0.8
-        ),
-        textOutput("txt.loci.missing"),
-        plotOutput("plot.loci.missing")
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(
+        "sl.loci.missing", label = h4("1) Percent of missing genotypes"),
+        min = 0, max = 1, value = 0.8
       ),
-      verticalLayout(
-        actionButton("btn.remove.loci.missing", label = "Remove samples"),
-        dataTableOutput("dt.loci.missing")
-      )
+      textOutput("txt.loci.missing"),
+      plotOutput("plot.loci.missing")
+    ),
+    mainPanel(
+      dataTableOutput("dt.loci.missing"),
+      actionButton("btn.remove.loci.missing", label = "Remove samples")
     )
   )
 }
 
-updateSliderInput(session, "sl.loci.missing", step = 1 / nLoc(current.g))
-
 output$txt.loci.missing <- renderPrint({
-  cat("Number of loci:", input$sl.loci.missing * nLoc(current.g))
+  if(is.null(user.data$current.g)) return()
+  cat("Number of loci:", input$sl.loci.missing * nLoc(user.data$current.g))
 })
 
 output$dt.loci.missing <- renderDataTable({
@@ -33,10 +27,11 @@ output$dt.loci.missing <- renderDataTable({
     colnames(df) <- c("ID", "Strata", "% Missing", "# Missing")
     df <- df[order(df[, 3], decreasing = TRUE), ]
     df <- df[df[, 3] >= input$sl.loci.missing, ]
+    df <- round(df, 4)
   }
   DT::datatable(
     df, rownames = FALSE,
-    options = list(paging = nrow(df) > 10, searching = FALSE)
+    options = list(paging = nrow(df) > 10, searching = FALSE, scrollX = TRUE)
   )
 })
 
@@ -61,8 +56,7 @@ observeEvent(input$btn.remove.loci.missing, {
     all.inds <- indNames(current.g)
     to.keep <- setdiff(all.inds, id)
     if(length(to.keep) > 0) {
-      current.g <<- current.g[to.keep, , ]
-      reloaded$count <- reloaded$count + 1
+      user.data$current.g <- user.data$current.g[to.keep, , ]
     }
   }
 })

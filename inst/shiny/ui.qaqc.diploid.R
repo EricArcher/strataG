@@ -6,6 +6,7 @@ qaqcDiploid <- function() {
         actionButton("btn.qaqc.next", label = "Next"),
         actionButton("btn.qaqc.reset", label = "Reset")
       ),
+      hr(),
       uiOutput("qaqcDiploidStep")
     ),
     tabPanel(
