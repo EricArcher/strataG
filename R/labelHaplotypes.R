@@ -2,7 +2,7 @@
 #' @description Identify and group sequences that share the same haplotype.
 #'
 #' @param x sequences in a \code{character matrix}, \code{list},
-#'   or \code{\link{DNAbin}} object, or a haploid \linkS4class{gtypes} object 
+#'   or \code{\link{DNAbin}} object, or a haploid \linkS4class{gtypes} object
 #'   with sequences.
 #' @param prefix a character string giving prefix to be applied to numbered
 #'   haplotypes. If NULL, haplotypes will be labeled with the first label
@@ -23,18 +23,18 @@
 #'  \describe{
 #'    \item{haps}{named vector (\code{DNAbin}) or list of named vectors
 #'      (\code{multidina}) of haplotypes for each sequence in \code{x}.}
-#'    \item{hap.seqs}{\code{DNAbin} or \code{multidna} object containing 
+#'    \item{hap.seqs}{\code{DNAbin} or \code{multidna} object containing
 #'      sequences for each haplotype.}
-#'    \item{unassigned}{\code{data.frame} listing closest matching haplotypes 
-#'      for unassignable sequences with N's and the minimum number of 
-#'      substitutions between the two. Will be \code{NULL} if no sequences 
+#'    \item{unassigned}{\code{data.frame} listing closest matching haplotypes
+#'      for unassignable sequences with N's and the minimum number of
+#'      substitutions between the two. Will be \code{NULL} if no sequences
 #'      remain unassigned.}
 #'  }
-#'  
+#'
 #'  For \code{gtypes}, a list with the following elements:
 #'  \describe{
 #'    \item{gtypes}{the new \code{gtypes} object with the haplotypes reassigned.}
-#'    \item{unassigned}{a list containing the \code{unassigned} \code{data.frame} 
+#'    \item{unassigned}{a list containing the \code{unassigned} \code{data.frame}
 #'      for each gene if present, otherwise \code{NULL}.}
 #'  }
 #'
@@ -66,7 +66,7 @@
 #'
 #' hap.assign <- labelHaplotypes(sample.seqs, prefix = "Hap.")
 #' hap.assign
-#' 
+#'
 #' @name labelHaplotypes
 #' @importFrom swfscMisc zero.pad
 #' @export
@@ -89,33 +89,33 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
     names(haps) <- haps
     return(list(haps = haps, hap.seqs = x, unassigned = NULL))
   }
-  
+
   # throw error if any sequence names are duplicated
   if(any(duplicated(rownames(x)))) {
     warning("'x' cannot have duplicate sequence names. NULL returned.",
             call. = FALSE, immediate. = TRUE)
     return(NULL)
   }
-  
+
   # find sequences without Ns
   has.ns <- apply(as.character(x), 1, function(bases) "n" %in% tolower(bases))
-  if(sum(!has.ns) == 1) {
-    warning("There is only one sequence without ambiguities (N's). Can't assign haplotypes. NULL returned.",
+  if(sum(!has.ns) <= 1) {
+    warning("There less than two sequences without ambiguities (N's). Can't assign haplotypes. NULL returned.",
             call. = FALSE, immediate. = TRUE)
     return(NULL)
   }
-  
+
   # get pairwise distances and set all non-0 distances to 1
   x.no.ns <- x[!has.ns, , drop = FALSE]
   hap.dist <- dist.dna(x.no.ns, model = "N", pairwise.deletion = TRUE)
   if(use.indels) hap.dist <- hap.dist + dist.dna(x.no.ns, model = "indelblock")
   hap.dist <- as.matrix(hap.dist)
   hap.dist[hap.dist > 0] <- 1
-  
+
   # create haplotype code out of 0s and 1s
   hap.code <- as.numeric(factor(apply(hap.dist, 1, paste, collapse = "")))
   names(hap.code) <- rownames(hap.dist)
-  
+
   # rename haplotypes
   hap.labels <- if(!is.null(prefix)) {
     # use prefix+number if prefix given
@@ -130,14 +130,14 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
   }
   hap.code <- hap.labels[hap.code]
   names(hap.code) <- rownames(hap.dist)
-  
+
   # get sequences for each haplotype
   unique.codes <- hap.code[!duplicated(hap.code)]
   hap.seqs <- x[names(unique.codes), , drop = FALSE]
   rownames(hap.seqs) <- unique.codes
   hap.seqs <- hap.seqs[order(rownames(hap.seqs)), , drop = FALSE]
   hap.seqs <- as.character(as.matrix(hap.seqs))
-  
+
   # get distance of all sequences with n's to other sequences (possible sequences)
   x.has.ns <- as.character(x)[has.ns, , drop = FALSE]
   unk.dist <- sapply(rownames(x.has.ns), function(i) {
@@ -161,19 +161,19 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
     if(use.indels) hap.dist <- hap.dist + dist.dna(new.mat, model = "indelblock", as.matrix = TRUE)
     hap.dist[test.names, !colnames(hap.dist) %in% test.names, drop = FALSE]
   }, simplify = FALSE, USE.NAMES = TRUE)
-  
+
   # get minimum distance of unknowns to other sequences
   min.dist <- t(sapply(unk.dist, function(mat) apply(mat, 2, min)))
-  
+
   # assign sequences if only one of the minimum sequences is 0
   hap.assign <- apply(min.dist, 1, function(counts) {
     num.matches <- sum(counts == 0)
     if(num.matches == 1) colnames(min.dist)[counts == 0] else NA
   })
-  
+
   # compile vector of haplotype assignments
   hap.vec <- c(hap.code, hap.assign)[rownames(x)]
-  
+
   # create data.frame of unassigned sequences
   unassigned.df <- if(any(is.na(hap.vec))) {
     mat <- min.dist[names(hap.vec)[is.na(hap.vec)], , drop = FALSE]
@@ -186,7 +186,7 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
     rownames(df) <- rownames(mat)
     df
   } else NULL
-  
+
   list(haps = hap.vec, hap.seqs = as.DNAbin(hap.seqs), unassigned = unassigned.df)
 }
 

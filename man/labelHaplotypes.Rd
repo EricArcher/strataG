@@ -20,7 +20,7 @@ labelHaplotypes(x, prefix = NULL, use.indels = TRUE)
 }
 \arguments{
 \item{x}{sequences in a \code{character matrix}, \code{list},
-or \code{\link{DNAbin}} object, or a haploid \linkS4class{gtypes} object 
+or \code{\link{DNAbin}} object, or a haploid \linkS4class{gtypes} object
 with sequences.}
 
 \item{prefix}{a character string giving prefix to be applied to numbered
@@ -36,18 +36,18 @@ For \code{character}, \code{list}, or \code{DNAbin}, a list with the following e
  \describe{
    \item{haps}{named vector (\code{DNAbin}) or list of named vectors
      (\code{multidina}) of haplotypes for each sequence in \code{x}.}
-   \item{hap.seqs}{\code{DNAbin} or \code{multidna} object containing 
+   \item{hap.seqs}{\code{DNAbin} or \code{multidna} object containing
      sequences for each haplotype.}
-   \item{unassigned}{\code{data.frame} listing closest matching haplotypes 
-     for unassignable sequences with N's and the minimum number of 
-     substitutions between the two. Will be \code{NULL} if no sequences 
+   \item{unassigned}{\code{data.frame} listing closest matching haplotypes
+     for unassignable sequences with N's and the minimum number of
+     substitutions between the two. Will be \code{NULL} if no sequences
      remain unassigned.}
  }
- 
+
  For \code{gtypes}, a list with the following elements:
  \describe{
    \item{gtypes}{the new \code{gtypes} object with the haplotypes reassigned.}
-   \item{unassigned}{a list containing the \code{unassigned} \code{data.frame} 
+   \item{unassigned}{a list containing the \code{unassigned} \code{data.frame}
      for each gene if present, otherwise \code{NULL}.}
  }
 }

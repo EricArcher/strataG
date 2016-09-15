@@ -1,10 +1,7 @@
 ui.samples.missing <- function() {
   sidebarLayout(
     sidebarPanel(
-      sliderInput(
-        "sl.samples.missing", label = h4("3) Percent of missing samples"),
-        min = 0, max = 1, value = 0.05
-      ),
+      sliderInput("sl.samples.missing", h4("Percent of missing samples"), 0, 1, 0.05),
       textOutput("txt.samples.missing"),
       plotOutput("plot.samples.missing")
     ),
@@ -16,11 +13,12 @@ ui.samples.missing <- function() {
 }
 
 output$txt.samples.missing <- renderPrint({
-  if(is.null(user.data$current.g)) return()
-  cat("Number of samples:", input$sl.samples.missing * nInd(user.data$current.g))
+  if(is.null(vals$gtypes)) return()
+  num.missing <- floor(input$sl.samples.missing * nInd(vals$gtypes))
+  cat("Number of samples:", num.missing)
 })
 
-output$dt.samples.missing <- renderDataTable({
+df.samples.missing <- reactive({  
   df <- by.locus()
   if(!is.null(df)) {
     df <- df[, c("locus", "pct.missing", "num.missing")]
@@ -29,6 +27,11 @@ output$dt.samples.missing <- renderDataTable({
     df <- df[df[, 2] >= input$sl.samples.missing, ]
     df <- round(df, 4)
   }
+  df
+})
+
+output$dt.samples.missing <- renderDataTable({
+  df <- df.samples.missing()
   DT::datatable(
     df, rownames = FALSE,
     options = list(paging = nrow(df) > 10, searching = FALSE, scrollX = TRUE)
@@ -49,14 +52,18 @@ output$plot.samples.missing <- renderPlot({
 })
 
 observeEvent(input$btn.remove.samples.missing, {
-  df <- by.locus()
-  i <- which(df$pct.missing >= input$sl.samples.missing)
-  if(length(i) > 0) {
-    loc <- df$locus[i]
-    all.loci <- locNames(user.data$current.g)
-    to.keep <- setdiff(all.loci, loc)
-    if(length(to.keep) > 0) {
-      user.data$current.g <- user.data$current.g[ ,to.keep , ]
+  isolate({
+    df <- by.locus()
+    i <- which(df$pct.missing >= input$sl.samples.missing)
+    if(length(i) > 0) {
+      loc <- as.character(df$locus[i])
+      all.loci <- locNames(vals$gtypes)
+      to.keep <- setdiff(all.loci, loc)
+      if(length(to.keep) > 0) {
+        vals$gtypes <- vals$gtypes[ ,to.keep , ]
+        qaqc.reports$loci[loc, "step.removed"] <- vals$qaqc.step
+        qaqc.reports$loci[loc, "threshold"] <- input$sl.samples.missing
+      }
     }
-  }
+  })
 })

@@ -44,6 +44,7 @@ summarizeSamples <- function(g, sort.by.strata = FALSE) {
     result
   }))
   rownames(result) <- indNames(g)
+  result$id <- as.character(result$id)
   
   if(sort.by.strata) result <- result[order(result$strata, result$id), ]
   result

@@ -1,10 +1,7 @@
 ui.loci.hmzg <- function() {
   sidebarLayout(
     sidebarPanel(
-      sliderInput(
-        "sl.loci.hmzg", label = h4("2) Percent of homozygous genotypes"),
-        min = 0, max = 1, value = 0.8
-      ),
+      sliderInput("sl.loci.hmzg", h4("Percent of homozygous loci"), 0, 1, 0.8),
       textOutput("txt.loci.hmzg"),
       plotOutput("plot.loci.hmzg")
     ),
@@ -16,14 +13,15 @@ ui.loci.hmzg <- function() {
 }
 
 output$txt.loci.hmzg <- renderPrint({
-  if(is.null(user.data$current.g)) return()
-  cat("Number of loci:", input$sl.loci.hmzg * nLoc(user.data$current.g))
+  if(is.null(vals$gtypes)) return()
+  num.hmzg <- floor(input$sl.loci.hmzg * nLoc(vals$gtypes))
+  cat("Number of loci:", num.hmzg)
 })
 
-output$dt.loci.hmzg <- renderDataTable({
+df.loci.hmzg <- reactive({
   df <- by.sample()
   if(!is.null(df)) {
-    num.genotyped <- nLoc(user.data$current.g) - df$num.loci.missing.genotypes
+    num.genotyped <- nLoc(vals$gtypes) - df$num.loci.missing.genotypes
     num.hmzg <- df$pct.loci.homozygous * num.genotyped
     df <- df[, c("id", "strata", "pct.loci.homozygous")]
     df <- cbind(df, '# Homozygous' = num.hmzg)
@@ -32,6 +30,11 @@ output$dt.loci.hmzg <- renderDataTable({
     df <- df[df[, 3] >= input$sl.loci.hmzg, ]
     df <- round(df, 4)
   }
+  df
+})
+
+output$dt.loci.hmzg <- renderDataTable({
+  df <- df.loci.hmzg()
   DT::datatable(
     df, rownames = FALSE,
     options = list(paging = nrow(df) > 10, searching = FALSE, scrollX = TRUE)
@@ -52,14 +55,18 @@ output$plot.loci.hmzg <- renderPlot({
 })
 
 observeEvent(input$btn.remove.loci.hmzg, {
-  df <- by.sample()
-  i <- which(df$pct.loci.homozygous >= input$sl.loci.hmzg)
-  if(length(i) > 0) {
-    id <- df$id[i]
-    all.inds <- indNames(user.data$current.g)
-    to.keep <- setdiff(all.inds, id)
-    if(length(to.keep) > 0) {
-      user.data$current.g <- user.data$current.g[to.keep, , ]
+  isolate({
+    df <- by.sample()
+    i <- which(df$pct.loci.homozygous >= input$sl.loci.hmzg)
+    if(length(i) > 0) {
+      id <- as.character(df$id[i])
+      all.inds <- indNames(vals$gtypes)
+      to.keep <- setdiff(all.inds, id)
+      if(length(to.keep) > 0) {
+        vals$gtypes <- vals$gtypes[to.keep, , ]
+        qaqc.reports$samples[id, "step.removed"] <- vals$qaqc.step
+        qaqc.reports$samples[id, "threshold"] <- input$sl.loci.hmzg
+      }
     }
-  }
+  })
 })

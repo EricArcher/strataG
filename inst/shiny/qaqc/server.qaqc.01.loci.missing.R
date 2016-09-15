@@ -1,10 +1,7 @@
 ui.loci.missing <- function() {
   sidebarLayout(
     sidebarPanel(
-      sliderInput(
-        "sl.loci.missing", label = h4("1) Percent of missing genotypes"),
-        min = 0, max = 1, value = 0.8
-      ),
+      sliderInput("sl.loci.missing", h4("Percent of missing loci"), 0, 1, 0.8),
       textOutput("txt.loci.missing"),
       plotOutput("plot.loci.missing")
     ),
@@ -16,8 +13,9 @@ ui.loci.missing <- function() {
 }
 
 output$txt.loci.missing <- renderPrint({
-  if(is.null(user.data$current.g)) return()
-  cat("Number of loci:", input$sl.loci.missing * nLoc(user.data$current.g))
+  if(is.null(isolate(vals$gtypes))) return()
+  num.missing <- floor(input$sl.loci.missing * nLoc(isolate(vals$gtypes)))
+  cat("Number of loci:", num.missing)
 })
 
 output$dt.loci.missing <- renderDataTable({
@@ -49,14 +47,18 @@ output$plot.loci.missing <- renderPlot({
 })
 
 observeEvent(input$btn.remove.loci.missing, {
-  df <- by.sample()
-  i <- which(df$pct.loci.missing.genotypes >= input$sl.loci.missing)
-  if(length(i) > 0) {
-    id <- df$id[i]
-    all.inds <- indNames(current.g)
-    to.keep <- setdiff(all.inds, id)
-    if(length(to.keep) > 0) {
-      user.data$current.g <- user.data$current.g[to.keep, , ]
+  isolate({
+    df <- by.sample()
+    i <- which(df$pct.loci.missing.genotypes >= input$sl.loci.missing)
+    if(length(i) > 0) {
+      id <- as.character(df$id[i])
+      all.inds <- indNames(current.g)
+      to.keep <- setdiff(all.inds, id)
+      if(length(to.keep) > 0) {
+        vals$gtypes <- vals$gtypes[to.keep, , ]
+        qaqc.reports$samples[id, "step.removed"] <- vals$qaqc.step
+        qaqc.reports$samples[id, "threshold"] <- input$sl.loci.missing
+      }
     }
-  }
+  })
 })

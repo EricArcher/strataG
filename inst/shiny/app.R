@@ -6,26 +6,33 @@ library(reshape2)
 library(strataG)
 library(parallel)
 
-source("ui.load.R", local = TRUE)
-source("ui.gtypes.R", local = TRUE)
-source("ui.qaqc.R", local = TRUE)
-source("ui.popstruct.R", local = TRUE)
+source(file.path("setup", "ui.setup.R"), local = TRUE, chdir = TRUE)
+source(file.path("load.data", "ui.load.R"), local = TRUE, chdir = TRUE)
+source(file.path("qaqc", "ui.qaqc.R"), local = TRUE, chdir = TRUE)
+source(file.path("popstruct", "ui.popstruct.R"), local = TRUE, chdir = TRUE)
 
 shinyApp(
-  ui = shinyUI(fluidPage(
-    titlePanel("strataG GUI"),
-    tabsetPanel(
-      id = "main.tab",
-      ui.load(), ui.gtypes(), ui.qaqc(), ui.popstruct()
-    ) 
-  )),
-  server = shinyServer(function(input, output, session) {
-    user.data <- reactiveValues(current.g = NULL)
-    qaqc.flow <- reactiveValues(step = 1)
-    volumes <- getVolumes()
-    source("server.load.R", local = TRUE)
-    source("server.gtypes.R", local = TRUE)
-    source("server.qaqc.R", local = TRUE)
-    source("server.popstruct.R", local = TRUE)
-  })
+  ui = fluidPage(
+    verticalLayout(
+      titlePanel("strataG GUI"),
+      hr(),
+      tabsetPanel(
+        id = "main.tab", ui.setup(), ui.load(), ui.qaqc(), ui.popstruct()
+      )
+    )
+  ),
+  
+  server = function(input, output, session) {
+    vals <- reactiveValues(
+      wd = NULL,
+      scratch.env = new.env(),
+      gtypes = NULL,
+      qaqc.step = 1
+    )
+    
+    source(file.path("setup", "server.setup.R"), local = TRUE, chdir = TRUE)
+    source(file.path("load.data", "server.load.R"), local = TRUE, chdir = TRUE)
+    source(file.path("qaqc", "server.qaqc.R"), local = TRUE, chdir = TRUE)
+    source(file.path("popstruct", "server.popstruct.R"), local = TRUE, chdir = TRUE)
+  }
 )

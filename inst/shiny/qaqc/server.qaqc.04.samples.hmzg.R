@@ -1,10 +1,7 @@
 ui.samples.hmzg <- function() {
   sidebarLayout(
     sidebarPanel(
-      sliderInput(
-        "sl.samples.hmzg", label = h4("4) Percent of homozygous loci"),
-        min = 0, max = 1, value = 0.8
-      ),
+      sliderInput("sl.samples.hmzg", h4("Percent of homozygous samples"), 0, 1, 0.8),
       textOutput("txt.samples.hmzg"),
       plotOutput("plot.samples.hmzg")
     ),
@@ -16,11 +13,12 @@ ui.samples.hmzg <- function() {
 }
 
 output$txt.samples.hmzg <- renderPrint({
-  if(is.null(user.data$current.g)) return()
-  cat("Number of samples:", input$sl.samples.hmzg * nInd(user.data$current.g))
+  if(is.null(vals$gtypes)) return()
+  num.hmzg <- floor(input$sl.samples.hmzg * nInd(vals$gtypes))
+  cat("Number of samples:", num.hmzg)
 })
 
-output$dt.samples.hmzg <- renderDataTable({
+df.samples.hmzg <- reactive({
   df <- by.locus()
   if(!is.null(df)) {
     df <- df[, c("locus", "pct.hmzg", "num.hmzg")]
@@ -29,6 +27,11 @@ output$dt.samples.hmzg <- renderDataTable({
     df <- df[df[, 2] >= input$sl.samples.hmzg, ]
     df <- round(df, 4)
   }
+  df
+})
+
+output$dt.samples.hmzg <- renderDataTable({
+  df <- df.samples.hmzg()
   DT::datatable(
     df, rownames = FALSE,
     options = list(paging = nrow(df) > 10, searching = FALSE, scrollX = TRUE)
@@ -49,14 +52,18 @@ output$plot.samples.hmzg <- renderPlot({
 })
 
 observeEvent(input$btn.remove.samples.hmzg, {
-  df <- by.locus()
-  i <- which(df$pct.hmzg >= input$sl.samples.hmzg)
-  if(length(i) > 0) {
-    loc <- df$locus[i]
-    all.loci <- locNames(user.data$current.g)
-    to.keep <- setdiff(all.loci, loc)
-    if(length(to.keep) > 0) {
-      user.data$current.g <- user.data$current.g[ ,to.keep , ]
+  isolate({
+    df <- by.locus()
+    i <- which(df$pct.hmzg >= input$sl.samples.hmzg)
+    if(length(i) > 0) {
+      loc <- as.character(df$locus[i])
+      all.loci <- locNames(vals$gtypes)
+      to.keep <- setdiff(all.loci, loc)
+      if(length(to.keep) > 0) {
+        vals$gtypes <- vals$gtypes[ ,to.keep , ]
+        qaqc.reports$loci[loc, "step.removed"] <- vals$qaqc.step
+        qaqc.reports$loci[loc, "threshold"] <- input$sl.samples.hmzg
+      }
     }
-  }
+  })
 })

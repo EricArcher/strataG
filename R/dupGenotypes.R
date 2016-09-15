@@ -37,8 +37,8 @@ dupGenotypes <- function(g, num.shared = 0.8, num.cores = 1) {
   shared.locs <- propSharedLoci(g, type = "ids", num.cores = num.cores)
   dup.df <- shared.locs[shared.locs[, "prop.same"] >= num.shared, ]
   if(nrow(dup.df) > 0) {
-    dup.df$strata.1 <- strata(g)[dup.df$ids.1]
-    dup.df$strata.2 <- strata(g)[dup.df$ids.2]
+    dup.df$strata.1 <- as.character(strata(g)[dup.df$ids.1])
+    dup.df$strata.2 <- as.character(strata(g)[dup.df$ids.2])
     dup.df$mismatch.loci <- sapply(1:nrow(dup.df), function(i) {
       shared.prop <- as.matrix(dup.df[i, locNames(g)])
       loc.diff <- locNames(g)[which(shared.prop < 1)]

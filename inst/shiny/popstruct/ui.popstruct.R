@@ -15,7 +15,7 @@ ui.popstruct <- function() {
           "nrep", label = h4("Number of permutations"), 
           min = 0, value = 1000
         ),
-        actionButton("btn.run.popstruct", label = "Run")
+        actionButton("run.popstruct", label = "Run")
       ),
       mainPanel(
         tabsetPanel(
