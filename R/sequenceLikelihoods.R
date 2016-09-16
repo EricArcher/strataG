@@ -78,6 +78,7 @@ sequenceLikelihoods <- function(x, model = "N", pairwise.deletion = FALSE,
       theme(axis.title.y = element_blank())
     print(p)
   }
-    
+  
+  rownames(df) <- NULL  
   df
 }

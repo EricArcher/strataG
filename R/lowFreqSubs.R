@@ -24,20 +24,21 @@ lowFreqSubs <- function(x, min.freq = 3, motif.length = 10, ...) {
   if(!inherits(x, "DNAbin")) stop("'x' must be a DNAbin object")
   x <- as.character(as.matrix(x))
   
-  motif.half <- round(motif.length / 2, 0)
+  motif.half <- max(1, round(motif.length / 2, 0))
   var.sites <- variableSites(x)
   has.min.freq <- apply(var.sites$site.freq, 2, function(site.freq) {
     site.freq <- site.freq[site.freq > 0 & site.freq < min.freq]
     length(site.freq) > 0
   })
-  sites.w.min.freq <- var.sites$site.freq[, has.min.freq]
+  if(!any(has.min.freq)) return(NULL)
+  sites.w.min.freq <- var.sites$site.freq[, has.min.freq, drop = FALSE]
   sites.to.check <- lapply(colnames(sites.w.min.freq), function(site) {
     position <- as.numeric(site)
     site.freq <- sites.w.min.freq[, site]
     bases <- names(site.freq)[which(site.freq > 0 & site.freq < min.freq)]
     site <- x[, position]
     id <- names(site)[which(site %in% bases)]
-    to.check <- data.frame(id = id, site = rep(position, length(id)))
+    to.check <- data.frame(id = id, site = rep(position, length(id)), stringsAsFactors = FALSE)
     to.check$base <- x[id, position]      
     to.check$motif <- sapply(id, function(i) {
       start.bp <- max(1, position - motif.half)
@@ -46,8 +47,8 @@ lowFreqSubs <- function(x, min.freq = 3, motif.length = 10, ...) {
     })
     to.check
   })
-  sites.to.check <- do.call(rbind, sites.to.check)  
-  sites.to.check <- sites.to.check[order(sites.to.check$id), ]
+  sites.to.check <- do.call(rbind, sites.to.check)
+  sites.to.check <- sites.to.check[order(sites.to.check$id, sites.to.check$site), , drop = FALSE]
   rownames(sites.to.check) <- NULL
   sites.to.check
 }

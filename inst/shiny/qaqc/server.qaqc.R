@@ -1,3 +1,13 @@
+output$uiQAQC <- renderUI({
+  if(is.null(vals$gtypes)) {
+    NULL
+  } else if(ploidy(vals$gtypes) == 1) {
+    qaqcHaploid()
+  } else {
+    verticalLayout(uiOutput("stepLabel"), qaqcDiploid())
+  }
+})
+
 output$flowStep <- reactive(vals$qaqc.step)
 
 output$stepLabel <- renderUI({
@@ -47,10 +57,6 @@ output$stepLabel <- renderUI({
     ),
     hr()
   )
-})
-
-output$qaqcHaploidStep <- renderUI({
-  if(is.null(vals$qaqc.step)) return()
 })
   
 output$qaqcDiploidStep <- renderUI({

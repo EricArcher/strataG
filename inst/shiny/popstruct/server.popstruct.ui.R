@@ -6,7 +6,16 @@ ui.haploid.metrics <- function() {
     conditionalPanel(
       "input.phist == TRUE",
       hr(),
-      checkboxInput("pairwise.deletion", "Pairwise deletion", value = TRUE)
+      checkboxInput("pairwise.deletion", "Pairwise deletion", value = TRUE),
+      selectInput(
+        "subModel",
+        "Choose a substitution model",
+        choices = c(
+          "raw", "TS", "TV", "JC69", "K80", "F81", "K81", "F84", "BH87",
+          "T92", "TN93", "GG95", "logdet", "paralin"
+        ),
+        selected = "TN93"
+      )
     )
   )
 }
@@ -25,6 +34,6 @@ ui.diploid.metrics <- function() {
 }
 
 output$metrics <- renderUI({
-  if(length(input$ploidy) == 0) return()
-  if(input$ploidy == "1") ui.haploid.metrics() else ui.diploid.metrics()
+  if(is.null(vals$gtypes)) return()
+  if(ploidy(vals$gtypes) == 1) ui.haploid.metrics() else ui.diploid.metrics()
 })

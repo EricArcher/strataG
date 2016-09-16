@@ -33,6 +33,7 @@ shinyApp(
     source(file.path("setup", "server.setup.R"), local = TRUE, chdir = TRUE)
     source(file.path("load.data", "server.load.R"), local = TRUE, chdir = TRUE)
     source(file.path("qaqc", "server.qaqc.R"), local = TRUE, chdir = TRUE)
+    source(file.path("qaqc", "server.qaqc.haploid.R"), local = TRUE, chdir = TRUE)
     source(file.path("popstruct", "server.popstruct.R"), local = TRUE, chdir = TRUE)
   }
 )

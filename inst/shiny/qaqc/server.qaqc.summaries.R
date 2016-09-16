@@ -19,7 +19,7 @@ dups <- reactive({
   if(is.null(vals$gtypes)) NULL else {
     df <- dupGenotypes(vals$gtypes, 0, detectCores(logical = F) - 1)
     if(first.run) {
-      qaqc.reports$dups <- df
+      qaqc.reports$dups <<- df
       first.run <<- FALSE
     }
     df
@@ -36,6 +36,7 @@ loadHweReportTabs <- function(x) {
   output[[strata.id["hwe.report", x]]] <- renderDataTable({ 
     DT::datatable(
       df, rownames = FALSE,
+      selection = "none",
       options = list(paging = nrow(df) > 10, searching = FALSE, scrollX = TRUE)
     )
   })
@@ -45,6 +46,7 @@ loadHweReportTabs <- function(x) {
   output[[strata.id["hwe.jack.report", x]]] <- renderDataTable({
     DT::datatable(
       infl.df, rownames = FALSE,
+      selection = "none",
       options = list(paging = nrow(infl.df) > 10, searching = FALSE, scrollX = TRUE)
     )
   })
@@ -73,6 +75,7 @@ loadLdReportTabs <- function(x) {
   output[[strata.id["ld.report", x]]] <- renderDataTable({ 
     DT::datatable(
       qaqc.reports$ld[[x]], rownames = FALSE,
+      selection = "none",
       options = list(paging = nrow(df) > 10, searching = FALSE, scrollX = TRUE)
     )
   })
