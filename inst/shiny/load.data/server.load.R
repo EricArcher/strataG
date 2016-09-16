@@ -58,7 +58,7 @@ observeEvent(input$loadCsvGtypes, {
   isolate({
     gen.data <- gen.data.df()
     vals$gtypes <- if(is.null(gen.data)) NULL else {
-      df2gtypes(
+      g <- df2gtypes(
         gen.data,
         ploidy = as.numeric(input$ploidy),
         id.col = if(as.numeric(input$idCol) == 0) NULL else as.numeric(input$idCol),
@@ -68,6 +68,9 @@ observeEvent(input$loadCsvGtypes, {
         schemes = schemes.df(),
         description = if(input$description == "") NULL else input$description
       )
+      if(ploidy(g) == 1 & !is.null(sequences(g)) & input$labelHaps) {
+        labelHaplotypes(g)$gtypes
+      } else g
     }
     if(!is.null(vals$gtypes)) gtypesLoaded()
   })

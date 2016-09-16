@@ -30,6 +30,10 @@ uiLoadCsv <- function() {
       selectInput(
         "fastaFile", label = h4("Choose a FASTA formatted file of sequences"),
         choices = fasta.fnames
+      ),
+      conditionalPanel(
+        "input.fastaFile != ''",
+        checkboxInput("labelHaps", "Label haplotypes", value = TRUE)
       )
     ),
     
