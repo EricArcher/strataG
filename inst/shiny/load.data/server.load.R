@@ -1,22 +1,22 @@
 source("server.load.ui.R", local = TRUE)
 
 gen.data.df <- reactive({
-  x <- input$gen.data
-  if(is.null(x)) NULL else readGenData(x$datapath)
+  x <- input$genDataFile
+  if(x == "") NULL else readGenData(file.path(vals$wd, x))
 })
 
 schemes.df <- reactive({
-  x <- input$schemes
-  if(is.null(x)) NULL else {
-    df <- readGenData(x$datapath)
+  x <- input$schemeFile
+  if(x == "") NULL else {
+    df <- readGenData(file.path(vals$wd, x))
     rownames(df) <- df[, 1]
     df
   }
 })
 
 seqs.DNAbin <- reactive({
-  x <- input$fasta
-  if(is.null(x)) NULL else read.fasta(x$datapath)
+  x <- input$fastaFile
+  if(x == "") NULL else read.fasta(file.path(vals$wd, x))
 })
 
 
@@ -44,11 +44,13 @@ output$file.fasta <- renderPrint(seqs.DNAbin())
 gtypesLoaded <- function() {      
   vals$qaqc.step <- 1
   first.run <<- TRUE
-  qaqc.reports <<- list()
-  qaqc.reports$samples <<- by.sample()
-  qaqc.reports$samples$threshold <<- qaqc.reports$samples$step.removed <<- NA
-  qaqc.reports$loci <<- by.locus()
-  qaqc.reports$loci$threshold <<- qaqc.reports$loci$step.removed <<- NA 
+  if(ploidy(vals$gtypes) > 1) {
+    qaqc.reports <<- list()
+    qaqc.reports$samples <<- by.sample()
+    qaqc.reports$samples$threshold <<- qaqc.reports$samples$step.removed <<- NA
+    qaqc.reports$loci <<- by.locus()
+    qaqc.reports$loci$threshold <<- qaqc.reports$loci$step.removed <<- NA 
+  }
 }
 
 # load gtypes - responds to loadCsvGtypes actionButton

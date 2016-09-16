@@ -1,8 +1,17 @@
 uiLoadCsv <- function() {
+  csv.fnames <- if(is.null(vals$wd)) NULL else {
+    fnames <- dir(vals$wd, pattern = "(*.csv$)", ignore.case = TRUE)
+    c("Choose a file" = "", fnames)
+  }
+  fasta.fnames <- if(is.null(vals$wd)) NULL else {
+    fnames <- dir(vals$wd, pattern = "(*.fasta$)|(*.fas$)|(*.txt)", ignore.case = TRUE)
+    c("Choose a file" = "", fnames)
+  }
+  
   verticalLayout(
-    fileInput(
-      "gen.data", label = h4("Choose a .csv file of genetic data"),
-      accept = c('text/csv', 'text/comma-separated-values,text/plain', '.csv')
+    selectInput(
+      "genDataFile", label = h4("Choose a .csv file of genetic data"),
+      choices = csv.fnames
     ),
     uiOutput("col.select"),
     
@@ -11,17 +20,16 @@ uiLoadCsv <- function() {
       choices = list("haploid" = 1, "diploid" = 2), selected = 2
     ),
     
-    fileInput(
-      "schemes", 
-      label = h4("Choose a .csv file of stratification schemes (optional)"),
-      accept = c('text/csv', 'text/comma-separated-values,text/plain', '.csv')
+    selectInput(
+      "schemeFile", label = h4("Choose a .csv file of stratification schemes (optional)"),
+      choices = csv.fnames
     ),
     
     conditionalPanel(
       "input.ploidy == '1'",
-      fileInput(
-        "fasta", label = h4("Choose a FASTA formatted file of sequences"),
-        accept = c(".fasta", ".fas", ".txt")
+      selectInput(
+        "fastaFile", label = h4("Choose a FASTA formatted file of sequences"),
+        choices = fasta.fnames
       )
     ),
     

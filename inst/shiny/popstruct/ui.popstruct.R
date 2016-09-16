@@ -19,6 +19,7 @@ ui.popstruct <- function() {
       ),
       mainPanel(
         actionButton("savePopStructResults", label = "Save results"),
+        hr(),
         tabsetPanel(
           tabPanel("Overall", dataTableOutput("ovlResults")),
           tabPanel("Pairwise", dataTableOutput("pwsResults"))

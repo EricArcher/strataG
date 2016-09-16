@@ -1,4 +1,4 @@
-VolumeRoots <- c(HOME = Sys.getenv("HOME"), home = "~", getVolumes()())
+VolumeRoots <- c(HOME = Sys.getenv("HOME"), getVolumes()())
 shinyDirChoose(input, "workingDirBtn", session = session, roots = VolumeRoots)
 wd <- reactive({
   if(!is.null(input$workingDirBtn)) {

@@ -4,7 +4,7 @@ ui.haploid.metrics <- function() {
     checkboxInput("fst", "Fst", value = TRUE),
     checkboxInput("phist", "Phist", value = TRUE),
     conditionalPanel(
-      "input.phist == TRUE",
+      "input.phist",
       hr(),
       checkboxInput("pairwise.deletion", "Pairwise deletion", value = TRUE),
       selectInput(

@@ -3,8 +3,16 @@ qaqcHaploid <- function() {
     tabPanel(
       "Sequence summary",
       splitLayout(
-        verticalLayout(titlePanel(h4("By strata summary")), dataTableOutput("seqSmryTable")),
-        verticalLayout(titlePanel(h4("Frequency table")), dataTableOutput("hapFreqTable"))
+        verticalLayout(
+          titlePanel(h4("By strata summary")), 
+          dataTableOutput("seqSmryTable"),
+          actionButton("saveSeqSmry", "Save table")
+        ),
+        verticalLayout(
+          titlePanel(h4("Frequency table")), 
+          dataTableOutput("hapFreqTable"),
+          actionButton("saveHapFreq", "Save table")
+        )
       )
     ),
     tabPanel(
@@ -24,7 +32,8 @@ qaqcHaploid <- function() {
           numericInput(
             "smrySeqLikeN", "Number of sequences to plot", 
             value = 20, min = 5, step = 1
-          )
+          ),
+          actionButton("saveSeqLike", "Save likelihood table")
         ),
         mainPanel(plotOutput("seqLikePlot"))
       )
@@ -40,7 +49,8 @@ qaqcHaploid <- function() {
           numericInput(
             "motifLength", "Length of motif around low frequency base",
             value = 10, min = 4, step = 2
-          )
+          ),
+          actionButton("saveLowFreqSubs", "Save table")
         ),
         mainPanel(dataTableOutput("lowFreqSubTable"))
       )
