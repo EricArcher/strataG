@@ -17,7 +17,13 @@ by.locus <- reactive({
 
 dups <- reactive({
   if(is.null(vals$gtypes)) NULL else {
+    if(!is.null(id)) removeNotification(id)
+    id <<- showNotification(
+      "Looking for duplicates...", duration = NULL, closeButton = FALSE,
+      type = "message"
+    )
     df <- dupGenotypes(vals$gtypes, 0, detectCores(logical = F) - 1)
+    removeNotification(id)
     if(first.run) {
       qaqc.reports$dups <<- df
       first.run <<- FALSE
@@ -55,10 +61,16 @@ loadHweReportTabs <- function(x) {
 hw.jack <- reactive({
   isolate({
     if(is.null(vals$gtypes)) NULL else {
+      if(!is.null(id)) removeNotification(id)
+      id <<- showNotification(
+        "Running HWE jackknife...", duration = NULL, closeButton = FALSE,
+        type = "message"
+      )
       jack.list <- lapply(
         strataSplit(vals$gtypes), jackHWE, 
         use.genepop = input$hwe.source == 2, show.progress = FALSE
       )
+      removeNotification(id)
       if(first.run) {
         qaqc.reports$hwe.jack <<- sapply(jack.list, function(x) {
           list(p.mat = hwe.p.mat(x$obs), infl = jackInfluential(x)$influential)
@@ -84,7 +96,13 @@ loadLdReportTabs <- function(x) {
 ld <- reactive({
   isolate({
     if(is.null(vals$gtypes)) NULL else {
+      if(!is.null(id)) removeNotification(id)
+      id <<- showNotification(
+        "Calculating linkage disequilibrium...", duration = NULL, 
+        closeButton = FALSE, type = "message"
+      )
       ld.list <- lapply(strataSplit(vals$gtypes), LDgenepop)
+      removeNotification(id)
       if(first.run) {
         qaqc.reports$ld <<- ld.list
         for(x in colnames(strata.id)) loadLdReportTabs(x)

@@ -5,6 +5,8 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @importFrom shiny runApp
+#' @importFrom shinyFiles shinyDirChoose
+#' @importFrom DT datatable
 #' @export
 #' 
 strataGUI <- function() {

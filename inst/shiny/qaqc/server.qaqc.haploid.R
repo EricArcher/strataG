@@ -43,6 +43,7 @@ observeEvent(input$saveSeqSmry, {
     if(!is.null(df)) {
       fname <- paste0(save.fname("QAQC", vals), "seq.smry.csv")
       write.csv(df, file = fname, row.names = FALSE)
+      showNotification("Sequence summaries saved", duration = 2, type = "message")
     }
   })
 })
@@ -62,6 +63,7 @@ observeEvent(input$saveHapFreq, {
     if(!is.null(df)) {
       fname <- paste0(save.fname("QAQC", vals), "hap.freq.csv")
       write.csv(df, file = fname, row.names = FALSE)
+      showNotification("Haplotype frequencies saved", duration = 2, type = "message")
     }
   })
 })
@@ -89,6 +91,7 @@ observeEvent(input$saveSeqLike, {
       if(!is.null(df)) {
         fname <- paste0(save.fname("QAQC", vals), "seq.likelihoods.csv")
         write.csv(df, file = fname, row.names = FALSE)
+        showNotification("Sequence likelihoods saved", duration = 2, type = "message")
       }
     })
   }
@@ -115,6 +118,7 @@ observeEvent(input$saveLowFreqSubs, {
       if(!is.null(df)) {
         fname <- paste0(save.fname("QAQC", vals), "low.freq.subs.csv")
         write.csv(df, file = fname, row.names = FALSE)
+        showNotification("Low frequency substitutions saved", duration = 2, type = "message")
       }
     })
   }

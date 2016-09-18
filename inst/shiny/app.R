@@ -29,6 +29,7 @@ shinyApp(
       gtypes = NULL,
       qaqc.step = 1
     )
+    id <- NULL
     
     source(file.path("setup", "server.setup.R"), local = TRUE, chdir = TRUE)
     source(file.path("load.data", "server.load.R"), local = TRUE, chdir = TRUE)

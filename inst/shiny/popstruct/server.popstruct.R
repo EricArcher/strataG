@@ -45,7 +45,13 @@ observeEvent(input$run.popstruct, {
   isolate({
     output$ovlResults <- renderDataTable({
       if(is.null(vals$gtypes) | !input$ovl) NULL else {
+        if(!is.null(id)) removeNotification(id)
+        id <<- showNotification(
+          "Calculating overall tests...", duration = NULL, 
+          closeButton = FALSE, type = "message"
+        )
         df <- round(ovl.df(), 4)
+        removeNotification(id)
         DT::datatable(
           df, rownames = TRUE,
           options = list(paging = nrow(df) > 10, searching = FALSE, scrollX = TRUE)
@@ -55,7 +61,13 @@ observeEvent(input$run.popstruct, {
     
     output$pwsResults <- renderDataTable({
       if(is.null(vals$gtypes) | !input$ovl) NULL else {
+        if(!is.null(id)) removeNotification(id)
+        id <<- showNotification(
+          "Calculating pairwise tests...", duration = NULL, 
+          closeButton = FALSE, type = "message"
+        )
         df <- round(pws.df(), 4)
+        removeNotification(id)
         DT::datatable(
           df, rownames = FALSE,
           options = list(paging = nrow(df) > 10, searching = FALSE, scrollX = TRUE)
@@ -87,5 +99,8 @@ observeEvent(input$savePopStructResults, {
         write.csv(df, file = fname, row.names = FALSE)
       }
     }
+    
+    if(!is.null(id)) removeNotification(id)
+    showNotification("Test results saved", duration = 2, type = "message")
   })
 })

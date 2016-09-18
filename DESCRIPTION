@@ -13,14 +13,14 @@ BugReports: https://github.com/EricArcher/strataG/issues
 Depends:
     R (>= 3.2.0),
     apex,
-    adegenet,
-    shiny
+    adegenet
 Suggests:
     knitr,
     rmarkdown
 Imports:
     ape,
     copula,
+    DT,
     ggplot2,
     graphics,
     grid,
@@ -32,6 +32,8 @@ Imports:
     RColorBrewer,
     Rcpp,
     reshape2,
+    shiny,
+    shinyFiles,
     stats,
     swfscMisc,
     utils

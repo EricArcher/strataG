@@ -126,5 +126,6 @@ observeEvent(input$saveReports, {
       }
     }
     
+    showNotification("Reports written", duration = 2, type = "message")
   })
 })

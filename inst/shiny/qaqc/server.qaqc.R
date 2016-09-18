@@ -70,7 +70,7 @@ output$qaqcDiploidStep <- renderUI({
 
 output$nextButton <- renderUI({
   if(vals$qaqc.step == 8) return()
-  actionButton("btn.qaqc.next", label = "Next")
+  actionButton("btn.qaqc.next", label = "Go to next step")
 })
 
 observeEvent(input$btn.qaqc.next, {
