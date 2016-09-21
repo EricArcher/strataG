@@ -1,10 +1,10 @@
 ---
-title: "QA/QC"
+title: "Quality Assurance / Quality Control"
 author: "Eric Archer"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{5. QA/QC}
+  %\VignetteIndexEntry{5. Quality Assurance / Quality Control}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---

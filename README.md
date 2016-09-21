@@ -39,17 +39,22 @@ browseVignettes("strataG")
 # To open a specific vignette
 vignette("gtypes")
 ```
-* [Creating and Manipulating gtypes Objects (gtypes)](https://github.com/ericarcher/stratag/blob/master/vignettes/gtypes.Rmd)
-* [By-Locus Summaries (summaries)](https://github.com/ericarcher/stratag/blob/master/vignettes/summaries.Rmd) 
-* [Working with sequences (sequences)](https://github.com/ericarcher/stratag/blob/master/vignettes/sequences.Rmd)
-* [Tests of Population Structure (population.structure)](https://github.com/ericarcher/stratag/blob/master/vignettes/population.structure.Rmd)
-* [QA/QC (qaqc)](https://github.com/ericarcher/stratag/blob/master/vignettes/qaqc.Rmd)
-* [Installing External Programs (external.programs)](https://github.com/ericarcher/stratag/blob/master/vignettes/external.programs.Rmd)
+* Creating and Manipulating gtypes Objects ([ gtypes](https://github.com/ericarcher/stratag/blob/master/vignettes/gtypes.Rmd))
+* By-Locus Summaries ([ summaries](https://github.com/ericarcher/stratag/blob/master/vignettes/summaries.Rmd))
+* Working with sequences ([ sequences](https://github.com/ericarcher/stratag/blob/master/vignettes/sequences.Rmd))
+* Tests of Population Structure ([population.structure](https://github.com/ericarcher/stratag/blob/master/vignettes/population.structure.Rmd))
+* Quality Assurance / Quality Control ([qaqc](https://github.com/ericarcher/stratag/blob/master/vignettes/qaqc.Rmd))
+* Installing External Programs ([external.programs](https://github.com/ericarcher/stratag/blob/master/vignettes/external.programs.Rmd))
 
 ## Citation
 
-The paper can be obtained [here](http://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12559/abstract), and is cited as:   
+The paper can be obtained [here](http://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12559/abstract), and is cited as (preferred):   
+
 Archer, F. I., Adams, P. E. and Schneiders, B. B. (2016), *strataG*: An *R* package for manipulating, summarizing and analysing population genetic data. Mol Ecol Resour. doi:10.1111/1755-0998.12559
+
+If desired, the current release version of the package can be cited as:  
+
+Archer, F. 2016. *strataG*: An *R* package for manipulating, summarizing and analysing population genetic data. R package version 1.0.6. Zenodo. http://doi.org/10.5281/zenodo.60416  
 
 ## Contact
 
