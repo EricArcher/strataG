@@ -30,6 +30,27 @@ if (!require('devtools')) install.packages('devtools')
 devtools::install_github('ericarcher/strataG', build_vignettes = TRUE)
 ```
 
+## Vignettes
+
+```r
+# To see the list of available vignettes
+browseVignettes("strataG") 
+
+# To open a specific vignette
+vignette("gtypes")
+```
+* [Creating and Manipulating gtypes Objects (gtypes)](https://github.com/ericarcher/stratag/blob/master/vignettes/gtypes.Rmd)
+* [By-Locus Summaries (summaries)](https://github.com/ericarcher/stratag/blob/master/vignettes/summaries.Rmd) 
+* [Working with sequences (sequences)](https://github.com/ericarcher/stratag/blob/master/vignettes/sequences.Rmd)
+* [Tests of Population Structure (population.structure)](https://github.com/ericarcher/stratag/blob/master/vignettes/population.structure.Rmd)
+* [QA/QC (qaqc)](https://github.com/ericarcher/stratag/blob/master/vignettes/qaqc.Rmd)
+* [Installing External Programs (external.programs)](https://github.com/ericarcher/stratag/blob/master/vignettes/external.programs.Rmd)
+
+## Citation
+
+The paper can be obtained [here](http://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12559/abstract), and is cited as:   
+Archer, F. I., Adams, P. E. and Schneiders, B. B. (2016), *strataG*: An *R* package for manipulating, summarizing and analysing population genetic data. Mol Ecol Resour. doi:10.1111/1755-0998.12559
+
 ## Contact
 
 * submit suggestions and bug-reports: <https://github.com/ericarcher/strataG/issues>
