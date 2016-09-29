@@ -80,6 +80,7 @@ Collate:
     lowFreqSubs.R
     mRatio.R
     mafft.R
+    maverickRun.R
     mega.R
     mostDistantSequences.R
     mostRepresentativeSequences.R
