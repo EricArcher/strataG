@@ -253,7 +253,7 @@ phaseWrite <- function(g, loci, positions = NULL,
     paste(type, collapse = ""), ""
   ), file = in.file)
   
-  g.mat <- as.matrix(sub.g)
+  g.mat <- as.matrix(sub.g, ids = FALSE, strata = FALSE)
   g.mat[is.na(g.mat)] <- "?"
   for(i in 1:nrow(g.mat)) {
     write(c(

@@ -73,6 +73,7 @@ Archer, F. 2016. *strataG*: An *R* package for manipulating, summarizing and ana
 * Added `type` argument to `structurePlot` to select between area and bar charts
 * Changed `haplotypeLikelihoods` to `sequenceLikelihoods`
 * `neiDa` now creates haplotypes before calculating metric
+* Fixed error in `writePhase` that was creating improper input files for PHASE
 
 ## version 1.0.5
 
