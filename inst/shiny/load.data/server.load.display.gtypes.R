@@ -21,8 +21,7 @@ output$gtypeSmry <- renderPrint({
 })
 
 # stratify current gtypes - responds to 'stratify' actionButton
-observe({
-  input$selectedScheme
+observeEvent(input$selectedScheme, {
   isolate({
     if(!is.null(vals$gtypes)) {
       x <- input$selectedScheme
@@ -30,8 +29,9 @@ observe({
       if(x == "Do not stratify") {
         strata(vals$gtypes) <- "Default"
       } else if(x != "") {
-        vals$gtypes <- stratify(vals$gtypes, x)
+        vals$gtypes <- stratify(vals$gtypes, x, drop = FALSE)
       }
+      gtypesLoaded()
     }
   })
 })
@@ -58,8 +58,7 @@ observe({
 })
 
 # save gtypes object to working directory
-observe({
-  input$save.gtypes
+observeEvent(input$save.gtypes, {
   isolate({
     if(!is.null(vals$gtypes) & !is.null(vals$wd) & !is.null(input$gtypesName)) {
       g.name <- input$gtypesName
@@ -68,6 +67,7 @@ observe({
         assign(g.name, vals$gtypes)
         fname <- paste0(g.name, "_gtypes.rdata")
         save(list = g.name, file = file.path(vals$wd, fname))
+        showNotification("File saved", duration = 2, type = "message")
       }
     }
   })

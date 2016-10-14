@@ -64,8 +64,8 @@ observeEvent(input$btn.remove.loci.hmzg, {
       to.keep <- setdiff(all.inds, id)
       if(length(to.keep) > 0) {
         vals$gtypes <- vals$gtypes[to.keep, , ]
-        qaqc.reports$samples[id, "step.removed"] <- vals$qaqc.step
-        qaqc.reports$samples[id, "threshold"] <- input$sl.loci.hmzg
+        vals$qaqc.reports$samples[id, "step.removed"] <<- vals$qaqc.step
+        vals$qaqc.reports$samples[id, "threshold"] <<- input$sl.loci.hmzg
       }
     }
   })

@@ -29,7 +29,7 @@ ui.reports <- function() {
 
 
 output$sampleReport <- renderDataTable({
-  df <- qaqc.reports$samples
+  df <- vals$qaqc.reports$samples
   if(!is.null(df)) df <- round(df, 4)
   DT::datatable(
     df, rownames = FALSE,
@@ -39,7 +39,7 @@ output$sampleReport <- renderDataTable({
 })
 
 output$locusReport <- renderDataTable({
-  df <- qaqc.reports$loci
+  df <- vals$qaqc.reports$loci
   if(!is.null(df)) df <- round(df, 4)
   DT::datatable(
     df, rownames = FALSE,
@@ -49,7 +49,7 @@ output$locusReport <- renderDataTable({
 })
 
 output$dupReport <- renderDataTable({
-  df <- qaqc.reports$dups
+  df <- vals$qaqc.reports$dups
   if(!is.null(df)) df <- round(df, 4)
   DT::datatable(
     df, rownames = FALSE,
@@ -95,34 +95,34 @@ observeEvent(input$saveReports, {
     
     if("by.sample" %in% input$reportsToSave) {
       fname <- file.path(output.dir, paste0(label, "_by.sample.report.csv"))
-      write.csv(qaqc.reports$samples, file = fname, row.names = FALSE)
+      write.csv(vals$qaqc.reports$samples, file = fname, row.names = FALSE)
     }
     
     if("by.locus" %in% input$reportsToSave) {
       fname <- file.path(output.dir, paste0(label, "_by.locus.report.csv"))
-      write.csv(qaqc.reports$loci, file = fname, row.names = FALSE)
+      write.csv(vals$qaqc.reports$loci, file = fname, row.names = FALSE)
     }
     
     if("dups" %in% input$reportsToSave) {
       fname <- file.path(output.dir, paste0(label, "_duplicates.report.csv"))
-      write.csv(qaqc.reports$dups, file = fname, row.names = FALSE)
+      write.csv(vals$qaqc.reports$dups, file = fname, row.names = FALSE)
     }
     
-    if("hwe" %in% input$reportsToSave & !is.null(qaqc.reports$hwe.jack)) {
-      for(x in names(qaqc.reports$hwe.jack)) {
+    if("hwe" %in% input$reportsToSave & !is.null(vals$qaqc.reports$hwe.jack)) {
+      for(x in names(vals$qaqc.reports$hwe.jack)) {
         fname <- file.path(output.dir, paste0(label, "_HWE.pvalues_", x, ".csv"))
-        write.csv(qaqc.reports$hwe.jack[[x]]$p.mat, file = fname, row.names = FALSE)
-        if(!is.null(qaqc.reports$hwe.jack[[x]]$inf)) {
+        write.csv(vals$qaqc.reports$hwe.jack[[x]]$p.mat, file = fname, row.names = FALSE)
+        if(!is.null(vals$qaqc.reports$hwe.jack[[x]]$inf)) {
           fname <- file.path(output.dir, paste0(label, "_HWE.jack.infl_", x, ".csv"))
-          write.csv(qaqc.reports$hwe.jack[[x]]$inf, file = fname, row.names = FALSE)
+          write.csv(vals$qaqc.reports$hwe.jack[[x]]$inf, file = fname, row.names = FALSE)
         }
       }
     }
     
-    if("ld" %in% input$reportsToSave & !is.null(qaqc.reports$ld)) {
-      for(x in names(qaqc.reports$ld)) {
+    if("ld" %in% input$reportsToSave & !is.null(vals$qaqc.reports$ld)) {
+      for(x in names(vals$qaqc.reports$ld)) {
         fname <- file.path(output.dir, paste0(label, "_lnkg.diseq_", x, ".csv"))
-        write.csv(qaqc.reports$ld[[x]], file = fname, row.names = FALSE)
+        write.csv(vals$qaqc.reports$ld[[x]], file = fname, row.names = FALSE)
       }
     }
     

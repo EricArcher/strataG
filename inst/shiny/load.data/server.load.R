@@ -45,11 +45,11 @@ gtypesLoaded <- function() {
   vals$qaqc.step <- 1
   first.run <<- TRUE
   if(ploidy(vals$gtypes) > 1) {
-    qaqc.reports <<- list()
-    qaqc.reports$samples <<- by.sample()
-    qaqc.reports$samples$threshold <<- qaqc.reports$samples$step.removed <<- NA
-    qaqc.reports$loci <<- by.locus()
-    qaqc.reports$loci$threshold <<- qaqc.reports$loci$step.removed <<- NA 
+    vals$qaqc.reports <<- list()
+    vals$qaqc.reports$samples <<- by.sample()
+    vals$qaqc.reports$samples$threshold <<- vals$qaqc.reports$samples$step.removed <<- NA
+    vals$qaqc.reports$loci <<- by.locus()
+    vals$qaqc.reports$loci$threshold <<- vals$qaqc.reports$loci$step.removed <<- NA 
   }
 }
 
@@ -100,11 +100,13 @@ observe({
   }
 })
 
-observe({
-  if(!is.null(input$slctGtypes)) {
-    if(input$slctGtypes != "") {
-      vals$gtypes <- get(input$slctGtypes, envir = vals$scratch.env)
-      gtypesLoaded()
+observeEvent(input$slctGtypes, {
+  isolate({
+    if(!is.null(input$slctGtypes)) {
+      if(input$slctGtypes != "") {
+        vals$gtypes <- get(input$slctGtypes, envir = vals$scratch.env)
+        gtypesLoaded()
+      }
     }
-  }
+  })
 })

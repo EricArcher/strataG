@@ -1,20 +1,12 @@
 ui.setup <- function() {
   tabPanel(
     title = "Setup",
-    fluidRow(
-      column(
-        width = 2,
-        shinyDirButton(
-          id = "workingDirBtn",
-          label = "Choose working directory",
-          title = "Choose working directory"
-        )
-      ),
-      column(
-        width = 6,
-        verbatimTextOutput("workingDir")
-      )
+    shinyDirButton(
+      id = "workingDirBtn",
+      label = "Choose working directory",
+      title = "Choose working directory"
     ),
+    verbatimTextOutput("workingDir"),
     helpText("This is the directory that contains your data and where output will be saved."),
     hr(),
     radioButtons(

@@ -52,13 +52,11 @@ observeEvent(input$btn.remove.loci.missing, {
     i <- which(df$pct.loci.missing.genotypes >= input$sl.loci.missing)
     if(length(i) > 0) {
       id <- as.character(df$id[i])
-      all.inds <- indNames(current.g)
+      all.inds <- indNames(vals$gtypes)
       to.keep <- setdiff(all.inds, id)
-      if(length(to.keep) > 0) {
-        vals$gtypes <- vals$gtypes[to.keep, , ]
-        qaqc.reports$samples[id, "step.removed"] <- vals$qaqc.step
-        qaqc.reports$samples[id, "threshold"] <- input$sl.loci.missing
-      }
+      if(length(to.keep) > 0) vals$gtypes <- vals$gtypes[to.keep, , ]
+      vals$qaqc.reports$samples[id, "step.removed"] <- vals$qaqc.step
+      vals$qaqc.reports$samples[id, "threshold"] <- input$sl.loci.missing
     }
   })
 })

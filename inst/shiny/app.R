@@ -27,7 +27,8 @@ shinyApp(
       wd = NULL,
       scratch.env = new.env(),
       gtypes = NULL,
-      qaqc.step = 1
+      qaqc.step = 1,
+      qaqc.reports = NULL
     )
     id <- NULL
     

@@ -83,8 +83,8 @@ observeEvent(input$btn.remove.ld.loci, {
       to.keep <- setdiff(all.loci, loc)
       if(length(to.keep) > 0) {
         vals$gtypes <- vals$gtypes[ ,to.keep , ]
-        qaqc.reports$loci[loc, "step.removed"] <- vals$qaqc.step
-        qaqc.reports$loci[loc, "threshold"] <- input$sl.ld
+        vals$qaqc.reports$loci[loc, "step.removed"] <- vals$qaqc.step
+        vals$qaqc.reports$loci[loc, "threshold"] <- input$sl.ld
       }
     }
   })

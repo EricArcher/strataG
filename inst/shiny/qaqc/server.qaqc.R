@@ -8,7 +8,7 @@ output$uiQAQC <- renderUI({
   }
 })
 
-output$flowStep <- reactive(vals$qaqc.step)
+#flowStep <- reactive(vals$qaqc.step)
 
 output$stepLabel <- renderUI({
   step.title <- switch(
@@ -77,68 +77,80 @@ observeEvent(input$btn.qaqc.next, {
   isolate({
     if(vals$qaqc.step < 8) {
       vals$qaqc.step <- vals$qaqc.step + 1
-      # if(vals$qaqc.step == 5) qaqc.reports$dup <<- NULL
-      # if(vals$qaqc.step == 6) qaqc.reports$hwe.jack <<- NULL
-      # if(vals$qaqc.step == 7) qaqc.reports$ld <<- NULL
+      # if(vals$qaqc.step == 5) vals$qaqc.reports$dup <<- NULL
+      # if(vals$qaqc.step == 6) vals$qaqc.reports$hwe.jack <<- NULL
+      # if(vals$qaqc.step == 7) vals$qaqc.reports$ld <<- NULL
       first.run <<- TRUE
     }
   })
 })
 
-output$dt.by.sample <- renderDataTable({
-  df <- qaqc.reports$samples
+
+by.sample.df <- reactive({
+  df <- vals$qaqc.reports$samples
   if(!is.null(df)) df <- round(df, 4)
-  df <- switch(
+  switch(
     input$sampleSelect,
     all = df,
     not.removed = df[is.na(df$step.removed), ],
     removed = df[!is.na(df$step.removed), ]
   )
-  DT::datatable(
-    df, rownames = FALSE,
-    options = list(paging = nrow(df) > 10, mode = "multiple", target = "row", scrollX = TRUE)
-  )
 })
 
-output$dt.by.locus <- renderDataTable({
-  df <- qaqc.reports$loci
-  if(!is.null(df)) df <- round(df, 4)  
-  df <- switch(
-    input$locusSelect,
-    all = df,
-    not.removed = df[is.na(df$step.removed), ],
-    removed = df[!is.na(df$step.removed), ]
-  )
+output$dt.by.sample <- renderDataTable({
   DT::datatable(
-    df, rownames = FALSE,
+    by.sample.df(), rownames = FALSE, 
     options = list(paging = nrow(df) > 10, mode = "multiple", target = "row", scrollX = TRUE)
   )
 })
 
 observeEvent(input$btn.remove.samples, {
-  i <- input$dt.by.sample_rows_selected
-  if(!is.null(i)) {
-    df <- by.sample()
-    id <- df$id[i]
-    all.inds <- indNames(vals$gtypes)
-    to.keep <- setdiff(all.inds, id)
-    if(length(to.keep) > 0) {
-      vals$gtypes <- vals$gtypes[to.keep, , ]
+  isolate({
+    i <- input$dt.by.sample_rows_selected
+    if(!is.null(i)) {
+      id <- by.sample.df()$id[i]
+      all.inds <- indNames(vals$gtypes)
+      to.keep <- setdiff(all.inds, id)
+      if(length(to.keep) > 0) vals$gtypes <- vals$gtypes[to.keep, , ]
+      vals$qaqc.reports$samples[id, "step.removed"] <- vals$qaqc.step
+      vals$qaqc.reports$samples[id, "threshold"] <- NA
     }
-  }
+  })
+})
+
+
+
+by.locus.df <- reactive({
+  df <- vals$qaqc.reports$loci
+  if(!is.null(df)) df <- round(df, 4)  
+  switch(
+    input$locusSelect,
+    all = df,
+    not.removed = df[is.na(df$step.removed), ],
+    removed = df[!is.na(df$step.removed), ]
+  )
+
+})
+
+output$dt.by.locus <- renderDataTable({
+  DT::datatable(
+    by.locus.df(), rownames = FALSE,
+    options = list(paging = nrow(df) > 10, mode = "multiple", target = "row", scrollX = TRUE)
+  )
 })
 
 observeEvent(input$btn.remove.loci, {
-  i <- input$dt.by.locus_rows_selected
-  if(!is.null(i)) {
-    df <- by.locus()
-    loc <- df$locus[i]
-    all.loci <- locNames(vals$gtypes)
-    to.keep <- setdiff(all.loci, loc)
-    if(length(to.keep) > 0) {
-      vals$gtypes <- vals$gtypes[ ,to.keep , ]
+  isolate({
+    i <- input$dt.by.locus_rows_selected
+    if(!is.null(i)) {
+      loc <- by.locus.df()$locus[i]
+      all.loci <- locNames(vals$gtypes)
+      to.keep <- setdiff(all.loci, loc)
+      if(length(to.keep) > 0) vals$gtypes <- vals$gtypes[ ,to.keep , ]
+      vals$qaqc.reports$loci[loc, "step.removed"] <- vals$qaqc.step
+      vals$qaqc.reports$loci[loc, "threshold"] <- NA
     }
-  }
+  })
 })
 
 source("server.qaqc.summaries.R", local = TRUE)
