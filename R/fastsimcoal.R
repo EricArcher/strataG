@@ -69,6 +69,7 @@ fscWrite <- function(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL, l
   pop.info[, c("pop.size", "sample.size")] <- pop.info[, c("pop.size", "sample.size")] * ploidy
   
   if(is.null(label)) label <- "fastsimcoal.output"
+  label <- make.names(label)
   file <- paste(label, ".par", sep = "")
   mig.rates <- if(!is.null(mig.rates)) if(is.list(mig.rates)) mig.rates else list(mig.rates)
   hist.ev <- if(is.list(hist.ev)) do.call(rbind, hist.ev) else rbind(hist.ev)
@@ -84,14 +85,14 @@ fscWrite <- function(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL, l
   for(i in 1:nrow(pop.info)) write(pop.info[i, c("sample.size", "sample.times")], file, append = T)
   
   write("//Growth rates", file, append = T)
-  for(i in 1:nrow(pop.info)) write(pop.info[i, "growth.rate"], file, append = T)
+  for(i in 1:nrow(pop.info)) write(as.character(pop.info[i, "growth.rate"]), file, append = T)
   
   write("//Number of migration matrices", file, append = T)
   write(length(mig.rates), file, append = T)
   if(!is.null(mig.rates)) {
     for(i in 1:length(mig.rates)) {
       write("//migration matrix", file, append = T)
-      for(r in 1:nrow(mig.rates[[i]])) write(mig.rates[[i]][r, ], file, append = T)
+      for(r in 1:nrow(mig.rates[[i]])) write(as.character(mig.rates[[i]][r, ]), file, append = T)
     }
   }
   
@@ -99,7 +100,7 @@ fscWrite <- function(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL, l
   write(ifelse(is.null(hist.ev), 0, nrow(hist.ev)), file, append = T)
   if(!is.null(hist.ev)) {
     for(i in 1:nrow(hist.ev)) {
-      write(paste(hist.ev[i, ], collapse = " "), file, append = T)
+      write(paste(as.character(hist.ev[i, ]), collapse = " "), file, append = T)
     }
   }
   
@@ -116,7 +117,7 @@ fscWrite <- function(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL, l
     write(nrow(block), file, append = T)
     write("//Per block: data type, num loci, rec. rate and mut rate + optional parameters", file, append = T)
     for(i in 1:nrow(block)) {
-      line <- paste(block[i, ], collapse = " ")
+      line <- paste(as.character(block[i, ]), collapse = " ")
       write(gsub(" NA", "", line), file, append = T)
     }
   }
@@ -216,6 +217,7 @@ fastsimcoal <- function(pop.info, locus.params, mig.rates = NULL,
                         delete.files = TRUE, exec = "fsc252", num.cores = NULL) {
   
   if(is.null(label)) label <- "fsc.run"
+  label <- make.names(label)
   if(file.exists(label)) for(f in dir(label, full.names = T)) file.remove(f)
   
   # Write fastsimcoal input file
