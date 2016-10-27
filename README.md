@@ -62,7 +62,12 @@ Archer, F. 2016. *strataG*: An *R* package for manipulating, summarizing and ana
 * send a pull request: <https://github.com/ericarcher/strataG/>
 * e-mail: <eric.archer@noaa.gov>
 
-## version 1.0.6 (current on GitHub)
+## version 1.0.7 (current on GitHub)
+
+* Added `maf` to return minimum allele frequency for each locus.
+* Added `ldNe` to calculate Ne.
+
+## version 1.0.6 
 
 * Added `read.arlequin` back. Fixed missing function error with `write.arlequin`.
 * Added `summarizeSamples`
