@@ -10,6 +10,8 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @export
+#' 
 ldNe <- function(g, maf.threshold = 0) {
   if(ploidy(g) != 2) stop("'g' must have diploid data")
   
