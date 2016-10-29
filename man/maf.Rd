@@ -29,6 +29,6 @@ maf(msats.g)
 Eric Archer \email{eric.archer@noaa.gov}
 }
 \seealso{
-\link{alleleFreq}
+\link{alleleFreqs}
 }
 

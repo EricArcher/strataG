@@ -10,7 +10,7 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
-#' @seealso \link{alleleFreq}
+#' @seealso \link{alleleFreqs}
 #'
 #' @examples
 #' data(msats.g)
@@ -33,5 +33,3 @@ maf <- function(g, by.strata = FALSE) {
     }
   })
 }
-
-      

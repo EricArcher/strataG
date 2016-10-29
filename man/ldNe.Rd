@@ -4,30 +4,39 @@
 \alias{ldNe}
 \title{ldNe}
 \usage{
-ldNe(g, maf.threshold = 0)
+ldNe(g, maf.threshold = 0, ci = 0.95)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
 \item{maf.threshold}{smallest minimum allele frequency permitted to include 
 a locus in calculation.}
+
+\item{ci}{central confidence interval.}
 }
 \value{
-vector with sample size (\code{S}), number of pairwise loci comparisons 
-  used (\code{num.comp}), mean r-squared (\code{mean.rsq}), and 
-  Ne estimate (\code{Ne}).
+a named numeric vector with: 
+\describe{
+ \item{\code{S}}{harmonic mean of sample size across pairwise comparisons of loci}
+ \item{\code{num.comp}}{number of pairwise loci comparisons used}
+ \item{\code{mean.rsq}}{mean r^2 over all loci}
+ \item{\code{mean.E.rsq}}{mean expected r^2 over all loci}
+ \item{\code{Ne}}{estimated Ne}
+ \item{\code{param.lci, param.uci}}{parametric lower and upper CIs}
+}
 }
 \description{
-Estimate Ne from linkage disequilibrium based on Pearson correlation 
-  approximation as in Waples et al 2016.
+Estimate Ne from linkage disequilibrium based on Pearson 
+  correlation approximation following Waples et al 2016. Adapted from code 
+  by R. Waples and W. Larson.
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov} (adapted from code by R. Waples)
+Eric Archer \email{eric.archer@noaa.gov}
 }
 \references{
 Waples, R.S. 2006. A bias correction for estimates of effective population 
   size based on linkage disequilibrium at unlinked gene loci. 
-  Conservation Genetics 7:167-184. \cr
+  Conservation Genetics 7:167-184. \cr\cr
   Waples RK, Larson WA, and Waples RS. 2016. 
   Estimating contemporary effective population size in non-model species using 
   linkage disequilibrium across thousands of loci. Heredity 117:233-240; 
