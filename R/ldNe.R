@@ -6,12 +6,13 @@
 #' @param g a \linkS4class{gtypes} object.
 #' @param maf.threshold smallest minimum allele frequency permitted to include 
 #'   a locus in calculation of Ne.
-#' @param by.strata apply the \code{maf.threshold} by strata. if \code{TRUE} 
+#' @param by.strata apply the \code{maf.threshold} by strata. if \code{TRUE}
 #'   then any locus that is below this threshold in any strata will be removed 
-#'   from the calculation of Ne.
+#'   from the calculation of Ne. Otherwise, loci are removed only if they are 
+#'   below the \code{maf.threshold} in the entire dataset.
 #' @param ci central confidence interval.
 #'
-#' @return a named numeric vector with: 
+#' @return a numeric matrix with one row per strata and the following columns:
 #' \describe{
 #'  \item{\code{S}}{harmonic mean of sample size across pairwise comparisons of loci}
 #'  \item{\code{num.comp}}{number of pairwise loci comparisons used}
@@ -59,7 +60,7 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95) {
   }
   
   # calculate Ne by strata
-  t(sapply(strataSplit(g), function(st.g) {
+  cbind(t(sapply(strataSplit(g), function(st.g) {
     # convert gtypes to coded data.frame
     g.df <- as.data.frame(st.g, ids = FALSE, strata = FALSE)
     df <- do.call(cbind, lapply(seq(1, ncol(g.df), by = 2), function(a1) {
@@ -139,5 +140,5 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95) {
       param.lci = calcNe(S.harm.mean, Rsq.drift.lci),
       param.uci = calcNe(S.harm.mean, Rsq.drift.uci)
     )
-  }))
+  })))
 }

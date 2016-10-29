@@ -12,14 +12,15 @@ ldNe(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95)
 \item{maf.threshold}{smallest minimum allele frequency permitted to include 
 a locus in calculation of Ne.}
 
-\item{by.strata}{apply the \code{maf.threshold} by strata. if \code{TRUE} 
+\item{by.strata}{apply the \code{maf.threshold} by strata. if \code{TRUE}
 then any locus that is below this threshold in any strata will be removed 
-from the calculation of Ne.}
+from the calculation of Ne. Otherwise, loci are removed only if they are 
+below the \code{maf.threshold} in the entire dataset.}
 
 \item{ci}{central confidence interval.}
 }
 \value{
-a named numeric vector with: 
+a numeric matrix with one row per strata and the following columns:
 \describe{
  \item{\code{S}}{harmonic mean of sample size across pairwise comparisons of loci}
  \item{\code{num.comp}}{number of pairwise loci comparisons used}
