@@ -4,13 +4,17 @@
 \alias{ldNe}
 \title{ldNe}
 \usage{
-ldNe(g, maf.threshold = 0, ci = 0.95)
+ldNe(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
 \item{maf.threshold}{smallest minimum allele frequency permitted to include 
-a locus in calculation.}
+a locus in calculation of Ne.}
+
+\item{by.strata}{apply the \code{maf.threshold} by strata. if \code{TRUE} 
+then any locus that is below this threshold in any strata will be removed 
+from the calculation of Ne.}
 
 \item{ci}{central confidence interval.}
 }
