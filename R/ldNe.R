@@ -6,10 +6,11 @@
 #' @param g a \linkS4class{gtypes} object.
 #' @param maf.threshold smallest minimum allele frequency permitted to include 
 #'   a locus in calculation of Ne.
-#' @param by.strata apply the \code{maf.threshold} by strata. if \code{TRUE}
+#' @param by.strata apply the \code{maf.threshold} by strata. If \code{TRUE}
 #'   then any locus that is below this threshold in any strata will be removed 
-#'   from the calculation of Ne. Otherwise, loci are removed only if they are 
-#'   below the \code{maf.threshold} in the entire dataset.
+#'   from the calculation of Ne for every stratum. Otherwise, loci are removed 
+#'   only if they are below the \code{maf.threshold} in the stratum for which 
+#'   Ne is calculated.
 #' @param ci central confidence interval.
 #'
 #' @return a numeric matrix with one row per strata and the following columns:
@@ -32,7 +33,7 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @importFrom parallel mclapply
+#' @importFrom parallel parSapply
 #' @importFrom stats cor qchisq
 #' @export
 #' 
@@ -48,62 +49,71 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95) {
   }
   g <- g[, biallelic, ]
   
-  # remove loci below MAF threshold
-  if(maf.threshold > 0) {
-    maf.g <- maf(g, by.strata = by.strata)
-    above.thresh <- if(by.strata) {
-      which(apply(maf.g, 2, function(x) all(x >= maf.threshold)))
-    } else {
-      which(maf.g >= maf.threshold)
-    }
+  # remove loci if below maf threshold for any stratum
+  if(maf.threshold > 0 & by.strata) {
+    maf.g <- maf(g, by.strata = TRUE)
+    above.thresh <- which(apply(maf.g, 2, function(x) all(x >= maf.threshold)))
     g <- g[, above.thresh, ]
   }
   
+  # calculate Pearson r-squared between a pair of loci
+  compLoc <- function(i, loc.pairs, mat) {
+    pair.mat <- mat[, loc.pairs[, i]]
+    pair.mat <- pair.mat[complete.cases(pair.mat), , drop = FALSE]
+    rsq <- cor(pair.mat[, 1], pair.mat[, 2], method = "pearson") ^ 2
+    S <- nrow(pair.mat)
+    c(S = S, rsq = rsq)
+  }
+  
+  # Eqn 1.7: calculate Ne
+  calcNe <- function(S, Rsq.drift) {
+    if(S > 29) {
+      root.term <- 1 / 9 - 2.76 * Rsq.drift
+      if(root.term < 0) root.term <- 0
+      (1 / 3 + sqrt(root.term)) / (2 * Rsq.drift)
+    } else {
+      root.term <- 0.308 ^ 2 - 2.08 * Rsq.drift
+      if(root.term < 0) root.term <- 0
+      (0.308 + sqrt(root.term)) / (2 * Rsq.drift)
+    }
+  }
+  
   # calculate Ne by strata
-  cbind(t(sapply(strataSplit(g), function(st.g) {
-    # convert gtypes to coded data.frame
-    g.df <- as.data.frame(st.g, ids = FALSE, strata = FALSE)
-    df <- do.call(cbind, lapply(seq(1, ncol(g.df), by = 2), function(a1) {
-      df.i <- g.df[, c(a1, a1 + 1)]
-      alleles <- sort(unique(unlist(df.i)))
-      apply(df.i, 1, function(i) sum(i == alleles[1]))
-    }))
-    
-    # remove loci that are constant
-    is.constant <- sapply(1:ncol(df), function(i) var(df[, i]) == 0)
-    df <- df[, !is.constant]
-    
-    # Eqn 1.7
-    calcNe <- function(S, Rsq.drift) {
-      if(S > 29) {
-        root.term <- 1 / 9 - 2.76 * Rsq.drift
-        if(root.term < 0) root.term <- 0
-        (1 / 3 + sqrt(root.term)) / (2 * Rsq.drift)
-      } else {
-        root.term <- 0.308 ^ 2 - 2.08 * Rsq.drift
-        if(root.term < 0) root.term <- 0
-        (0.308 + sqrt(root.term)) / (2 * Rsq.drift)
-      }
+  cbind(t(sapply(strataSplit(g), function(g.st) {
+    # remove loci below MAF threshold
+    if(maf.threshold > 0) {
+      above.thresh <- which(maf(g.st) >= maf.threshold)
+      g.st <- g.st[, above.thresh, ]
     }
     
-    # calculate correlation r-squared (rsq) between pairs of loci
-    loc.pairs <- combn(ncol(df), 2)
-    num.cores <- if(.Platform$OS.type == "windows") 1 else detectCores() - 1
-    loc.comp.mat <- do.call(rbind, mclapply(1:ncol(loc.pairs), function(i) {
-      pair.df <- df[, loc.pairs[, i]]
-      pair.df <- pair.df[complete.cases(pair.df), ]
-      rsq <- cor(pair.df[, 1], pair.df[, 2], method = "pearson") ^ 2
-      S <- nrow(pair.df)
-      c(S = S, rsq = rsq)
-    }, mc.cores = num.cores ))
+    # create list of coded numeric matrices for each stratum
+    g.mat <- as.matrix(g.st, ids = FALSE, strata = FALSE)
+    mat <- matrix(nrow = nInd(g.st), ncol = nLoc(g.st))
+    a1.i <- seq(1, ncol(g.mat), by = 2)
+    for(j in 1:length(a1.i)) {
+      a1 <- a1.i[j]
+      mat.j <- g.mat[, c(a1, a1 + 1), drop = FALSE]
+      alleles <- sort(unique(mat.j))
+      for(i in 1:nrow(mat.j)) mat[i, j] <- sum(mat.j[i, ] == alleles[1])
+    }
     
-    S <- loc.comp.mat[, "S"]
+    # remove loci that are constant
+    mat <- mat[, apply(mat, 2, function(x) var(x) > 0)]
+    
+    # calculate correlation r-squared (rsq) between pairs of loci
+    loc.pairs <- combn(ncol(mat), 2)
+    cl <- .setupClusters(detectCores() - 1)
+    loc.comp.mat <- tryCatch({
+      parSapply(cl, 1:ncol(loc.pairs), compLoc, loc.pairs = loc.pairs, mat = mat)
+    }, finally = stopCluster(cl))
+    
+    S <- loc.comp.mat["S", ]
     # Eqn 1.1: expected r-squared
     E.rsq <- ifelse(S > 29, (1 / S) + (3.19 / S ^ 2), 0.0018 + (0.907 / S) + (4.44 / S ^ 2))
     # sample size corrected r-squared
-    rsq <- loc.comp.mat[, "rsq"] * ((S / (S - 1)) ^ 2)
+    rsq <- loc.comp.mat["rsq", ] * ((S / (S - 1)) ^ 2)
     # Eqn 1.4
-    w <- loc.comp.mat[, "S"] ^ 2
+    w <- S ^ 2
     # Eqn 1.5
     W <- sum(w)
     mean.rsq <- sum(w * rsq) / W
@@ -112,7 +122,8 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95) {
     # Eqn 1.10: R-squared prime.0 for Ne.0 
     Rsq.drift.0 <- sum(Rsq.drift * w) / W
     # harmonic mean of S
-    S.harm.mean <- nrow(loc.comp.mat) / sum(1 / S)
+    N <- ncol(loc.comp.mat)
+    S.harm.mean <- N / sum(1 / S)
     # initial Ne.0
     ne0 <- calcNe(S.harm.mean, Rsq.drift.0)
     
@@ -125,7 +136,6 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95) {
     mean.E.rsq <- sum(w * E.rsq) / W
     
     # calculate CI
-    N <- nrow(loc.comp.mat)
     lci.p <- (1 - ci) / 2
     uci.p <- 1 - lci.p
     Rsq.drift.lci <- mean.rsq * N / qchisq(lci.p, N) - mean.E.rsq

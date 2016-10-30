@@ -12,10 +12,11 @@ ldNe(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95)
 \item{maf.threshold}{smallest minimum allele frequency permitted to include 
 a locus in calculation of Ne.}
 
-\item{by.strata}{apply the \code{maf.threshold} by strata. if \code{TRUE}
+\item{by.strata}{apply the \code{maf.threshold} by strata. If \code{TRUE}
 then any locus that is below this threshold in any strata will be removed 
-from the calculation of Ne. Otherwise, loci are removed only if they are 
-below the \code{maf.threshold} in the entire dataset.}
+from the calculation of Ne for every stratum. Otherwise, loci are removed 
+only if they are below the \code{maf.threshold} in the stratum for which 
+Ne is calculated.}
 
 \item{ci}{central confidence interval.}
 }
