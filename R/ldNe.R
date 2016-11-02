@@ -83,6 +83,13 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95) {
     # remove loci below MAF threshold
     if(maf.threshold > 0) {
       above.thresh <- which(maf(g.st) >= maf.threshold)
+      if(length(above.thresh) < 2) {
+        warning(
+          paste0("fewer than two loci are below 'maf.threshold' in '", strataNames(g.st), "'"),
+          call. = FALSE
+        )
+        return(NULL)
+      }
       g.st <- g.st[, above.thresh, ]
     }
     
@@ -98,7 +105,14 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95) {
     }
     
     # remove loci that are constant
-    mat <- mat[, apply(mat, 2, function(x) var(x) > 0)]
+    mat <- mat[, apply(mat, 2, function(x) var(x) > 0), drop = FALSE]
+    if(ncol(mat) < 2) {
+      warning(
+        paste0("fewer than two loci are constant in '", strataNames(g.st), "'"),
+        call. = FALSE
+      )
+      return(NULL)
+    }
     
     # calculate correlation r-squared (rsq) between pairs of loci
     loc.pairs <- combn(ncol(mat), 2)
