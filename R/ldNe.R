@@ -44,7 +44,7 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95) {
   num.alleles <- numAlleles(g)
   biallelic <- names(num.alleles)[num.alleles <= 2]
   if(length(biallelic) == 0) {
-    warning("No loci are biallelic. NULL returned.")
+    warning("No loci are biallelic. NULL returned.", call. = FALSE)
     return(NULL)
   }
   g <- g[, biallelic, ]
@@ -53,6 +53,13 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95) {
   if(maf.threshold > 0 & by.strata) {
     maf.g <- maf(g, by.strata = TRUE)
     above.thresh <- which(apply(maf.g, 2, function(x) all(x >= maf.threshold)))
+    if(length(above.thresh) < 2) {
+      warning(
+        paste0("Fewer than two loci are below 'maf.threshold' in any stratum. NULL returned."),
+        call. = FALSE
+      )
+      return(NULL)
+    }
     g <- g[, above.thresh, ]
   }
   
@@ -79,13 +86,13 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95) {
   }
   
   # calculate Ne by strata
-  cbind(t(sapply(strataSplit(g), function(g.st) {
+  ne.smry <- sapply(strataSplit(g), function(g.st) {
     # remove loci below MAF threshold
     if(maf.threshold > 0) {
       above.thresh <- which(maf(g.st) >= maf.threshold)
       if(length(above.thresh) < 2) {
         warning(
-          paste0("fewer than two loci are below 'maf.threshold' in '", strataNames(g.st), "'"),
+          paste0("Fewer than two loci are below 'maf.threshold' in '", strataNames(g.st), "'"),
           call. = FALSE
         )
         return(NULL)
@@ -108,7 +115,7 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95) {
     mat <- mat[, apply(mat, 2, function(x) var(x) > 0), drop = FALSE]
     if(ncol(mat) < 2) {
       warning(
-        paste0("fewer than two loci are constant in '", strataNames(g.st), "'"),
+        paste0("Fewer than two loci are constant in '", strataNames(g.st), "'"),
         call. = FALSE
       )
       return(NULL)
@@ -167,5 +174,7 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95) {
       mean.E.rsq = mean.E.rsq, Ne = ne, param.lci = param.lci, 
       param.uci = param.uci
     )
-  })))
+  }, USE.NAMES = TRUE, simplify = FALSE)
+  ne.smry <- ne.smry[!sapply(ne.smry, is.null)]
+  do.call(rbind, ne.smry)
 }
