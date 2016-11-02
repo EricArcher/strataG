@@ -141,14 +141,17 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95) {
     Rsq.drift.lci <- mean.rsq * N / qchisq(lci.p, N) - mean.E.rsq
     Rsq.drift.uci <- mean.rsq * N / qchisq(uci.p, N) - mean.E.rsq
     
+    ne <- calcNe(S.harm.mean, Rsq.drift)
+    param.lci <- calcNe(S.harm.mean, Rsq.drift.lci)
+    param.uci <- calcNe(S.harm.mean, Rsq.drift.uci)
+    if(ne < 0) ne <- Inf
+    if(param.lci < 0) param.lci <- Inf
+    if(param.uci < 0) param.uci <- Inf
+    
     c(
-      S = S.harm.mean, 
-      num.comp = N, 
-      mean.rsq = mean.rsq,
-      mean.E.rsq = mean.E.rsq,
-      Ne = calcNe(S.harm.mean, Rsq.drift),
-      param.lci = calcNe(S.harm.mean, Rsq.drift.lci),
-      param.uci = calcNe(S.harm.mean, Rsq.drift.uci)
+      S = S.harm.mean, num.comp = N, mean.rsq = mean.rsq, 
+      mean.E.rsq = mean.E.rsq, Ne = ne, param.lci = param.lci, 
+      param.uci = param.uci
     )
   })))
 }
