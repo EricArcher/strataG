@@ -38,7 +38,7 @@ gtypes2genind <- function(x, type = c("codom", "PA")) {
     NA.char = NA,
     ploidy = ploidy(x),
     type = match.arg(type),
-    strata = schemes(x)[rownames(x.mat), ]
+    strata = schemes(x)[rownames(x.mat), , drop = FALSE]
   )
 }
 

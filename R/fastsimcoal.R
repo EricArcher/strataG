@@ -128,10 +128,11 @@ fscWrite <- function(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL, l
 
 
 #' @rdname fastsimcoal
+#' @importFrom Kmisc readlines
 #' @export
 #' 
 fscRead <- function(file, locus.params) {
-  formatGenotypes <- function(x, ploidy) {
+  .formatGenotypes <- function(x, ploidy) {
     # reformat matrix to have alleles side-by-side
     nloci <- ncol(x) - 2
     loc.end <- seq(ploidy, nrow(x), by = ploidy)
@@ -149,7 +150,7 @@ fscRead <- function(file, locus.params) {
     gen.data
   }
   
-  formatDNA <- function(dna.seq, pop, locus.params) {
+  .formatDNA <- function(dna.seq, pop, locus.params) {
     # create multidna object splitting chromosomes into loci
     num.chrom <- attr(locus.params, "num.chrom")
     chrom.pos <- if(is.null(num.chrom)) {
@@ -167,7 +168,7 @@ fscRead <- function(file, locus.params) {
     }))
   }
   
-  f <- readLines(file)
+  f <- Kmisc::readlines(file)
   
   # get start and end points of data blocks
   start <- grep("SampleData=", f) + 1
@@ -175,12 +176,21 @@ fscRead <- function(file, locus.params) {
   pos <- cbind(start, end)
   
   # compile data into 3 column character matrix
-  data.mat <- do.call(rbind, lapply(1:nrow(pos), function(i) {
+  .compileMatrix <- function(i, pos) {
     f.line <- f[pos[i, 1]:pos[i, 2]]
     f.line <- gsub("[[:space:]]+", "--", f.line)
     result <- do.call(rbind, strsplit(f.line, "--"))[, -2]
     cbind(rep(paste("Sample", i), nrow(result)), result)
-  }))
+  }
+  cl <- .setupClusters()
+  data.mat <- tryCatch({
+    if(!is.null(cl)) {
+      parLapply(cl, 1:nrow(pos), .compileMatrix, pos = pos)
+    } else {
+      lapply(1:nrow(pos), .compileMatrix, pos = pos)
+    }
+  }, finally = if(!is.null(cl)) stopCluster(cl))
+  data.mat <- do.call(rbind, data.mat)
   
   ploidy <- attr(locus.params, "ploidy")
   
@@ -192,16 +202,16 @@ fscRead <- function(file, locus.params) {
     DNA = { # diploid SNPs
       dna.seq <- do.call(rbind, strsplit(data.mat[, 3], ""))
       if(attr(locus.params, "ploidy") == 2) {
-        gen.data <- formatGenotypes(cbind(data.mat[, 1:2], dna.seq), ploidy)
+        gen.data <- .formatGenotypes(cbind(data.mat[, 1:2], dna.seq), ploidy)
         df2gtypes(gen.data, ploidy, description = file)
       } else { # haploid DNA sequences
-        dna.seq <- formatDNA(dna.seq, data.mat[, 2], locus.params)
+        dna.seq <- .formatDNA(dna.seq, data.mat[, 2], locus.params)
         g <- sequence2gtypes(dna.seq, strata = data.mat[, 1], description = file)
         labelHaplotypes(g)$gtype
       }
     },
     MICROSAT = {
-      gen.data <- formatGenotypes(data.mat, ploidy)
+      gen.data <- .formatGenotypes(data.mat, ploidy)
       df2gtypes(gen.data, ploidy, description = file)
     },
     NULL

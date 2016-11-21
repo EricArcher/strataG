@@ -54,23 +54,21 @@ differentiation functions.}
 }
 \value{
 \describe{
- \item{overall}{a list containing:
-   \describe{
-     \item{\code{strata.freq}}{a vector of the sample sizes for each stratum}
-     \item{\code{result}}{a matrix with the statistic estimate and p-value 
-       for each statistic}
-     \item{\code{null.dist}}{a matrix with the null distributions for 
-       each statistic}
-   }}
- \item{pairwise}{a list containing:
-   \describe{
-     \item{\code{result}}{a data.frame with the result of each pairwise 
-       comparison on each row}
-     \item{\code{pair.mat}}{a list with a pairwise matrix for each statistic. 
-       Values in lower left are the statistic estimate, and upper right are p-values}
-     \item{\code{null.dist}}{a matrix with the null distributions for 
-       each statistic}
-   }}
+ \item{overall}{a list containing: \describe{
+   \item{\code{strata.freq}}{a vector of the sample sizes for each stratum}
+   \item{\code{result}}{a matrix with the statistic estimate and p-value 
+     for each statistic}
+   \item{\code{null.dist}}{a matrix with the null distributions for 
+     each statistic}
+ }}
+ \item{pairwise}{a list containing: \describe{
+   \item{\code{result}}{a data.frame with the result of each pairwise 
+     comparison on each row}
+   \item{\code{pair.mat}}{a list with a pairwise matrix for each statistic. 
+     Values in lower left are the statistic estimate, and upper right are p-values}
+   \item{\code{null.dist}}{a matrix with the null distributions for 
+     each statistic}
+ }} 
 }
 }
 \description{

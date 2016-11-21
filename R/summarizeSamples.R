@@ -25,7 +25,7 @@
 summarizeSamples <- function(g, sort.by.strata = FALSE) {
   result <- do.call(rbind, lapply(indNames(g), function(id) {
     smry <- sapply(locNames(g), function(loc) {
-      gt <- loci(g, id, loc)
+      gt <- as.array(g, id, loc)
       missing <- any(is.na(gt))
       hmzgs <- if(missing) NA else length(unique(unlist(gt))) == 1
       c(missing = missing, hmzgs = hmzgs)

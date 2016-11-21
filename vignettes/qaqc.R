@@ -13,6 +13,7 @@ head(smry)
 dupGenotypes(msats, num.shared = 0.66)
 
 ## ------------------------------------------------------------------------
+library(ape)
 data(dolph.seqs)
 seq.smry <- summarizeSeqs(as.DNAbin(dolph.seqs))
 head(seq.smry)

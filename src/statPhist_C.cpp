@@ -1,6 +1,8 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+// 
+
 // [[Rcpp::export]]
 double ssWPCalc(IntegerVector strataFreq, IntegerMatrix strataHapFreq,
                         NumericMatrix hapDist) {

@@ -96,39 +96,57 @@ NumericMatrix numOuterC(NumericVector x, NumericVector y) {
   return tbl;
 }
 
+// // [[Rcpp::export]]
+// IntegerMatrix intVecToMat(IntegerVector x, int n) {
+//   int nrow(x.size() + 1);
+//   int len(x.size()), r, c;
+//   double ncol(len / nrow);
+//   IntegerMatrix mat(nrow, ncol);
+//   for(int i = 0; i < len; i++) {
+//     c = std::floor(double(i) / n);
+//     r = i - (int(n) * c);
+//     mat(r, c) = x[i];
+//   }
+//   return mat;
+// }
+// 
+// // [[Rcpp::export]]
+// NumericMatrix numVecToMat(NumericVector x, int ncol) {
+//   int len(x.size()), r, c;
+//   double n(len / ncol);
+//   NumericMatrix mat(n, ncol);
+//   for(int i = 0; i < len; i++) {
+//     c = std::floor(double(i) / n);
+//     r = i - (int(n) * c);
+//     mat(r, c) = x[i];
+//   }
+//   return mat;
+// }
+
 // [[Rcpp::export]]
-IntegerMatrix intVecToMat(IntegerVector x, int ncol) {
-  int len(x.size()), r, c;
-  double n(len / ncol);
-  IntegerMatrix mat(n, ncol);
-  for(int i = 0; i < len; i++) {
-    c = std::floor(double(i) / n);
-    r = i - (int(n) * c);
-    mat(r, c) = x[i];
-  }
-  return mat;
+int idStart(int id, int ploidy) {
+  return ((id + 1) * ploidy) - ploidy;
 }
 
 // [[Rcpp::export]]
-NumericMatrix numVecToMat(NumericVector x, int ncol) {
-  int len(x.size()), r, c;
-  double n(len / ncol);
-  NumericMatrix mat(n, ncol);
-  for(int i = 0; i < len; i++) {
-    c = std::floor(double(i) / n);
-    r = i - (int(n) * c);
-    mat(r, c) = x[i];
-  }
-  return mat;
+IntegerVector idGenotype(IntegerVector locus, int id, int ploidy) {
+  int idStart(int, int);
+  
+  IntegerVector gt(ploidy);
+  int start(idStart(id, ploidy));
+  int end(start + ploidy);
+  for(int i = start; i < end; i++) gt[i - start] = locus[i];
+  return gt;
 }
 
 // [[Rcpp::export]]
-IntegerVector calcStrataN(IntegerVector locus, IntegerVector strata) {
+IntegerVector calcStrataN(IntegerVector locus, IntegerVector strata, int ploidy) {
+  int idStart(int, int);
+  
   IntegerVector n(getMaxInt(strata) + 1);
   for(int i = 0; i < strata.size(); i++) {
-    bool allelesNA(IntegerVector::is_na(locus[i]));
-    bool strataNA(IntegerVector::is_na(strata[i]));
-    if(allelesNA || strataNA) continue;
+    int j(idStart(i, ploidy));
+    if(IntegerVector::is_na(locus[j])) continue;
     n[strata[i]]++;
   }
   return n;

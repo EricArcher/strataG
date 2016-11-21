@@ -11,8 +11,8 @@
 #'   an equivalent number of unknowns for self-assignment, then the comparison 
 #'   is not done.
 #' @param gelato.result the result of a call to \code{gelato}.
-#' @param unknown the name of an unknown stratum in the \code{x$likelihoods} 
-#'   element.
+#' @param unknown the names of the unknown strata in the \code{x$likelihoods} 
+#'   element to create plots. If \code{NULL} one plot for each stratum is created. 
 #' @param main main label for top of plot.
 #' 
 #' @return A list with the following elements:
@@ -39,9 +39,30 @@
 #' 
 #' @name gelato
 #' @importFrom stats sd dnorm median
+#' @importFrom parallel parLapply stopCluster
 #' @export
 #' 
-gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5) { 
+gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5) {
+  .gelatoPermFunc <- function(i, known.ids, unknown.ids, g, known.g) {
+    # select samples to self assign
+    ran.knowns <- sample(known.ids, length(unknown.ids))
+    
+    # extract gtypes of base known strata
+    known.to.keep <- setdiff(known.ids, ran.knowns)
+    
+    # gtypes for observed Fst
+    obs.g <- g[c(unknown.ids, known.to.keep), , , drop = TRUE]
+    
+    # gtypes for null Fst
+    st <- strata(known.g)
+    st[ran.knowns] <- "<gelato.unknown>"
+    null.g <- stratify(known.g, st)
+    
+    c(obs = unname(statFst(obs.g, nrep = 0)$result["estimate"]), 
+      null = unname(statFst(null.g, nrep = 0)$result["estimate"])
+    )
+  }
+  
   # Check unknown strata
   all.strata <- strata(g)
   unknown.strata <- unique(as.character(unknown.strata))
@@ -49,68 +70,64 @@ gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5) {
     stop("Some 'unknown.strata' could not be found in 'g'")
   }
   
+  strata.freq <- table(all.strata)
+  # identify known strata
   knowns <- sort(setdiff(all.strata, unknown.strata))
-  # loop through every unknown strata
+  # loop through every unknown stratum
   result <- sapply(unknown.strata, function(unknown) {
-    unknown.gtypes <- g[, , unknown]
-    unknown.mat <- as.matrix(unknown.gtypes, ids = FALSE)
-    unknown.n <- nInd(unknown.gtypes)
+    # individual ids in this unknown
+    unknown.ids <- names(all.strata)[all.strata == unknown]
     
     # loop through each known population and calculate distribution
     #   of Fst and log-likelihood of membership
     unknown.result <- sapply(knowns, function(known) {
-      known.gtypes <- g[, , known]
-      if((nInd(known.gtypes) - unknown.n) >= min.sample.size) {
-        fst.dist <- do.call(rbind, lapply(1:nrep, function(i) {
-          # select samples to self assign
-          ran.sample <- sample(indNames(known.gtypes), unknown.n)
-          
-          # extract gtypes of base known strata
-          known.to.keep <- setdiff(indNames(known.gtypes), ran.sample)
-          known.sample <- known.gtypes[known.to.keep, , ]
-          
-          # gtypes for observed Fst
-          known.mat <- as.matrix(known.sample, ids = FALSE)
-          obs.gtypes <- df2gtypes(
-            rbind(known.mat, unknown.mat), ploidy = ploidy(g),
-            id.col = NULL, strata.col = 1, loc.col = 2, sequences = sequences(g)
+      # check that enough samples exist in this known
+      can.run <- (strata.freq[known] - length(unknown.ids)) >= min.sample.size
+      if(!can.run) return(NULL)
+      # individual ids in this known
+      known.ids <- names(all.strata)[all.strata == known]
+      known.g <- g[known.ids, , , drop = TRUE]
+      
+      # run permutations to collect Fst distributions 
+      cl <- .setupClusters()
+      fst.dist <- tryCatch({
+        if(!is.null(cl)) {
+          parLapply(
+            cl, 1:nrep, .gelatoPermFunc, known.ids = known.ids, 
+            unknown.ids = unknown.ids, g = g, known.g = known.g
           )
-
-          # gtypes for null Fst
-          st <- as.character(strata(known.gtypes))
-          names(st) <- names(strata(known.gtypes))
-          st[ran.sample] <- "<gelato.unknown>"
-          null.gtypes <- stratify(known.gtypes, st)
-          
-          c(obs = unname(statFst(obs.gtypes, nrep = 0)$result["estimate"]), 
-            null = unname(statFst(null.gtypes, nrep = 0)$result["estimate"])
-          )
-        }))
-        fst.dist <- fst.dist[apply(fst.dist, 1, function(x) all(!is.na(x))), ]
-
-        if(nrow(fst.dist) < 2) {
-          NULL
         } else {
-          # summarize Fst distribution
-          null.mean <- mean(fst.dist[, "null"])
-          null.sd <- sd(fst.dist[, "null"])
-          null.lik <- dnorm(fst.dist[, "obs"], null.mean, null.sd)
-          log.Lik <- sum(log(null.lik), na.rm = T)     
-          obs.median <- median(fst.dist[, "obs"], na.rm = T)
-          obs.mean <- mean(fst.dist[, "obs"], na.rm = T)
-          list(
-            fst.dist = fst.dist, 
-            log.Lik.smry = c(
-              log.Lik = log.Lik, 
-              mean.nreps = log.Lik / length(log.Lik),
-              median = log(dnorm(obs.median, null.mean, null.sd)), 
-              mean = log(dnorm(obs.mean, null.mean, null.sd))
-            ),
-            norm.coefs = c(mean = null.mean, sd = null.sd)
+          lapply(
+            1:nrep, .gelatoPermFunc, known.ids = known.ids, 
+            unknown.ids = unknown.ids, g = g, known.g = known.g
           )
-        }
-      } else NULL
-    }, simplify = F)
+        } 
+      }, finally = stopCluster(cl))
+      fst.dist <- do.call(rbind, fst.dist)
+      fst.dist <- fst.dist[apply(fst.dist, 1, function(x) all(!is.na(x))), ]
+      
+      if(nrow(fst.dist) < 2) {
+        NULL
+      } else {
+        # summarize Fst distribution
+        null.mean <- mean(fst.dist[, "null"])
+        null.sd <- sd(fst.dist[, "null"])
+        null.lik <- dnorm(fst.dist[, "obs"], null.mean, null.sd)
+        log.Lik <- sum(log(null.lik), na.rm = T)     
+        obs.median <- median(fst.dist[, "obs"], na.rm = T)
+        obs.mean <- mean(fst.dist[, "obs"], na.rm = T)
+        list(
+          fst.dist = fst.dist, 
+          log.Lik.smry = c(
+            log.Lik = log.Lik, 
+            mean.nreps = log.Lik / length(log.Lik),
+            median = log(dnorm(obs.median, null.mean, null.sd)), 
+            mean = log(dnorm(obs.mean, null.mean, null.sd))
+          ),
+          norm.coefs = c(mean = null.mean, sd = null.sd)
+        )
+      }
+    }, simplify = FALSE)
     
     # calculate median logLikehood of assignment to each known
     log.Lik <- sapply(unknown.result, function(x) {
@@ -133,55 +150,59 @@ gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5) {
   list(assign.prob = assign.prob, likelihoods = result)
 }
 
+
 #' @rdname gelato
 #' @importFrom graphics par hist curve axis mtext
 #' @importFrom stats dnorm
 #' @export
 #' 
-gelatoPlot <- function(gelato.result, unknown, main = NULL) { 
-  lik <- gelato.result$likelihoods[[unknown]]
-  lik <- lik[!sapply(lik, is.null)]
-  if(length(lik) == 0) {
-    stop(paste("No likelihood distributions available for '", 
-               unknown, "'", sep = ""))
+gelatoPlot <- function(gelato.result, unknown = NULL, main = NULL) { 
+  if(is.null(unknown)) unknown <- names(gelato.result$likelihoods)
+  for(unk in unknown) {
+    lik <- gelato.result$likelihoods[[unk]]
+    lik <- lik[!sapply(lik, is.null)]
+    if(length(lik) == 0) {
+      stop(paste("No likelihood distributions available for '", 
+                 unknown, "'", sep = ""))
+    }
+    xticks <- pretty(unlist(sapply(lik, function(x) x$fst.dist)))
+    xlim <- range(xticks)
+    op <- par(mar = c(3, 3, 3, 2) + 0.1, 
+              oma = c(2, 2, 0.1, 0.1), 
+              mfrow = c(length(lik), 1)
+    )
+    high.prob <- gelato.result$assign.prob[unknown, "assignment"]
+    for(known in names(lik)) {
+      known.lik <- lik[[known]]
+      null.max <- max(hist(known.lik$fst.dist[, "null"], plot = F)$density)
+      obs.max <- max(hist(known.lik$fst.dist[, "obs"], plot = F)$density)
+      lik.mean <- known.lik$norm.coefs["mean"]
+      lik.sd <- known.lik$norm.coefs["sd"]
+      norm.lik <- dnorm(lik.mean, lik.mean, lik.sd)
+      ylim <- range(pretty(c(0, null.max, obs.max, norm.lik)))
+      hist(known.lik$fst.dist[, "null"], breaks = 10, freq = FALSE, 
+           xlim = xlim, ylim = ylim, xlab = "", ylab = "", main = "", 
+           col = "red", xaxt = "n")
+      x <- NULL # To avoid R CMD CHECK warning about no global binding for 'x'
+      curve(dnorm(x, lik.mean, lik.sd), from = xlim[1], to = xlim[2],
+            add = TRUE, col = "black", lwd = 3, ylim = ylim)
+      par(new = TRUE)
+      hist(known.lik$fst.dist[, "obs"], breaks = 10, freq = FALSE, 
+           xlim = xlim, ylim = ylim, xlab = "", ylab = "", col = "darkgreen", 
+           main = "", xaxt = "n", yaxt = "n") 
+      axis(1, pretty(xlim))
+      ll.median <- known.lik$log.Lik.smry["median"]
+      log.lik <- if(!is.infinite(ll.median)) {
+        format(ll.median, digits = 4) 
+      } else "Inf"
+      p.val <- format(gelato.result$assign.prob[unknown, known], digits = 2)
+      pop <- paste(known, " (lnL = ", log.lik, ", p = ", p.val, ")", sep = "")
+      mtext(pop, side = 3, line = 1, adj = 1, 
+            font = ifelse(known == high.prob, 2, 1))
+    }
+    mtext("Fst", side = 1, outer = T, cex = 1.2)
+    mtext("Density", side = 2, outer = T, cex = 1.2)
+    par(op)
+    if(!is.null(main)) mtext(main, side = 3, line = 3, adj = 0, font = 3)
   }
-  xticks <- pretty(unlist(sapply(lik, function(x) x$fst.dist)))
-  xlim <- range(xticks)
-  op <- par(mar = c(3, 3, 3, 2) + 0.1, 
-            oma = c(2, 2, 0.1, 0.1), 
-            mfrow = c(length(lik), 1)
-  )
-  high.prob <- gelato.result$assign.prob[unknown, "assignment"]
-  for(known in names(lik)) {
-    known.lik <- lik[[known]]
-    null.max <- max(hist(known.lik$fst.dist[, "null"], plot = F)$density)
-    obs.max <- max(hist(known.lik$fst.dist[, "obs"], plot = F)$density)
-    lik.mean <- known.lik$norm.coefs["mean"]
-    lik.sd <- known.lik$norm.coefs["sd"]
-    norm.lik <- dnorm(lik.mean, lik.mean, lik.sd)
-    ylim <- range(pretty(c(0, null.max, obs.max, norm.lik)))
-    hist(known.lik$fst.dist[, "null"], breaks = 10, freq = FALSE, 
-         xlim = xlim, ylim = ylim, xlab = "", ylab = "", main = "", 
-         col = "red", xaxt = "n")
-    x <- NULL # To avoid R CMD CHECK warning about no global binding for 'x'
-    curve(dnorm(x, lik.mean, lik.sd), from = xlim[1], to = xlim[2],
-          add = TRUE, col = "black", lwd = 3, ylim = ylim)
-    par(new = TRUE)
-    hist(known.lik$fst.dist[, "obs"], breaks = 10, freq = FALSE, 
-         xlim = xlim, ylim = ylim, xlab = "", ylab = "", col = "darkgreen", 
-         main = "", xaxt = "n", yaxt = "n") 
-    axis(1, pretty(xlim))
-    ll.median <- known.lik$log.Lik.smry["median"]
-    log.lik <- if(!is.infinite(ll.median)) {
-      format(ll.median, digits = 4) 
-    } else "Inf"
-    p.val <- format(gelato.result$assign.prob[unknown, known], digits = 2)
-    pop <- paste(known, " (lnL = ", log.lik, ", p = ", p.val, ")", sep = "")
-    mtext(pop, side = 3, line = 1, adj = 1, 
-          font = ifelse(known == high.prob, 2, 1))
-  }
-  mtext("Fst", side = 1, outer = T, cex = 1.2)
-  mtext("Density", side = 2, outer = T, cex = 1.2)
-  par(op)
-  if(!is.null(main)) mtext(main, side = 3, line = 3, adj = 0, font = 3)
 }

@@ -218,13 +218,12 @@ labelHaplotypes.gtypes <- function(x, ...) {
   )
   has.errors <- sapply(new.haps, is.null)
   if(sum(has.errors) > 0) {
-    msg <- paste(names(new.haps)[has.errors], collapse = ", ")
-    msg <- paste("haplotypes could not be assigned for:", msg)
-    stop(msg)
+    has.errors <- paste(names(new.haps)[has.errors], collapse = ", ")
+    stop("haplotypes could not be assigned for: ", has.errors)
   }
 
   # create haplotype data.frame
-  hap.df <- as.data.frame(x, stringsAsFactors = FALSE)
+  hap.df <- as.data.frame(x)
   for(gene in names(new.haps)) {
     old.haps <- hap.df[, gene]
     hap.df[, gene] <- new.haps[[gene]]$haps[old.haps]

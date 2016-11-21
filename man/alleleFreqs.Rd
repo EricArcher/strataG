@@ -30,10 +30,10 @@ If \code{g} is a haploid object with sequences, make sure to run
 data(msats.g)
 
 f <- alleleFreqs(msats.g)
-f$D11t # Frequencies for Locus D11t
+f$D11t # Frequencies and proportions for Locus D11t
 
 f.pop <- alleleFreqs(msats.g, TRUE)
-f.pop$EV94[, , "Coastal"] # Frequencies for EV94 in the Coastal population
+f.pop$EV94[, "freq", "Coastal"] # Frequencies for EV94 in the Coastal population
 
 }
 \author{

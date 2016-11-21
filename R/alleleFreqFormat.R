@@ -38,7 +38,7 @@ alleleFreqFormat <- function(x, g) {
     # skip (leave as NA) if either id or locus can't be found
     if(!(id %in% indNames(g) | locus %in% locNames(g))) next
     # get genotype of this id at this locus
-    gt <- unlist(loci(g, id, locus))
+    gt <- as.array(g, id, locus)
     # if the genotype is NA skip and leave format as NA
     if(any(is.na(gt))) next
     # get frequency and round

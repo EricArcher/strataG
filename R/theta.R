@@ -20,5 +20,6 @@
 #' @export
 #' 
 theta <- function(g) {
-  sapply(colnames(g@loci), function(x) theta.h(na.omit(g@loci[, x])))
+  .thetaFunc <- function(x) theta.h(na.omit(x))
+  g@data[, sapply(.SD, .thetaFunc), .SDcols = !c("ids", "strata")]
 }

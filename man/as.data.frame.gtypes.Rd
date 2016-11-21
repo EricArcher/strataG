@@ -26,7 +26,7 @@ locus.}
 \item{sort.alleles}{logical. for non-haploid objects, should alleles be sorted 
 in genotypes or left in original order? (only takes affect if \code{one.col = TRUE})}
 
-\item{...}{additional arguments ot be passed to or from methods.}
+\item{...}{additional arguments to be passed to or from methods.}
 }
 \value{
 A \code{data.frame} with one row per sample.
@@ -54,6 +54,6 @@ str(genotypes.df)
 Eric Archer \email{eric.archer@noaa.gov}
 }
 \seealso{
-\link{df2gtypes} \link[strataG]{as.matrix}
+\link{df2gtypes} \link[strataG]{as.matrix} \link[strataG]{as.array}
 }
 

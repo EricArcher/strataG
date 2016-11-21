@@ -110,7 +110,7 @@ genepopWrite <- function(g, label = "genepop.write",
     formatC(x, width = max.width, flag = "0")
   })
   
-  loc_dat <- apply(idRows(g), 1, function(x) {
+  loc_dat <- apply(as.array(g, drop = FALSE), 1, function(x) {
     x.loc <- apply(g.mat, 2, function(loc) paste(loc[x], collapse = ""))
     paste(x.loc, collapse = " ")
   })

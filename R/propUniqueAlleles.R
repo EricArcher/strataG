@@ -22,9 +22,8 @@
 #' @export
 #' 
 propUniqueAlleles <- function(g) { 
-  id.rows <- sub("\\.[[:digit:]]*$", "", rownames(loci(g)))
-  apply(loci(g), 2, function(locus) {
-    id.a.freqs <- table(id.rows, locus)
+  sapply(locNames(g), function(locus) {
+    id.a.freqs <- table(g@data$ids, g@data[[locus]])
     is.unique <- apply(id.a.freqs, 2, function(x) sum(x > 0) == 1)
     sum(is.unique)
   }) / numAlleles(g)

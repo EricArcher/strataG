@@ -34,8 +34,8 @@
 #' @importFrom stats complete.cases
 #' @export
 #' 
-freq2GenData <- function(freq.mat, hap.col = NULL, freq.col = 1, id.label = NULL, 
-                         hap.label = NULL) {
+freq2GenData <- function(freq.mat, hap.col = NULL, freq.col = 1, 
+                         id.label = NULL, hap.label = NULL) {
   haps <- if(is.null(hap.col)) {
     if(is.null(rownames(freq.mat))) 1:nrow(freq.mat) else rownames(freq.mat)
   } else {

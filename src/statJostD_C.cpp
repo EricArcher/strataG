@@ -2,18 +2,19 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-NumericVector statJostD_C(IntegerMatrix loci, IntegerMatrix strataMat, int ploidy) {
+NumericVector statJostD_C(IntegerMatrix loci, IntegerMatrix strataMat) {
   // function declarations
   IntegerMatrix table2D(IntegerVector, IntegerVector);
-  IntegerVector calcStrataN(IntegerVector, IntegerVector);
+  IntegerVector calcStrataN(IntegerVector, IntegerVector, int);
   double harmonicMean_C(NumericVector);
   
   NumericVector terms(loci.ncol());
   NumericVector estVec(strataMat.ncol());
+  int ploidy(loci.nrow() / strataMat.nrow());
+  int numStrata(unique(strataMat(_, 0)).size());
   for(int idx = 0; idx < estVec.size(); idx++) {
     for(int i = 0; i < loci.ncol(); i++) {
-      IntegerMatrix alleleStrataFreq = table2D(loci(_, i), rep(strataMat(_, idx), ploidy));
-      int numStrata = calcStrataN(loci, strataMat(_, idx)).size();
+      IntegerMatrix alleleStrataFreq = table2D(loci(_, i), rep_each(strataMat(_, idx), ploidy));
       NumericMatrix iTerms(2, alleleStrataFreq.nrow());
       for(int a = 0; a < iTerms.ncol(); a++) {
         NumericMatrix jTerms(3, alleleStrataFreq.ncol());

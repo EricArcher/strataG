@@ -22,28 +22,31 @@
 #' data(msats.g)
 #' 
 #' f <- alleleFreqs(msats.g)
-#' f$D11t # Frequencies for Locus D11t
+#' f$D11t # Frequencies and proportions for Locus D11t
 #' 
 #' f.pop <- alleleFreqs(msats.g, TRUE)
-#' f.pop$EV94[, , "Coastal"] # Frequencies for EV94 in the Coastal population
+#' f.pop$EV94[, "freq", "Coastal"] # Frequencies for EV94 in the Coastal population
 #' 
 #' @export
 
 alleleFreqs <- function(g, by.strata = FALSE) {
-  freqs <- vector("list", length = ncol(g@loci))
-  strata <- rep(g@strata, g@ploidy)
-  for(i in 1:length(freqs)) {
-    if(by.strata & nlevels(strata) != 1) {
-      f <- table(g@loci[, i], strata)
+  freqs <- vector("list", length = nLoc(g))
+  names(freqs) <- locNames(g)
+  if(by.strata & nStrata(g) > 1) {
+    for(i in locNames(g)) {
+      f <- table(g@data[[i]], g@data$strata)
       p <- prop.table(f, 2)
-      freqs[[i]] <- array(dim = list(nrow(f), 2, ncol(f)))
+      freqs[[i]] <- array(
+        dim = list(nrow(f), 2, ncol(f)),
+        dimnames = list(rownames(f), c("freq", "prop"), colnames(f))
+      )
       for(j in 1:ncol(f)) freqs[[i]][, , j] <- cbind(f[, j], p[, j])
-      dimnames(freqs[[i]]) <- list(rownames(f), c("freq", "prop"), colnames(f))
-    } else {
-      f <- table(g@loci[, i])
+    } 
+  } else {
+    for(i in locNames(g)) {
+      f <- table(g@data[[i]])
       freqs[[i]] <- cbind(freq = f, prop = f / sum(f))
     }
   }
-  names(freqs) <- colnames(g@loci)
   freqs
 }

@@ -9,7 +9,7 @@
 #' @importFrom methods setMethod
 #' 
 setMethod("show", "gtypes", function(object) {
-  x <- object
-  print(summary(x))
+  .printBaseSmry(.baseSmry(object))
+  invisible(NULL)
 })
   

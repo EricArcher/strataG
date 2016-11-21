@@ -3,6 +3,7 @@ options(digits = 2)
 library(strataG)
 
 ## ------------------------------------------------------------------------
+library(ape)
 data(dolph.seqs)
 
 i <- sample(1:10, 1)

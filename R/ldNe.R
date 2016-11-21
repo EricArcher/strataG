@@ -123,10 +123,14 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95) {
     
     # calculate correlation r-squared (rsq) between pairs of loci
     loc.pairs <- combn(ncol(mat), 2)
-    cl <- .setupClusters(detectCores() - 1)
+    cl <- .setupClusters()
     loc.comp.mat <- tryCatch({
-      parSapply(cl, 1:ncol(loc.pairs), compLoc, loc.pairs = loc.pairs, mat = mat)
-    }, finally = stopCluster(cl))
+      if(!is.null(cl)) {
+        parSapply(cl, 1:ncol(loc.pairs), compLoc, loc.pairs = loc.pairs, mat = mat)
+      } else {
+        sapply(1:ncol(loc.pairs), compLoc, loc.pairs = loc.pairs, mat = mat)
+      }
+    }, finally = if(!is.null(cl)) stopCluster(cl))
     
     S <- loc.comp.mat["S", ]
     # Eqn 1.1: expected r-squared

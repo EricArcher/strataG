@@ -55,7 +55,8 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1), model = 
   
   result <- lapply(locNames(g), function(loc) {
     within.dist <- do.call(rbind, tapply(names(st), st, function(ids) {
-      haps <- as.character(loci(g, ids = ids, loci = loc)[, 1])
+      #haps <- as.character(loci(g, ids = ids, loci = loc)[, 1])
+      haps <- as.array(g, ids = ids, loci = loc, drop = TRUE)
       pair.dist.summary(t(combn(haps, 2)), hap.dist[[loc]], probs)
     }))
   
@@ -63,8 +64,10 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1), model = 
       btwn <- t(apply(st.pairs, 1, function(sp) {
         ids1 <- names(st)[which(st == sp[1])]
         ids2 <- names(st)[which(st == sp[2])]
-        h1 <- as.character(loci(g, ids = ids1, loci = loc)[, 1])
-        h2 <- as.character(loci(g, ids = ids2, loci = loc)[, 1])
+        # h1 <- as.character(loci(g, ids = ids1, loci = loc)[, 1])
+        # h2 <- as.character(loci(g, ids = ids2, loci = loc)[, 1])
+        h1 <- as.array(g, ids = ids1, loci = loc, drop = TRUE)
+        h2 <- as.array(g, ids = ids2, loci = loc, drop = TRUE)
         btwn <- pair.dist.summary(expand.grid(h1, h2), hap.dist[[loc]], probs)
         dA <- btwn["mean"] - (sum(within.dist[sp, "mean"], na.rm = TRUE) / 2)
         c(dA = unname(dA), btwn)

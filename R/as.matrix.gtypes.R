@@ -10,13 +10,13 @@
 #' @param strata logical. include a column for current statification (\code{strata})?
 #' @param sort.alleles logical. for non-haploid objects, should alleles be sorted 
 #'   in genotypes or left as in original order? (only takes affect if \code{one.col = TRUE})
-#' @param ... additional arguments ot be passed to or from methods.
+#' @param ... additional arguments to be passed to or from methods.
 #'   
 #' @return A \code{matrix} with one row per sample.
 #' 
 #' @author Eric Archer \email{eric.archer@@noa.gov}
 #' 
-#' @seealso \link{df2gtypes} \link[strataG]{as.data.frame}
+#' @seealso \link{df2gtypes} \link[strataG]{as.data.frame} \link[strataG]{as.array}
 #' 
 #' @examples 
 #' data(msats.g)
@@ -33,43 +33,40 @@
 #' genotypes.mat <- as.matrix(msats.g, one.col = TRUE, ids = FALSE, strata = FALSE)
 #' head(genotypes.mat)
 #' 
-#' @importFrom methods setMethod
 #' @aliases as.matrix,gtypes-method as.matrix.gtypes as.matrix
+#' @importFrom methods setMethod
 #' 
 #' @export
 #' 
 setMethod(
   "as.matrix", "gtypes",
   function(x, one.col = FALSE, sep = "/", ids = TRUE, strata = TRUE, sort.alleles = TRUE, ...) {
-    # create matrix identifying which rows (columns) each sample (row) is in 
-    #   in the @loci slot
-    id.mat <- matrix(1:nrow(x@loci), ncol = ploidy(x))
+    setkey(x@data, ids)
     # loop through each locus
     gen.mat <- do.call(cbind, lapply(locNames(x), function(locus) {
-      # extract alleles for this locus as a matrix with one allele per colum
-      this.loc <- x@loci[[locus]]
-      this.loc <- apply(id.mat, 1, function(i) as.character(this.loc[i]))
-      this.loc <- if(is.vector(this.loc)) cbind(this.loc) else t(this.loc)  
       # collapse alleles to create a one column matrix if one.col == TRUE
-      if(one.col & x@ploidy > 1) {
-        this.loc <- cbind(apply(this.loc, 1, function(alleles) {
+      this.loc <- if(one.col | ploidy(x) == 1) {
+        arr <- as.array(x, loci = locus, drop = FALSE)
+        cbind(apply(arr, 1, function(alleles) {
           if(any(is.na(alleles))) NA else {
             if(sort.alleles) alleles <- sort(alleles)
             paste(alleles, collapse = sep)
           }
         }))
+      } else {
+        as.array(x, loci = locus, drop = TRUE)
       }
       # assign column names
-      colnames(this.loc) <- if(ncol(this.loc) > 1) {
-        paste(locus, 1:ncol(this.loc), sep = ".")
-      } else {
+      colnames(this.loc) <- if(dim(this.loc)[2] == 1) {
         locus
-      }
+      } else {
+        paste(locus, 1:ncol(this.loc), sep = ".")
+      } 
       this.loc
     }))
     rownames(gen.mat) <- indNames(x)
     if(strata) gen.mat <- cbind(strata = as.character(strata(x)), gen.mat)
     if(ids) gen.mat <- cbind(ids = indNames(x), gen.mat)
-    gen.mat    
+    gen.mat
   }
 )

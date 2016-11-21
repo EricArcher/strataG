@@ -2,16 +2,17 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-NumericVector statChi2_C(IntegerMatrix loci, IntegerMatrix strataMat, int ploidy) {
+NumericVector statChi2_C(IntegerMatrix loci, IntegerMatrix strataMat) {
   // function declarations
   IntegerMatrix table2D(IntegerVector, IntegerVector);
   NumericVector rowSumC(NumericMatrix);
   NumericVector colSumC(NumericMatrix);
   NumericMatrix numOuterC(NumericVector, NumericVector);
   
+  int ploidy(loci.nrow() / strataMat.nrow());
   NumericVector estVec(strataMat.ncol());
   for(int idx = 0; idx < estVec.size(); idx++) {
-    IntegerVector st(rep(strataMat(_, idx), ploidy));
+    IntegerVector st(rep_each(strataMat(_, idx), ploidy));
     double chi2(0);
     for(int i = 0; i < loci.ncol(); i++) {
       IntegerMatrix obsFreq(table2D(loci(_, i), st));

@@ -34,31 +34,33 @@ stratify <- function(g, scheme = NULL, drop = TRUE) {
   ids <- indNames(g)
   
   scheme <- if(is.null(scheme)) {
-    rep("Default", nInd(g))
+    rep("Default", length(ids))
   } else if(!(is.vector(scheme) | is.factor(scheme))) {
     stop("'scheme' must be a vector or a factor")
   } else if(length(scheme) == 1) {
-    if(!scheme %in% colnames(g@schemes)) {
+    if(!scheme %in% colnames(schemes(g))) {
       stop(paste("scheme '", scheme, "' cannot be found", sep = ""))
     }
     g@schemes[ids, scheme]
   } else {
     if(length(scheme) != length(ids)) {
-      warning(paste("'scheme' is not the same length as the number of samples.",
-                    "values will be recycled"))
+      warning(
+        "'scheme' is not the same length as the number of samples. ",
+        "values will be recycled."
+      )
     }
     if(!is.null(names(scheme))) {
       scheme[ids]
     } else {
-      rep(scheme, length.out = nInd(g))
+      rep(scheme, length.out = length(ids))
     }
   }
+  scheme <- data.table(ids = ids, strata = as.character(scheme))
+  g@data <- merge(scheme, g@data[, .SD, .SDcols = !"strata"], by = "ids", all.y = TRUE)
   
-  names(scheme) <- ids
-  g@strata <- factor(scheme)
   if(drop) {
-    i <- which(is.na(strata(g)))
-    if(length(i) > 0) g <- g[-i, , , drop = TRUE]
+    g@data <- g@data[!is.na(strata)]
+    g <- removeSequences(g)
   }
   g
 }

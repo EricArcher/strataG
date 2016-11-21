@@ -57,23 +57,32 @@ setMethod("initialize", "gtypes",
     colnames(gen.data) <- "Haplotype"
   }
   if(!(is.matrix(gen.data) | is.data.frame(gen.data))) {
-    stop("'gen.data' is not a vector, matrix, or data.frame")
+    stop("'gen.data' is not a vector, matrix, or data.frame", call. = FALSE)
   }
   
   # check ploidy
   ploidy <- as.integer(ploidy)
   if(ncol(gen.data) %% ploidy != 0) {
-    stop("the number of columns in 'gen.data' is not a multiple of 'ploidy'")
+    stop(
+      "the number of columns in 'gen.data' is not a multiple of 'ploidy'",
+      call. = FALSE
+    )
   }
   if(ploidy > 1 & !is.null(sequences)) {
-    stop("'sequences' can't be present if 'ploidy' is greater than 1")
+    stop(
+      "'sequences' can't be present if 'ploidy' is greater than 1", 
+      call. = FALSE
+    )
   }
   
   # check ind.names
   ind.names <- if(!is.null(ind.names)) {
     if(!is.vector(ind.names)) stop("'ind.names' must be a vector")
     if(length(ind.names) != nrow(gen.data)) {
-      stop("the length of 'ind.names' must equal the number of rows in 'gen.data'")
+      stop(
+        "the length of 'ind.names' must equal the number of rows in 'gen.data'",
+        call. = FALSE
+      )
     }
     as.character(ind.names)
   } else {
@@ -82,14 +91,14 @@ setMethod("initialize", "gtypes",
   if(any(duplicated(ind.names))) {
     dup.names <- unique(ind.names[duplicated(ind.names)])
     dup.names <- paste(dup.names, collapse = ", ")
-    stop(paste("there are duplicated individual names:", dup.names))
+    stop("there are duplicated individual names: ", dup.names, call. = FALSE)
   }
   rownames(gen.data) <- ind.names
   
   # check schemes
   if(!is.null(schemes)) {
     if(!(is.matrix(schemes) | is.data.frame(schemes))) {
-      stop("'schemes' is not a matrix or data.frame")
+      stop("'schemes' is not a matrix or data.frame", call. = FALSE)
     } else {
       schemes <- as.data.frame(schemes)
       for(i in 1:ncol(schemes)) schemes[, i] <- factor(schemes[, i])
@@ -97,11 +106,14 @@ setMethod("initialize", "gtypes",
         if(nrow(schemes) == length(ind.names)) {
           rownames(schemes) <- ind.names
         } else {
-          stop("'schemes' doesn't have rownames and not as long as 'ind.names'")
+          stop(
+            "'schemes' doesn't have rownames and not as long as 'ind.names'",
+            call. = FALSE
+          )
         }
       } else {
         if(length(intersect(rownames(schemes), rownames(gen.data))) == 0) {
-          stop("no rownames in 'schemes' are in 'gen.data'")
+          stop("no rownames in 'schemes' are in 'gen.data'", call. = FALSE)
         }
       }
     }
@@ -116,44 +128,49 @@ setMethod("initialize", "gtypes",
   }
   
   # format loci
-  locus.cols <- matrix(1:ncol(gen.data), nrow = ploidy)
-  loci <- do.call(data.frame, lapply(1:ncol(locus.cols), function(i) {
-    factor(unlist(gen.data[, locus.cols[, i]], use.names = FALSE))
+  nloc <- ncol(gen.data) / ploidy
+  loci <- do.call(data.table, lapply(1:nloc, function(i) {
+    locus.cols <- (i * ploidy - ploidy + 1):(i * ploidy)
+    factor(unlist(gen.data[, locus.cols], use.names = FALSE))
   }))
+  # create locus names
   colnames(loci) <- if(is.null(colnames(gen.data))) {
     # return generic names if no colnames assigned
     nums <- formatC(1:ncol(loci), digits = floor(log10(ncol(loci))), flag = "0")
     paste("Locus", nums, sep = "_")
   } else .parseLocusNames(colnames(gen.data), ploidy)
-  row.ids <- rep(rownames(gen.data), ploidy)
-  row.nums <- rep(1:ploidy, each = nrow(gen.data))
-  rownames(loci) <- paste(row.ids, row.nums, sep = ".")
-  rm(gen.data, locus.cols, row.ids, row.nums)
-  
-  # create valid locus names
   colnames(loci) <- make.names(colnames(loci))
   
   # check sequences
   if(!is.null(sequences)) {
     sequences <- as.multidna(sequences)
     if(getNumLoci(sequences) != ncol(loci)) {
-      stop("the number of genes in 'sequences' is not equal to the number of loci")
+      stop(
+        "the number of genes in 'sequences' is not equal to the number of loci",
+        call. = FALSE
+      )
     }
     setLocusNames(sequences) <- colnames(loci)
     for(loc in colnames(loci)) {
-      haps <- na.omit(unique(as.character(loci[, loc])))
+      haps <- na.omit(unique(as.character(loci[[loc]])))
       seq.names <- getSequenceNames(sequences)[[loc]]
       missing <- setdiff(haps, seq.names)
       if(length(missing) > 0) {
         missing <- paste(missing, collapse = ", ")
-        stop(paste("the following haplotypes can't be found in sequences for locus '", loc, "': ", missing, sep = ""))
+        stop(
+          "the following haplotypes can't be found in sequences for locus '", 
+          loc, "': ", missing, call. = FALSE
+        )
       }
     }
   }
   
+  gen.data <- cbind(ids = rownames(gen.data), strata = "Default", loci)
+  setkey(gen.data, ids)
+  
   # create and return gtypes object
   g <- .Object
-  g@loci <- loci
+  g@data <- gen.data
   g@ploidy <- ploidy
   g@sequences <- sequences
   g@schemes <- schemes
@@ -161,17 +178,9 @@ setMethod("initialize", "gtypes",
   g@other <- other
   
   # Check for samples missing data for all loci
-  g.mat <- as.matrix(g)
-  not.missing.all <- apply(g.mat, 1, function(y) !all(is.na(y)))
-  to.keep <- names(which(not.missing.all))
-  to.remove <- names(which(!not.missing.all))
-  if(length(to.remove)) {
-    warning("The following samples are missing data for all loci and have been removed: ", 
-            paste(to.remove, collapse = ", "))
-  }
-  g@loci <- g@loci[idRows(g, to.keep), , drop = FALSE]
-  g@loci <- droplevels(g@loci)
+  g <- .removeIdsMissingAllLoci(g)
   
+  # Remove unreferenced sequences
   if(remove.sequences) g <- removeSequences(g)
   
   stratify(g, strata)

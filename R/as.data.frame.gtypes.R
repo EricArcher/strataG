@@ -11,13 +11,13 @@
 #' @param strata logical. include a column for current statification (\code{strata})?
 #' @param sort.alleles logical. for non-haploid objects, should alleles be sorted 
 #'   in genotypes or left in original order? (only takes affect if \code{one.col = TRUE})
-#' @param ... additional arguments ot be passed to or from methods.
+#' @param ... additional arguments to be passed to or from methods.
 #'   
 #' @return A \code{data.frame} with one row per sample.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \link{df2gtypes} \link[strataG]{as.matrix}
+#' @seealso \link{df2gtypes} \link[strataG]{as.matrix} \link[strataG]{as.array}
 #' 
 #' @examples 
 #' data(msats.g)
@@ -34,9 +34,9 @@
 #' genotypes.df <- as.data.frame(msats.g, one.col = TRUE, ids = FALSE, strata = FALSE)
 #' str(genotypes.df)
 #' 
-#' @importFrom methods setMethod
 #' @aliases as.data.frame,gtypes-method as.data.frame.gtypes as.data.frame
-#' 
+#' @importFrom methods setMethod
+#'
 #' @export
 #' 
 setMethod(
@@ -47,5 +47,3 @@ setMethod(
     ), stringsAsFactors = FALSE)
   }
 )
-
-  

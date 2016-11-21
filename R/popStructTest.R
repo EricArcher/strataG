@@ -27,25 +27,22 @@
 #' @param ... other parameters to be passed to population 
 #'   differentiation functions.
 #' 
-#' @return
-#' \describe{
-#'  \item{overall}{a list containing:
-#'    \describe{
-#'      \item{\code{strata.freq}}{a vector of the sample sizes for each stratum}
-#'      \item{\code{result}}{a matrix with the statistic estimate and p-value 
-#'        for each statistic}
-#'      \item{\code{null.dist}}{a matrix with the null distributions for 
-#'        each statistic}
-#'    }}
-#'  \item{pairwise}{a list containing:
-#'    \describe{
-#'      \item{\code{result}}{a data.frame with the result of each pairwise 
-#'        comparison on each row}
-#'      \item{\code{pair.mat}}{a list with a pairwise matrix for each statistic. 
-#'        Values in lower left are the statistic estimate, and upper right are p-values}
-#'      \item{\code{null.dist}}{a matrix with the null distributions for 
-#'        each statistic}
-#'    }}
+#' @return \describe{
+#'  \item{overall}{a list containing: \describe{
+#'    \item{\code{strata.freq}}{a vector of the sample sizes for each stratum}
+#'    \item{\code{result}}{a matrix with the statistic estimate and p-value 
+#'      for each statistic}
+#'    \item{\code{null.dist}}{a matrix with the null distributions for 
+#'      each statistic}
+#'  }}
+#'  \item{pairwise}{a list containing: \describe{
+#'    \item{\code{result}}{a data.frame with the result of each pairwise 
+#'      comparison on each row}
+#'    \item{\code{pair.mat}}{a list with a pairwise matrix for each statistic. 
+#'      Values in lower left are the statistic estimate, and upper right are p-values}
+#'    \item{\code{null.dist}}{a matrix with the null distributions for 
+#'      each statistic}
+#'  }} 
 #' }
 #' 
 #' @note On multi-core systems, runs of separate statistics are automatically 
@@ -193,44 +190,6 @@ overallTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE,
     nd
   } else NULL
   
-# # calculate list of observed values for each population structure function
-#   # conduct permutation test
-#   null.dist <- NULL
-#   if(nrep > 0 & length(stat.list) > 0) {
-#     st <- lapply(1:nrep, function(i) sample(strata(g)))  
-#     
-#     # setup permutation function to return vector of values from each population 
-#     #   structure statistic in stat.funcs
-#     perm.func <- function(ran.strata, g, stat.funcs, ...) {
-#       sapply(1:length(stat.funcs), function(j) {
-#         stat.funcs[[j]](g, strata = ran.strata, ...)
-#       })
-#     }
-#     
-#     # collect null distribution
-#     if(num.cores > 1) {
-#       # setup clusters
-#       cl <- .setupClusters(num.cores)
-#       tryCatch({
-#         # calculate matrix of null distributions
-#         null.dist <- parLapply(cl, st, perm.func, g = g, stat.funcs = stat.list, ...)
-#       })
-#       stopCluster(cl)
-#       closeAllConnections()
-#     } else {
-#       null.dist <- lapply(st, perm.func, g = g, stat.funcs = stat.list, ...)
-#     }
-#     null.dist <- do.call(rbind, null.dist)
-#     colnames(null.dist) <- rownames(result)
-#     
-#     # calculate vector of p-values
-#     for(x in rownames(result)) {
-#       est <- result[x, "estimate"]
-#       if(!is.na(est)) result[x, "p.val"] <- pVal(est, na.omit(null.dist[, x]))
-#     }
-#   } 
-  # if(!keep.null) null.dist <- NULL
-  
   # collect strata frequencies to named vector 
   strata.freq <- table(strata(g), useNA = "no")
   
@@ -302,7 +261,7 @@ pairwiseTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE,
   
   # create pairwise matrices - lower left is estimate, upper right is p-value 
   stat.cols <- seq(6, ncol(result), 2)
-  strata <- levels(strata(g))
+  strata <- strataNames(g)
   mat <- matrix(nrow = length(strata), ncol = length(strata), 
     dimnames = list(strata, strata)
   )

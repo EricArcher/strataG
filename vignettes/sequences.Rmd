@@ -16,6 +16,7 @@ There are several functions for working with sequence data in strataG. They will
 
 Leading and trailing N's can be removed from all sequences like this:
 ```{r}
+library(ape)
 data(dolph.seqs)
 
 i <- sample(1:10, 1)

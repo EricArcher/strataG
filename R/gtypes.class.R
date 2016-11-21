@@ -4,21 +4,19 @@ setClassUnion("dnaSequences", c("multidna", "NULL"))
 #' @description An S4 class storing multi-allelic locus or sequence data along
 #'   with a current stratification and option stratification schemes.
 #'
-#' @slot loci a data.frame containing the allelic data as one column per locus.
-#'   Alleles are on multiple rows per column with samples listed in the same
-#'   order for each allele. rownames are sample names plus allele number
-#'   formatted as 12345.1 and 12345.2 where 12345 is the sample name and 1 and
-#'   2 are the first and second alleles. colnames are unique locus names.
+#' @slot data a data.table where the first column contains the sample ID 
+#'   (\code{ids}). The second column contains the sample stratification 
+#'   (\code{strata}). The third column to the end contains the allelic data as 
+#'   one column per locus. Alleles are on multiple rows per column with sample 
+#'   IDs duplicated for all alleles. Column names are unique locus names.
 #' @slot sequences a \linkS4class{multidna} object.
 #' @slot ploidy integer representing the ploidy of the data. There are
-#'   ploidy * the number of samples rows in 'loci'.
-#' @slot strata a factor or vector that can be coerced as to a factor as long 
-#'   as the number of samples representing the current stratification scheme.
+#'   ploidy * the number of individuals rows in 'data'.
 #' @slot schemes a data.frame with stratification schemes in each column.
-#'   Sample names are in the rownames and must match the first part of the
-#'   sample names (rownames) of the 'loci' slot. Each column is a factor.
+#'   The rownames are individual names and must match the 'id' column of the
+#'   'data' slot. Each column is a factor.
 #' @slot description a label for the object (optional).
-#' @slot other a slot to carry other related information - unused in package
+#' @slot other a slot to carry other related information - currently unused in 
 #'   analyses (optional).
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
@@ -49,61 +47,68 @@ setClassUnion("dnaSequences", c("multidna", "NULL"))
 #' dloop.g
 #' 
 #' @aliases gtypes
-#' @import adegenet ape apex
+#' @import adegenet ape apex data.table
 #' @importFrom methods setClass
 #' @export
 #' 
 setClass(
   Class = "gtypes",
-  slots = c(loci = "data.frameOrNULL", sequences = "dnaSequences",
-            ploidy = "integer", strata = "factorOrNULL",
-            schemes = "data.frameOrNULL", description = "charOrNULL", 
-            other = "ANY"
+  slots = c(
+    data = "data.table", sequences = "dnaSequences",
+    ploidy = "integer", schemes = "data.frameOrNULL", 
+    description = "charOrNULL", other = "ANY"
   ),
-  prototype = prototype(loci = NULL, sequences = NULL, ploidy = 0L, 
-                        strata = NULL, schemes = NULL, 
-                        description = NULL, other = NULL
+  prototype = prototype(
+    data = NULL, sequences = NULL, ploidy = 0L, 
+    schemes = NULL, description = NULL, other = NULL
   ),
   validity = function(object) {
-    # check that all columns in loci are factors
-    loci.are.factors <- sapply(object@loci, is, class2 = "factor")
-    if(!all(loci.are.factors)) {
-      cat("all columns in the 'loci' slot are not factors\n")
+    # check that the first two columns are "ids" and "strata"
+    if(!identical(colnames(object@data)[1:2], c("ids", "strata"))) {
+      cat("first two columns in the 'data' slot must be 'ids' and 'strata'\n")
       return(FALSE)
     }
     
+    # check that all columns in data are factors
+    loci.are.factors <- object@data[, sapply(.SD, is.factor), .SDcols = !c("ids", "strata")]
+    if(!all(loci.are.factors)) {
+      cat("all locus columns in the 'data' slot are not factors\n")
+      return(FALSE)
+    }
+
     # check sequences
-    if(!is.null(object@sequences)) {  
-      # check that length of sequences equals number of columns in loci
+    if(!is.null(object@sequences)) {
+      # check that length of sequences equals number of locus columns
       dna <- getSequences(sequences(object), simplify = FALSE)
       num.seqs <- length(dna)
-      if(num.seqs > 0 & num.seqs != ncol(object@loci)) {
+      if(num.seqs > 0 & num.seqs != ncol(object@data) - 2) {
         cat("the number of sets of sequences is not equal to the number of loci\n")
         return(FALSE)
       }
-      
-      # check that locus names are the same in the @loci colnames and names of 
+
+      # check that locus names are the same in the @data colnames and names of
       #  @sequences
-      if(!identical(colnames(object@loci), getLocusNames(object@sequences))) {
+      loc.names <- colnames(object@data)[-(1:2)]
+      if(!identical(loc.names, getLocusNames(object@sequences))) {
         cat("the names of the sets of sequences is not the same as the loci\n")
         return(FALSE)
       }
-      
+
       # check that sequence haplotype labels can be found
-      locus.good <- sapply(colnames(object@loci), function(x) {
-        haps <- unique(as.character(object@loci[, x]))
+      locus.good <- sapply(loc.names, function(x) {
+        haps <- object@data[[x]]
         seqs <- rownames(as.matrix(dna[[x]]))
         all(na.omit(haps) %in% seqs)
       })
       if(!all(locus.good)) {
-        bad.loci <- paste(colnames(object@loci)[!locus.good], collapse = ", ")
-        cat("haplotypes are missing in", bad.loci, "\n")
+        bad.loci <- paste(loc.names[!locus.good], collapse = ", ")
+        cat("haplotypes are missing in:", bad.loci, "\n")
         return(FALSE)
       }
     }
-    
+
     # check that ploidy is compatible with loci
-    if(nrow(object@loci) %% object@ploidy != 0) {
+    if(nrow(object@data) %% object@ploidy != 0) {
       cat("number of alleles is not an even multiple of 'ploidy'\n")
       return(FALSE)
     }
@@ -111,23 +116,15 @@ setClass(
       cat("sequences can't be present unless object is haploid (ploidy = 1)\n")
       return(FALSE)
     }
-    
-    # check that strata is same length as number of individuals
-    if(!is.null(object@strata)) {
-      if((nrow(object@loci) / object@ploidy) != length(object@strata)) {
-        cat("length of 'strata' slot is not equal to number of individuals\n")
-        return(FALSE)
-      }
-    }
-    
+
     # check that at least some individuals are in strata schemes
     if(!is.null(object@schemes)) {
-      if(length(intersect(indNames(object), rownames(object@schemes))) == 0) {
-        cat("no sample ids from the 'loci' slot are in stratification schemes\n")
+      if(length(intersect(object@data$ids, rownames(object@schemes))) == 0) {
+        cat("no sample ids from the 'data' slot are in stratification schemes\n")
         return(FALSE)
       }
     }
-    
+
     TRUE
   }
 )

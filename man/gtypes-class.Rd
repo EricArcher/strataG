@@ -12,27 +12,24 @@ An S4 class storing multi-allelic locus or sequence data along
 \section{Slots}{
 
 \describe{
-\item{\code{loci}}{a data.frame containing the allelic data as one column per locus.
-Alleles are on multiple rows per column with samples listed in the same
-order for each allele. rownames are sample names plus allele number
-formatted as 12345.1 and 12345.2 where 12345 is the sample name and 1 and
-2 are the first and second alleles. colnames are unique locus names.}
+\item{\code{data}}{a data.table where the first column contains the sample ID 
+(\code{ids}). The second column contains the sample stratification 
+(\code{strata}). The third column to the end contains the allelic data as 
+one column per locus. Alleles are on multiple rows per column with sample 
+IDs duplicated for all alleles. Column names are unique locus names.}
 
 \item{\code{sequences}}{a \linkS4class{multidna} object.}
 
 \item{\code{ploidy}}{integer representing the ploidy of the data. There are
-ploidy * the number of samples rows in 'loci'.}
-
-\item{\code{strata}}{a factor or vector that can be coerced as to a factor as long 
-as the number of samples representing the current stratification scheme.}
+ploidy * the number of individuals rows in 'data'.}
 
 \item{\code{schemes}}{a data.frame with stratification schemes in each column.
-Sample names are in the rownames and must match the first part of the
-sample names (rownames) of the 'loci' slot. Each column is a factor.}
+The rownames are individual names and must match the 'id' column of the
+'data' slot. Each column is a factor.}
 
 \item{\code{description}}{a label for the object (optional).}
 
-\item{\code{other}}{a slot to carry other related information - unused in package
+\item{\code{other}}{a slot to carry other related information - currently unused in 
 analyses (optional).}
 }}
 \examples{

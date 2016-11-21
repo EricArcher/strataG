@@ -29,10 +29,10 @@
 #' 
 summarizeLoci <- function(g, by.strata = FALSE, ...) {
   smry.func <- function(x) {
-    n.genotyped <- nInd(x) - numMissing(x)
+    n.gtyped <- numGenotyped(x)
     cbind(
-      num.genotyped = n.genotyped,
-      prop.genotyped = n.genotyped / nInd(x),
+      num.genotyped = n.gtyped,
+      prop.genotyped = n.gtyped / nInd(x),
       num.alleles = numAlleles(x),
       allelic.richness = allelicRichness(x),
       prop.unique.alleles = propUniqueAlleles(x),

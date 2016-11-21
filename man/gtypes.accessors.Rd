@@ -16,8 +16,6 @@
 \alias{index}
 \alias{locNames}
 \alias{locNames,gtypes-method}
-\alias{loci}
-\alias{loci,gtypes-method}
 \alias{nInd}
 \alias{nInd,gtypes-method}
 \alias{nLoc}
@@ -77,10 +75,6 @@ schemes(x) <- value
 
 \S4method{schemes}{gtypes}(x) <- value
 
-loci(x, ...)
-
-\S4method{loci}{gtypes}(x, ids = NULL, loci = NULL)
-
 alleleNames(x, ...)
 
 \S4method{alleleNames}{gtypes}(x)
@@ -107,21 +101,18 @@ description(x) <- value
 
 \item{value}{value being assigned by accessor.}
 
-\item{ids}{vector of individual ids.}
-
-\item{loci}{vector of loci.}
-
 \item{seqName}{the name (or number) of a set of sequences from the 
 \code{@sequences} slot to return.}
 
 \item{as.haplotypes}{return sequences as haplotypes? If \code{TRUE}, contents of 
-\code{@sequences} slot are returned. If \code{FALSE}, one sequence per individual 
-is returned.}
+\code{@sequences} slot are returned. If \code{FALSE}, one sequence per 
+individual is returned.}
 
 \item{i, j, k}{subsetting slots for individuals (\code{i}), loci (\code{j}),
 or strata (\code{k}). See Details for more information.}
 
-\item{quiet}{suppress warnings about unmatched requested individuals, loci, or strata?}
+\item{quiet}{suppress warnings about unmatched requested individuals, loci, 
+or strata?}
 
 \item{drop}{if \code{TRUE} the return object will have unused sequences removed.}
 }
@@ -137,10 +128,11 @@ or strata (\code{k}). See Details for more information.}
   \item{other}{contents of \code{@other} slot}
   \item{strata}{return or modify the current stratification}
   \item{schemes}{return or modify the current stratification schemes}
-  \item{loci}{return a data.frame of the alleles for the specified ids and loci}
+  \item{genotypes}{return a 3-dimensional array of the alleles for the 
+    specified ids and loci}
   \item{alleleNames}{return a list of alleles at each locus}
-  \item{sequences}{return the \linkS4class{multidna} object in 
-    the \code{@sequences} slot. See \code{\link[apex]{getSequences}} to 
+  \item{sequences}{return the \linkS4class{multidna} object in the 
+    \code{@sequences} slot. See \code{\link[apex]{getSequences}} to 
     extract individual genes or sequences from this object}
   \item{description}{return the object's description}
 }
@@ -150,8 +142,8 @@ Accessors for slots in \linkS4class{gtypes} objects.
 }
 \details{
 Indexing a \code{gtypes} object with integers, characters, or logicals with 
-  the \code{[} operator follows the same rules as normal R indexing. The 
-  order that individuals, loci, and strata are chosen in follow the order 
+  the \code{[} operator follows the same rules as normal indexing in R. The 
+  order that individuals, loci, and strata are chosen in the order 
   returned by \code{indNames}, \code{locNames}, and \code{strataNames} 
   respectively. If unstratified samples are present, they can be selected as
   a group either by including \code{NA} in the character or numeric vector of the 

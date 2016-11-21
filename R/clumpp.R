@@ -44,8 +44,8 @@
 #' @export
 #' 
 clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
-                      greedy.option = "ran.order", repeats = 100, 
-                      order.by.run = 0, label = NULL, delete.files = TRUE) {
+                   greedy.option = "ran.order", repeats = 100, 
+                   order.by.run = 0, label = NULL, delete.files = TRUE) {
   
   if(k < 2) stop("k must be greater than 1.")
   

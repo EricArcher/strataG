@@ -29,6 +29,7 @@ dupGenotypes(msats, num.shared = 0.66)
 
 The start and end positions and number of N's and indels can be generated with the _summarizeSeqs_ function:
 ```{r}
+library(ape)
 data(dolph.seqs)
 seq.smry <- summarizeSeqs(as.DNAbin(dolph.seqs))
 head(seq.smry)

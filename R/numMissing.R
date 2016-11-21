@@ -18,9 +18,10 @@
 #' @export
 #' 
 numMissing <- function(g, prop = FALSE) {
-  apply(g@loci, 2, function(locus) {
-    count <- sum(is.na(locus)) / g@ploidy
-    if(prop) count <- count / nInd(g)
+  .countNAs <- function(locus, prop) {
+    count <- sum(is.na(locus))
+    if(prop) count <- count / length(locus)
     count
-  })
+  }
+  .applyPerLocus(.countNAs, g, prop = prop)
 }

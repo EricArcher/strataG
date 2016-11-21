@@ -13,13 +13,9 @@
 #' data(msats.g)
 #' allelicRichness(msats.g)
 #'
-#' @importFrom stats na.omit
 #' @export
 
 allelicRichness <- function(g) {
   if(ploidy(g) == 1 & !is.null(sequences(g))) g <- labelHaplotypes(g)$gtypes
-  apply(g@loci, 2, function(locus) {
-    locus <- na.omit(locus)
-    length(unique(locus)) / (length(locus) / ploidy(g))
-  })
+  numAlleles(g) / numGenotyped(g)
 }

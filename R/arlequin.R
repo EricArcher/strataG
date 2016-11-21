@@ -174,11 +174,8 @@ write.arlequin <- function(g, label = NULL, locus = 1) {
       write(t(hap.mat), ncolumns = ncol(hap.mat), sep = "\t", file = file, append = TRUE)
     } else { # Microsats
       loc.mat <- do.call(rbind, lapply(indNames(st), function(id) {
-        id.mat <- sapply(loci(st, ids = id), function(x) {
-          x <- as.character(x)
-          x[is.na(x)] <- "?"
-          x
-        })
+        id.mat <- t(as.array(st, id))
+        id.mat[is.na(id.mat)] <- "?"
         do.call(rbind, lapply(1:nrow(id.mat), function(i) {
           line.i <- if(i == 1) c(id, "1") else {
             id.pad <- paste(rep(" ", nchar(id)), collapse = "")
