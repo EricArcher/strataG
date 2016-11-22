@@ -27,7 +27,6 @@
 #'
 #' @importFrom ggplot2 ggplot aes_string geom_area geom_bar ylab theme geom_vline 
 #'   scale_x_continuous xlab coord_flip scale_fill_manual element_blank
-#' @importFrom reshape2 melt
 #' @importFrom RColorBrewer brewer.pal
 #' @export
 #' 
@@ -37,12 +36,12 @@ structurePlot <- function(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
   
   legend.position <- match.arg(legend.position)
   
-  # convert q.mat to sorted data.frame
+  # convert q.mat to sorted data.table
   prob.cols <- prob.col:ncol(q.mat)
-  qm <- data.frame(q.mat)
-  qm[, pop.col] <- factor(
-    qm[, pop.col], 
-    levels = sort(unique(qm[, pop.col]), decreasing = horiz)
+  qm <- data.table(q.mat)
+  qm[[pop.col]] <- factor(
+    qm[[pop.col]], 
+    levels = sort(unique(qm[[pop.col]]), decreasing = horiz)
   )
   sort.cols <- c(pop.col, if(sort.probs) rev(prob.cols) else NULL)
   i <- do.call(order, qm[, sort.cols, drop = FALSE])

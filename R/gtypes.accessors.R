@@ -64,6 +64,7 @@
 #' 
 #' 
 #' #--- a sequence example
+#' library(ape)
 #' data(woodmouse)
 #' genes <- list(gene1=woodmouse[,1:500], gene2=woodmouse[,501:965])
 #' x <- new("multidna", genes)
@@ -76,6 +77,7 @@
 #' class(multi.seqs) # "multidna"
 #'
 #' # get a list of DNAbin objects
+#' library(apex)
 #' dnabin.list <- getSequences(multi.seqs)
 #' class(dnabin.list) # "list"
 #' 

@@ -12,15 +12,12 @@ Authors@R: c(
 URL: https://github.com/EricArcher/strataG
 BugReports: https://github.com/EricArcher/strataG/issues
 Depends:
-    R (>= 3.2.0)
+    R (>= 3.2.0), apex, ape, adegenet
 Suggests:
     knitr,
     rmarkdown,
     testthat
 Imports:
-    adegenet,
-    ape,
-    apex,
     data.table,
     copula,
     DT,
@@ -35,7 +32,6 @@ Imports:
     phangorn,
     RColorBrewer,
     Rcpp,
-    reshape2,
     shiny,
     shinyFiles,
     stats,

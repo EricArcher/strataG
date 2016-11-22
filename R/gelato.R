@@ -39,7 +39,6 @@
 #' 
 #' @name gelato
 #' @importFrom stats sd dnorm median
-#' @importFrom parallel parLapply stopCluster
 #' @export
 #' 
 gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5) {
@@ -89,21 +88,10 @@ gelato <- function(g, unknown.strata, nrep = 1000, min.sample.size = 5) {
       known.g <- g[known.ids, , , drop = TRUE]
       
       # run permutations to collect Fst distributions 
-      cl <- .setupClusters()
-      fst.dist <- tryCatch({
-        if(!is.null(cl)) {
-          parLapply(
-            cl, 1:nrep, .gelatoPermFunc, known.ids = known.ids, 
-            unknown.ids = unknown.ids, g = g, known.g = known.g
-          )
-        } else {
-          lapply(
-            1:nrep, .gelatoPermFunc, known.ids = known.ids, 
-            unknown.ids = unknown.ids, g = g, known.g = known.g
-          )
-        } 
-      }, finally = stopCluster(cl))
-      fst.dist <- do.call(rbind, fst.dist)
+      fst.dist <- do.call(rbind, lapply(
+        1:nrep, .gelatoPermFunc, known.ids = known.ids, 
+        unknown.ids = unknown.ids, g = g, known.g = known.g
+      ))
       fst.dist <- fst.dist[apply(fst.dist, 1, function(x) all(!is.na(x))), ]
       
       if(nrow(fst.dist) < 2) {

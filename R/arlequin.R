@@ -20,7 +20,6 @@
 #' 
 #' @name arlequin
 #' @aliases arlequin
-#' @importFrom reshape2 dcast
 #' 
 NULL
 

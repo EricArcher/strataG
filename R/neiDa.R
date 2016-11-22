@@ -22,17 +22,18 @@
 neiDa <- function(g) {
   if(ploidy(g) == 1 & !is.null(sequences(g))) g <- labelHaplotypes(g)$gtypes
   st.pairs <- as.matrix(.strataPairs(g))
-  st.col <- rep(strata(g), ploidy(g))
+  st <- g@data$strata
+  
+  .DaFunc <- function(locus, st, sp) {
+    to.use <- st %in% sp & !is.na(st) & !is.na(locus)
+    freqs <- prop.table(table(locus[to.use], st[to.use]))
+    sum(apply(freqs, 1, function(f) {
+      if(all(f == 0)) NA else sqrt(prod(f))
+    }), na.rm = TRUE)
+  }
 
   Da <- apply(st.pairs, 1, function(sp) {
-    loc.sum <- sapply(1:nLoc(g), function(i) {
-      locus <- g@loci[, i]
-      to.use <- st.col %in% sp & !is.na(st.col) & !is.na(locus)
-      freqs <- prop.table(table(locus[to.use], droplevels(st.col[to.use])))
-      sum(apply(freqs, 1, function(f) {
-        if(all(f == 0)) NA else sqrt(prod(f))
-      }), na.rm = TRUE)
-    })
+    loc.sum <- g@data[, sapply(.SD, .DaFunc, st = st, sp = sp), .SDcols = !c("ids", "strata")]
     1 - sum(loc.sum, na.rm = TRUE) / sum(!is.na(loc.sum))
   })
   cbind(data.frame(st.pairs), Da = Da)
