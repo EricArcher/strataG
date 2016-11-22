@@ -105,7 +105,8 @@ NULL
 #' @keywords internal
 #' 
 .removeIdsMissingAllLoci <- function(g) {
-  is.missing.all <- g@data[, .(missing = all(is.na(.SD))), .SDcols = !c("ids", "strata"), by = "ids"]
+  ids <- NULL # For CRAN CHECK
+  is.missing.all <- g@data[, list(missing = all(is.na(.SD))), .SDcols = !c("ids", "strata"), by = "ids"]
   to.remove <- is.missing.all[(missing)]$ids
   if(length(to.remove) > 0) {
     warning(
@@ -134,6 +135,7 @@ NULL
 #' @keywords internal
 #' 
 .numericLoci <- function(g, min.val = 0) {
+  ids <- NULL # For CRAN CHECK
   .convToNum <- function(x) min.val + (as.numeric(x) - 1)
   list(
     ids = g@data[, unique(ids)],

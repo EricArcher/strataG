@@ -9,23 +9,7 @@
 #' @export
 #' 
 write.nexus.snapp <- function(g, file = "snapp.data.nex") {
-  if(ploidy(g) != 2) stop("'g' must have diploid data")
-  
-  num.alleles <- numAlleles(g)
-  biallelic <- names(num.alleles)[num.alleles <= 2]
-  if(length(biallelic) == 0) {
-    warning("No loci are biallelic. No file written.")
-    return(NULL)
-  }
-  
-  g <- g[, biallelic, ]
-  result <- sapply(locNames(g), function(locus) {
-    genotypes <- sapply(indNames(g), function(ind) {
-      x <- unlist(as.numeric(loci(g, ids = ind, loci = locus)[, locus]))
-      switch(paste(sort(x), collapse = "."), '1.1' = 0, '1.2' = 1, '2.2' = 2, NA)
-    })
-    as.character(as.numeric(factor(genotypes)) - 1)
-  })
+  result <- numericSNPmat(g)
   
   result[is.na(result)] <- "?"
   result <- lapply(1:nrow(result), function(i) result[i, ])

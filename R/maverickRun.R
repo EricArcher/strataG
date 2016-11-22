@@ -35,21 +35,6 @@ maverickRun <- function(g, params = NULL, label = "MavericK_files",
   
   if(ploidy(g) < 2) stop("ploidy of 'g' must be 2 or greater")
 
-  # prepare data
-  df <- loci(g)
-  colnames(df) <- make.names(colnames(df))
-  for(x in colnames(df)) df[[x]] <- as.numeric(df[[x]])
-  df[is.na(df)] <- -9
-  if(nStrata(g) > 1) {  
-    df <- cbind(
-      strata = make.names(rep(strata(g), ploidy(g))),
-      df, stringsAsFactors = FALSE
-    )
-  } 
-  df <- cbind(id = make.names(rownames(df)), df, stringsAsFactors = FALSE)
-  df <- df[order(df$strata, nchar(df$id), df$id), ]
-  rownames(df) <- NULL
-  
   # set parameters
   p <- .maverickDefaultParams()
   if(!is.null(params)) {
@@ -88,6 +73,14 @@ maverickRun <- function(g, params = NULL, label = "MavericK_files",
   }
   
   # write data
+  df <- as.data.frame(g@data)
+  colnames(df) <- make.names(colnames(df))
+  df$ids <- make.names(df$ids)
+  df$strata <- make.names(df$strata)
+  for(i in 3:ncol(df)) df[[i]] <- as.numeric(df[[i]])
+  df[is.na(df)] <- -9
+  df <- df[order(df$strata, nchar(df$ids), df$ids), ]
+  rownames(df) <- NULL
   write.table(
     df, file = data_fname, quote = FALSE, sep = "\t", row.names = FALSE
   )
@@ -96,9 +89,9 @@ maverickRun <- function(g, params = NULL, label = "MavericK_files",
   cmd <- paste0("Maverick", " -parameters", param_fname)
   err.code <- system(cmd)
   if(err.code == 127) {
-    stop("You do not have MavericK installed.")
+    stop("You do not have MavericK properly installed.")
   } else if(!err.code == 0) {
-    stop(paste("Error running MavericK Error code", err.code, "returned."))
+    stop("Error running MavericK. Error code ", err.code, " returned.")
   }
   
   setwd(wd)

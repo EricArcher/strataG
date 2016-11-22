@@ -41,6 +41,6 @@ obsvdHet <- function(g) {
   isHom <- function(x) {
     if(any(is.na(x))) NA else length(unique(x)) == 1
   }
-  is.homzgt <- g@data[, lapply(.SD, isHom), .SDcols = !c("ids", "strata"), by = ids]
+  is.homzgt <- g@data[, lapply(.SD, isHom), .SDcols = !c("ids", "strata"), by = "ids"]
   is.homzgt[, 1 - sapply(.SD, mean, na.rm = TRUE), .SDcols = !"ids"]
 }

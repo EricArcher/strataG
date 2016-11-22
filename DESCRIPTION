@@ -90,6 +90,7 @@ Collate:
     nucleotideDivergence.R
     nucleotideDiversity.R
     numAlleles.R
+    numericSNPmat.R
     numGenotyped.R
     numMissing.R
     permuteStrata.R

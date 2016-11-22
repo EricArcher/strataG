@@ -45,7 +45,8 @@ NULL
 
 # create matrix of permuted stratifications
 .permStrata <- function(g, nrep = NULL) {
-  st <- g@data[, .(strata = unique(strata)), by = ids]$strata
+  ids <- strata <- NULL # For CRAN CHECK
+  st <- g@data[, list(st = unique(strata)), by = ids]$st
   if(any(is.na(st))) stop("cannot run with unstratified samples")
   strata.num <- cbind(as.numeric(factor(st)) - 1)
   rownames(strata.num) <- indNames(g)
@@ -82,6 +83,7 @@ NULL
 # create a list of formatted numeric loci and strata matrices for input to C
 #   population structure functions
 .formatCinput <- function(g, strata.mat, nrep) {
+  ids <- NULL # For CRAN CHECK
   setkey(g@data, ids)
   loci <- .numericLoci(g)
   strata <- .checkStrataMat(strata.mat, g, nrep)

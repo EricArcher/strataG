@@ -166,6 +166,7 @@ setMethod("initialize", "gtypes",
   }
   
   gen.data <- cbind(ids = rownames(gen.data), strata = "Default", loci)
+  ids <- NULL # For CRAN CHECK
   setkey(gen.data, ids)
   
   # create and return gtypes object

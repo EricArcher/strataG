@@ -284,7 +284,7 @@ phasePosterior <- function(ph.res, keep.missing = TRUE) {
       if(keep.missing) {
         for(i in 1:nrow(post.df)) {
           ids <- which(indNames(ph.res$orig.gtypes) == post.df[i, 1])
-          if(any(is.na(loci(ph.res$orig.gtypes[ids, , ])))) {
+          if(any(is.na(as.array(ph.res$orig.gtypes, ids = ids)))) {
             post.df[i, 2:3] <- NA
           }
         }
@@ -321,7 +321,7 @@ phaseFilter <- function(ph.res, thresh = 0.5, keep.missing = TRUE) {
     if(keep.missing) {
       for(i in 1:nrow(locus.filtered)) {
         ids <- which(indNames(x$orig.gtypes) == locus.filtered[i, 1])
-        if(any(is.na(loci(x$orig.gtypes[ids, , ])))) {
+        if(any(is.na(as.array(x$orig.gtypes, ids = ids)))) {
           locus.filtered[i, 2:3] <- NA
         }
       }

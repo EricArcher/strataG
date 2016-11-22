@@ -31,7 +31,7 @@
 #' data(msats.g)
 #' 
 #' # Run GELATo analysis
-#' gelato.fine <- gelato(msats.g, unk = "Offshore.South", nrep = 10)
+#' gelato.fine <- gelato(msats.g, unk = "Offshore.South", nrep = 20)
 #' gelato.fine
 #' 
 #' # Plot results

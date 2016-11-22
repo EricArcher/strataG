@@ -101,7 +101,10 @@ NULL
 #' @aliases nInd
 #' @export
 #' 
-setMethod("nInd", "gtypes", function(x, ...) x@data[, uniqueN(ids)])
+setMethod("nInd", "gtypes", function(x, ...) {
+  ids <- NULL # For CRAN CHECK
+  x@data[, uniqueN(ids)]
+})
 
 
 #' @rdname gtypes.accessors
@@ -127,7 +130,10 @@ setMethod("nStrata", "gtypes", function(x, ...) x@data[, uniqueN(strata)])
 #' @aliases indNames
 #' @export
 #' 
-setMethod("indNames", "gtypes", function(x, ...) x@data[, unique(ids)])
+setMethod("indNames", "gtypes", function(x, ...) {
+  ids <- NULL # For CRAN CHECK
+  x@data[, unique(ids)]
+})
 
 
 #' @rdname gtypes.accessors
@@ -172,7 +178,8 @@ setMethod("other", "gtypes", function(x, ...) x@other)
 #' @export
 #' 
 setMethod("strata", "gtypes", function(x) {
-  mat <- as.matrix(x@data[, .(ids, strata)])
+  ids <- strata <- NULL # For CRAN CHECK
+  mat <- as.matrix(x@data[, list(ids, strata)])
   mat <- mat[!duplicated(mat[, "ids"]), ]
   vec <- mat[, "strata"]
   names(vec) <- mat[, "ids"]
@@ -190,6 +197,7 @@ setGeneric("strata<-", function(x, value) standardGeneric("strata<-"))
 #' @export
 #' 
 setMethod("strata<-", "gtypes", function(x, value) {
+  ids <- strata <- NULL # For CRAN CHECK
   value <- if(is.null(names(value))) {
     rep(value, length.out = nrow(x@data))
   } else {
