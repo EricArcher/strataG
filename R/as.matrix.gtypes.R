@@ -40,30 +40,38 @@
 #' 
 setMethod(
   "as.matrix", "gtypes",
-  function(x, one.col = FALSE, sep = "/", ids = TRUE, strata = TRUE, sort.alleles = TRUE, ...) {
+  function(x, one.col = FALSE, sep = "/", ids = TRUE, 
+           strata = TRUE, sort.alleles = TRUE, ...) {
     setkey(x@data, ids)
-    # loop through each locus
-    gen.mat <- do.call(cbind, lapply(locNames(x), function(locus) {
-      # collapse alleles to create a one column matrix if one.col == TRUE
-      this.loc <- if(one.col | ploidy(x) == 1) {
-        arr <- as.array(x, loci = locus, drop = FALSE)
-        cbind(apply(arr, 1, function(alleles) {
-          if(any(is.na(alleles))) NA else {
-            if(sort.alleles) alleles <- sort(alleles)
-            paste(alleles, collapse = sep)
-          }
-        }))
-      } else {
-        as.array(x, loci = locus, drop = TRUE)
+    
+    gen.mat <- if(one.col) {
+      # one column per locus
+      .combineLoci <- function(x, sep, sort) {
+        x <- as.character(x)
+        if(any(is.na(x))) {
+          as.character(NA)
+        } else {
+          x <- if(sort) sort(x) else x
+          paste(x, collapse = sep)
+        }
       }
-      # assign column names
-      colnames(this.loc) <- if(dim(this.loc)[2] == 1) {
-        locus
-      } else {
-        paste(locus, 1:ncol(this.loc), sep = ".")
-      } 
-      this.loc
-    }))
+      mat <- x@data[, lapply(.SD, .combineLoci, sep = sep, sort = sort.alleles), 
+                    by = "ids", .SDcols = !c("ids", "strata")]
+      as.matrix(mat)[, -1]
+    } else {
+      # alleles on separate columns
+      .locusCols <- function(loc) {
+        do.call(cbind, as.list(as.character(loc)))
+      }
+      mat <- do.call(rbind, lapply(x@data[, unique(ids)], function(i) {
+        x@data[i, do.call(cbind, lapply(.SD, .locusCols)), 
+               .SDcols = !c("ids", "strata")]
+      }))
+      pl <- ploidy(x)
+      colnames(mat) <- paste(rep(locNames(x), each = pl), 1:pl, sep = ".")
+      mat
+    }
+    # finish formatting matrix
     rownames(gen.mat) <- indNames(x)
     if(strata) gen.mat <- cbind(strata = as.character(strata(x)), gen.mat)
     if(ids) gen.mat <- cbind(ids = indNames(x), gen.mat)

@@ -147,7 +147,7 @@ overallTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE,
   
   # delete loci with no genotypes in at least one stratum
   to.delete <- unique(unlist(lapply(strataSplit(g), function(st.g) {
-    n.genotyped <- nInd(st.g) - numMissing(st.g)
+    n.genotyped <- numGenotyped(st.g)
     names(n.genotyped)[n.genotyped == 0]
   })))
   if(length(to.delete) > 0) {
