@@ -68,7 +68,11 @@ setMethod(
                .SDcols = !c("ids", "strata")]
       }))
       pl <- ploidy(x)
-      colnames(mat) <- paste(rep(locNames(x), each = pl), 1:pl, sep = ".")
+      colnames(mat) <- if(pl > 1) {
+        paste(rep(locNames(x), each = pl), 1:pl, sep = ".")
+      } else {
+        locNames(x)
+      }
       mat
     }
     # finish formatting matrix

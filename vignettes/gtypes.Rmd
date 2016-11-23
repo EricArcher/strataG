@@ -94,7 +94,7 @@ Note that since each sequence in _dolph.seqs_ is for a given individual, the _pc
 
 ```{r}
 dl.haps <- labelHaplotypes(dl.g)
-dl.haps$gtype
+dl.haps$gtypes
 ```
 
 ### _sequence2gtypes_ - Convert DNA sequences
