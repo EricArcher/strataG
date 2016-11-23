@@ -35,6 +35,7 @@
 #' 
 #' @aliases as.matrix,gtypes-method as.matrix.gtypes as.matrix
 #' @importFrom methods setMethod
+#' @importFrom utils unstack
 #' 
 #' @export
 #' 
@@ -60,15 +61,11 @@ setMethod(
       as.matrix(mat)[, -1]
     } else {
       # alleles on separate columns
-      .locusCols <- function(loc) {
-        do.call(cbind, as.list(as.character(loc)))
-      }
-      mat <- do.call(rbind, lapply(x@data[, unique(ids)], function(i) {
-        x@data[i, do.call(cbind, lapply(.SD, .locusCols)), 
-               .SDcols = !c("ids", "strata")]
-      }))
+      dt <- x@data[, unlist(.SD), by = ids, .SDcols = !c("ids", "strata")] 
+      mat <- unstack(dt, form = V1 ~ ids)
       pl <- ploidy(x)
       colnames(mat) <- if(pl > 1) {
+        mat <- t(mat)
         paste(rep(locNames(x), each = pl), 1:pl, sep = ".")
       } else {
         locNames(x)
