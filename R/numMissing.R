@@ -23,5 +23,5 @@ numMissing <- function(g, prop = FALSE) {
     if(prop) count <- count / length(locus)
     count
   }
-  .applyPerLocus(.countNAs, g, prop = prop)
+  .applyPerLocus(.countNAs, g, prop = prop) / ploidy(g)
 }

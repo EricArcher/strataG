@@ -109,6 +109,7 @@ double fstCalc(IntegerMatrix loci, IntegerVector strata, int ploidy) {
     int r = nvec.size();
     if(r < 2) continue;
     double nbar = mean(nvec);
+    if(nbar == 1) continue;
     double rnbar = r * nbar;
     double nc = (rnbar - (sum(Rcpp::pow(nvec, 2.0)) / rnbar)) / (r - 1);
     NumericMatrix alleleFreq = alleleFreqCalc(locVec, strataRep);
@@ -119,7 +120,6 @@ double fstCalc(IntegerMatrix loci, IntegerVector strata, int ploidy) {
       locusSums(1, loc) += sum(varcompMat(i, _));
     }
   }
-  
   double est(sum(locusSums(0, _)) / sum(locusSums(1, _)));
   if(std::isnan(est)) est = NA_REAL;
   return est;

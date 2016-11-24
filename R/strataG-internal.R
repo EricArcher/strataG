@@ -136,7 +136,7 @@ NULL
 #' 
 .numericLoci <- function(g, min.val = 0) {
   ids <- NULL # For CRAN CHECK
-  .convToNum <- function(x) min.val + (as.numeric(x) - 1)
+  .convToNum <- function(x) min.val + (as.numeric(droplevels(x)) - 1)
   list(
     ids = g@data[, unique(ids)],
     loci = as.matrix(g@data[, sapply(.SD, .convToNum), .SDcols = !c("ids", "strata")])

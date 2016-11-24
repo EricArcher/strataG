@@ -140,7 +140,7 @@ overallTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE,
   if(!is.numeric(nrep) & length(nrep) != 1) {
     stop("'nrep' must be a single-element numeric vector")
   }
-  if(nrep < 1) keep.null <- FALSE
+  if(nrep == 0) keep.null <- FALSE
   
   # remove unstratified samples
   if(any(is.na(strata(g)))) g <- g[, , strataNames(g)]
@@ -152,7 +152,8 @@ overallTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE,
   })))
   if(length(to.delete) > 0) {
     warning(paste(
-      "The following loci will be removed because they have no genotypes in one or more strata: ",
+      "The following ", length(to.delete), 
+      " loci will be removed because they have no genotypes in one or more strata: ",
       paste(to.delete, collapse = ", ")
     ))
     g <- g[, setdiff(locNames(g), to.delete), ]
