@@ -1,3 +1,4 @@
+[![Last-changedate](https://img.shields.io/badge/last%20change-`r gsub('-', '--', Sys.Date())`-orange.svg)](/commits/master) [![packageversion](https://img.shields.io/badge/Package%20version-`r version`-orange.svg)](commits/master)   
 [![CRAN version](http://www.r-pkg.org/badges/version/strataG?color=red)](https://cran.r-project.org/package=strataG)
 [![CRAN last day downloads](http://cranlogs.r-pkg.org/badges/last-day/strataG?color=red)](https://cran.r-project.org/package=strataG)
 [![CRAN last week downloads](http://cranlogs.r-pkg.org/badges/last-week/strataG?color=red)](https://cran.r-project.org/package=strataG)
