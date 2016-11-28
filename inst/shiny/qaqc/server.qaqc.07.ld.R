@@ -43,7 +43,7 @@ observeEvent(input$calc.ld, {
     # plot p-value distribution
     output[[strata.id["plot.ld", x]]] <- renderPlot({
       if(is.null(df)) NULL else if(nrow(df) == 0) NULL else {
-        df <- data.frame(x = 1:nrow(df), y = sort(df$p.value))
+        df <- data.frame(x = 1:nrow(df), y = sort(df$p.value, na.last = TRUE))
         p <- ggplot(df, aes_string(x = "x", y = "y")) + 
           geom_point() + geom_line() +
           xlab("Pairs") + ylab("p-value") + 

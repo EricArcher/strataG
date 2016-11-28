@@ -102,18 +102,27 @@ genepopWrite <- function(g, label = "genepop.write",
   
   if(ploidy(g) != 2) stop("'g' must be a diploid object")
   
-  g.mat <- as.matrix(g@loci)
-  g.mat <- apply(g.mat, 2, function(x) {
-    x <- as.numeric(as.factor(x))
-    x[is.na(x)] <- 0
-    max.width <- max(2, nchar(x))
-    formatC(x, width = max.width, flag = "0")
-  })
+  # g.mat <- as.matrix(g@data)[, -(1:2)]
+  # g.mat <- apply(g.mat, 2, function(x) {
+  #   x <- as.numeric(as.factor(x))
+  #   x[is.na(x)] <- 0
+  #   max.width <- max(2, nchar(x))
+  #   formatC(x, width = max.width, flag = "0")
+  # })
   
-  loc_dat <- apply(as.array(g, drop = FALSE), 1, function(x) {
-    x.loc <- apply(g.mat, 2, function(loc) paste(loc[x], collapse = ""))
-    paste(x.loc, collapse = " ")
-  })
+  .convLoci <- function(x, ids) {
+    loc <- as.numeric(x)
+    loc[is.na(loc)] <- 0
+    max.width <- max(2, nchar(loc))
+    loc <- formatC(loc, width = max.width, flag = "0")
+    df <- data.frame(ids = ids, loc = loc)
+    mat <- unstack(df, loc ~ ids)
+    apply(mat, 2, paste, collapse = "")
+  }
+  loc_dat <- g@data[, lapply(.SD, .convLoci, ids = g@data$ids), .SDcols = !c("ids", "strata")] 
+  loc_dat <- as.matrix(loc_dat)
+  loc_dat <- apply(loc_dat, 1, paste, collapse = " ")
+  names(loc_dat) <- indNames(g)
   
   id.vec <- gsub(",", "_", names(loc_dat))
   pop.vec <- gsub(",", "_", as.character(strata(g)))
