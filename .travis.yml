@@ -4,10 +4,12 @@ language: R
 cache: packages
 sudo: required
 warnings_are_errors: false
+r:
+  - release
+  - devel
 r_packages: 
   - knitr
   - rmarkdown
-  - hierfstat
 r_github_packages: thibautjombart/apex
 apt_packages:
   - libgsl0-dev
