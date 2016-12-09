@@ -92,7 +92,7 @@ fscWrite <- function(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL, l
   if(!is.null(mig.rates)) {
     for(i in 1:length(mig.rates)) {
       write("//migration matrix", file, append = T)
-      for(r in 1:nrow(mig.rates[[i]])) write(as.character(mig.rates[[i]][r, ]), file, append = T)
+      for(r in 1:nrow(mig.rates[[i]])) write(paste(as.character(mig.rates[[i]][r, ]), collapse = " "), file, append = T)
     }
   }
   
