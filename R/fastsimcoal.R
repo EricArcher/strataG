@@ -181,15 +181,7 @@ fscRead <- function(file, locus.params) {
     result <- do.call(rbind, strsplit(f.line, "--"))[, -2]
     cbind(rep(paste("Sample", i), nrow(result)), result)
   }
-  cl <- .setupClusters()
-  data.mat <- tryCatch({
-    if(!is.null(cl)) {
-      parLapply(cl, 1:nrow(pos), .compileMatrix, pos = pos)
-    } else {
-      lapply(1:nrow(pos), .compileMatrix, pos = pos)
-    }
-  }, finally = if(!is.null(cl)) stopCluster(cl))
-  data.mat <- do.call(rbind, data.mat)
+  data.mat <- do.call(rbind, lapply(1:nrow(pos), .compileMatrix, pos = pos))
   
   ploidy <- attr(locus.params, "ploidy")
   
@@ -230,13 +222,14 @@ fastsimcoal <- function(pop.info, locus.params, mig.rates = NULL,
   if(file.exists(label)) for(f in dir(label, full.names = T)) file.remove(f)
   
   # Write fastsimcoal input file
+  if(!quiet) cat("fastsimcoal: writing input file\n")
   infile <- fscWrite(
     pop.info = pop.info, locus.params = locus.params,
     mig.rates = mig.rates, hist.ev = hist.ev, label = label
   )
-  if(!quiet) cat("fastsimcoal input file written, running fastsimcoal\n")
   
   # Run fastsimcoal
+  if(!quiet) cat("fastsimcoal: running\n")
   cores.spec <- if(!is.null(num.cores)) {
     num.cores <- max(1, num.cores)
     num.cores <- min(num.cores, min(detectCores(), 12))
@@ -262,15 +255,14 @@ fastsimcoal <- function(pop.info, locus.params, mig.rates = NULL,
   # Read and parse output
   arp.file <- file.path(label, paste(label, "_1_1.arp", sep = ""))
   if(!file.exists(arp.file)) stop("fastsimcoal did not generate output")
-  if(!quiet) cat("fastsimcoal output file read\n")
+  if(!quiet) cat("fastsimcoal: parsing output to gtypes\n")
   g <- fscRead(arp.file, locus.params)
-  if(!quiet) cat("fastsimcoal output file parsed into gtypes\n")
   
   # Cleanup
   if(delete.files) {
+    if(!quiet) cat("fastsimcoal: removing output files\n")
     unlink(label, recursive = TRUE, force = TRUE)
     file.remove(infile)
-    if(!quiet) cat("fastsimcoal output files removed\n")
   }
   
   return(g)
