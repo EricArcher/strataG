@@ -26,7 +26,6 @@ Imports:
     grid,
     gridExtra,
     Hmisc,
-    Kmisc,
     methods,
     pegas,
     phangorn,

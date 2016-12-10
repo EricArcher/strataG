@@ -128,7 +128,6 @@ fscWrite <- function(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL, l
 
 
 #' @rdname fastsimcoal
-#' @importFrom Kmisc readlines
 #' @export
 #' 
 fscRead <- function(file, locus.params) {
@@ -168,7 +167,7 @@ fscRead <- function(file, locus.params) {
     }))
   }
   
-  f <- Kmisc::readlines(file)
+  f <- readLines(file)
   
   # get start and end points of data blocks
   start <- grep("SampleData=", f) + 1
@@ -235,12 +234,13 @@ fastsimcoal <- function(pop.info, locus.params, mig.rates = NULL,
     pop.info = pop.info, locus.params = locus.params,
     mig.rates = mig.rates, hist.ev = hist.ev, label = label
   )
+  if(!quiet) cat("fastsimcoal input file written, running fastsimcoal\n")
   
   # Run fastsimcoal
   cores.spec <- if(!is.null(num.cores)) {
     num.cores <- max(1, num.cores)
     num.cores <- min(num.cores, min(detectCores(), 12))
-    paste(c("-c", "-B"), num.cores, collapse = " ")
+    if(num.cores == 1) "" else paste(c("-c", "-B"), num.cores, collapse = " ")
   } else ""
   cmd.line <- paste(
     exec, "-i", infile, "-n 1",
@@ -262,12 +262,15 @@ fastsimcoal <- function(pop.info, locus.params, mig.rates = NULL,
   # Read and parse output
   arp.file <- file.path(label, paste(label, "_1_1.arp", sep = ""))
   if(!file.exists(arp.file)) stop("fastsimcoal did not generate output")
+  if(!quiet) cat("fastsimcoal output file read\n")
   g <- fscRead(arp.file, locus.params)
+  if(!quiet) cat("fastsimcoal output file parsed into gtypes\n")
   
   # Cleanup
   if(delete.files) {
     unlink(label, recursive = TRUE, force = TRUE)
     file.remove(infile)
+    if(!quiet) cat("fastsimcoal output files removed\n")
   }
   
   return(g)
