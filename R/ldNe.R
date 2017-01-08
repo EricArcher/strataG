@@ -33,7 +33,7 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @importFrom parallel parSapply
+#' @importFrom parallel mclapply detectCores
 #' @importFrom stats cor qchisq
 #' @export
 #' 
@@ -123,14 +123,16 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95) {
     
     # calculate correlation r-squared (rsq) between pairs of loci
     loc.pairs <- combn(ncol(mat), 2)
-    cl <- .setupClusters()
-    loc.comp.mat <- tryCatch({
-      if(!is.null(cl)) {
-        parSapply(cl, 1:ncol(loc.pairs), compLoc, loc.pairs = loc.pairs, mat = mat)
-      } else {
-        sapply(1:ncol(loc.pairs), compLoc, loc.pairs = loc.pairs, mat = mat)
-      }
-    }, finally = if(!is.null(cl)) stopCluster(cl))
+    loc.comp.mat <- mclapply(1:ncol(loc.pairs), compLoc, loc.pairs = loc.pairs, mat = mat, mc.cores = detectCores() - 1)
+    loc.comp.mat <- do.call(cbind, loc.comp.mat)
+    # cl <- .setupClusters()
+    # loc.comp.mat <- tryCatch({
+    #   if(!is.null(cl)) {
+    #     parSapply(cl, 1:ncol(loc.pairs), compLoc, loc.pairs = loc.pairs, mat = mat)
+    #   } else {
+    #     sapply(1:ncol(loc.pairs), compLoc, loc.pairs = loc.pairs, mat = mat)
+    #   }
+    # }, finally = if(!is.null(cl)) stopCluster(cl))
     
     S <- loc.comp.mat["S", ]
     # Eqn 1.1: expected r-squared

@@ -144,6 +144,7 @@ phase <- function(g, loci, positions = NULL, type = NULL,
     }
     
     # Read output
+    opts <- options(warn = -1)
     gtype.probs <- phaseReadPair(paste(out.file, "_pairs", sep = ""))
     if(is.null(gtype.probs)) {
       alleles <- rep(NA, nrow(g$genotypes))
@@ -155,6 +156,7 @@ phase <- function(g, loci, positions = NULL, type = NULL,
     alleles <- paste(new.locus.name, 1:2, sep = ".")
     colnames(gtype.probs)[1:3] <- c("id", alleles) 
     rownames(gtype.probs) <- NULL
+    options(opts)
     
     locus.result <- list(
       locus.name = new.locus.name, gtype.probs = gtype.probs, 
@@ -330,9 +332,11 @@ phaseFilter <- function(ph.res, thresh = 0.5, keep.missing = TRUE) {
     locus.filtered
   })
   
-  id <- filtered[[1]][, 1]
-  filtered <- as.matrix(do.call(cbind, lapply(filtered, function(x) x[, 2:3])))
-  rownames(filtered) <- id
+  ids <- data.frame(id = sort(unique(unlist(lapply(filtered, function(x) x$id)))))
+  filtered <- as.matrix(do.call(cbind, lapply(filtered, function(x) {
+    merge(ids, x, by = "id", all.x = TRUE)[, 2:3]
+  })))
+  rownames(filtered) <- ids$id
   colnames(filtered) <- paste(rep(names(ph.res), each = 2), ".", 1:2, sep = "")
   filtered
 }

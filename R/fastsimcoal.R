@@ -263,6 +263,7 @@ fastsimcoal <- function(pop.info, locus.params, mig.rates = NULL,
     if(!quiet) cat("fastsimcoal: removing output files\n")
     unlink(label, recursive = TRUE, force = TRUE)
     file.remove(infile)
+    file.remove("seed.txt")
   }
   
   return(g)
