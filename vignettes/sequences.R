@@ -52,20 +52,14 @@ nucleotideDiversity(dolph.seqs)
 # create gtypes
 data(dolph.seqs)
 data(dolph.strata)
-dloop.haps <- cbind(dLoop = dolph.strata$id)
-rownames(dloop.haps) <- dolph.strata$id
-strata.schemes <- dolph.strata[, c("broad", "fine")]
-rownames(strata.schemes) <- dolph.strata$id
-dloop <- new("gtypes", gen.data = dloop.haps, ploidy = 1,
-             schemes = strata.schemes, sequences = dolph.seqs,
-             strata = "fine")
+dloop <- df2gtypes(dolph.strata[, c("id", "fine", "id")], ploidy = 1,
+             schemes = dolph.strata[, c("fine", "broad")], sequences = dolph.seqs)
 dloop <- labelHaplotypes(dloop, "Hap.")$gtypes
 
 # calculate divergence
 nucleotideDivergence(dloop)
 
 ## ------------------------------------------------------------------------
-
 fixedDifferences(dloop)
 
 ## ------------------------------------------------------------------------

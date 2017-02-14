@@ -77,7 +77,6 @@ df2gtypes <- function(x, ploidy, id.col = 1, strata.col = 2, loc.col = 3,
   }
   
   # extract id, strata, and locus information
-  rownames(x) 
   ind.names <- if(is.null(id.col)) {
     if(is.null(rownames(x))) {
       1:nrow(x) 

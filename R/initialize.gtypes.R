@@ -95,6 +95,16 @@ setMethod("initialize", "gtypes",
   }
   rownames(gen.data) <- ind.names
   
+  # check strata
+  if(!is.null(strata)) {
+    if(is.null(names(strata))) {
+      if(length(strata) == length(ind.names)) names(strata) <- ind.names
+    } 
+  } else strata <- "Default"
+  if(length(strata) != length(ind.names)) {
+    warning("the length of 'strata' is not the same as the number of individuals. strata will be recycled.")
+  }
+  
   # check schemes
   if(!is.null(schemes)) {
     if(!(is.matrix(schemes) | is.data.frame(schemes))) {
@@ -165,7 +175,7 @@ setMethod("initialize", "gtypes",
     }
   }
   
-  gen.data <- cbind(ids = rownames(gen.data), strata = "Default", loci)
+  gen.data <- cbind(ids = rownames(gen.data), strata = strata, loci)
   ids <- NULL # For CRAN CHECK
   setkey(gen.data, ids)
   
@@ -184,6 +194,6 @@ setMethod("initialize", "gtypes",
   # Remove unreferenced sequences
   if(remove.sequences) g <- removeSequences(g)
   
-  stratify(g, strata)
+  g
 })
          
