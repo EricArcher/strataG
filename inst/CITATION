@@ -10,7 +10,7 @@ citEntry(
     as.person("Brita Schneiders")
   ),
   journal = "Molecular Ecology Resources",
-  doi = "http://dx.doi.org/10.1111/1755-0998.12559",
+  doi = "10.1111/1755-0998.12559",
   url = "https://github.com/ericarcher/strataG",
   textVersion = paste("Archer, F. I., Adams, P. E. and Schneiders, B. B. (2016) strataG: An R package for manipulating, summarizing and analysing population genetic data. Mol Ecol Resour. doi:10.1111/1755-0998.12559")
 )
