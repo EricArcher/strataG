@@ -4,12 +4,23 @@ language: R
 cache: packages
 sudo: required
 warnings_are_errors: false
+dist: trusty
+
 r:
   - release
-  - devel
+
 r_packages: 
   - knitr
   - rmarkdown
+  
 r_github_packages: thibautjombart/apex
+
 apt_packages:
   - libgsl0-dev
+
+before_install:
+  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
+  - chmod 755 ./travis-tool.sh
+
+install:
+  - ./travis-tool.sh install_deps
