@@ -20,9 +20,9 @@ apt_packages:
   - libgsl-dev
 
 before_install:
-  - sudo apt-get install -y libgsl10-dev
   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
   - chmod 755 ./travis-tool.sh
 
 install:
+  - ./travis-tool.sh aptget_install libgsl0-dev
   - ./travis-tool.sh install_deps
