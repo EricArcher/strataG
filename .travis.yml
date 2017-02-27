@@ -7,7 +7,6 @@ warnings_are_errors: false
 dist: trusty
 
 r:
-  - release
   - devel
 
 r_packages: 
