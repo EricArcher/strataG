@@ -2,9 +2,9 @@
 % Please edit documentation in R/fastsimcoal.input.R
 \name{fastsimcoal.input}
 \alias{fastsimcoal.input}
-\alias{fscHistEv}
-\alias{fscLocusParams}
 \alias{fscPopInfo}
+\alias{fscLocusParams}
+\alias{fscHistEv}
 \title{Input functions for fastsimcoal parameters}
 \usage{
 fscPopInfo(pop.size, sample.size, sample.times = 0, growth.rate = 0)
@@ -90,9 +90,6 @@ SNPs are simulated as a diploid DNA sequence with a single nucleotide,
   has more than one value then this many SNPs are simulated. Otherwise, 
   \code{num.loci} independent SNPs are simulated.
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \references{
 Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time 
   coalescent simulator of genomic diversity under arbitrarily complex 
@@ -102,4 +99,6 @@ Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time
 \seealso{
 \code{\link{fastsimcoal}}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

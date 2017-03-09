@@ -2,9 +2,9 @@
 % Please edit documentation in R/as.array.gtypes.R
 \docType{methods}
 \name{as.array.gtypes}
-\alias{as.array}
-\alias{as.array,gtypes-method}
 \alias{as.array.gtypes}
+\alias{as.array,gtypes-method}
+\alias{as.array}
 \title{Convert \code{gtypes} To \code{array}}
 \usage{
 \S4method{as.array}{gtypes}(x, ids = NULL, loci = NULL, drop = TRUE, ...)
@@ -30,10 +30,9 @@ Create a 3-dimensional array from a \linkS4class{gtypes} object.
 data(msats.g)
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \seealso{
 \link[strataG]{as.data.frame} \link[strataG]{as.matrix}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

@@ -15,6 +15,9 @@
 #' @param delete.files logical. Delete files when done?
 #' @param exec name of fastsimcoal executable.
 #' @param num.cores number of cores to use.
+#' @param label.haplotypes if DNA sequences are being simulated, should resulting
+#'   sequences be stored as haplotypes (default = \code{TRUE}), or left as 
+#'   individual sequences (\code{FALSE})?
 #' @param file filename to write to.
 #' 
 #' @note fastsimcoal is not included with \code{strataG} and must be downloaded 
@@ -130,7 +133,7 @@ fscWrite <- function(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL, l
 #' @rdname fastsimcoal
 #' @export
 #' 
-fscRead <- function(file, locus.params) {
+fscRead <- function(file, locus.params, label.haplotypes = TRUE) {
   .formatGenotypes <- function(x, ploidy) {
     # reformat matrix to have alleles side-by-side
     nloci <- ncol(x) - 2
@@ -198,7 +201,7 @@ fscRead <- function(file, locus.params) {
       } else { # haploid DNA sequences
         dna.seq <- .formatDNA(dna.seq, data.mat[, 2], locus.params)
         g <- sequence2gtypes(dna.seq, strata = data.mat[, 1], description = file)
-        labelHaplotypes(g)$gtype
+        if(label.haplotypes) labelHaplotypes(g)$gtype else g
       }
     },
     MICROSAT = {
@@ -215,7 +218,8 @@ fscRead <- function(file, locus.params) {
 #' 
 fastsimcoal <- function(pop.info, locus.params, mig.rates = NULL, 
                         hist.ev = NULL, label = NULL, quiet = TRUE, 
-                        delete.files = TRUE, exec = "fsc252", num.cores = NULL) {
+                        delete.files = TRUE, exec = "fsc252", num.cores = NULL,
+                        label.haplotypes = TRUE) {
   
   if(is.null(label)) label <- "fsc.run"
   label <- make.names(label)
@@ -256,7 +260,7 @@ fastsimcoal <- function(pop.info, locus.params, mig.rates = NULL,
   arp.file <- file.path(label, paste(label, "_1_1.arp", sep = ""))
   if(!file.exists(arp.file)) stop("fastsimcoal did not generate output")
   if(!quiet) cat("fastsimcoal: parsing output to gtypes\n")
-  g <- fscRead(arp.file, locus.params)
+  g <- fscRead(arp.file, locus.params, label.haplotypes)
   
   # Cleanup
   if(delete.files) {

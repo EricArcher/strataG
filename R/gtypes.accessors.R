@@ -276,7 +276,9 @@ setMethod("sequences", "gtypes", function(x, seqName = NULL, as.haplotypes = TRU
     })
   }
   if(!is.null(seqName)) dna <- dna[seqName]
-  as.multidna(dna)
+  dna <- as.multidna(dna)
+  setLocusNames(dna) <- locNames(x)
+  dna
 })
 
 

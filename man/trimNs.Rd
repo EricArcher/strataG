@@ -31,4 +31,3 @@ as.character(trimmed)
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

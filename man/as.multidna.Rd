@@ -26,10 +26,9 @@ gtype.mdna <- as.multidna(dloop.g)
 gtype.mdna
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \seealso{
 \link{sequences}, \link{getSequences}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

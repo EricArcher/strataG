@@ -48,4 +48,3 @@ summary(x)
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

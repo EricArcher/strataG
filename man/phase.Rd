@@ -2,11 +2,11 @@
 % Please edit documentation in R/phase.R
 \name{phase}
 \alias{phase}
-\alias{phaseFilter}
-\alias{phasePosterior}
-\alias{phaseReadPair}
 \alias{phaseReadSample}
+\alias{phaseReadPair}
 \alias{phaseWrite}
+\alias{phasePosterior}
+\alias{phaseFilter}
 \title{PHASE}
 \usage{
 phase(g, loci, positions = NULL, type = NULL, num.iter = 1e+05,
@@ -121,12 +121,11 @@ summary(phased.snps)
 }
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \references{
 Stephens, M., and Donnelly, P. (2003). A comparison of Bayesian methods for haplotype reconstruction from 
   population genotype data. American Journal of Human Genetics 73:1162-1169.
   Available at: \url{http://stephenslab.uchicago.edu/software.html#phase}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

@@ -2,9 +2,9 @@
 % Please edit documentation in R/as.matrix.gtypes.R
 \docType{methods}
 \name{as.matrix,gtypes-method}
-\alias{as.matrix}
 \alias{as.matrix,gtypes-method}
 \alias{as.matrix.gtypes}
+\alias{as.matrix}
 \title{Convert \code{gtypes} To \code{matrix}}
 \usage{
 \S4method{as.matrix}{gtypes}(x, one.col = FALSE, sep = "/", ids = TRUE,
@@ -50,10 +50,9 @@ genotypes.mat <- as.matrix(msats.g, one.col = TRUE, ids = FALSE, strata = FALSE)
 head(genotypes.mat)
 
 }
-\author{
-Eric Archer \email{eric.archer@noa.gov}
-}
 \seealso{
 \link{df2gtypes} \link[strataG]{as.data.frame} \link[strataG]{as.array}
 }
-
+\author{
+Eric Archer \email{eric.archer@noa.gov}
+}

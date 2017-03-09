@@ -32,4 +32,3 @@ lowFreqSubs(as.DNAbin(dolph.haps))
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

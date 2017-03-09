@@ -64,9 +64,6 @@ file.show(results$files["output.fname"])
 }
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \references{
 GENEPOP 4.3 (08 July 2014; Rousset, 2008)\cr
   \url{http://kimura.univ-montp2.fr/~rousset/Genepop.htm}
@@ -74,4 +71,6 @@ GENEPOP 4.3 (08 July 2014; Rousset, 2008)\cr
 \seealso{
 \link{hweTest}, \link{LDgenepop}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

@@ -18,4 +18,3 @@ Remove sequences not used by samples listed in \code{@data} slot.
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

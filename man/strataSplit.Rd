@@ -33,4 +33,3 @@ sapply(msats.list, propUniqueAlleles)
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

@@ -73,9 +73,6 @@ If \code{use.genepop = TRUE}, the command line version of GENEPOP v.4
   folder in the PATH environmental variable. On Macs, the executable should 
   be installed in a folder like \code{/usr/local/bin}.
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \references{
 Morin, P.A., R.G. LeDuc, F.I. Archer, K.K. Martien, 
   R. Huebinger, J.W. Bickham, and B.L. Taylor. 2009. Significant deviations 
@@ -85,4 +82,6 @@ Morin, P.A., R.G. LeDuc, F.I. Archer, K.K. Martien,
 \seealso{
 \code{\link{hweTest}}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

@@ -34,12 +34,11 @@ Conducts a suite of QA/QC tests. Summarizes missing data and
   frequency substitutions (see \code{\link{lowFreqSubs}}), and computes 
   sequence likelihoods (see \code{\link{sequenceLikelihoods}}).
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \seealso{
 \code{\link{summarizeSamples}}, \code{\link{summarizeLoci}}, 
   \code{\link{dupGenotypes}}, \code{\link{lowFreqSubs}}, 
   \code{\link{sequenceLikelihoods}}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

@@ -17,4 +17,3 @@ Show a gtypes object
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

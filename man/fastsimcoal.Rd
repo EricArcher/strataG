@@ -2,18 +2,19 @@
 % Please edit documentation in R/fastsimcoal.R
 \name{fastsimcoal}
 \alias{fastsimcoal}
-\alias{fscRead}
 \alias{fscWrite}
+\alias{fscRead}
+\alias{fastsimcoal}
 \title{Run fastsimcoal}
 \usage{
 fscWrite(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL,
   label = NULL)
 
-fscRead(file, locus.params)
+fscRead(file, locus.params, label.haplotypes = TRUE)
 
 fastsimcoal(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL,
   label = NULL, quiet = TRUE, delete.files = TRUE, exec = "fsc252",
-  num.cores = NULL)
+  num.cores = NULL, label.haplotypes = TRUE)
 }
 \arguments{
 \item{pop.info}{matrix of population sampling information created by the 
@@ -31,6 +32,10 @@ between pairs of populations.}
 \item{label}{character string to label files with.}
 
 \item{file}{filename to write to.}
+
+\item{label.haplotypes}{if DNA sequences are being simulated, should resulting
+sequences be stored as haplotypes (default = \code{TRUE}), or left as 
+individual sequences (\code{FALSE})?}
 
 \item{quiet}{logical. Run quietly?}
 
@@ -77,13 +82,12 @@ summarizeLoci(sim.msats)
 }
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \references{
 Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time 
   coalescent simulator of genomic diversity under arbitrarily complex 
   evolutionary scenarios Bioinformatics 27: 1332-1334.\cr
   \url{http://cmpg.unibe.ch/software/fastsimcoal2/}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

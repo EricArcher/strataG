@@ -26,4 +26,3 @@ is.gtypes(dolph.msats) # FALSE
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

@@ -23,4 +23,3 @@ Create a matrix of SNPs coded as 0, 1, 2, where 0 and 2 are
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

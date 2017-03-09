@@ -20,4 +20,3 @@ Morin, P.A., Archer, F.I., Pease, V.L., Hancock-Hanser,
   Endangered Species Research 19, 129-147.
 }
 \keyword{datasets}
-

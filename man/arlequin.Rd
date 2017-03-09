@@ -27,13 +27,12 @@ haploid data.}
 Read an Arlequin-formatted project input file into a 
   \code{gtypes} object, or write an input file from a \code{gtypes} object.
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \references{
 Excoffier, L.G. Laval, and S. Schneider (2005) 
   Arlequin ver. 3.0: An integrated software package for population genetics 
   data analysis. Evolutionary Bioinformatics Online 1:47-50.\cr
   Available at \url{http://cmpg.unibe.ch/software/arlequin3/}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

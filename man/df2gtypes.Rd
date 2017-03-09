@@ -66,11 +66,10 @@ dl.g <- df2gtypes(seq.df, ploidy = 1, sequences = dolph.haps)
 dl.g
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \seealso{
 \link{initialize.gtypes}, \link{sequence2gtypes}, 
   \link{as.data.frame.gtypes}, \link{gtypes2genind}, \link{gtypes2loci}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

@@ -50,9 +50,6 @@ CLUMPP is not included with \code{strataG} and must be downloaded
   the command line in the current working directory. See the vignette 
   for \code{external.programs}.
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \references{
 Mattias Jakobsson and Noah A. Rosenberg. 2007. CLUMPP: a cluster 
   matching and permutation program for dealing with label switching and 
@@ -63,4 +60,6 @@ Mattias Jakobsson and Noah A. Rosenberg. 2007. CLUMPP: a cluster
 \seealso{
 \code{\link{structure}}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

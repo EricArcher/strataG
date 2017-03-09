@@ -34,10 +34,9 @@ fd <- fixedDifferences(dloop.g)
 fd
 
 }
-\author{
-Eric Archer <eric.archer@noaa.gov>
-}
 \seealso{
 \code{\link{fixedSites}}, \code{\link{variableSites}}
 }
-
+\author{
+Eric Archer <eric.archer@noaa.gov>
+}

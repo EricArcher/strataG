@@ -48,12 +48,11 @@ dolph.aln
 }
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \references{
 Katoh, M., Kumar, M. 2002. MAFFT: a novel method for rapid multiple sequence 
   alignment based on fast Fourier transform. Nucleic Acids Res. 30:3059-3066.\cr 
   Available at: \url{http://mafft.cbrc.jp/alignment/software}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

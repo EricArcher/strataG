@@ -49,4 +49,3 @@ alleleSplit(msats, sep = "/")
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

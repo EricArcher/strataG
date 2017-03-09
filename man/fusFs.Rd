@@ -25,12 +25,11 @@ data(dolph.seqs)
 fusFs(dolph.seqs)
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \references{
 Fu, Y-X. 1997. Statistical tests of neutrality of mutations 
   against population growth, hitchiking and background selection. 
   Genetics 147:915-925.
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

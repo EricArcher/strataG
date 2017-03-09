@@ -38,10 +38,9 @@ broad.msats <- stratify(msats.g, "broad")
 broad.msats
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \seealso{
 \link{schemes}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

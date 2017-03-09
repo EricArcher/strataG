@@ -27,10 +27,9 @@ data(dolph.haps)
 variableSites(dolph.haps)
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \seealso{
 \code{\link{fixedSites}}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

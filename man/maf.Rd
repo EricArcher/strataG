@@ -25,10 +25,9 @@ data(msats.g)
 maf(msats.g)
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \seealso{
 \link{alleleFreqs}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

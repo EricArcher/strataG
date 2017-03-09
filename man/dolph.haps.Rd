@@ -18,4 +18,3 @@ Lowther-Thieleking J.L., F.I. Archer, A.R. Lang, and
   Marine Mammal Science 31:1-20
 }
 \keyword{datasets}
-

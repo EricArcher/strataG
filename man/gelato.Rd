@@ -51,12 +51,11 @@ gelato.fine
 gelatoPlot(gelato.fine, "Offshore.South")
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \references{
 O'Corry-Crowe, G., W. Lucey, F.I. Archer, and B. Mahoney. 2015. 
   The genetic ecology and population origins of the beluga whales of 
   Yakutat Bay. Marine Fisheries Review.
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

@@ -21,13 +21,12 @@ data(msats.g)
 neiDa(msats.g)
  
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \references{
 Nei et al 1983 Accuracy of Estimated Phylogenetic Trees from 
   Molecular Data. J Mol Evol 19:153-170 (eqn 7)\cr
   Nei, M., and S. Kumar (2000) Molecular Evolution and Phylogenetics. 
   Oxford University Press, Oxford. (pp. 268, eqn 13.6)
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

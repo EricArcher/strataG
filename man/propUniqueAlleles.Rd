@@ -27,10 +27,9 @@ data(msats.g)
 propUniqueAlleles(msats.g)
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \seealso{
 \link{privateAlleles}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

@@ -35,9 +35,6 @@ evno
 }
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \references{
 Evanno, G., Regnaut, S., and J. Goudet. 2005. Detecting the 
   number of clusters of individuals using the software STRUCTURE: a 
@@ -46,4 +43,6 @@ Evanno, G., Regnaut, S., and J. Goudet. 2005. Detecting the
 \seealso{
 \code{\link{structure}} \code{\link{clumpp}}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

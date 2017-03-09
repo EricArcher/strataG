@@ -2,8 +2,8 @@
 % Please edit documentation in R/gtypes.class.R
 \docType{class}
 \name{gtypes-class}
-\alias{gtypes}
 \alias{gtypes-class}
+\alias{gtypes}
 \title{\code{gtypes} Class}
 \description{
 An S4 class storing multi-allelic locus or sequence data along
@@ -32,6 +32,7 @@ The rownames are individual names and must match the 'id' column of the
 \item{\code{other}}{a slot to carry other related information - currently unused in 
 analyses (optional).}
 }}
+
 \examples{
 
 #--- create a diploid (microsatellite) gtypes object
@@ -55,12 +56,11 @@ dloop.g <- labelHaplotypes(dloop.g, "Hap.")$gtypes
 dloop.g
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \seealso{
 \code{\link{df2gtypes}}, \code{\link{sequence2gtypes}},
   \code{\link{genind2gtypes}}, \code{\link{gtypes.accessors}},
   \code{\link{initialize.gtypes}}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

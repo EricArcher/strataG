@@ -43,4 +43,3 @@ description = "dLoop: fine-scale stratification")
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

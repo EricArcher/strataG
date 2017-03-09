@@ -32,10 +32,9 @@ head(msats.ld)
 }
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \seealso{
 \link{genepop}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

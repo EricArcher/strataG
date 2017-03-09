@@ -28,4 +28,3 @@ theta(msats.g)
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

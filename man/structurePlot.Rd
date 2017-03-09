@@ -41,10 +41,9 @@ invisibly, the ggplot object
 Plot Q-matrix from a call to \code{\link{structure}} or 
   \code{\link{clumpp}}.
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \seealso{
 \code{\link{structure}}, \code{\link{clumpp}}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

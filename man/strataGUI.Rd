@@ -13,4 +13,3 @@ A graphical user interface for creating gtypes objects, conducting
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

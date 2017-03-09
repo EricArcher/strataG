@@ -27,4 +27,3 @@ validIupacCodes(c("a", "g", "t", "a"))
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

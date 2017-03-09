@@ -36,10 +36,9 @@ f.pop <- alleleFreqs(msats.g, TRUE)
 f.pop$EV94[, "freq", "Coastal"] # Frequencies for EV94 in the Coastal population
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \seealso{
 \link{alleleFreqFormat}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

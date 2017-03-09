@@ -29,4 +29,3 @@ createConsensus(dolph.seqs)
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

@@ -23,4 +23,3 @@ A wrapper for \code{\link{read.csv}} that sets common values
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

@@ -2,9 +2,9 @@
 % Please edit documentation in R/structure.R
 \name{structure}
 \alias{structure}
-\alias{structureRead}
 \alias{structureRun}
 \alias{structureWrite}
+\alias{structureRead}
 \title{STRUCTURE}
 \usage{
 structureRun(g, k.range = NULL, num.k.rep = 1, label = NULL,
@@ -124,9 +124,6 @@ structurePlot(q.mat)
 }
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \references{
 Pritchard, J.K., M. Stephens, P. Donnelly. 2000. Inference of 
   population structure using multilocus genotype data. Genetics 155:945-959.\cr 
@@ -136,4 +133,6 @@ Pritchard, J.K., M. Stephens, P. Donnelly. 2000. Inference of
 \code{\link{structurePlot}}, \code{\link{evanno}}, 
   \code{\link{clumpp}}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

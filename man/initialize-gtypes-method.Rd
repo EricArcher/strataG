@@ -58,11 +58,10 @@ and match haplotype labels in \code{loc.col} of \code{x}. If multiple
 genes are given as a \linkS4class{multidna}, then they should have the 
 same names as column names in \code{X} from \code{loc.col} to the end.
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \seealso{
 \link{df2gtypes}, \link{sequence2gtypes},
   \link{gtypes2genind}, \link{gtypes2loci}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

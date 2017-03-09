@@ -33,13 +33,12 @@ MavericK is not included with \code{strataG} and must be downloaded
   the command line in the current working directory. See the vignette 
   for \code{external.programs} for OS-specific installation instructions.
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \references{
 Robert Verity and Richard Nichols. (2016) Estimating the number of 
 subpopulations (K) in structured populations. Genetics \cr\cr
 Robert Verity and Richard Nichols. (2016) Documentation for MavericK 
 software: Version 1.0
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}

@@ -58,6 +58,7 @@ Collate:
     createConsensus.R
     dupGenotypes.R
     evanno.R
+    expandHaplotypes.R
     fasta.R
     fastsimcoal.input.R
     fastsimcoal.R
@@ -129,4 +130,4 @@ Collate:
 LazyData: true
 VignetteBuilder: knitr
 LinkingTo: Rcpp
-RoxygenNote: 5.0.1.9000
+RoxygenNote: 6.0.1

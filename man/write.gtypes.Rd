@@ -51,4 +51,3 @@ write.gtypes(dloop.g, as.frequency = TRUE)
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

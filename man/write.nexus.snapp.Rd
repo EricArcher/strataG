@@ -17,4 +17,3 @@ Write NEXUS File for SNAPP
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

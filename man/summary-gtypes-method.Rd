@@ -2,10 +2,11 @@
 % Please edit documentation in R/summary.gtypes.R
 \docType{methods}
 \name{summary,gtypes-method}
-\alias{print.gtypeSummary}
-\alias{summary}
 \alias{summary,gtypes-method}
+\alias{summary}
 \alias{summary.gtypes}
+\alias{summary,gtypes-method}
+\alias{print.gtypeSummary}
 \title{Summarize gtypes Object}
 \usage{
 \S4method{summary}{gtypes}(object, ...)
@@ -40,4 +41,3 @@ Generate a summary of a \code{gtypes} object.
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

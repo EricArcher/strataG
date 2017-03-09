@@ -27,4 +27,3 @@ summary(ran.msats)
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

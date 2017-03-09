@@ -28,4 +28,3 @@ Read and write FASTA formatted files of sequences.
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

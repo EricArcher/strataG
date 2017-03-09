@@ -28,4 +28,3 @@ numMissing(msats.g, prop = TRUE)
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

@@ -2,9 +2,9 @@
 % Please edit documentation in R/TiTvRatio.R
 \name{TiTvRatio}
 \alias{TiTvRatio}
+\alias{subType}
 \alias{isTi}
 \alias{isTv}
-\alias{subType}
 \title{Transition / Transversion Ratio}
 \usage{
 TiTvRatio(x)
@@ -48,4 +48,3 @@ isTv("a", "c")
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

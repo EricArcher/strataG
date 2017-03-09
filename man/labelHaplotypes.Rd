@@ -2,10 +2,10 @@
 % Please edit documentation in R/labelHaplotypes.R
 \name{labelHaplotypes}
 \alias{labelHaplotypes}
-\alias{labelHaplotypes.character}
 \alias{labelHaplotypes.default}
-\alias{labelHaplotypes.gtypes}
 \alias{labelHaplotypes.list}
+\alias{labelHaplotypes.character}
+\alias{labelHaplotypes.gtypes}
 \title{Find and label haplotypes}
 \usage{
 labelHaplotypes(x, prefix = NULL, use.indels = TRUE)
@@ -93,4 +93,3 @@ hap.assign
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-

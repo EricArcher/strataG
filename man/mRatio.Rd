@@ -39,12 +39,11 @@ m.overall <- mRatio(msats.g, FALSE)
 m.overall
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov} (adapted from code by Sean Hoban)
-}
 \references{
 Garza, J.C. and E.G. Williamson. 2001. Detection of reduction in 
   population size using data form microsatellite loci. 
   Molecular Ecology 10(2):305-318.
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov} (adapted from code by Sean Hoban)
+}

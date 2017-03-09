@@ -2,9 +2,9 @@
 % Please edit documentation in R/as.data.frame.gtypes.R
 \docType{methods}
 \name{as.data.frame.gtypes}
-\alias{as.data.frame}
-\alias{as.data.frame,gtypes-method}
 \alias{as.data.frame.gtypes}
+\alias{as.data.frame,gtypes-method}
+\alias{as.data.frame}
 \title{Convert \code{gtypes} To \code{data.frame}}
 \usage{
 \S4method{as.data.frame}{gtypes}(x, one.col = FALSE, sep = "/",
@@ -50,10 +50,9 @@ genotypes.df <- as.data.frame(msats.g, one.col = TRUE, ids = FALSE, strata = FAL
 str(genotypes.df)
 
 }
-\author{
-Eric Archer \email{eric.archer@noaa.gov}
-}
 \seealso{
 \link{df2gtypes} \link[strataG]{as.matrix} \link[strataG]{as.array}
 }
-
+\author{
+Eric Archer \email{eric.archer@noaa.gov}
+}
