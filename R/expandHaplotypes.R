@@ -21,7 +21,9 @@
 #' @export
 #' 
 expandHaplotypes <- function(g) {
+  if(ploidy(g) != 1) stop("'g' must be a haploid gtypes object")
   dna.seqs <- sequences(g, as.haplotypes = FALSE)
+  if(is.null(dna.seqs)) stop("'g' must have associated sequences")
   gen.data <- as.data.frame(g)
   for(x in getLocusNames(dna.seqs)) {
     to.replace <- which(!is.na(gen.data[, x]))
