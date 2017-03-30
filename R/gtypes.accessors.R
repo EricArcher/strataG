@@ -37,8 +37,6 @@
 #'   \item{other}{contents of \code{@@other} slot}
 #'   \item{strata}{return or modify the current stratification}
 #'   \item{schemes}{return or modify the current stratification schemes}
-#'   \item{genotypes}{return a 3-dimensional array of the alleles for the 
-#'     specified ids and loci}
 #'   \item{alleleNames}{return a list of alleles at each locus}
 #'   \item{sequences}{return the \linkS4class{multidna} object in the 
 #'     \code{@@sequences} slot. See \code{\link[apex]{getSequences}} to 

@@ -28,6 +28,9 @@ Create a 3-dimensional array from a \linkS4class{gtypes} object.
 }
 \examples{
 data(msats.g)
+msats.arr <- as.array(msats.g)
+
+msats.arr
 
 }
 \seealso{

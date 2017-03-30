@@ -16,6 +16,9 @@
 #' 
 #' @examples 
 #' data(msats.g)
+#' msats.arr <- as.array(msats.g)
+#' 
+#' msats.arr
 #' 
 #' @aliases as.array,gtypes-method as.array.gtypes as.array
 #' @importFrom methods setMethod

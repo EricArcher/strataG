@@ -38,7 +38,7 @@ structurePlot <- function(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
   
   # convert q.mat to sorted data.table
   prob.cols <- prob.col:ncol(q.mat)
-  qm <- data.table(q.mat)
+  qm <- as.data.frame(q.mat)
   qm[[pop.col]] <- factor(
     qm[[pop.col]], 
     levels = sort(unique(qm[[pop.col]]), decreasing = horiz)

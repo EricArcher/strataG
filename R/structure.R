@@ -113,7 +113,7 @@ structureRun <- function(g, k.range = NULL, num.k.rep = 1, label = NULL,
   label <- file.path(label, label)
   
   # setup k and replicate data.frame to cycle through
-  if(is.null(k.range)) k.range <- 1:nlevels(strata(g))
+  if(is.null(k.range)) k.range <- 1:nStrata(g)
   rep.df <- expand.grid(rep = 1:num.k.rep, k = k.range)
   
   rownames(rep.df) <- paste(label, ".k", rep.df$k, ".r", rep.df$rep, sep = "")
@@ -178,7 +178,6 @@ structureWrite <- function(g, label = NULL, maxpops = nlevels(strata(g)),
     }
   }
   if(is.null(popflag)) popflag <- rep(1, nInd(g))
-  popflag <- as.numeric(popflag)
   if(length(popflag) != nInd(g)) {
     stop("'popflag' should be the same length as the number of individuals in 'g'.")
   }
@@ -194,19 +193,29 @@ structureWrite <- function(g, label = NULL, maxpops = nlevels(strata(g)),
                        paste(label, "extraparams", sep = "_"))
   
   # write data
-  write(paste(locNames(g), collapse = " "), file = in.file)
-  popdata <- as.numeric(strata(g))
+  num.loc <- .numericLoci(g)
+  num.loc$ids <- rep(num.loc$ids, each = ploidy(g))
+  num.loc$loci[is.na(num.loc$loci)] <- -9
+  popdata <- as.numeric(factor(strata(g))[num.loc$ids])
+  if(!is.null(names(popflag))) popflag <- popflag[num.loc$ids]
+  popflag <- rep(popflag, each = ploidy(g))
+  mat <- cbind(num.loc$ids, popdata, popflag, num.loc$loci)
   
-  for(i in 1:nInd(g)) {
-    id <- indNames(g)[i]
-    loci <- loci(g, id, locNames(g))
-    loci <- c(as.matrix(sapply(loci, as.numeric)))
-    loci[is.na(loci)] <- -9
-    loci <- paste(loci, collapse = " ")
-    write(paste(id, popdata[i], popflag[i], loci), 
-          file = in.file, append = TRUE
-    )
+  write(paste(locNames(g), collapse = " "), file = in.file)
+  for(i in 1:nrow(mat)) {
+    write(paste(mat[i, ], collapse = " "), file = in.file, append = TRUE)
   }
+
+  # for(i in 1:nInd(g)) {
+  #   id <- indNames(g)[i]
+  #   loci <- loci(g, id, locNames(g))
+  #   loci <- c(as.matrix(sapply(loci, as.numeric)))
+  #   loci[is.na(loci)] <- -9
+  #   loci <- paste(loci, collapse = " ")
+  #   write(paste(id, popdata[i], popflag[i], loci), 
+  #         file = in.file, append = TRUE
+  #   )
+  # }
   
   # write mainparams
   main.params <- c(
@@ -218,7 +227,7 @@ structureWrite <- function(g, label = NULL, maxpops = nlevels(strata(g)),
     paste("NUMINDS", nInd(g)),
     paste("NUMLOCI", nLoc(g)),
     "MISSING -9",
-    "ONEROWPERIND 1",
+    #"ONEROWPERIND 1",
     "LABEL 1",
     "POPDATA 1",
     "POPFLAG 1",
