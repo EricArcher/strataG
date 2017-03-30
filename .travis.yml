@@ -5,8 +5,10 @@ sudo: required
 warnings_are_errors: false
 dist: trusty
 
-r:
-  - devel
+r: devel
+  
+repos:
+  - cran: http://cran.stat.ucla.edu/
 
 r_packages: 
   - knitr
