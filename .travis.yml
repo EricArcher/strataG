@@ -3,10 +3,8 @@
 language: r
 sudo: required
 warnings_are_errors: false
-dist: trusty
 
 r: devel
-cache: packages
   
 cran: http://cran.stat.ucla.edu
 
