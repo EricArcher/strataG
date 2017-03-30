@@ -8,7 +8,7 @@ dist: trusty
 r: devel
   
 repos:
-  - cran: http://cran.stat.ucla.edu/
+  CRAN: http://cran.stat.ucla.edu/
 
 r_packages: 
   - knitr
