@@ -5,8 +5,6 @@ sudo: required
 warnings_are_errors: false
 
 r: devel
-  
-cran: http://cran.stat.ucla.edu
 
 r_packages: 
   - knitr
