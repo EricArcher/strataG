@@ -1,14 +1,13 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
-language: R
+language: r
 sudo: required
 warnings_are_errors: false
 dist: trusty
 
 r: devel
   
-repos:
-  CRAN: http://cran.stat.ucla.edu/
+cran: http://cran.stat.ucla.edu/
 
 r_packages: 
   - knitr
