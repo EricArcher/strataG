@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -12,7 +12,7 @@
 
 <meta name="author" content="Eric Archer" />
 
-<meta name="date" content="2016-11-23" />
+<meta name="date" content="2017-03-30" />
 
 <title>Creating and Manipulating gtypes Objects</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Creating and Manipulating gtypes Objects</h1>
 <h4 class="author"><em>Eric Archer</em></h4>
-<h4 class="date"><em>2016-11-23</em></h4>
+<h4 class="date"><em>2017-03-30</em></h4>
 
 
 
@@ -100,7 +100,14 @@ x</code></pre></div>
 ## 
 ## All sequences of same length: 402 
 ## 
-## Labels: 4495 4496 4498 5814 5815 5816 ...
+## Labels:
+## 4495
+## 4496
+## 4498
+## 5814
+## 5815
+## 5816
+## ...
 ## 
 ## Base composition:
 ##     a     c     g     t 
@@ -127,17 +134,22 @@ x</code></pre></div>
 strata.schemes &lt;-<span class="st"> </span>dolph.strata[, <span class="kw">c</span>(<span class="st">&quot;broad&quot;</span>, <span class="st">&quot;fine&quot;</span>)]
 <span class="kw">rownames</span>(strata.schemes) &lt;-<span class="st"> </span>dolph.strata$id
 msats &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;gtypes&quot;</span>, <span class="dt">gen.data =</span> dolph.msats[, -<span class="dv">1</span>], <span class="dt">ploidy =</span> <span class="dv">2</span>,
-  <span class="dt">ind.names =</span> dolph.msats[, <span class="dv">1</span>], <span class="dt">schemes =</span> strata.schemes)
-
-<span class="co">#--- create a haploid sequence (mtDNA) gtypes object</span>
+  <span class="dt">ind.names =</span> dolph.msats[, <span class="dv">1</span>], <span class="dt">schemes =</span> strata.schemes)</code></pre></div>
+<pre><code>## Warning in .local(.Object, ...): the length of 'strata' is not the same as
+## the number of individuals. strata will be recycled.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#--- create a haploid sequence (mtDNA) gtypes object</span>
 <span class="kw">data</span>(dolph.seqs)
 dloop.haps &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="dt">haps =</span> dolph.strata$id)
 <span class="kw">rownames</span>(dloop.haps) &lt;-<span class="st"> </span>dolph.strata$id
 dloop &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;gtypes&quot;</span>, <span class="dt">gen.data =</span> dloop.haps, <span class="dt">ploidy =</span> <span class="dv">1</span>, 
   <span class="dt">sequences =</span> dolph.seqs)</code></pre></div>
+<pre><code>## Warning in .local(.Object, ...): the length of 'strata' is not the same as
+## the number of individuals. strata will be recycled.</code></pre>
 <p>Both of these examples create a <em>gtypes</em> where every individual is in a single default stratum. To stratify samples when created, supply either a vector, factor, or stratification scheme name to the ‘strata’ argument in <em>new</em>, like so:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">msats.fine &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;gtypes&quot;</span>, <span class="dt">gen.data =</span> dolph.msats[, -<span class="dv">1</span>], <span class="dt">ploidy =</span> <span class="dv">2</span>,
   <span class="dt">ind.names =</span> dolph.msats[, <span class="dv">1</span>], <span class="dt">schemes =</span> strata.schemes, <span class="dt">strata =</span> <span class="st">&quot;fine&quot;</span>)</code></pre></div>
+<pre><code>## Warning in .local(.Object, ...): the length of 'strata' is not the same as
+## the number of individuals. strata will be recycled.</code></pre>
 </div>
 <div id="df2gtypes---convert-a-data.frame-or-matrix" class="section level3">
 <h3><em>df2gtypes</em> - Convert a data.frame or matrix</h3>
@@ -170,7 +182,7 @@ seq.df &lt;-<span class="st"> </span>dolph.strata[ <span class="kw">c</span>(<sp
 dl.g &lt;-<span class="st"> </span><span class="kw">df2gtypes</span>(seq.df, <span class="dt">ploidy =</span> <span class="dv">1</span>, <span class="dt">sequences =</span> dolph.seqs)
 dl.g</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-11-23 11:15:33 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2017-03-30 00:03:51 &gt;&gt;&gt;
 ## 
 ## Contents: 126 samples, 1 locus, 2 strata
 ## 
@@ -185,27 +197,29 @@ dl.g</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dl.haps &lt;-<span class="st"> </span><span class="kw">labelHaplotypes</span>(dl.g)
 dl.haps$gtypes</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-11-23 11:15:33 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2017-03-30 00:03:51 &gt;&gt;&gt;
 ## 
 ## Contents: 126 samples, 1 locus, 2 strata
 ## 
 ## Strata summary:
 ##          num.samples num.missing num.alleles prop.unique.alleles
-## Coastal           68           0          14           0.4285714
-## Offshore          58           0          30           0.5000000
+## Coastal           68           0           5           0.0000000
+## Offshore          58           0          29           0.4827586
 ##          heterozygosity
-## Coastal       0.8270413
-## Offshore      0.9667272</code></pre>
+## Coastal       0.7427568
+## Offshore      0.9594676</code></pre>
 </div>
 <div id="sequence2gtypes---convert-dna-sequences" class="section level3">
 <h3><em>sequence2gtypes</em> - Convert DNA sequences</h3>
 <p>The <em>sequence2gtypes</em> function creates an unstratified <em>gtype</em> object with just a set of DNA sequences:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(dolph.haps)
 
-haps.g &lt;-<span class="st"> </span><span class="kw">sequence2gtypes</span>(dolph.haps)
-haps.g</code></pre></div>
+haps.g &lt;-<span class="st"> </span><span class="kw">sequence2gtypes</span>(dolph.haps)</code></pre></div>
+<pre><code>## Warning in .local(.Object, ...): the length of 'strata' is not the same as
+## the number of individuals. strata will be recycled.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">haps.g</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-11-23 11:15:34 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2017-03-30 00:03:51 &gt;&gt;&gt;
 ## 
 ## Contents: 33 samples, 1 locus, 1 stratum
 ## 
@@ -266,16 +280,18 @@ obj</code></pre></div>
 ##  // Optional content
 ##    - empty -</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># convert to gtypes</span>
-gi.g &lt;-<span class="st"> </span><span class="kw">genind2gtypes</span>(obj)
-gi.g</code></pre></div>
+gi.g &lt;-<span class="st"> </span><span class="kw">genind2gtypes</span>(obj)</code></pre></div>
+<pre><code>## Warning in .local(.Object, ...): the length of 'strata' is not the same as
+## the number of individuals. strata will be recycled.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gi.g</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-11-23 11:15:34 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2017-03-30 00:03:52 &gt;&gt;&gt;
 ## 
 ## Contents: 4 samples, 3 loci, 1 stratum
 ## 
 ## Strata summary:
 ##         num.samples num.missing num.alleles prop.unique.alleles
-## Default           4   0.6666667           3           0.5277778
+## Default           4   0.3333333           3           0.5277778
 ##         heterozygosity
 ## Default      0.4722222</code></pre>
 </div>
@@ -306,43 +322,43 @@ gi.g</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>msats.fine[<span class="kw">sample</span>(<span class="kw">nInd</span>(msats.fine), <span class="dv">10</span>), , ]
 sub.msats</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-11-23 11:15:33 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2017-03-30 00:03:51 &gt;&gt;&gt;
 ## 
 ## Contents: 10 samples, 5 loci, 2 strata
 ## 
 ## Strata summary:
 ##          num.samples num.missing num.alleles prop.unique.alleles
-## Coastal            5         0.4         3.2           0.2833333
-## Offshore           5         0.8         5.8           0.7400000
+## Coastal            4           0         3.0           0.1666667
+## Offshore           6           0         6.2           0.5500000
 ##          heterozygosity
-## Coastal            0.71
-## Offshore           0.78</code></pre>
+## Coastal             0.8
+## Offshore            0.7</code></pre>
 <p>…or to return specific loci:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>sub.msats[, <span class="kw">c</span>(<span class="st">&quot;D11t&quot;</span>, <span class="st">&quot;EV37&quot;</span>, <span class="st">&quot;TV7&quot;</span>), ]
 sub.msats</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-11-23 11:15:33 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2017-03-30 00:03:51 &gt;&gt;&gt;
 ## 
 ## Contents: 10 samples, 2 loci, 2 strata
 ## 
 ## Strata summary:
 ##          num.samples num.missing num.alleles prop.unique.alleles
-## Coastal            5           1         2.5           0.1666667
-## Offshore           5           1         6.5           0.8333333
+## Coastal            4           0           3           0.2500000
+## Offshore           6           0           7           0.6428571
 ##          heterozygosity
-## Coastal           0.775
-## Offshore          0.875</code></pre>
+## Coastal       0.7500000
+## Offshore      0.6666667</code></pre>
 <p>…or some loci in a specific stratum:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>msats.fine[, <span class="kw">c</span>(<span class="st">&quot;Ttr11&quot;</span>, <span class="st">&quot;D11t&quot;</span>), <span class="st">&quot;Coastal&quot;</span>]
 sub.msats</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-11-23 11:15:33 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2017-03-30 00:03:51 &gt;&gt;&gt;
 ## 
 ## Contents: 68 samples, 2 loci, 1 stratum
 ## 
 ## Strata summary:
 ##         num.samples num.missing num.alleles prop.unique.alleles
-## Coastal          68           1         3.5                   0
+## Coastal          68         0.5         3.5                   0
 ##         heterozygosity
 ## Coastal      0.5773705</code></pre>
 </div>
@@ -356,7 +372,7 @@ sub.msats</code></pre></div>
 ##  $ num.loc     : num 5
 ##  $ num.strata  : int 2
 ##  $ unstratified: int 0
-##  $ strata.smry : num [1:2, 1:5] 68 58 2.4 1.6 4.8 ...
+##  $ strata.smry : num [1:2, 1:5] 68 58 1.2 0.8 4.8 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : chr [1:2] &quot;Coastal&quot; &quot;Offshore&quot;
 ##   .. ..$ : chr [1:5] &quot;num.samples&quot; &quot;num.missing&quot; &quot;num.alleles&quot; &quot;prop.unique.alleles&quot; ...
@@ -392,19 +408,19 @@ sub.msats</code></pre></div>
 ##   ..$ num.loci.missing.genotypes: int [1:126] 0 0 0 0 0 0 0 0 0 0 ...
 ##   ..$ pct.loci.missing.genotypes: num [1:126] 0 0 0 0 0 0 0 0 0 0 ...
 ##   ..$ pct.loci.homozygous       : num [1:126] 0 0.2 0 0 0.2 0 0 0.2 0.2 0 ...
-##  $ locus.smry  : num [1:5, 1:7] 124 112 124 124 126 ...
+##  $ locus.smry  : num [1:5, 1:7] 125 119 125 125 126 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : chr [1:5] &quot;D11t&quot; &quot;EV37&quot; &quot;EV94&quot; &quot;Ttr11&quot; ...
 ##   .. ..$ : chr [1:7] &quot;num.genotyped&quot; &quot;prop.genotyped&quot; &quot;num.alleles&quot; &quot;allelic.richness&quot; ...
-##  - attr(*, &quot;description&quot;)= chr &quot;gtypes created on 2016-11-23 11:15:33&quot;
+##  - attr(*, &quot;description&quot;)= chr &quot;gtypes created on 2017-03-30 00:03:51&quot;
 ##  - attr(*, &quot;class&quot;)= chr [1:2] &quot;gtypeSummary&quot; &quot;list&quot;</code></pre>
 <p>For just the by-locus summary statistics:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarizeLoci</span>(msats.fine)</code></pre></div>
 <pre><code>##       num.genotyped prop.genotyped num.alleles allelic.richness
-## D11t            124      0.9841270          12       0.09677419
-## EV37            112      0.8888889          22       0.19642857
-## EV94            124      0.9841270          15       0.12096774
-## Ttr11           124      0.9841270           9       0.07258065
+## D11t            125      0.9920635          12       0.09600000
+## EV37            119      0.9444444          22       0.18487395
+## EV94            125      0.9920635          15       0.12000000
+## Ttr11           125      0.9920635           9       0.07200000
 ## Ttr34           126      1.0000000          10       0.07936508
 ##       prop.unique.alleles exptd.heterozygosity obsvd.heterozygosity
 ## D11t           0.25000000            0.7468273            0.7040000
@@ -420,18 +436,18 @@ sub.msats</code></pre></div>
 <span class="kw">strata</span>(msats) &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;Pop1&quot;</span>, <span class="st">&quot;Pop2&quot;</span>), <span class="kw">nInd</span>(msats), <span class="dt">rep =</span> <span class="ot">TRUE</span>)
 <span class="kw">summary</span>(msats)$strata.smry</code></pre></div>
 <pre><code>##      num.samples num.missing num.alleles prop.unique.alleles
-## Pop1          92         2.6        12.4          0.21746032
-## Pop2          90         1.4        11.2          0.09038462
+## Pop1          96         0.8        12.4           0.1927778
+## Pop2         102         1.2        11.0           0.0984127
 ##      heterozygosity
-## Pop1      0.2902142
-## Pop2      0.2772691</code></pre>
+## Pop1      0.1946530
+## Pop2      0.2217021</code></pre>
 <p>or, if there is a stratification scheme data.frame in the @schemes slot, you can use the <em>stratify</em> function to choose a stratification scheme:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># choose &quot;broad&quot; stratification scheme</span>
 msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <span class="st">&quot;broad&quot;</span>)
 <span class="kw">summary</span>(msats)$strata.smry</code></pre></div>
 <pre><code>##          num.samples num.missing num.alleles prop.unique.alleles
-## Coastal           68         2.4         4.8          0.08571429
-## Offshore          58         1.6        13.6          0.17505051
+## Coastal           68         1.2         4.8          0.08571429
+## Offshore          58         0.8        13.6          0.17505051
 ##          heterozygosity
 ## Coastal       0.6312283
 ## Offshore      0.8144326</code></pre>
@@ -440,7 +456,7 @@ msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <spa
 <p>NOTE: Filling or changing the @schemes slot does not affect the current stratification of the samples. You must then select a new stratification scheme or fill the @strata slot as above.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stratify</span>(dloop, <span class="st">&quot;fine&quot;</span>)</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2016-11-23 11:15:33 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2017-03-30 00:03:51 &gt;&gt;&gt;
 ## 
 ## Contents: 126 samples, 1 locus, 3 strata
 ## Stratification schemes: broad, fine
@@ -461,19 +477,19 @@ x[<span class="kw">sample</span>(<span class="kw">indNames</span>(msats), <span 
 <span class="kw">strata</span>(msats) &lt;-<span class="st"> </span>x
 <span class="kw">summary</span>(msats)$strata.smry</code></pre></div>
 <pre><code>##          num.samples num.missing num.alleles prop.unique.alleles
-## Coastal           63         2.0         4.6           0.1166667
-## Offshore          53         1.6        13.4           0.1763492
+## Coastal           63         1.2         4.8          0.08571429
+## Offshore          53         0.4        13.2          0.15530303
 ##          heterozygosity
-## Coastal       0.6156847
-## Offshore      0.8081690</code></pre>
+## Coastal       0.6271925
+## Offshore      0.8021771</code></pre>
 <p>You can also randomly permute the current stratification scheme using the <em>permuteStrata</em> function like this:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <span class="st">&quot;fine&quot;</span>)
 
 <span class="co"># original</span>
 <span class="kw">summary</span>(msats)$strata.smry</code></pre></div>
 <pre><code>##                num.samples num.missing num.alleles prop.unique.alleles
-## Coastal                 68         2.4         4.8          0.08571429
-## Offshore.North          40         1.6        12.6          0.22398990
+## Coastal                 68         1.2         4.8          0.08571429
+## Offshore.North          40         0.8        12.6          0.22398990
 ## Offshore.South          18         0.0        11.0          0.25098291
 ##                heterozygosity
 ## Coastal             0.6312283
@@ -483,13 +499,13 @@ x[<span class="kw">sample</span>(<span class="kw">indNames</span>(msats), <span 
 ran.msats &lt;-<span class="st"> </span><span class="kw">permuteStrata</span>(msats)
 <span class="kw">summary</span>(ran.msats)$strata.smry</code></pre></div>
 <pre><code>##                num.samples num.missing num.alleles prop.unique.alleles
-## Coastal                 68         3.2        11.2           0.1464912
-## Offshore.North          40         0.8        11.8           0.3255952
-## Offshore.South          18         0.0         9.6           0.4160256
+## Coastal                 68         1.2        12.6           0.2244577
+## Offshore.North          40         0.2        10.2           0.2367766
+## Offshore.South          18         0.6         7.8           0.2679365
 ##                heterozygosity
-## Coastal             0.7140161
-## Offshore.North      0.7523684
-## Offshore.South      0.6444444</code></pre>
+## Coastal             0.6912588
+## Offshore.North      0.7437179
+## Offshore.South      0.7467320</code></pre>
 <p>NOTE: Only samples assigned to strata are permuted with <em>permuteStrata</em>. Those not assigned (NAs) remain unassigned.</p>
 </div>
 <div id="exporting" class="section level2">
@@ -498,12 +514,12 @@ ran.msats &lt;-<span class="st"> </span><span class="kw">permuteStrata</span>(ms
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gen.mat &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(msats)
 <span class="kw">head</span>(gen.mat)</code></pre></div>
 <pre><code>##       ids     strata           D11t.1 D11t.2 EV37.1 EV37.2 EV94.1 EV94.2
-## 18650 &quot;18650&quot; &quot;Coastal&quot;        &quot;131&quot;  &quot;133&quot;  &quot;212&quot;  &quot;222&quot;  &quot;263&quot;  &quot;265&quot; 
-## 18651 &quot;18651&quot; &quot;Offshore.South&quot; &quot;137&quot;  &quot;143&quot;  &quot;200&quot;  &quot;228&quot;  &quot;249&quot;  &quot;251&quot; 
-## 18652 &quot;18652&quot; &quot;Offshore.South&quot; &quot;131&quot;  &quot;133&quot;  &quot;212&quot;  &quot;218&quot;  &quot;249&quot;  &quot;251&quot; 
-## 18653 &quot;18653&quot; &quot;Offshore.North&quot; &quot;133&quot;  &quot;139&quot;  &quot;202&quot;  &quot;220&quot;  &quot;229&quot;  &quot;245&quot; 
+## 18650 &quot;18650&quot; &quot;Offshore.North&quot; &quot;131&quot;  &quot;133&quot;  &quot;212&quot;  &quot;222&quot;  &quot;263&quot;  &quot;265&quot; 
+## 18651 &quot;18651&quot; &quot;Coastal&quot;        &quot;137&quot;  &quot;143&quot;  &quot;200&quot;  &quot;228&quot;  &quot;249&quot;  &quot;251&quot; 
+## 18652 &quot;18652&quot; &quot;Coastal&quot;        &quot;131&quot;  &quot;133&quot;  &quot;212&quot;  &quot;218&quot;  &quot;249&quot;  &quot;251&quot; 
+## 18653 &quot;18653&quot; &quot;Coastal&quot;        &quot;133&quot;  &quot;139&quot;  &quot;202&quot;  &quot;220&quot;  &quot;229&quot;  &quot;245&quot; 
 ## 18654 &quot;18654&quot; &quot;Coastal&quot;        &quot;131&quot;  &quot;135&quot;  &quot;214&quot;  &quot;216&quot;  &quot;249&quot;  &quot;249&quot; 
-## 18655 &quot;18655&quot; &quot;Offshore.South&quot; &quot;131&quot;  &quot;137&quot;  &quot;222&quot;  &quot;254&quot;  &quot;243&quot;  &quot;255&quot; 
+## 18655 &quot;18655&quot; &quot;Offshore.North&quot; &quot;131&quot;  &quot;137&quot;  &quot;222&quot;  &quot;254&quot;  &quot;243&quot;  &quot;255&quot; 
 ##       Ttr11.1 Ttr11.2 Ttr34.1 Ttr34.2
 ## 18650 &quot;197&quot;   &quot;209&quot;   &quot;185&quot;   &quot;187&quot;  
 ## 18651 &quot;197&quot;   &quot;197&quot;   &quot;185&quot;   &quot;187&quot;  
@@ -515,12 +531,12 @@ ran.msats &lt;-<span class="st"> </span><span class="kw">permuteStrata</span>(ms
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gen.mat &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(msats, <span class="dt">one.col =</span> <span class="ot">TRUE</span>)
 <span class="kw">head</span>(gen.mat)</code></pre></div>
 <pre><code>##       ids     strata           D11t      EV37      EV94      Ttr11    
-## 18650 &quot;18650&quot; &quot;Coastal&quot;        &quot;131/133&quot; &quot;212/222&quot; &quot;263/265&quot; &quot;197/209&quot;
-## 18651 &quot;18651&quot; &quot;Offshore.South&quot; &quot;137/143&quot; &quot;200/228&quot; &quot;249/251&quot; &quot;197/197&quot;
-## 18652 &quot;18652&quot; &quot;Offshore.South&quot; &quot;131/133&quot; &quot;212/218&quot; &quot;249/251&quot; &quot;211/213&quot;
-## 18653 &quot;18653&quot; &quot;Offshore.North&quot; &quot;133/139&quot; &quot;202/220&quot; &quot;229/245&quot; &quot;197/215&quot;
+## 18650 &quot;18650&quot; &quot;Offshore.North&quot; &quot;131/133&quot; &quot;212/222&quot; &quot;263/265&quot; &quot;197/209&quot;
+## 18651 &quot;18651&quot; &quot;Coastal&quot;        &quot;137/143&quot; &quot;200/228&quot; &quot;249/251&quot; &quot;197/197&quot;
+## 18652 &quot;18652&quot; &quot;Coastal&quot;        &quot;131/133&quot; &quot;212/218&quot; &quot;249/251&quot; &quot;211/213&quot;
+## 18653 &quot;18653&quot; &quot;Coastal&quot;        &quot;133/139&quot; &quot;202/220&quot; &quot;229/245&quot; &quot;197/215&quot;
 ## 18654 &quot;18654&quot; &quot;Coastal&quot;        &quot;131/135&quot; &quot;214/216&quot; &quot;249/249&quot; &quot;197/211&quot;
-## 18655 &quot;18655&quot; &quot;Offshore.South&quot; &quot;131/137&quot; &quot;222/254&quot; &quot;243/255&quot; &quot;207/211&quot;
+## 18655 &quot;18655&quot; &quot;Offshore.North&quot; &quot;131/137&quot; &quot;222/254&quot; &quot;243/255&quot; &quot;207/211&quot;
 ##       Ttr34    
 ## 18650 &quot;185/187&quot;
 ## 18651 &quot;185/187&quot;
