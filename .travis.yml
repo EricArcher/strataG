@@ -6,8 +6,9 @@ warnings_are_errors: false
 dist: trusty
 
 r: devel
+cache: packages
   
-cran: http://cran.stat.ucla.edu/
+cran: http://cran.stat.ucla.edu
 
 r_packages: 
   - knitr
