@@ -189,63 +189,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// alleleFreqCalc
-NumericMatrix alleleFreqCalc(IntegerVector locVec, IntegerVector strataRep);
-RcppExport SEXP strataG_alleleFreqCalc(SEXP locVecSEXP, SEXP strataRepSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type locVec(locVecSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type strataRep(strataRepSEXP);
-    rcpp_result_gen = Rcpp::wrap(alleleFreqCalc(locVec, strataRep));
-    return rcpp_result_gen;
-END_RCPP
-}
-// prHetCalc
-NumericMatrix prHetCalc(IntegerVector locus, int nalleles, IntegerVector strata, IntegerVector nvec, int ploidy);
-RcppExport SEXP strataG_prHetCalc(SEXP locusSEXP, SEXP nallelesSEXP, SEXP strataSEXP, SEXP nvecSEXP, SEXP ploidySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type locus(locusSEXP);
-    Rcpp::traits::input_parameter< int >::type nalleles(nallelesSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type strata(strataSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type nvec(nvecSEXP);
-    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
-    rcpp_result_gen = Rcpp::wrap(prHetCalc(locus, nalleles, strata, nvec, ploidy));
-    return rcpp_result_gen;
-END_RCPP
-}
-// varCompCalc
-NumericMatrix varCompCalc(IntegerVector nvec, NumericMatrix alleleFreq, NumericMatrix prHet, int r, double nbar, double rnbar, double nc);
-RcppExport SEXP strataG_varCompCalc(SEXP nvecSEXP, SEXP alleleFreqSEXP, SEXP prHetSEXP, SEXP rSEXP, SEXP nbarSEXP, SEXP rnbarSEXP, SEXP ncSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type nvec(nvecSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type alleleFreq(alleleFreqSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type prHet(prHetSEXP);
-    Rcpp::traits::input_parameter< int >::type r(rSEXP);
-    Rcpp::traits::input_parameter< double >::type nbar(nbarSEXP);
-    Rcpp::traits::input_parameter< double >::type rnbar(rnbarSEXP);
-    Rcpp::traits::input_parameter< double >::type nc(ncSEXP);
-    rcpp_result_gen = Rcpp::wrap(varCompCalc(nvec, alleleFreq, prHet, r, nbar, rnbar, nc));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fstCalc
-double fstCalc(IntegerMatrix loci, IntegerVector strata, int ploidy);
-RcppExport SEXP strataG_fstCalc(SEXP lociSEXP, SEXP strataSEXP, SEXP ploidySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerMatrix >::type loci(lociSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type strata(strataSEXP);
-    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
-    rcpp_result_gen = Rcpp::wrap(fstCalc(loci, strata, ploidy));
-    return rcpp_result_gen;
-END_RCPP
-}
 // statFst_C
 NumericVector statFst_C(IntegerMatrix loci, IntegerMatrix strataMat);
 RcppExport SEXP strataG_statFst_C(SEXP lociSEXP, SEXP strataMatSEXP) {
@@ -316,32 +259,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerMatrix >::type loci(lociSEXP);
     Rcpp::traits::input_parameter< IntegerMatrix >::type strataMat(strataMatSEXP);
     rcpp_result_gen = Rcpp::wrap(statJostD_C(loci, strataMat));
-    return rcpp_result_gen;
-END_RCPP
-}
-// ssWPCalc
-double ssWPCalc(IntegerVector strataFreq, IntegerMatrix strataHapFreq, NumericMatrix hapDist);
-RcppExport SEXP strataG_ssWPCalc(SEXP strataFreqSEXP, SEXP strataHapFreqSEXP, SEXP hapDistSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type strataFreq(strataFreqSEXP);
-    Rcpp::traits::input_parameter< IntegerMatrix >::type strataHapFreq(strataHapFreqSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type hapDist(hapDistSEXP);
-    rcpp_result_gen = Rcpp::wrap(ssWPCalc(strataFreq, strataHapFreq, hapDist));
-    return rcpp_result_gen;
-END_RCPP
-}
-// ssAPCalc
-double ssAPCalc(IntegerVector strataFreq, IntegerMatrix strataHapFreq, NumericMatrix hapDist);
-RcppExport SEXP strataG_ssAPCalc(SEXP strataFreqSEXP, SEXP strataHapFreqSEXP, SEXP hapDistSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type strataFreq(strataFreqSEXP);
-    Rcpp::traits::input_parameter< IntegerMatrix >::type strataHapFreq(strataHapFreqSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type hapDist(hapDistSEXP);
-    rcpp_result_gen = Rcpp::wrap(ssAPCalc(strataFreq, strataHapFreq, hapDist));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -1,9 +1,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// 
-
-// [[Rcpp::export]]
 double ssWPCalc(IntegerVector strataFreq, IntegerMatrix strataHapFreq,
                         NumericMatrix hapDist) {
   // function declarations
@@ -27,7 +24,6 @@ double ssWPCalc(IntegerVector strataFreq, IntegerMatrix strataHapFreq,
  return sum(ssWPvec); 
 }
 
-// [[Rcpp::export]]
 double ssAPCalc(IntegerVector strataFreq, IntegerMatrix strataHapFreq, 
                 NumericMatrix hapDist) {
   // function declarations
@@ -82,7 +78,6 @@ double phistCalc(IntegerVector haps, IntegerVector strata, NumericMatrix hapDist
   if(std::isnan(est)) est = NA_REAL;
   return est;
 }
-
 
 // [[Rcpp::export]]
 NumericVector statPhist_C(IntegerMatrix hapMat, IntegerMatrix strataMat, List hapDist) {

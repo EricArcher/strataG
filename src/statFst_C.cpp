@@ -1,7 +1,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// [[Rcpp::export]]
 NumericMatrix alleleFreqCalc(IntegerVector locVec, IntegerVector strataRep) {
   IntegerMatrix table2D(IntegerVector, IntegerVector);
   NumericVector colSumC(NumericMatrix);
@@ -18,8 +17,6 @@ NumericMatrix alleleFreqCalc(IntegerVector locVec, IntegerVector strataRep) {
   return alleleFreq;
 }
 
-
-// [[Rcpp::export]]
 NumericMatrix prHetCalc(IntegerVector locus, int nalleles,
                         IntegerVector strata, IntegerVector nvec, int ploidy) {
   IntegerVector idGenotype(IntegerVector, int, int);
@@ -44,8 +41,6 @@ NumericMatrix prHetCalc(IntegerVector locus, int nalleles,
   return prHet;
 }
 
-
-// [[Rcpp::export]]
 NumericMatrix varCompCalc(IntegerVector nvec, NumericMatrix alleleFreq,
                           NumericMatrix prHet, int r, double nbar, 
                           double rnbar, double nc) {
@@ -88,8 +83,6 @@ NumericMatrix varCompCalc(IntegerVector nvec, NumericMatrix alleleFreq,
   return varcompMat;
 }
 
-
-// [[Rcpp::export]]
 double fstCalc(IntegerMatrix loci, IntegerVector strata, int ploidy) {
   // function declarations
   IntegerVector calcStrataN(IntegerVector, IntegerVector, int);
@@ -152,7 +145,6 @@ IntegerMatrix maxFstLoci(IntegerMatrix loci, IntegerVector strata, int ploidy, I
   return maxLoci;
 }
 
-
 // [[Rcpp::export]]
 NumericVector statFst_C(IntegerMatrix loci, IntegerMatrix strataMat) {
   NumericVector estVec(strataMat.ncol());
@@ -163,7 +155,6 @@ NumericVector statFst_C(IntegerMatrix loci, IntegerMatrix strataMat) {
   }
   return estVec;
 }
-
 
 // [[Rcpp::export]]
 NumericVector statFstPrime_C(IntegerMatrix loci, IntegerMatrix strataMat) {

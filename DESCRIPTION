@@ -127,7 +127,7 @@ Collate:
     gtypes2phyDat.R
     df2gtypes.R
     sequence2gtypes.R
-LazyData: true
+LazyData: TRUE
 VignetteBuilder: knitr
 LinkingTo: Rcpp
 RoxygenNote: 6.0.1

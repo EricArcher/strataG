@@ -36,7 +36,7 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @name popStructStat
-#' @useDynLib strataG
+#' @useDynLib strataG, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #'
 NULL
