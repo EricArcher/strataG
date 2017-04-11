@@ -1,7 +1,12 @@
 Package: strataG
 Title: Summaries and Population Structure Analyses of Genetic Data
-Description: A toolkit for analyzing stratified population genetic data.
-Version: 2.0.1
+Description: A toolkit for analyzing stratified population genetic data. 
+  Functions are provided for summarizing and checking loci 
+  (haploid, diploid, and polyploid), single stranded DNA sequences,
+  calculating most population subdivision metrics, and running external programs 
+  such as structure and fastsimcoal. The package is further described in 
+  Archer et al (2016) <doi:10.1111/1755-0998.12559>.
+Version: 2.0.2
 License: GNU General Public License
 Authors@R: c(
   EA = person("Eric", "Archer", email = "eric.archer@noaa.gov", role = c("aut", "cre")),

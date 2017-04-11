@@ -62,7 +62,7 @@ Archer, F. 2016. *strataG*: An *R* package for manipulating, summarizing and ana
 * send a pull request: <https://github.com/ericarcher/strataG/>
 * e-mail: <eric.archer@noaa.gov>
 
-## version 2.0.0 (current on GitHub)
+## version 2.0.2 (current on GitHub)
 
 * NOTE: In order to speed up indexing the data in large data sets, this version changes the underlying structure of the `gtypes` object by replacing the `@loci` data.frame slot with a `@data` data.table slot. The data.table has a `id` character column, a `strata` character column, and every column afterwards represents one locus. The `@strata` slot has been removed.
 * The `loci` accessor has been removed. 
@@ -72,6 +72,7 @@ Archer, F. 2016. *strataG*: An *R* package for manipulating, summarizing and ana
 * Fixed computational errors in population structure metrics due to incorrect sorting of stratification.
 * Added `maf` to return minimum allele frequency for each locus.
 * Added `ldNe` to calculate Ne.
+* Added `expandHaplotypes` to expand the haplotypes in a `gtypes` object to one sequence per individual.
 
 ## version 1.0.6 
 
