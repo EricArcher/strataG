@@ -32,13 +32,13 @@ NULL
   smry$schemes <- if(!is.null(schemes(x))) colnames(schemes(x)) else NULL    
   smry$strata.smry <- t(sapply(strataSplit(x), function(g) {
     c(num.samples = nInd(g),
-      num.missing = mean(numMissing(g)),
-      num.alleles = mean(numAlleles(g)),
-      prop.unique.alleles = mean(propUniqueAlleles(g)),
+      num.missing = mean(numMissing(g), na.rm = TRUE),
+      num.alleles = mean(numAlleles(g), na.rm = TRUE),
+      prop.unique.alleles = mean(propUniqueAlleles(g), na.rm = TRUE),
       heterozygosity = if(ploidy(g) == 1) {
-        mean(exptdHet(g))
+        mean(exptdHet(g), na.rm = TRUE)
       } else {
-        mean(obsvdHet(g))
+        mean(obsvdHet(g), na.rm = TRUE)
       }
     )
   }))
