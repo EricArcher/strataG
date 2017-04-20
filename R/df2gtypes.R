@@ -61,6 +61,8 @@ df2gtypes <- function(x, ploidy, id.col = 1, strata.col = 2, loc.col = 3,
   if(!(is.matrix(x) | is.data.frame(x))) {
     stop("'x' must be a matrix or data.frame")
   }
+  # explicitly convert to a data.frame in case it is a data.table or some such thing
+  x <- as.data.frame(x)
   
   # check that id.col, strata.col, and loc.col are numbers and loc.col is max
   if(!is.null(id.col)) {
