@@ -120,7 +120,10 @@ fscLocusParams <- function(locus.type = c("dna", "msat", "snp"),
 #' @param new.sink.size New size for the sink deme, relative to its size at
 #'   generation t.
 #' @param new.sink.growth New growth rate for the sink deme.
-#' @param new.mig.mat New migration matrix to be used further back in time.
+#' @param new.mig.mat Number of new migration matrix to be used further back in time.
+#'   The matrices are provided in the \code{mig.rates} list argument in
+#'   \code{\link{fastsimcoal}}. The first matrix has index 0 in the vector provided to 
+#'   this argument. See the fastsimcoal manual for more information.
 #' 
 #' @rdname fastsimcoal.input
 #' @export

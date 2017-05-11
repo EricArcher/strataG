@@ -12,3 +12,4 @@ test haps.R
 inst/doc
 .RData
 devel/
+.DS_Store

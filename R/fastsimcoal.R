@@ -78,7 +78,7 @@ fscWrite <- function(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL, l
   hist.ev <- if(is.list(hist.ev)) do.call(rbind, hist.ev) else rbind(hist.ev)
   
   # Write input file
-  write(paste("//  <<", label, ">>  (input from 'fastsimcoal.skeleSim.run')"), file)
+  write(paste("//  <<", label, ">> (written by strataG::fscWrite)"), file)
   write(paste(nrow(pop.info), "populations to sample"), file, append = T)
   
   write("//Population effective sizes", file, append = T)

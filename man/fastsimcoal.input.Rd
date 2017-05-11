@@ -78,7 +78,10 @@ generation t.}
 
 \item{new.sink.growth}{New growth rate for the sink deme.}
 
-\item{new.mig.mat}{New migration matrix to be used further back in time.}
+\item{new.mig.mat}{Number of new migration matrix to be used further back in time.
+The matrices are provided in the \code{mig.rates} list argument in
+\code{\link{fastsimcoal}}. The first matrix has index 0 in the vector provided to 
+this argument. See the fastsimcoal manual for more information.}
 }
 \description{
 Functions to create \code{pop.info}, \code{locus.params}, and 
