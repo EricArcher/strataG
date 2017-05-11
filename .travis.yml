@@ -1,16 +1,23 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: r
-sudo: required
+r: 
+  - devel
+
+sudo: false
+cran: http://cran.at.r-project.org
+cache: packages
 warnings_are_errors: false
 
-r: devel
+before_install:
+  - Rscript -e 'update.packages(ask = FALSE)'
 
 r_packages: 
   - knitr
   - rmarkdown
   
-r_github_packages: thibautjombart/apex
+r_github_packages: 
+  - thibautjombart/apex
 
 addons:
   apt:
