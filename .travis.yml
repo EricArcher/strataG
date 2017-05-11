@@ -12,8 +12,10 @@ r_packages:
   
 r_github_packages: thibautjombart/apex
 
-apt_packages:
-  - libgsl-dev
+addons:
+  apt:
+    packages:
+      - libgsl-dev
 
 before_install:
   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
