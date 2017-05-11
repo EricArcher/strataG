@@ -4,7 +4,7 @@ language: r
 r: 
   - devel
 
-sudo: false
+sudo: required
 cran: http://cran.at.r-project.org
 cache: packages
 warnings_are_errors: false
