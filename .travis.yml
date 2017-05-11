@@ -1,24 +1,23 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: r
-sudo: required
+r: 
+  - devel
+
+sudo: false
+cran: http://cran.at.r-project.org
+cache: packages
 warnings_are_errors: false
 
-r: devel
+before_install:
+  - Rscript -e 'update.packages(ask = FALSE)'
 
 r_packages: 
   - knitr
   - rmarkdown
   
-r_github_packages: thibautjombart/apex
+r_github_packages: 
+  - thibautjombart/apex
 
 apt_packages:
   - libgsl-dev
-
-before_install:
-  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
-  - chmod 755 ./travis-tool.sh
-
-install:
-  - ./travis-tool.sh aptget_install libgsl0-dev
-  - ./travis-tool.sh install_deps
