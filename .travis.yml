@@ -4,7 +4,7 @@ language: r
 r: 
   - devel
 
-sudo: required
+sudo: false
 cran: http://cran.at.r-project.org
 cache: packages
 warnings_are_errors: false
@@ -27,6 +27,3 @@ addons:
 before_install:
   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
   - chmod 755 ./travis-tool.sh
-
-install:
-  - ./travis-tool.sh install_deps
