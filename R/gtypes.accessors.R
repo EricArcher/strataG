@@ -155,7 +155,7 @@ setGeneric("strataNames", function(x, ...) standardGeneric("strataNames"))
 #' @export
 #' 
 setMethod("strataNames", "gtypes", function(x, ...) {
-  x@data[, sort(as.character(unique(strata)))]
+  as.character(x@data[, sort(as.character(unique(strata)))])
 })
 
 
