@@ -132,7 +132,7 @@ setMethod("nStrata", "gtypes", function(x, ...) x@data[, uniqueN(strata)])
 #' 
 setMethod("indNames", "gtypes", function(x, ...) {
   ids <- NULL # For CRAN CHECK
-  x@data[, unique(ids)]
+  as.character(x@data[, unique(ids)])
 })
 
 
@@ -141,7 +141,7 @@ setMethod("indNames", "gtypes", function(x, ...) {
 #' @export
 #' 
 setMethod("locNames", "gtypes", function(x, ...) {
-  setdiff(colnames(x@data), c("ids", "strata"))
+  as.character(setdiff(colnames(x@data), c("ids", "strata")))
 })
 
 
