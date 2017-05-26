@@ -16,20 +16,23 @@
 numericSNPmat <- function(g) {
   if(ploidy(g) != 2) stop("'g' must have diploid data")
   
-  num.alleles <- numAlleles(g)
-  biallelic <- names(num.alleles)[num.alleles <= 2]
-  if(length(biallelic) == 0) {
-    warning("No loci are biallelic. No file written.")
-    return(NULL)
-  }
+  nums <- c('1.1' = 0, '1.2' = 1, '2.2' = 2)
   
-  g <- g[, biallelic, ]
-  mat <- sapply(locNames(g), function(locus) {
-    arr <- as.array(g, locus = locus, drop = TRUE)
-    apply(arr, 1, function(x) {
-      switch(paste(sort(x), collapse = "."), '1.1' = 0, '1.2' = 1, '2.2' = 2, NA)
-    })
+  g.mat <- as.matrix(g, sep = "_", strata = FALSE, one.col = TRUE)
+  
+  mat <- apply(g.mat[, -(1:2)], 2, function(loc) {
+    loc <- strsplit(loc, split = "_")
+    lvls <- sort(unique(unlist(loc)))
+    lvls <- lvls[!is.na(lvls)]
+    if(length(lvls) > 2) return(rep(NA, nrow(g.mat)))
+    unname(sapply(loc, function(x) nums[paste(match(x, lvls), collapse = ".")]))
   })
-  rownames(mat) <- indNames(g)
+  rownames(mat) <- g.mat[, 1]
+  to.delete <- which(apply(mat, 2, function(x) all(is.na(x))))
+  if(length(to.delete) > 0) {
+    mat <- mat[, -to.delete]
+    to.delete <- paste(colnames(mat)[to.delete], collapse = ", ")
+    warning("The following loci have been removed: ", to.delete)
+  }
   mat
 }
