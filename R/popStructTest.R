@@ -268,8 +268,8 @@ pairwiseTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE,
   )
   pair.mat <- lapply(stat.cols, function(i) {
     for(j in 1:nrow(result)) {
-      strata.1 <- result$strata.1[j]
-      strata.2 <- result$strata.2[j]
+      strata.1 <- as.character(result$strata.1[j])
+      strata.2 <- as.character(result$strata.2[j])
       mat[strata.2, strata.1] <- result[j, i]
       mat[strata.1, strata.2] <- result[j, i + 1]
     }

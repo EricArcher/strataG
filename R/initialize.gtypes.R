@@ -175,7 +175,7 @@ setMethod("initialize", "gtypes",
     }
   }
   
-  gen.data <- cbind(ids = rownames(gen.data), strata = strata, loci)
+  gen.data <- cbind(ids = rownames(gen.data), strata = as.character(strata), loci)
   ids <- NULL # For CRAN CHECK
   setkey(gen.data, ids)
   
