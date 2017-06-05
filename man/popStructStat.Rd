@@ -77,8 +77,24 @@ If \code{strata.mat} is provided, it must be a numeric matrix of
 }
 \references{
 \describe{
-  \item{Hstats}{Nei, M. and R.K. Chesser. 1983. Estimation of fixation 
+  \item{Hstats, statFis}{Nei, M. and R.K. Chesser. 1983. Estimation of fixation 
     indices and gene diversities. Ann. Hum. Genet. 47:253-259.}
+  \item{statFst}{Weir, B. and Cockerham, C. 1984. Estimating F-Statistics 
+    for the Analysis of Population Structure. Evolution 38(6):1358-1370. 
+    doi:10.2307/2408641}
+  \item{statGst, statGstPrime}{Nei, M. 1973. Analysis of gene diversity in 
+    subdvidided populations. Proc. Nat. Acad. Sci. 70(12):3321-3323.  
+    Hedrick, P.W. 2005. A standardized genetic differentiation measure. 
+    Evolution 59(8):1633-1638.}
+  \item{statFstPrime, statGstDblPrime}{Miermans, P.G. and P.W. Hedrick. 2011. 
+    Assessing population structure: FST and related measures. Molecular 
+    Ecology Resources 11:5-18.}
+  \item{statJostD}{Jost, L. 2008. GST and its relatives do not measure 
+    differentiation. Molecular Ecology 17:4015-4026.}
+  \item{statPHIst}{Excoffier, L., P.E. Smouse, and J.M. Quattro. 1992. 
+    Analysis of molecular variance inferred from metric distances among 
+    DNA haplotypes: Application to human mitochondrial DNA restriction data. 
+    Genetics 131:479-491.}
 }
 }
 \author{
