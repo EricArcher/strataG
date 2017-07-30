@@ -208,6 +208,10 @@ fscRead <- function(file, locus.params, label.haplotypes = TRUE) {
       gen.data <- .formatGenotypes(data.mat, ploidy)
       df2gtypes(gen.data, ploidy, description = file)
     },
+    STANDARD = {
+      gen.data <- .formatGenotypes(data.mat, ploidy)
+      df2gtypes(gen.data, ploidy, description = file)
+    },
     NULL
   )
 }

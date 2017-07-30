@@ -40,7 +40,7 @@ fscPopInfo <- function(pop.size, sample.size, sample.times = 0, growth.rate = 0)
 
 
 #' @param locus.type a character representation of what type of marker to simulate.
-#'   Can be "dna", "msat", or "snp".
+#'   Can be "dna", "msat", "snp", or "standard".
 #' @param sequence.length \code{dna}: number of DNA base pairs to use.
 #' @param num.loci \code{msat, snp}: number of loci to simulate.
 #' @param mut.rate \code{dna, msat}: per base pair or locus mutation rate.
@@ -67,7 +67,7 @@ fscPopInfo <- function(pop.size, sample.size, sample.times = 0, growth.rate = 0)
 #' @rdname fastsimcoal.input
 #' @export
 #' 
-fscLocusParams <- function(locus.type = c("dna", "msat", "snp"),
+fscLocusParams <- function(locus.type = c("dna", "msat", "snp", "standard"),
                            sequence.length = NULL, num.loci = NULL, 
                            mut.rate = NULL, transition.rate = 1 / 3, 
                            gsm.param = 0, range.constraint = 0, recomb.rate = 0, 
@@ -105,7 +105,10 @@ fscLocusParams <- function(locus.type = c("dna", "msat", "snp"),
       createLocusParams(
         1:length(mut.rate), "DNA", 1, 0, mut.rate, 1, NA, 2, NULL
       )
-    }
+    },
+    standard = createLocusParams(
+      chromosome, "STANDARD", num.loci, recomb.rate, mut.rate, NA, NA, 2, num.chrom
+    )
   )
   attr(df, "opts") <- if(locus.type == "snp") "-s" else ""
   return(df)

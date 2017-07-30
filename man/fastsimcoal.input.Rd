@@ -9,10 +9,10 @@
 \usage{
 fscPopInfo(pop.size, sample.size, sample.times = 0, growth.rate = 0)
 
-fscLocusParams(locus.type = c("dna", "msat", "snp"), sequence.length = NULL,
-  num.loci = NULL, mut.rate = NULL, transition.rate = 1/3,
-  gsm.param = 0, range.constraint = 0, recomb.rate = 0,
-  chromosome = NULL, num.chrom = NULL, ploidy = 2)
+fscLocusParams(locus.type = c("dna", "msat", "snp", "standard"),
+  sequence.length = NULL, num.loci = NULL, mut.rate = NULL,
+  transition.rate = 1/3, gsm.param = 0, range.constraint = 0,
+  recomb.rate = 0, chromosome = NULL, num.chrom = NULL, ploidy = 2)
 
 fscHistEv(num.gen = 0, source.deme = 0, sink.deme = 0,
   prop.migrants = 1, new.sink.size = 1, new.sink.growth = 0,
@@ -30,7 +30,7 @@ at which samples are taken.}
 \item{growth.rate}{a vector giving the growth rate of each population.}
 
 \item{locus.type}{a character representation of what type of marker to simulate.
-Can be "dna", "msat", or "snp".}
+Can be "dna", "msat", "snp", or "standard".}
 
 \item{sequence.length}{\code{dna}: number of DNA base pairs to use.}
 
