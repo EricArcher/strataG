@@ -27,6 +27,7 @@
 #' 
 gtypes2loci <- function(x) {
   df <- as.data.frame(x, one.col = TRUE, sep = "/", ids = FALSE)
+  for(i in 2:ncol(df)) df[, i] <- as.factor(df[, i])
   as.loci(df, col.pop = 1)
 }
 

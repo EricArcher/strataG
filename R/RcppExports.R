@@ -2,90 +2,94 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 HoCalc <- function(nInd, locus, ploidy, strata, strataN) {
-    .Call(strataG_HoCalc, nInd, locus, ploidy, strata, strataN)
+    .Call(`_strataG_HoCalc`, nInd, locus, ploidy, strata, strataN)
 }
 
 HsCalc <- function(alleleFreq, ploidy, strataN, harmN, Ho) {
-    .Call(strataG_HsCalc, alleleFreq, ploidy, strataN, harmN, Ho)
+    .Call(`_strataG_HsCalc`, alleleFreq, ploidy, strataN, harmN, Ho)
+}
+
+HtCalc <- function(alleleFreq, ploidy, strataN, harmN, Ho, Hs) {
+    .Call(`_strataG_HtCalc`, alleleFreq, ploidy, strataN, harmN, Ho, Hs)
 }
 
 Hstats_C <- function(loci, strata) {
-    .Call(strataG_Hstats_C, loci, strata)
+    .Call(`_strataG_Hstats_C`, loci, strata)
 }
 
 getMaxInt <- function(x) {
-    .Call(strataG_getMaxInt, x)
+    .Call(`_strataG_getMaxInt`, x)
 }
 
 table2D <- function(x, y) {
-    .Call(strataG_table2D, x, y)
+    .Call(`_strataG_table2D`, x, y)
 }
 
 rowSumC <- function(x) {
-    .Call(strataG_rowSumC, x)
+    .Call(`_strataG_rowSumC`, x)
 }
 
 colSumC <- function(x) {
-    .Call(strataG_colSumC, x)
+    .Call(`_strataG_colSumC`, x)
 }
 
 colMeanC <- function(x) {
-    .Call(strataG_colMeanC, x)
+    .Call(`_strataG_colMeanC`, x)
 }
 
 intOuterC <- function(x, y) {
-    .Call(strataG_intOuterC, x, y)
+    .Call(`_strataG_intOuterC`, x, y)
 }
 
 numOuterC <- function(x, y) {
-    .Call(strataG_numOuterC, x, y)
+    .Call(`_strataG_numOuterC`, x, y)
 }
 
 idStart <- function(id, ploidy) {
-    .Call(strataG_idStart, id, ploidy)
+    .Call(`_strataG_idStart`, id, ploidy)
 }
 
 idGenotype <- function(locus, id, ploidy) {
-    .Call(strataG_idGenotype, locus, id, ploidy)
+    .Call(`_strataG_idGenotype`, locus, id, ploidy)
 }
 
 calcStrataN <- function(locus, strata, ploidy) {
-    .Call(strataG_calcStrataN, locus, strata, ploidy)
+    .Call(`_strataG_calcStrataN`, locus, strata, ploidy)
 }
 
 statChi2_C <- function(loci, strataMat) {
-    .Call(strataG_statChi2_C, loci, strataMat)
+    .Call(`_strataG_statChi2_C`, loci, strataMat)
 }
 
 statFis_C <- function(loci, strataMat) {
-    .Call(strataG_statFis_C, loci, strataMat)
+    .Call(`_strataG_statFis_C`, loci, strataMat)
 }
 
 statFst_C <- function(loci, strataMat) {
-    .Call(strataG_statFst_C, loci, strataMat)
+    .Call(`_strataG_statFst_C`, loci, strataMat)
 }
 
 statFstPrime_C <- function(loci, strataMat) {
-    .Call(strataG_statFstPrime_C, loci, strataMat)
+    .Call(`_strataG_statFstPrime_C`, loci, strataMat)
 }
 
 statGst_C <- function(loci, strataMat) {
-    .Call(strataG_statGst_C, loci, strataMat)
+    .Call(`_strataG_statGst_C`, loci, strataMat)
 }
 
 statGstPrime_C <- function(loci, strataMat, primeType) {
-    .Call(strataG_statGstPrime_C, loci, strataMat, primeType)
+    .Call(`_strataG_statGstPrime_C`, loci, strataMat, primeType)
 }
 
 statGstDblPrime_C <- function(loci, strataMat) {
-    .Call(strataG_statGstDblPrime_C, loci, strataMat)
+    .Call(`_strataG_statGstDblPrime_C`, loci, strataMat)
 }
 
 statJostD_C <- function(loci, strataMat) {
-    .Call(strataG_statJostD_C, loci, strataMat)
+    .Call(`_strataG_statJostD_C`, loci, strataMat)
 }
 
 statPhist_C <- function(hapMat, strataMat, hapDist) {
-    .Call(strataG_statPhist_C, hapMat, strataMat, hapDist)
+    .Call(`_strataG_statPhist_C`, hapMat, strataMat, hapDist)
 }
 

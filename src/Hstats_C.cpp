@@ -64,6 +64,7 @@ double HsCalc(NumericMatrix alleleFreq, int ploidy, IntegerVector strataN,
   return (harmN / (harmN - 1)) * (meanHet - (Ho / 2 / harmN));
 }
 
+// [[Rcpp::export]]
 double HtCalc(NumericMatrix alleleFreq, int ploidy, IntegerVector strataN,
               double harmN, double Ho, double Hs) {
   // function declarations
