@@ -150,7 +150,7 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
     if(nrow(possible.sites) == 0) return(NULL)
     test.seqs <- do.call(rbind, lapply(1:nrow(possible.sites), function(j) {
       seq.j <- x.has.ns[i, ]
-      seq.j[n.sites] <- possible.sites[j]
+      seq.j[n.sites] <- possible.sites[j, ]
       seq.j
     }))
     test.names <- paste("test.seq.", 1:nrow(test.seqs), sep = "")
