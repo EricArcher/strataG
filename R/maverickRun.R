@@ -86,7 +86,7 @@ maverickRun <- function(g, params = NULL, label = "MavericK_files",
   )
   
   # run MavericK
-  cmd <- paste0("Maverick", " -parameters", param_fname)
+  cmd <- paste0("Maverick", " -parameters ", param_fname)
   err.code <- system(cmd)
   if(err.code == 127) {
     stop("You do not have MavericK properly installed.")
