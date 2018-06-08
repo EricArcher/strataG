@@ -63,6 +63,7 @@ Archer, F. 2016. *strataG*: An *R* package for manipulating, summarizing and ana
 * e-mail: <eric.archer@noaa.gov>
 
 ## version 2.1   
+* fixed error in ldNe when missing data are present
 * added STANDARD marker type to fastsimcoal
 * added `na.rm = TRUE` to calculation of mean locus summaries by strata in `summary.gtypes`. This avoids `NaN`s when there is a locus with genotypes missing for all samples.
 * explicitly convert `x` to a `data.frame` in `df2gtypes` in case it is a `data.table` or `tibble`.

@@ -125,6 +125,10 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95) {
     loc.pairs <- combn(ncol(mat), 2)
     loc.comp.mat <- mclapply(1:ncol(loc.pairs), compLoc, loc.pairs = loc.pairs, mat = mat, mc.cores = detectCores() - 1)
     loc.comp.mat <- do.call(cbind, loc.comp.mat)
+    to.keep <- apply(loc.comp.mat, 2, function(x) all(!is.na(x)))
+    if(sum(to.keep) == 0) stop("all loci have missing data")
+    loc.comp.mat <- loc.comp.mat[, to.keep, drop = FALSE]
+    
     # cl <- .setupClusters()
     # loc.comp.mat <- tryCatch({
     #   if(!is.null(cl)) {
