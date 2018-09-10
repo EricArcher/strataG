@@ -37,7 +37,7 @@
 #' alleleSplit(msats, sep = "/")
 #' 
 #' @export
-
+#' 
 alleleSplit <- function(x, sep = NULL) {
   locus.names <- if(is.null(colnames(x))) {
     paste("Locus", 1:ncol(x), sep = "") 

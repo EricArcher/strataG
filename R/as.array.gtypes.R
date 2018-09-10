@@ -27,18 +27,7 @@
 #' 
 setMethod(
   "as.array", "gtypes", 
-  function(x, ids = NULL, loci = NULL, drop = TRUE, ...) {
-  # check ids
-  x.ids <- indNames(x)
-  if(is.null(ids)) ids <- x.ids
-  if(is.numeric(ids) | is.logical(ids)) ids <- x.ids[ids]
-  if(!all(ids %in% x.ids)) stop("some 'ids' not found in 'x'")
-  
-  # check loci
-  x.loci <- locNames(x)
-  if(is.null(loci)) loci <- x.loci
-  if(is.numeric(loci) | is.logical(loci)) loci <- x.loci[loci]
-  if(!all(loci %in% x.loci)) stop("some 'loci' not found in 'x'")
+  function(x, drop = TRUE, ...) {
   
   # create 3-D array
   arr <- array(

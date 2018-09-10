@@ -2,9 +2,7 @@
 #' @description Calculate allele frequencies for each locus.
 #'
 #' @param g a \linkS4class{gtypes} object.
-#' @param by.strata logical. If \code{TRUE} every element in the return list is 
-#'   a three dimensional array where the third dimension contains frequencies 
-#'   and proportions for each stratum.
+#' @param by.strata logical - return results grouped by strata?
 #'
 #' @return A list of allele frequencies for each locus. Each element is a
 #'   matrix or array with frequencies by count (\code{freq}) and 
@@ -28,25 +26,22 @@
 #' f.pop$EV94[, "freq", "Coastal"] # Frequencies for EV94 in the Coastal population
 #' 
 #' @export
-
+#' 
 alleleFreqs <- function(g, by.strata = FALSE) {
-  freqs <- vector("list", length = nLoc(g))
-  names(freqs) <- locNames(g)
-  if(by.strata & nStrata(g) > 1) {
-    for(i in locNames(g)) {
-      f <- table(g@data[[i]], g@data$strata)
-      p <- prop.table(f, 2)
-      freqs[[i]] <- array(
-        dim = list(nrow(f), 2, ncol(f)),
-        dimnames = list(rownames(f), c("freq", "prop"), colnames(f))
-      )
-      for(j in 1:ncol(f)) freqs[[i]][, , j] <- cbind(f[, j], p[, j])
-    } 
+  af <- if(by.strata) {
+    g@data %>% 
+      dplyr::group_by(stratum, locus, allele) %>% 
+      dplyr::summarize(freq = n()) %>% 
+      dplyr::filter(!is.na(allele)) %>% 
+      dplyr::group_by(stratum, locus) 
   } else {
-    for(i in locNames(g)) {
-      f <- table(g@data[[i]])
-      freqs[[i]] <- cbind(freq = f, prop = f / sum(f))
-    }
+    g@data %>% 
+      dplyr::group_by(locus, allele) %>% 
+      dplyr::summarize(freq = n()) %>% 
+      dplyr::filter(!is.na(allele)) %>% 
+      dplyr::group_by(locus) 
   }
-  freqs
+  af %>% 
+    dplyr::mutate(prop = freq / sum(freq)) %>% 
+    dplyr::ungroup()
 }

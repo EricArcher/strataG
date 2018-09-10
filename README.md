@@ -62,6 +62,9 @@ Archer, F. 2016. *strataG*: An *R* package for manipulating, summarizing and ana
 * send a pull request: <https://github.com/ericarcher/strataG/>
 * e-mail: <eric.archer@noaa.gov>
 
+## version 2.4.9
+* Deleted functions: `alleleFreqFormat`
+
 ## version 2.1   
 * fixed error in ldNe when missing data are present
 * added STANDARD marker type to fastsimcoal
