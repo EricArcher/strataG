@@ -28,12 +28,14 @@
 #' haploid marker.
 #' Sample names can be either in the rownames of \code{gen.data} or given 
 #' separately in \code{ind.names}. If \code{ind.names} are provided, these are 
-#' used in lieu of rownames in \code{gen.data} and also used to label 
-#' \code{schemes}.
+#' used in lieu of rownames in \code{gen.data}. 
+#' If \code{schemes} has a column named '\code{id}', it will be used to match
+#' to sample names in \code{gen.data}. Otherwise, if rownames are present in
+#' \code{schemes}, a column named '\code{id}' will be created from them.
 #' If sequences are provided in \code{sequences}, then they should be named 
-#' and match haplotype labels in \code{loc.col} of \code{x}. If multiple 
-#' genes are given as a \linkS4class{multidna}, then they should have the 
-#' same names as column names in \code{X} from \code{loc.col} to the end.
+#' and match values in the haplotype column in \code{gen.data}. If multiple 
+#' genes are given as a \linkS4class{multidna} object, it is assumed that they
+#' are in the same order as the columns in \code{gen.data}.
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
@@ -43,10 +45,10 @@
 #' @aliases initialize.gtypes new
 #' @importFrom methods setMethod
 #' 
-setMethod("initialize", "gtypes", 
+setMethod("initialize", "gtypes",
           function(.Object, gen.data, ploidy, ind.names = NULL,
-                   sequences = NULL, strata = NULL, schemes = NULL, 
-                   description = NULL, other = NULL, 
+                   sequences = NULL, strata = NULL, schemes = NULL,
+                   description = NULL, other = NULL,
                    remove.sequences = FALSE) {
   
   if(is.null(gen.data) | is.null(ploidy)) return(.Object)
@@ -100,35 +102,47 @@ setMethod("initialize", "gtypes",
     if(is.null(names(strata))) {
       if(length(strata) == length(ind.names)) names(strata) <- ind.names
     } 
-  } else strata <- "Default"
-  if(length(strata) != length(ind.names)) {
+  } else strata <- rep("Default", nrow(gen.data))
+  if(length(strata) != nrow(gen.data)) {
     warning("the length of 'strata' is not the same as the number of individuals. strata will be recycled.")
   }
   
   # check schemes
   if(!is.null(schemes)) {
+    # check that schemes is a data.frame
     if(!(is.matrix(schemes) | is.data.frame(schemes))) {
       stop("'schemes' is not a matrix or data.frame", call. = FALSE)
-    } else {
-      schemes <- as.data.frame(schemes)
-      for(i in 1:ncol(schemes)) schemes[, i] <- factor(schemes[, i])
+    } 
+    schemes <- as.data.frame(schemes)
+
+    # check that 'id' column in schemes exists
+    if(!"id" %in% colnames(schemes)) {
       if(is.null(rownames(schemes))) {
-        if(nrow(schemes) == length(ind.names)) {
-          rownames(schemes) <- ind.names
-        } else {
+        if(nrow(schemes) != nrow(gen.data)) {
           stop(
-            "'schemes' doesn't have rownames and not as long as 'ind.names'",
+            "'schemes' doesn't have an 'id' column or rownames and is not as long as 'gen.data'",
             call. = FALSE
           )
+        } else {
+          schemes$id <- 1:nrow(schemes)
         }
       } else {
-        if(length(intersect(rownames(schemes), rownames(gen.data))) == 0) {
-          stop("no rownames in 'schemes' are in 'gen.data'", call. = FALSE)
-        }
+        schemes$id <- rownames(schemes)
       }
     }
+    rownames(schemes) <- NULL
+    schemes <- dplyr::select(schemes, id, dplyr::everything())
+
+    # check that ids in schemes can be found
+    if(length(intersect(schemes$id, rownames(gen.data))) == 0) {
+      stop(
+        "no ids in 'schemes' are in 'gen.data' or 'ind.names'", 
+        call. = FALSE
+      )
+    }
+    
+    schemes$id <- as.character(schemes$id)
   }
-  rm(ind.names)
   
   # check description
   if(is.null(description)) {
@@ -137,47 +151,59 @@ setMethod("initialize", "gtypes",
     )
   }
   
-  # format loci
-  nloc <- ncol(gen.data) / ploidy
-  loci <- do.call(data.table, lapply(1:nloc, function(i) {
-    locus.cols <- (i * ploidy - ploidy + 1):(i * ploidy)
-    factor(unlist(gen.data[, locus.cols], use.names = FALSE))
-  }))
   # create locus names
-  colnames(loci) <- if(is.null(colnames(gen.data))) {
+  nloc <- ncol(gen.data) / ploidy
+  if(is.null(colnames(gen.data))) {
     # return generic names if no colnames assigned
-    nums <- formatC(1:ncol(loci), digits = floor(log10(ncol(loci))), flag = "0")
-    paste("Locus", nums, sep = "_")
-  } else .parseLocusNames(colnames(gen.data), ploidy)
-  colnames(loci) <- make.names(colnames(loci))
+    nums <- formatC(1:nloc, digits = floor(log10(nloc)), flag = "0")
+    generic.locus.names <- paste0("Locus", "_", nums)
+    colnames(gen.data) <- .expandLocusNames(generic.locus.names, ploidy)
+  } 
+  locus.names.lookup <- dplyr::tibble(
+    old = colnames(gen.data),
+    new = rep(.parseLocusNames(colnames(gen.data), ploidy), each = ploidy)
+  )
   
   # check sequences
   if(!is.null(sequences)) {
     sequences <- as.multidna(sequences)
-    if(getNumLoci(sequences) != ncol(loci)) {
+    if(getNumLoci(sequences) != ncol(gen.data)) {
       stop(
         "the number of genes in 'sequences' is not equal to the number of loci",
         call. = FALSE
       )
     }
-    setLocusNames(sequences) <- colnames(loci)
-    for(loc in colnames(loci)) {
-      haps <- na.omit(unique(as.character(loci[[loc]])))
+    setLocusNames(sequences) <- colnames(gen.data)
+    for(loc in colnames(gen.data)) {
+      haps <- na.omit(unique(as.character(gen.data[[loc]])))
       seq.names <- getSequenceNames(sequences)[[loc]]
       missing <- setdiff(haps, seq.names)
       if(length(missing) > 0) {
-        missing <- paste(missing, collapse = ", ")
         stop(
           "the following haplotypes can't be found in sequences for locus '", 
-          loc, "': ", missing, call. = FALSE
+          loc, "': ", paste(missing, collapse = ", "), 
+          call. = FALSE
         )
       }
     }
   }
   
-  gen.data <- cbind(ids = rownames(gen.data), strata = as.character(strata), loci)
-  ids <- NULL # For CRAN CHECK
-  setkey(gen.data, ids)
+  gen.data <- cbind(
+    id = rownames(gen.data), 
+    stratum = strata, 
+    gen.data,
+    stringsAsFactors = FALSE
+  ) %>% 
+    tidyr::gather(locus, allele, -id, -stratum) %>% 
+    dplyr::left_join(locus.names.lookup, by = c("locus" = "old")) %>% 
+    dplyr::select(id, stratum, new, allele) %>% 
+    dplyr::rename(locus = new) %>% 
+    dplyr::mutate(
+      stratum = factor(stratum),
+      locus = factor(locus),
+      allele = factor(allele)
+    ) %>% 
+    data.table::as.data.table
   
   # create and return gtypes object
   g <- .Object
@@ -187,13 +213,13 @@ setMethod("initialize", "gtypes",
   g@schemes <- schemes
   g@description <- description
   g@other <- other
-  
+
   # Check for samples missing data for all loci
   g <- .removeIdsMissingAllLoci(g)
-  
+
   # Remove unreferenced sequences
   if(remove.sequences) g <- removeSequences(g)
-  
+
   g
 })
          

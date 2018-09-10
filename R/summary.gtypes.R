@@ -27,23 +27,46 @@
 NULL
 
 .baseSmry <- function(x) {
-  smry <- list(num.ind = nInd(x), num.loc = nLoc(x), num.strata = nStrata(x))
-  smry$unstratified <- sum(is.na(strata(x))) 
-  smry$schemes <- if(!is.null(schemes(x))) colnames(schemes(x)) else NULL    
-  smry$strata.smry <- t(sapply(strataSplit(x), function(g) {
-    c(num.samples = nInd(g),
-      num.missing = mean(numMissing(g), na.rm = TRUE),
-      num.alleles = mean(numAlleles(g), na.rm = TRUE),
-      prop.unique.alleles = mean(propUniqueAlleles(g), na.rm = TRUE),
-      heterozygosity = if(ploidy(g) == 1) {
-        mean(exptdHet(g), na.rm = TRUE)
-      } else {
-        mean(obsvdHet(g), na.rm = TRUE)
-      }
-    )
-  }))
-  attr(smry, "description") <- x@description
-  smry
+  list(
+    description = x@description,
+    num.ind = getNumInd(x), 
+    num.loc = getNumLoci(x), 
+    num.strata = getNumStrata(x),
+    unstratified = sum(is.na(strata(x))),
+    schemes = if(!is.null(schemes(x))) colnames(schemes(x))[-1] else NULL,
+    strata.smry = getNumInd(x, by.strata = TRUE) %>% 
+      left_join(
+        numMissing(x) %>% 
+          dplyr::group_by(stratum) %>% 
+          dplyr::summarize(num.missing = mean(num.missing, na.rm = TRUE)),
+        by = "stratum"
+      ) %>% 
+      left_join(
+        numAlleles(x) %>% 
+          dplyr::group_by(stratum) %>% 
+          dplyr::summarize(num.alleles = mean(num.alleles, na.rm = TRUE)),
+        by = "stratum"
+      ) %>% 
+      left_join(
+        propUniqueAlleles(x) %>% 
+          dplyr::group_by(stratum) %>% 
+          dplyr::summarize(prop.unique.alleles = mean(prop.unique.alleles, na.rm = TRUE)),
+        by = "stratum"
+      ) %>% 
+      left_join(
+        heterozygosity(x, type = "exp") %>% 
+          dplyr::group_by(stratum) %>% 
+          dplyr::summarize(exptd.het = mean(exptd.het, na.rm = TRUE)),
+        by = "stratum"
+      ) %>% 
+      left_join(
+        heterozygosity(x, type = "obs") %>% 
+          dplyr::group_by(stratum) %>% 
+          dplyr::summarize(obsvd.het = mean(obsvd.het, na.rm = TRUE)),
+        by = "stratum"
+      ) %>% 
+      as.data.frame
+  )
 }
 
 .printBaseSmry <- function(x) {
@@ -55,7 +78,7 @@ NULL
                       ifelse(x$num.strata > 1, "a", "um"), sep = "")
   
   cat("\n")
-  cat("<<<", attr(x, "description"), ">>>\n")
+  cat("<<<", x$description, ">>>\n")
   cat("\nContents: ")
   cat(ind.txt, loc.txt, strata.txt, sep = ", ")
   if(!is.null(x$schemes)) cat("\nStratification schemes:", paste(x$schemes, collapse = ", "))

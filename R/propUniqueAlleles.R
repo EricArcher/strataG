@@ -2,6 +2,7 @@
 #' @description Calculate the proportion of alleles that are unique.
 #' 
 #' @param g a \linkS4class{gtypes} object.
+#' @param by.strata logical - return results by strata?
 #' 
 #' @return a vector of the proportion of unique (occuring only in one individual) 
 #'   alleles for each locus.
@@ -21,10 +22,24 @@
 #' 
 #' @export
 #' 
-propUniqueAlleles <- function(g) { 
-  sapply(locNames(g), function(locus) {
-    id.a.freqs <- table(g@data$ids, g@data[[locus]])
-    is.unique <- apply(id.a.freqs, 2, function(x) sum(x > 0) == 1)
-    sum(is.unique)
-  }) / numAlleles(g)
+propUniqueAlleles <- function(g, by.strata = TRUE) { 
+  df <- if(by.strata) {
+    g@data %>% 
+      group_by(stratum, locus, allele) %>% 
+      summarize(n = n_distinct(id)) %>% 
+      group_by(stratum, locus) %>% 
+      summarize(num.unique = sum(n == 1)) %>% 
+      left_join(numGenotyped(g, by.strata), by = c("stratum", "locus")) 
+  } else {
+    g@data %>% 
+      group_by(locus, allele) %>% 
+      summarize(n = n_distinct(id)) %>% 
+      group_by(locus) %>% 
+      summarize(num.unique = sum(n == 1)) %>% 
+      left_join(numGenotyped(g, by.strata), by = c("locus"))
+  } 
+  df %>% 
+    mutate(prop.unique.alleles = num.unique / num.genotyped) %>% 
+    select(-num.unique, -num.genotyped) %>% 
+    ungroup
 }

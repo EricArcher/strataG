@@ -2,6 +2,8 @@
 #' @description Calculate observed heterozygosity for diploid data.
 #' 
 #' @param g a \linkS4class{gtypes} object.
+#' @param by.strata logical - return results by strata?
+#' @param type return \code{expected} or \code{observed} heterozygosity
 #' 
 #' @note For a measure of haplotypic diversity (haploid "heterozygosity"), 
 #'   use \code{exptdHet}. If \code{g} is a haploid object with sequences, make sure to run 
@@ -19,28 +21,27 @@
 #' # Observed heterozygosity
 #' obsvdHet(msats.g)
 #' 
-#' @name heterozygosity
-#' 
-NULL
-
-
-#' @rdname heterozygosity
-#' @importFrom swfscMisc diversity
-#' @export
-#' 
-exptdHet <- function(g) {
-  .applyPerLocus(swfscMisc::diversity, g)
-}
-
-
-#' @rdname heterozygosity
-#' @importFrom stats na.omit
-#' @export
-#' 
-obsvdHet <- function(g) {
-  isHom <- function(x) {
-    if(any(is.na(x))) NA else length(unique(x)) == 1
-  }
-  is.homzgt <- g@data[, lapply(.SD, isHom), .SDcols = !c("ids", "strata"), by = "ids"]
-  is.homzgt[, 1 - sapply(.SD, mean, na.rm = TRUE), .SDcols = !"ids"]
+heterozygosity <- function(g, by.strata = TRUE, type = c("expected", "observed")) {
+  type = match.arg(type)
+  het <- switch(
+    type,
+    expected = .applyPerLocus(swfscMisc::diversity, g, by.strata = by.strata) %>% 
+      rename(exptd.het = value),
+    observed = {
+      is.het <- if(by.strata) {
+        g@data %>% 
+          group_by(stratum, locus, id) %>% 
+          summarize(is.het = n_distinct(allele) > 1) %>% 
+          group_by(stratum, locus)
+      } else {        
+        g@data %>% 
+          group_by(locus, id) %>% 
+          summarize(is.het = n_distinct(allele) > 1) %>% 
+          group_by(locus)
+      }
+      is.het %>% 
+        summarize(obsvd.het = mean(is.het, na.rm = TRUE)) %>% 
+        ungroup
+    }
+  )
 }

@@ -2,6 +2,7 @@
 #' @description Accessors for slots in \linkS4class{gtypes} objects.
 #' 
 #' @param x a \linkS4class{gtypes} object.
+#' @param by.strata logical - return results by strata?
 #' @param seqName the name (or number) of a set of sequences from the 
 #'   \code{@@sequences} slot to return.
 #' @param as.haplotypes return sequences as haplotypes? If \code{TRUE}, contents of 
@@ -101,9 +102,15 @@ NULL
 #' @aliases nInd
 #' @export
 #' 
-setMethod("nInd", "gtypes", function(x, ...) {
-  ids <- NULL # For CRAN CHECK
-  x@data[, uniqueN(ids)]
+setMethod("getNumInd", "gtypes", function(x, by.strata = FALSE, ...) {
+  if(!by.strata) {
+    length(getIndNames(x))
+  } else {
+    x@data %>% 
+      dplyr::group_by(stratum) %>% 
+      dplyr::summarize(num.ind = n_distinct(id)) %>% 
+      dplyr::ungroup()
+  }
 })
 
 
@@ -111,52 +118,58 @@ setMethod("nInd", "gtypes", function(x, ...) {
 #' @aliases nLoc
 #' @export
 #' 
-setMethod("nLoc", "gtypes", function(x, ...) ncol(x@data) - 2)
+setMethod("getNumLoci", "gtypes", function(x, ...) length(getLocusNames(x)))
 
 
 #' @rdname gtypes.accessors
 #' @export
 #' 
-setGeneric("nStrata", function(x, ...) standardGeneric("nStrata"))
+setGeneric("getNumStrata", function(x, ...) standardGeneric("getNumStrata"))
 
 #' @rdname gtypes.accessors
 #' @aliases nStrata
 #' @export
 #' 
-setMethod("nStrata", "gtypes", function(x, ...) x@data[, uniqueN(strata)])
+setMethod("getNumStrata", "gtypes", function(x, ...) length(getStrataNames(x)))
 
+#' @rdname gtypes.accessors
+#' @export
+#' 
+setGeneric("getIndNames", function(x, ...) standardGeneric("getIndNames"))
 
 #' @rdname gtypes.accessors
 #' @aliases indNames
 #' @export
 #' 
-setMethod("indNames", "gtypes", function(x, ...) {
-  ids <- NULL # For CRAN CHECK
-  x@data[, unique(ids)]
-})
+setMethod("getIndNames", "gtypes", function(x, ...) unique(x@data[["id"]]))
 
 
 #' @rdname gtypes.accessors
 #' @aliases locNames
 #' @export
 #' 
-setMethod("locNames", "gtypes", function(x, ...) {
-  setdiff(colnames(x@data), c("ids", "strata"))
+setMethod("getLocusNames", "gtypes", function(x, ...) {
+  as.character(unique(x@data[["locus"]]))
 })
 
 
 #' @rdname gtypes.accessors
 #' @export
 #' 
-setGeneric("strataNames", function(x, ...) standardGeneric("strataNames"))
+setGeneric("getStrataNames", function(x, ...) standardGeneric("getStrataNames"))
 
 #' @rdname gtypes.accessors
 #' @aliases strataNames
 #' @export
 #' 
-setMethod("strataNames", "gtypes", function(x, ...) {
-  x@data[, sort(unique(as.character(strata)))]
+setMethod("getStrataNames", "gtypes", function(x, ...) {
+  as.character(unique(x@data[["stratum"]]))
 })
+          
+#' @rdname gtypes.accessors
+#' @export
+#' 
+setGeneric("ploidy", function(x, ...) standardGeneric("ploidy"))
 
 
 #' @rdname gtypes.accessors
@@ -165,6 +178,11 @@ setMethod("strataNames", "gtypes", function(x, ...) {
 #' 
 setMethod("ploidy", "gtypes", function(x, ...) x@ploidy)
 
+#' @rdname gtypes.accessors
+#' @export
+#' 
+setGeneric("other", function(x, ...) standardGeneric("other"))
+
 
 #' @rdname gtypes.accessors
 #' @aliases other
@@ -172,18 +190,22 @@ setMethod("ploidy", "gtypes", function(x, ...) x@ploidy)
 #' 
 setMethod("other", "gtypes", function(x, ...) x@other)
 
+#' @rdname gtypes.accessors
+#' @export
+#' 
+setGeneric("strata", function(x, ...) standardGeneric("strata"))
 
 #' @rdname gtypes.accessors
 #' @aliases strata
 #' @export
 #' 
 setMethod("strata", "gtypes", function(x) {
-  ids <- strata <- NULL # For CRAN CHECK
-  mat <- as.matrix(x@data[, list(ids, strata)])
-  mat <- mat[!duplicated(mat[, "ids"]), ]
-  vec <- mat[, "strata"]
-  names(vec) <- mat[, "ids"]
-  vec
+  id.strata <- x@data %>% 
+    dplyr::select(id, stratum) %>% 
+    dplyr::distinct()
+  id.strata$stratum %>% 
+    as.character %>% 
+    stats::setNames(id.strata$id)
 })
 
 
@@ -197,13 +219,31 @@ setGeneric("strata<-", function(x, value) standardGeneric("strata<-"))
 #' @export
 #' 
 setMethod("strata<-", "gtypes", function(x, value) {
-  ids <- strata <- NULL # For CRAN CHECK
-  value <- if(is.null(names(value))) {
-    rep(value, length.out = nrow(x@data))
-  } else {
-    value[x@data[, ids]]
+  if(!is.vector(value)) {
+    stop("strata must be assigned as a vector", call. = FALSE)
   }
-  x@data[, strata := value]
+  if(is.null(names(value))) {
+    stop("strata vector must have ids for names", call. = FALSE)
+  }
+  missing <- !names(value) %in% x@data[["id"]]
+  if(any(missing)) {
+    stop(
+      "the following ids are not in the gtypes object:", 
+      paste(names(value)[missing], collapse = ", "),
+      call. = FALSE
+    )
+  }
+  
+  value <- data.frame(
+    id = names(value),
+    new = as.character(value)
+  )
+
+  x@data <- x@data %>% 
+    dplyr::left_join(value, by = "id") %>% 
+    dplyr::select(id, new, locus, allele) %>% 
+    dplyr::rename(stratum = new) %>% 
+    dplyr::mutate(stratum = factor(stratum))
   validObject(x)
   x
 })
@@ -247,9 +287,15 @@ setGeneric("alleleNames", function(x, ...) standardGeneric("alleleNames"))
 #' @export
 #' 
 setMethod("alleleNames", "gtypes", function(x) {
-  sapply(x@data[, locNames(x), with = FALSE], function(x) {
-    as.vector(na.omit(unique(as.character(x))))
-  }, simplify = FALSE)
+  x@data %>% 
+    split(.$locus) %>% 
+    purr::map(function(x) {
+      x$allele %>% 
+        as.character %>% 
+        unique %>%
+        na.omit %>% 
+        sort
+    })
 })
 
 
@@ -319,7 +365,7 @@ setMethod("[",
   # check ids (i)
   if(missing(i)) i <- TRUE
   if(is.factor(i)) i <- as.character(i)
-  ids <- indNames(x)
+  ids <- getIndNames(x)
   i <- if(is.character(i)) {
     i <- unique(i)
     missing.ids <- setdiff(i, ids)
@@ -333,7 +379,7 @@ setMethod("[",
   # check loci (j)
   if(missing(j)) j <- TRUE
   if(is.factor(j)) j <- as.character(j)
-  locs <- locNames(x)
+  locs <- getLocusNames(x)
   j <- if(is.character(j)) {
     j <- unique(j)
     missing.locs <- setdiff(j, locs)
@@ -347,7 +393,7 @@ setMethod("[",
   # check strata (k) 
   if(missing(k)) k <- TRUE
   if(is.factor(k)) k <- as.character(k)
-  st <- strataNames(x)
+  st <- getStrataNames(x)
   k <- if(is.character(k)) {
     k <- unique(k)
     missing.strata <- setdiff(k, st)
@@ -356,23 +402,16 @@ setMethod("[",
       warning("the following strata cannot be found: ", missing.strata)
     }
     intersect(k, st)
-  } else {
-    st[k]
-  }
+  } else st[k]
 
   if(length(i) == 0) stop("no samples selected")
   if(length(j) == 0) stop("no loci selected")
   if(length(k) == 0) stop("no strata selected")
   
-  x@data <- x@data[ids %in% i & strata %in% k, c("ids", "strata", j), with = FALSE, nomatch = 0]
-  if(nrow(x@data) == 0) stop("none of the specified ids were found in the specified strata.")
-  
-  # check ids in selected strata
-  missing.ids <- setdiff(i, x@data[, unique(ids)])
-  if(length(missing.ids) > 0 & !quiet) {
-    missing.ids <- paste(missing.ids, collapse = ", ")
-    warning("the following ids are not in the selected strata: ", missing.ids)
-  }
+  x@data <- x@data %>% 
+    dplyr::filter(id %in% i & locus %in% j & stratum %in% k) %>% 
+    data.table::as.data.table
+  if(nrow(x@data) == 0) stop("the requested indices would form an empty gtypes object")
   
   # filter sequences
   if(!is.null(x@sequences)) {

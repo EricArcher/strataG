@@ -64,12 +64,8 @@ setMethod(
       dt <- x@data[, unlist(.SD), by = ids, .SDcols = !c("ids", "strata")] 
       mat <- unstack(dt, form = V1 ~ ids)
       pl <- ploidy(x)
-      colnames(mat) <- if(pl > 1) {
-        mat <- t(mat)
-        paste(rep(locNames(x), each = pl), 1:pl, sep = ".")
-      } else {
-        locNames(x)
-      }
+      if(pl > 1) mat <- t(mat)
+      colnames(mat) <- .expandLocusNames(locNames(x), pl)
       mat
     }
     # finish formatting matrix

@@ -32,6 +32,17 @@ NULL
   
 
 #' @rdname strataG-internal
+#' @param locus.names a vector of locus names.
+#' @param ploidy integer representing the ploidy of the data.
+#' @keywords internal
+#' 
+.expandLocusNames <- function(locus.names, ploidy) {
+  if(ploidy == 1) return(locus.names)
+  paste(rep(locus.names, each = ploidy), 1:ploidy, sep = ".")
+}
+
+
+#' @rdname strataG-internal
 #' @param locus.names a vector of column names, where each locus must be
 #'   named with the same roots. For example, diploid locus 'ABCD' would have
 #'   two columns named something like 'ABCD.1' and 'ABCD.2', or
@@ -105,15 +116,22 @@ NULL
 #' @keywords internal
 #' 
 .removeIdsMissingAllLoci <- function(g) {
-  ids <- NULL # For CRAN CHECK
-  is.missing.all <- g@data[, list(missing = all(is.na(.SD))), .SDcols = !c("ids", "strata"), by = "ids"]
-  to.remove <- is.missing.all[(missing)]$ids
+  to.remove <- g@data %>% 
+    dplyr::group_by(id) %>% 
+    dplyr::summarize(to.remove = all(is.na(allele))) %>% 
+    dplyr::filter(to.remove) %>% 
+    dplyr::pull(id) %>% 
+    as.character
+
   if(length(to.remove) > 0) {
     warning(
       "The following samples are missing data for all loci and have been removed: ", 
-      paste(to.remove, collapse = ", ")
+      paste(to.remove, collapse = ", "),
+      call. = FALSE
     )
-    g@data <- g@data[!ids %in% to.remove]
+    g@data <- g@data %>% 
+      dplyr::filter(!id %in% to.remove) %>% 
+      data.table::as.data.table
   }
   g@data <- droplevels(g@data)
   g
@@ -125,8 +143,17 @@ NULL
 #' @param g a \linkS4class{gtypes} object.
 #' @keywords internal
 #' 
-.applyPerLocus <- function(fun, g, ...) {
-  g@data[, apply(.SD, 2, fun, ...), .SDcols = !c("ids", "strata")]
+.applyPerLocus <- function(fun, g, by.strata = TRUE, ...) {
+  result <- if(by.strata) {
+    g@data %>% 
+      group_by(stratum, locus) %>%  
+      summarize(value = fun(allele, ...))
+  } else {
+    g@data %>% 
+      group_by(locus) %>%  
+      summarize(value = fun(allele, ...))
+  }
+  ungroup(result)
 }
 
 

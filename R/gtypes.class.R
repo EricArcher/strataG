@@ -58,45 +58,54 @@ setClass(
     ploidy = "integer", schemes = "data.frameOrNULL", 
     description = "charOrNULL", other = "ANY"
   ),
+  
   prototype = prototype(
     data = NULL, sequences = NULL, ploidy = 0L, 
     schemes = NULL, description = NULL, other = NULL
   ),
+  
   validity = function(object) {
-    # check that the first two columns are "ids" and "strata"
-    if(!identical(colnames(object@data)[1:2], c("ids", "strata"))) {
-      cat("first two columns in the 'data' slot must be 'ids' and 'strata'\n")
+    data.cols <- colnames(object@data)
+    
+    # check that there are only four columns in 'data'
+    if(length(data.cols) != 4) {
+      cat("'data' slot does not have 4 columns\n")
+      return(FALSE)
+    }
+    
+    # check that columns "id", "stratum", "locus", and "allele" are present
+    if(!all(data.cols %in% c("id", "stratum", "locus", "allele"))) {
+      cat("column names of 'data' slot must be 'id', 'stratum', 'locus', and 'allele'\n")
       return(FALSE)
     }
     
     # check that all columns in data are factors
-    loci.are.factors <- object@data[, sapply(.SD, is.factor), .SDcols = !c("ids", "strata")]
-    if(!all(loci.are.factors)) {
-      cat("all locus columns in the 'data' slot are not factors\n")
+    if(!all(sapply(object@data, is.factor))) {
+      cat("all columns in the 'data' slot are not factors\n")
       return(FALSE)
     }
 
     # check sequences
     if(!is.null(object@sequences)) {
-      # check that length of sequences equals number of locus columns
+      # check that length of sequences equals number of loci
       dna <- getSequences(sequences(object), simplify = FALSE)
       num.seqs <- length(dna)
-      if(num.seqs > 0 & num.seqs != ncol(object@data) - 2) {
+      if(num.seqs > 0 & num.seqs != length(unique(object@data[["locus"]]))) {
         cat("the number of sets of sequences is not equal to the number of loci\n")
         return(FALSE)
       }
 
-      # check that locus names are the same in the @data colnames and names of
-      #  @sequences
-      loc.names <- colnames(object@data)[-(1:2)]
-      if(!identical(loc.names, getLocusNames(object@sequences))) {
+      # check that locus names are the same in the @data 'locus' column and
+      #   names of @sequences
+      loc.names <- sort(unique(object@data[["locus"]]))
+      if(!identical(loc.names, sort(getLocusNames(object@sequences)))) {
         cat("the names of the sets of sequences is not the same as the loci\n")
         return(FALSE)
       }
 
       # check that sequence haplotype labels can be found
       locus.good <- sapply(loc.names, function(x) {
-        haps <- object@data[[x]]
+        haps <- dplyr::filter(object@data, locus == x)
         seqs <- rownames(as.matrix(dna[[x]]))
         all(na.omit(haps) %in% seqs)
       })
@@ -107,11 +116,20 @@ setClass(
       }
     }
 
-    # check that ploidy is compatible with loci
-    if(nrow(object@data) %% object@ploidy != 0) {
-      cat("number of alleles is not an even multiple of 'ploidy'\n")
+    # check that ploidy is the same for all individuals/loci
+    pl <- unique(table(object@data[["id"]], object@data[["locus"]]))
+    if(length(pl) != 1) {
+      cat("some individuals have different numbers of alleles per locus\n")
       return(FALSE)
     }
+    
+    # check that true ploidy matches stored ploidy
+    if(object@ploidy != pl) {
+      cat("ploidy in 'data' slot not same as in 'ploidy' slot\n")
+      return(FALSE)
+    }
+    
+    # check that sequences aren't present if not haploid
     if(object@ploidy != 1 & !is.null(object@sequences)) {
       cat("sequences can't be present unless object is haploid (ploidy = 1)\n")
       return(FALSE)
