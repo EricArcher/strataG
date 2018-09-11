@@ -43,35 +43,13 @@ setMethod(
   "as.matrix", "gtypes",
   function(x, one.col = FALSE, sep = "/", ids = TRUE, 
            strata = TRUE, sort.alleles = TRUE, ...) {
-    setkey(x@data, ids)
-    
-    gen.mat <- if(one.col) {
-      # one column per locus
-      .combineLoci <- function(x, sep, sort) {
-        x <- as.character(x)
-        if(any(is.na(x))) {
-          as.character(NA)
-        } else {
-          x <- if(sort) sort(x) else x
-          paste(x, collapse = sep)
-        }
-      }
-      mat <- x@data[, lapply(.SD, .combineLoci, sep = sep, sort = sort.alleles), 
-                    by = "ids", .SDcols = !c("ids", "strata")]
-      as.matrix(mat)[, -1]
-    } else {
-      # alleles on separate columns
-      dt <- x@data[, unlist(.SD), by = ids, .SDcols = !c("ids", "strata")] 
-      mat <- unstack(dt, form = V1 ~ ids)
-      pl <- ploidy(x)
-      if(pl > 1) mat <- t(mat)
-      colnames(mat) <- .expandLocusNames(locNames(x), pl)
-      mat
-    }
-    # finish formatting matrix
-    rownames(gen.mat) <- indNames(x)
-    if(strata) gen.mat <- cbind(strata = as.character(strata(x)), gen.mat)
-    if(ids) gen.mat <- cbind(ids = indNames(x), gen.mat)
-    gen.mat
-  }
-)
+
+    as.matrix(as.data.frame(
+      x = x,
+      one.col = one.col,
+      sep = sep,
+      ids = ids,
+      strata = strata,
+      sort.alleles = sort.alleles
+    ))
+})

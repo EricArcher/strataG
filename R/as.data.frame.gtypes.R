@@ -41,9 +41,33 @@
 #' 
 setMethod(
   "as.data.frame", "gtypes",
-  function(x, one.col = FALSE, sep = "/", ids = TRUE, strata = TRUE, sort.alleles = TRUE, ...) {
-    as.data.frame(as.matrix(
-      x, one.col = one.col, sep = sep, ids = ids, strata = strata, sort.alleles = sort.alleles
-    ), stringsAsFactors = FALSE)
-  }
-)
+  function(x, one.col = FALSE, sep = "/", ids = TRUE, 
+           strata = TRUE, sort.alleles = TRUE, ...) {
+    
+    # create data.frame of one column per locus
+    df <- x@data %>% 
+      dplyr::group_by(stratum, id, locus) %>% 
+      dplyr::summarize(genotype = .combineLoci(allele, sep, sort.alleles)) %>% 
+      tidyr::spread(locus, genotype) %>% 
+      dplyr::ungroup()
+    
+    # if loci are to be split into separate columns, use alleleSplit
+    if(!one.col) {
+      df <- cbind(
+        df[, c("id", "stratum")],
+        df %>% 
+          dplyr::select(-id, -stratum) %>% 
+          as.data.frame() %>% 
+          alleleSplit(sep = sep),
+        stringsAsFactors = FALSE
+      )
+    }
+    
+    # remove ids or strata if requested
+    if(!ids) df <- dplyr::select(df, -id)
+    if(!strata) df <- dplyr::select(df, -stratum)
+    
+    df %>% 
+      dplyr::mutate_all(funs(as.character(.))) %>% 
+      as.data.frame()
+})

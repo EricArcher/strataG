@@ -34,33 +34,33 @@ NULL
     num.strata = getNumStrata(x),
     unstratified = sum(is.na(strata(x))),
     schemes = if(!is.null(schemes(x))) colnames(schemes(x))[-1] else NULL,
-    strata.smry = getNumInd(x, by.strata = TRUE) %>% 
+    strata.smry = getNumInd(x, TRUE) %>% 
       left_join(
-        numMissing(x) %>% 
+        numMissing(x, TRUE) %>% 
           dplyr::group_by(stratum) %>% 
           dplyr::summarize(num.missing = mean(num.missing, na.rm = TRUE)),
         by = "stratum"
       ) %>% 
       left_join(
-        numAlleles(x) %>% 
+        numAlleles(x, TRUE) %>% 
           dplyr::group_by(stratum) %>% 
           dplyr::summarize(num.alleles = mean(num.alleles, na.rm = TRUE)),
         by = "stratum"
       ) %>% 
       left_join(
-        propUniqueAlleles(x) %>% 
+        propUniqueAlleles(x, TRUE) %>% 
           dplyr::group_by(stratum) %>% 
           dplyr::summarize(prop.unique.alleles = mean(prop.unique.alleles, na.rm = TRUE)),
         by = "stratum"
       ) %>% 
       left_join(
-        heterozygosity(x, type = "exp") %>% 
+        heterozygosity(x, TRUE, "exp") %>% 
           dplyr::group_by(stratum) %>% 
           dplyr::summarize(exptd.het = mean(exptd.het, na.rm = TRUE)),
         by = "stratum"
       ) %>% 
       left_join(
-        heterozygosity(x, type = "obs") %>% 
+        heterozygosity(x, TRUE, "obs") %>% 
           dplyr::group_by(stratum) %>% 
           dplyr::summarize(obsvd.het = mean(obsvd.het, na.rm = TRUE)),
         by = "stratum"

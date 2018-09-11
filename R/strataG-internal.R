@@ -169,3 +169,19 @@ NULL
     loci = as.matrix(g@data[, sapply(.SD, .convToNum), .SDcols = !c("ids", "strata")])
   )
 }
+
+#' @rdname strataG-internal
+#' @param x a vector
+#' @param sep a character for separating
+#' @param sort a logical for whether to sort alleles
+#' @keywords internal
+#' 
+.combineLoci <- function(x, sep, sort) {
+  x <- as.character(x)
+  if(any(is.na(x))) {
+    as.character(NA)
+  } else {
+    x <- if(sort) sort(x) else x
+    paste(x, collapse = sep)
+  }
+}

@@ -63,7 +63,7 @@ Archer, F. 2016. *strataG*: An *R* package for manipulating, summarizing and ana
 * e-mail: <eric.archer@noaa.gov>
 
 ## version 2.4.9
-* Deleted functions: `alleleFreqFormat`
+* Deleted functions: `alleleFreqFormat`, `as.array.gtypes`
 
 ## version 2.1   
 * fixed error in ldNe when missing data are present
