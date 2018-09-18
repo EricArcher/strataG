@@ -1,12 +1,13 @@
 #' @title Allele Frequencies
-#' @description Calculate allele frequencies for each locus.
+#' @description Calculate allele frequencies or proportions for each locus.
 #'
 #' @param g a \linkS4class{gtypes} object.
-#' @param by.strata logical - return results grouped by strata?
+#' @param by.strata logical - return results by strata?
+#' @param type return counts (\code{"freq"}) or proportions (\code{"prop"})
 #'
 #' @return A list of allele frequencies for each locus. Each element is a
-#'   matrix or array with frequencies by count (\code{freq}) and 
-#'   proportion (\code{prop}) of each allele.
+#'   vector (\code{by.strata = FALSE}) or matrix (\code{by.strata = TRUE}) 
+#'   with the frequency or proportion of each allele. 
 #'   
 #' @note If \code{g} is a haploid object with sequences, make sure to run 
 #'   \code{\link{labelHaplotypes}} if sequences aren't already grouped by 
@@ -20,28 +21,38 @@
 #' data(msats.g)
 #' 
 #' f <- alleleFreqs(msats.g)
-#' f$D11t # Frequencies and proportions for Locus D11t
+#' f$D11t # Frequencies for Locus D11t
 #' 
-#' f.pop <- alleleFreqs(msats.g, TRUE)
-#' f.pop$EV94[, "freq", "Coastal"] # Frequencies for EV94 in the Coastal population
+#' f.pop <- alleleFreqs(msats.g, TRUE, "prop")
+#' f.pop$EV94[, "Coastal"] # Proportions of EV94 alleles in the Coastal population
 #' 
 #' @export
 #' 
-alleleFreqs <- function(g, by.strata = FALSE) {
+alleleFreqs <- function(g, by.strata = FALSE, type = c("freq", "prop")) {
   af <- if(by.strata) {
     g@data %>% 
-      dplyr::group_by(stratum, locus, allele) %>% 
-      dplyr::summarize(freq = n()) %>% 
-      dplyr::filter(!is.na(allele)) %>% 
-      dplyr::group_by(stratum, locus) 
+      split(.$locus) %>% 
+      purrr::map(function(x) {
+        table(x$allele, x$stratum)
+      })
   } else {
     g@data %>% 
-      dplyr::group_by(locus, allele) %>% 
-      dplyr::summarize(freq = n()) %>% 
-      dplyr::filter(!is.na(allele)) %>% 
-      dplyr::group_by(locus) 
+      split(.$locus) %>% 
+      purrr::map(function(x) {
+        table(x$allele)
+      })
   }
-  af %>% 
-    dplyr::mutate(prop = freq / sum(freq)) %>% 
-    dplyr::ungroup()
+  
+  if(match.arg(type) == "prop") {
+    af %>% 
+      purrr::map(function(x) {
+        if(length(dim(x)) == 1) {
+          prop.table(x)
+        } else {
+          prop.table(x, length(dim(x)))
+        }
+      })
+  } else {
+    af
+  }
 }

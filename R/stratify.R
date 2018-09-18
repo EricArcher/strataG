@@ -31,36 +31,33 @@
 #' @export
 #' 
 stratify <- function(g, scheme = NULL, drop = TRUE) {
-  ids <- indNames(g)
+  ids <- getIndNames(g)
   
   scheme <- if(is.null(scheme)) {
-    rep("Default", length(ids))
+    tibble(id = ids, .new = rep("Default", length(ids)))
   } else if(!(is.vector(scheme) | is.factor(scheme))) {
     stop("'scheme' must be a vector or a factor")
-  } else if(length(scheme) == 1) {
-    if(!scheme %in% colnames(schemes(g))) {
-      stop(paste("scheme '", scheme, "' cannot be found", sep = ""))
-    }
-    g@schemes[ids, scheme]
+  } else if(length(scheme) != 1) {
+    stop("'scheme' must be one element long")
+  } else if(!scheme %in% colnames(schemes(g))) {
+    stop(paste("scheme '", scheme, "' cannot be found", sep = ""))
   } else {
-    if(length(scheme) != length(ids)) {
-      warning(
-        "'scheme' is not the same length as the number of samples. ",
-        "values will be recycled."
-      )
-    }
-    if(!is.null(names(scheme))) {
-      scheme[ids]
-    } else {
-      rep(scheme, length.out = length(ids))
-    }
+    schemes(g) %>% 
+      rename('.new' = scheme) %>% 
+      select(id, .new)
   }
-  scheme <- data.table(ids = ids, strata = as.character(scheme))
-  g@data <- merge(scheme, g@data[, .SD, .SDcols = !"strata"], by = "ids", all.y = TRUE)
-  
+      
+  g@data <- g@data %>% 
+    left_join(scheme, by = "id") %>% 
+    select(id, .new, locus, allele) %>% 
+    rename(stratum = .new) %>% 
+    as.data.table()
+
   if(drop) {
-    g@data <- g@data[!is.na(strata)]
+    g@data <- g@data %>% 
+      filter(!is.na(stratum)) %>% 
+      as.data.table()
     g <- removeSequences(g)
-  }
+  } 
   g
 }

@@ -190,7 +190,7 @@ setMethod("initialize", "gtypes",
   
   gen.data <- cbind(
     id = rownames(gen.data), 
-    stratum = strata, 
+    stratum = as.character(strata), 
     gen.data,
     stringsAsFactors = FALSE
   ) %>% 
@@ -199,9 +199,8 @@ setMethod("initialize", "gtypes",
     dplyr::select(id, stratum, new, allele) %>% 
     dplyr::rename(locus = new) %>% 
     dplyr::mutate(
-      stratum = factor(stratum),
-      locus = factor(locus),
-      allele = factor(allele)
+      locus = as.character(locus),
+      allele = as.character(allele)
     ) %>% 
     data.table::as.data.table
   

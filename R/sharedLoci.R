@@ -42,13 +42,13 @@ NULL
 #' 
 propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = NULL) {
   type <- match.arg(type)
-  if(type == "strata" & nStrata(g) == 1) {
+  if(type == "strata" & getNumStrata(g) == 1) {
     stop("'type' cannot be 'strata' if only one stratum is present.")
   }
   type.pairs <- if(type == "strata") {
     as.matrix(.strataPairs(g))
   } else {
-    id.vec <- indNames(g)
+    id.vec <- getIndNames(g)
     if(length(id.vec) < 2) stop("'g' must have at least two individuals")
     t(combn(id.vec, 2))
   }
@@ -133,13 +133,24 @@ sharedAlleles <- function(g, smry = c("num", "which")) {
 
 
 #' @rdname sharedLoci
+#' @param g a \code{gtypes} object
 #' @param ids character vector of two sample ids to compare.
-#' @param gt genotypes array resulting from a call to as.array(g)
 #' @keywords internal
 #' 
-.propSharedIds <- function(ids, gt) {
-  apply(gt[ids, , , drop = FALSE], 2, function(x) {
-    if(any(is.na(x))) return(NA)
-    sum(x[1, ] %in% x[2, ], x[2, ] %in% x[1, ])
-  }) / (2 * dim(gt)[3])
+.propSharedIds <- function(ids, g) {
+  g@data %>% 
+    group_by(locus) %>% 
+    do({
+      gt1 <- filter(., id == ids[1]) %>% 
+        pull(allele)
+      gt2 <- filter(., id == ids[2]) %>% 
+        pull(allele)
+      if(any(is.na(c(gt1, gt2)))) {
+        data.frame(prop.shared = NA)
+      } else {
+        data.frame(
+          prop.shared = sum(gt1 %in% gt2, gt2 %in% gt1) / (2 * ploidy(g))
+        )
+      }
+    })
 }

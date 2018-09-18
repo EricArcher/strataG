@@ -85,13 +85,17 @@ NULL
 #' 
 .setupClusters <- function(num.cores = NULL) {
   # setup clusters
-  if(is.null(num.cores)) num.cores <- detectCores() - 1
+  max.cores <- parallel::detectCores()
+  if(is.null(num.cores)) num.cores <- max.cores - 1
   if(is.na(num.cores)) num.cores <- 1
   num.cores <- max(1, num.cores)
-  num.cores <- min(num.cores, detectCores() - 1)
+  num.cores <- min(num.cores, max.cores - 1)
   if(num.cores > 1) {
-    is.windows <- .Platform$OS.type == "windows"
-    cl.func <- ifelse(is.windows, makePSOCKcluster, makeForkCluster)
+    cl.func <- ifelse(
+      .Platform$OS.type == "windows", 
+      parallel::makePSOCKcluster, 
+      parallel::makeForkCluster
+    )
     cl.func(num.cores)
   } else NULL
 }
@@ -103,11 +107,12 @@ NULL
 #' @keywords internal
 #' 
 .strataPairs <- function(g) {
-  st <- strataNames(g)
+  st <- getStrataNames(g)
   if(length(st) < 2) return(NULL)
-  strata.pairs <- t(combn(st, 2))
-  colnames(strata.pairs) <- c("strata.1", "strata.2")
-  as.data.frame(strata.pairs, stringsAsFactors = FALSE)
+  combn(st, 2) %>% 
+    t() %>%  
+    as.data.frame(stringsAsFactors = FALSE) %>% 
+    setNames(c("strata.1", "strata.2"))
 }
 
 

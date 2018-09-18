@@ -80,12 +80,10 @@ df2gtypes <- function(x, ploidy, id.col = 1, strata.col = 2, loc.col = 3,
   
   # extract id, strata, and locus information
   ind.names <- if(is.null(id.col)) {
-    if(is.null(rownames(x))) {
-      1:nrow(x) 
-    } else {
-      rownames(x)
-    }
-  } else x[, id.col]
+    if(is.null(rownames(x))) 1:nrow(x) else rownames(x)
+  } else {
+    x[, id.col]
+  }
   ind.names <- as.character(ind.names)
   strata <- if(is.null(strata.col)) NULL else x[, strata.col]
   gen.data <- x[, loc.col:ncol(x), drop = FALSE]

@@ -280,16 +280,16 @@ setMethod("schemes<-", "gtypes", function(x, value) {
 #' @rdname gtypes.accessors
 #' @export
 #' 
-setGeneric("alleleNames", function(x, ...) standardGeneric("alleleNames"))
+setGeneric("getAlleleNames", function(x, ...) standardGeneric("alleleNames"))
 
 #' @rdname gtypes.accessors
 #' @aliases alleleNames
 #' @export
 #' 
-setMethod("alleleNames", "gtypes", function(x) {
+setMethod("getAlleleNames", "gtypes", function(x) {
   x@data %>% 
     split(.$locus) %>% 
-    purr::map(function(x) {
+    purrr::map(function(x) {
       x$allele %>% 
         as.character %>% 
         unique %>%

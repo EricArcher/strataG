@@ -13,11 +13,11 @@
 #' 
 removeSequences <- function(g) {
   if(is.null(sequences(g))) return(g)
-  new.seqs <- lapply(locNames(g), function(x) {
-    haps <- alleleNames(g)[[x]]
+  new.seqs <- lapply(getLocusNames(g), function(x) {
+    haps <- getAlleleNames(g)[[x]]
     getSequences(sequences(g), x)[haps]
   })
-  names(new.seqs) <- locNames(g)
+  names(new.seqs) <- getLocusNames(g)
   g@sequences <- as.multidna(new.seqs)
   g
 }
