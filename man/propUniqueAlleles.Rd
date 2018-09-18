@@ -4,10 +4,12 @@
 \alias{propUniqueAlleles}
 \title{Proportion Unique Alleles}
 \usage{
-propUniqueAlleles(g)
+propUniqueAlleles(g, by.strata = FALSE)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
+
+\item{by.strata}{logical - return results grouped by strata?}
 }
 \value{
 a vector of the proportion of unique (occuring only in one individual) 

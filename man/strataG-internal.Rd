@@ -3,15 +3,19 @@
 \name{strataG-internal}
 \alias{strataG-internal}
 \alias{.getFileLabel}
+\alias{.expandLocusNames}
 \alias{.parseLocusNames}
 \alias{.setupClusters}
 \alias{.strataPairs}
 \alias{.removeIdsMissingAllLoci}
 \alias{.applyPerLocus}
 \alias{.numericLoci}
+\alias{.combineLoci}
 \title{Internal Functions}
 \usage{
 .getFileLabel(g, label = NULL)
+
+.expandLocusNames(locus.names, ploidy)
 
 .parseLocusNames(locus.names, ploidy)
 
@@ -21,19 +25,18 @@
 
 .removeIdsMissingAllLoci(g)
 
-.applyPerLocus(fun, g, ...)
+.applyPerLocus(fun, g, by.strata = TRUE, ...)
 
 .numericLoci(g, min.val = 0)
+
+.combineLoci(x, sep, sort)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
 \item{label}{label for filename(s). Default is the gtypes description if present.}
 
-\item{locus.names}{a vector of column names, where each locus must be
-named with the same roots. For example, diploid locus 'ABCD' would have
-two columns named something like 'ABCD.1' and 'ABCD.2', or
-'ABCD_A' and 'ABCD_B'.\cr}
+\item{locus.names}{a vector of locus names.}
 
 \item{ploidy}{integer representing the ploidy of the data.}
 
@@ -41,6 +44,19 @@ two columns named something like 'ABCD.1' and 'ABCD.2', or
 used is set to the value of \code{detectCores() - 1}.}
 
 \item{fun}{a function that takes one locus column at a time.}
+
+\item{x}{a vector}
+
+\item{sep}{a character for separating}
+
+\item{sort}{a logical for whether to sort alleles}
+
+\item{locus.names}{a vector of column names, where each locus must be
+named with the same roots. For example, diploid locus 'ABCD' would have
+two columns named something like 'ABCD.1' and 'ABCD.2', or
+'ABCD_A' and 'ABCD_B'.\cr}
+
+\item{ploidy}{integer representing the ploidy of the data.}
 
 \item{g}{a \linkS4class{gtypes} object.}
 

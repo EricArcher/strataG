@@ -88,56 +88,56 @@ NULL
 }
 
 
-#' @rdname summary-gtypes-method
-#' @export
+#' #' @rdname summary-gtypes-method
+#' #' @export
+#' #' 
+#' setMethod("summary", "gtypes", function(object, ...) { 
+#'   smry <- .baseSmry(object)
+#'   smry$allele.freqs <- alleleFreqs(object, by.strata = TRUE)
+#'   smry$sample.smry <- summarizeSamples(object)
+#'   smry$locus.smry <- if(ploidy(object) > 1) summarizeLoci(object) else NULL
+#'   smry$seq.smry <- if(!is.null(sequences(object))) {
+#'     sequences <- getSequences(sequences(object), simplify = FALSE)
+#'     do.call(rbind, sapply(sequences, function(dna) {
+#'       dna <- as.matrix(dna)
+#'       dna.len <- unlist(lapply(dna, length))
+#'       len.range <- range(dna.len)
+#'       result <- data.frame(
+#'         num.seqs = nrow(dna), 
+#'         min.length = len.range[1], 
+#'         mean.length = round(mean(dna.len)), max.length = len.range[2]
+#'       )
+#'       cbind(result, rbind(base.freq(dna)))
+#'     }, simplify = FALSE))
+#'   } else NULL
+#'   
+#'   class(smry) <- c("gtypeSummary", "list")
+#'   smry
+#' })
 #' 
-setMethod("summary", "gtypes", function(object, ...) { 
-  smry <- .baseSmry(object)
-  smry$allele.freqs <- alleleFreqs(object, by.strata = TRUE)
-  smry$sample.smry <- summarizeSamples(object)
-  smry$locus.smry <- if(ploidy(object) > 1) summarizeLoci(object) else NULL
-  smry$seq.smry <- if(!is.null(sequences(object))) {
-    sequences <- getSequences(sequences(object), simplify = FALSE)
-    do.call(rbind, sapply(sequences, function(dna) {
-      dna <- as.matrix(dna)
-      dna.len <- unlist(lapply(dna, length))
-      len.range <- range(dna.len)
-      result <- data.frame(
-        num.seqs = nrow(dna), 
-        min.length = len.range[1], 
-        mean.length = round(mean(dna.len)), max.length = len.range[2]
-      )
-      cbind(result, rbind(base.freq(dna)))
-    }, simplify = FALSE))
-  } else NULL
-  
-  class(smry) <- c("gtypeSummary", "list")
-  smry
-})
-
-
-#' @rdname summary-gtypes-method
-#' @export
 #' 
-print.gtypeSummary <- function(x, ... ) { 
-  .printBaseSmry(x)
-  if(!is.null(x$locus.smry)) {
-    cols <- c(1, 3, 5, 7)
-    num.rows <- nrow(x$locus.smry)
-    if(num.rows > 20) {
-      cat("\nLocus summary (first and last 10):\n")
-      print(x$locus.smry[1:10, cols, drop = FALSE])
-      cat("---\n")
-      print(x$locus.smry[(num.rows - 10):num.rows, cols, drop = FALSE])
-    } else {
-      cat("\nLocus summary:\n")
-      print(x$locus.smry[, cols, drop = FALSE])
-    }
-  }
-  if(!is.null(x$seq.smry)) {
-    cat("\nSequence summary:\n")
-    print(x$seq.smry)
-  }
-  cat("\n")
-  invisible(x)
-}
+#' #' @rdname summary-gtypes-method
+#' #' @export
+#' #' 
+#' print.gtypeSummary <- function(x, ... ) { 
+#'   .printBaseSmry(x)
+#'   if(!is.null(x$locus.smry)) {
+#'     cols <- c(1, 3, 5, 7)
+#'     num.rows <- nrow(x$locus.smry)
+#'     if(num.rows > 20) {
+#'       cat("\nLocus summary (first and last 10):\n")
+#'       print(x$locus.smry[1:10, cols, drop = FALSE])
+#'       cat("---\n")
+#'       print(x$locus.smry[(num.rows - 10):num.rows, cols, drop = FALSE])
+#'     } else {
+#'       cat("\nLocus summary:\n")
+#'       print(x$locus.smry[, cols, drop = FALSE])
+#'     }
+#'   }
+#'   if(!is.null(x$seq.smry)) {
+#'     cat("\nSequence summary:\n")
+#'     print(x$seq.smry)
+#'   }
+#'   cat("\n")
+#'   invisible(x)
+#' }

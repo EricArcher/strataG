@@ -20,8 +20,8 @@
 permuteStrata <- function(g) {
   st <- strata(g)
   no.nas <- st[!is.na(st)]
-  no.na.sample <- sample(as.character(no.nas))
-  names(no.na.sample) <- names(no.nas)
-  strata(g) <- factor(no.na.sample[names(st)])
+  no.na.perm <- sample(no.nas)
+  names(no.na.perm) <- names(no.nas)
+  strata(g) <- no.na.perm[names(st)]
   g
 }

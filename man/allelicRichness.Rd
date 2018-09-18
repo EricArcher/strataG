@@ -4,10 +4,12 @@
 \alias{allelicRichness}
 \title{Allelic Richness}
 \usage{
-allelicRichness(g)
+allelicRichness(g, by.strata = FALSE)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
+
+\item{by.strata}{logical - return results grouped by strata?}
 }
 \value{
 the allelic richness of each locus calculated as the number of 

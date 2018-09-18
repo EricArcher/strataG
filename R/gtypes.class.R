@@ -79,9 +79,9 @@ setClass(
       return(FALSE)
     }
     
-    # check that all columns in data are factors
-    if(!all(sapply(object@data, is.factor))) {
-      cat("all columns in the 'data' slot are not factors\n")
+    # check that all columns in data are character
+    if(!all(sapply(object@data, is.character))) {
+      cat("all columns in the 'data' slot are not characters\n")
       return(FALSE)
     }
 
@@ -137,7 +137,7 @@ setClass(
 
     # check that at least some individuals are in strata schemes
     if(!is.null(object@schemes)) {
-      if(length(intersect(object@data$ids, rownames(object@schemes))) == 0) {
+      if(length(intersect(object@data$id, object@schemes$id)) == 0) {
         cat("no sample ids from the 'data' slot are in stratification schemes\n")
         return(FALSE)
       }

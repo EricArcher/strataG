@@ -4,10 +4,12 @@
 \alias{numGenotyped}
 \title{Number of Individuals Genotyped}
 \usage{
-numGenotyped(g)
+numGenotyped(g, by.strata = FALSE)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
+
+\item{by.strata}{logical - return results grouped by strata?}
 }
 \value{
 vector of number of alleles per locus.

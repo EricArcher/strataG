@@ -47,89 +47,33 @@ Collate:
     gtypes.class.R
     gtypes.accessors.R
     is.gtypes.R
-    initialize.gtypes.R
+    gtypes.initialize.R
     strataG-internal.R
-    as.array.gtypes.R
     as.matrix.gtypes.R
     as.data.frame.gtypes.R
-    alleleFreqFormat.R
     alleleFreqs.R
     alleleSplit.R
     allelicRichness.R
-    arlequin.R
     as.multidna.R
-    baseFreqs.R
-    clumpp.R
-    createConsensus.R
     dupGenotypes.R
-    evanno.R
-    expandHaplotypes.R
-    fasta.R
-    fastsimcoal.input.R
-    fastsimcoal.R
-    fixedDifferences.R
-    fixedSites.R
-    freq2GenData.R
-    fusFs.R
-    gelato.R
-    genepop.R
     heterozygosity.R
-    hweTest.R
-    iupacCode.R
-    jackHWE.R
     labelHaplotypes.R
-    ldNe.R
-    LDgenepop.R
-    lowFreqSubs.R
-    mRatio.R
-    maf.R
-    mafft.R
-    maverickRun.R
-    mega.R
-    mostDistantSequences.R
-    mostRepresentativeSequences.R
-    neiDa.R
-    nucleotideDivergence.R
-    nucleotideDiversity.R
     numAlleles.R
-    numericSNPmat.R
     numGenotyped.R
     numMissing.R
     permuteStrata.R
-    phase.R
-    popGenEqns.R
-    popStructStat.R
-    popStructTest.R
     privateAlleles.R
     propUniqueAlleles.R
-    qaqc.R
-    RcppExports.R
-    readGenData.R
     removeSequences.R
-    sequenceLikelihoods.R
     sharedLoci.R
-    show.gtypes.R
-    simGammaHaps.R
-    strataGUI.R
     strataSplit.R
     stratify.R
-    structure.R
-    structurePlot.R
     summarizeLoci.R
     summarizeSamples.R
     summarizeSeqs.R
-    summary.gtypes.R
-    tajimasD.R
-    theta.R
-    TiTvRatio.R
-    trimNs.R
-    validIupacCodes.R
-    variableSites.R
+    gtypes.show.R
+    gtypes.summary.R
     write.gtypes.R
-    write.nexus.snapp.R
-    gtypes2genind.R
-    gtypes2loci.R
-    gtypes2phyDat.R
     df2gtypes.R
     sequence2gtypes.R
 LazyData: TRUE

@@ -2,16 +2,16 @@
 % Please edit documentation in R/heterozygosity.R
 \name{heterozygosity}
 \alias{heterozygosity}
-\alias{exptdHet}
-\alias{obsvdHet}
 \title{Observed and Expected Heterozygosity}
 \usage{
-exptdHet(g)
-
-obsvdHet(g)
+heterozygosity(g, by.strata = FALSE, type = c("expected", "observed"))
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
+
+\item{by.strata}{logical - return results by strata?}
+
+\item{type}{return \code{expected} or \code{observed} heterozygosity}
 }
 \description{
 Calculate observed heterozygosity for diploid data.

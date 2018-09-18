@@ -4,24 +4,28 @@
 \name{gtypes.accessors}
 \alias{gtypes.accessors}
 \alias{accessors}
-\alias{nInd,gtypes-method}
+\alias{getNumInd,gtypes-method}
 \alias{nInd}
-\alias{nLoc,gtypes-method}
+\alias{getNumLoci,gtypes-method}
 \alias{nLoc}
+\alias{getNumStrata}
+\alias{getNumStrata,gtypes-method}
 \alias{nStrata}
-\alias{nStrata,gtypes-method}
-\alias{nStrata}
-\alias{indNames,gtypes-method}
+\alias{getIndNames}
+\alias{getIndNames,gtypes-method}
 \alias{indNames}
-\alias{locNames,gtypes-method}
+\alias{getLocusNames,gtypes-method}
 \alias{locNames}
+\alias{getStrataNames}
+\alias{getStrataNames,gtypes-method}
 \alias{strataNames}
-\alias{strataNames,gtypes-method}
-\alias{strataNames}
+\alias{ploidy}
 \alias{ploidy,gtypes-method}
 \alias{ploidy}
+\alias{other}
 \alias{other,gtypes-method}
 \alias{other}
+\alias{strata}
 \alias{strata,gtypes-method}
 \alias{strata}
 \alias{strata<-}
@@ -33,8 +37,8 @@
 \alias{schemes<-}
 \alias{schemes<-,gtypes-method}
 \alias{schemes}
-\alias{alleleNames}
-\alias{alleleNames,gtypes-method}
+\alias{getAlleleNames}
+\alias{getAlleleNames,gtypes-method}
 \alias{alleleNames}
 \alias{sequences}
 \alias{sequences,gtypes-method}
@@ -50,25 +54,33 @@
 \alias{subset}
 \title{\code{gtypes} Accessors}
 \usage{
-\S4method{nInd}{gtypes}(x, ...)
+\S4method{getNumInd}{gtypes}(x, by.strata = FALSE, ...)
 
-\S4method{nLoc}{gtypes}(x, ...)
+\S4method{getNumLoci}{gtypes}(x, ...)
 
-nStrata(x, ...)
+getNumStrata(x, ...)
 
-\S4method{nStrata}{gtypes}(x, ...)
+\S4method{getNumStrata}{gtypes}(x, ...)
 
-\S4method{indNames}{gtypes}(x, ...)
+getIndNames(x, ...)
 
-\S4method{locNames}{gtypes}(x, ...)
+\S4method{getIndNames}{gtypes}(x, ...)
 
-strataNames(x, ...)
+\S4method{getLocusNames}{gtypes}(x, ...)
 
-\S4method{strataNames}{gtypes}(x, ...)
+getStrataNames(x, ...)
+
+\S4method{getStrataNames}{gtypes}(x, ...)
+
+ploidy(x, ...)
 
 \S4method{ploidy}{gtypes}(x, ...)
 
+other(x, ...)
+
 \S4method{other}{gtypes}(x, ...)
+
+strata(x, ...)
 
 \S4method{strata}{gtypes}(x)
 
@@ -84,9 +96,9 @@ schemes(x) <- value
 
 \S4method{schemes}{gtypes}(x) <- value
 
-alleleNames(x, ...)
+getAlleleNames(x, ...)
 
-\S4method{alleleNames}{gtypes}(x)
+\S4method{getAlleleNames}{gtypes}(x)
 
 sequences(x, ...)
 
@@ -105,6 +117,8 @@ description(x) <- value
 }
 \arguments{
 \item{x}{a \linkS4class{gtypes} object.}
+
+\item{by.strata}{logical - return results by strata?}
 
 \item{...}{other arguments passed from generics (ignored).}
 

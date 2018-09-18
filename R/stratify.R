@@ -34,7 +34,7 @@ stratify <- function(g, scheme = NULL, drop = TRUE) {
   ids <- getIndNames(g)
   
   scheme <- if(is.null(scheme)) {
-    tibble(id = ids, .new = rep("Default", length(ids)))
+    tibble::tibble(id = ids, .new = rep("Default", length(ids)))
   } else if(!(is.vector(scheme) | is.factor(scheme))) {
     stop("'scheme' must be a vector or a factor")
   } else if(length(scheme) != 1) {
@@ -43,20 +43,20 @@ stratify <- function(g, scheme = NULL, drop = TRUE) {
     stop(paste("scheme '", scheme, "' cannot be found", sep = ""))
   } else {
     schemes(g) %>% 
-      rename('.new' = scheme) %>% 
-      select(id, .new)
+      dplyr::rename('.new' = scheme) %>% 
+      dplyr::select(id, .new)
   }
       
   g@data <- g@data %>% 
-    left_join(scheme, by = "id") %>% 
-    select(id, .new, locus, allele) %>% 
-    rename(stratum = .new) %>% 
-    as.data.table()
+    dplyr::left_join(scheme, by = "id") %>% 
+    dplyr::select(id, .new, locus, allele) %>% 
+    dplyr::rename(stratum = .new) %>% 
+    data.table::as.data.table()
 
   if(drop) {
     g@data <- g@data %>% 
-      filter(!is.na(stratum)) %>% 
-      as.data.table()
+      dplyr::filter(!is.na(stratum)) %>% 
+      data.table::as.data.table()
     g <- removeSequences(g)
   } 
   g

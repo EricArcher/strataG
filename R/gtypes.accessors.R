@@ -97,61 +97,102 @@
 #' 
 NULL
 
-
 #' @rdname gtypes.accessors
-#' @aliases nInd
+#' @aliases getNumInd
 #' @export
 #' 
 setMethod("getNumInd", "gtypes", function(x, by.strata = FALSE, ...) {
-  if(!by.strata) {
-    length(getIndNames(x))
-  } else {
+  if(by.strata) {
     x@data %>% 
       dplyr::group_by(stratum) %>% 
       dplyr::summarize(num.ind = n_distinct(id)) %>% 
-      dplyr::ungroup()
+      dplyr::ungroup() %>% 
+      as.data.frame()
+  } else {
+    length(getIndNames(x))
   }
 })
 
-
 #' @rdname gtypes.accessors
-#' @aliases nLoc
+#' @aliases getNumLoci
 #' @export
 #' 
-setMethod("getNumLoci", "gtypes", function(x, ...) length(getLocusNames(x)))
-
+setMethod("getNumLoci", "gtypes", function(x, ...) {
+  x@data$locus %>% 
+    dplyr::n_distinct(na.rm = TRUE)
+})
 
 #' @rdname gtypes.accessors
+#' @aliases getNumStrata
 #' @export
 #' 
 setGeneric("getNumStrata", function(x, ...) standardGeneric("getNumStrata"))
 
 #' @rdname gtypes.accessors
-#' @aliases nStrata
 #' @export
 #' 
-setMethod("getNumStrata", "gtypes", function(x, ...) length(getStrataNames(x)))
+setMethod("getNumStrata", "gtypes", function(x, ...) {
+  x@data$stratum %>% 
+    dplyr::n_distinct(na.rm = TRUE)
+})
 
 #' @rdname gtypes.accessors
+#' @aliases getIndNames
 #' @export
 #' 
 setGeneric("getIndNames", function(x, ...) standardGeneric("getIndNames"))
 
 #' @rdname gtypes.accessors
-#' @aliases indNames
 #' @export
 #' 
-setMethod("getIndNames", "gtypes", function(x, ...) unique(x@data[["id"]]))
-
+setMethod("getIndNames", "gtypes", function(x, by.strata = FALSE, ...) {
+  if(by.strata) {
+    x@data %>% 
+      split(.$stratum) %>% 
+      purrr::map(function(s) {
+        s$id %>% 
+          unique() %>%
+          stats::na.omit() %>% 
+          as.character() %>% 
+          sort()
+      })
+  } else {
+    x@data[["id"]] %>% 
+      unique() %>% 
+      sort()
+  }
+})
 
 #' @rdname gtypes.accessors
-#' @aliases locNames
+#' @aliases getLocusNames
 #' @export
 #' 
 setMethod("getLocusNames", "gtypes", function(x, ...) {
-  as.character(unique(x@data[["locus"]]))
+  x@data[["locus"]] %>% 
+    unique() %>% 
+    sort()
 })
 
+#' @rdname gtypes.accessors
+#' @export
+#' 
+setGeneric("getAlleleNames", function(x, ...) standardGeneric("getAlleleNames"))
+
+#' @rdname gtypes.accessors
+#' @aliases getAlleleNames
+#' @export
+#' 
+setMethod("getAlleleNames", "gtypes", function(x, ...) {
+  x@data %>% 
+    split(.$locus) %>% 
+    purrr::map(function(s) {
+      s$allele %>% 
+        unique() %>%
+        stats::na.omit() %>% 
+        sort() %>% 
+        as.character()
+    })
+})
 
 #' @rdname gtypes.accessors
 #' @export
@@ -159,18 +200,20 @@ setMethod("getLocusNames", "gtypes", function(x, ...) {
 setGeneric("getStrataNames", function(x, ...) standardGeneric("getStrataNames"))
 
 #' @rdname gtypes.accessors
-#' @aliases strataNames
+#' @aliases getStrataNames
 #' @export
 #' 
 setMethod("getStrataNames", "gtypes", function(x, ...) {
-  as.character(unique(x@data[["stratum"]]))
+  x@data[["stratum"]] %>% 
+    unique() %>% 
+    sort()
 })
           
+
 #' @rdname gtypes.accessors
 #' @export
 #' 
 setGeneric("ploidy", function(x, ...) standardGeneric("ploidy"))
-
 
 #' @rdname gtypes.accessors
 #' @aliases ploidy
@@ -178,17 +221,18 @@ setGeneric("ploidy", function(x, ...) standardGeneric("ploidy"))
 #' 
 setMethod("ploidy", "gtypes", function(x, ...) x@ploidy)
 
+
 #' @rdname gtypes.accessors
 #' @export
 #' 
 setGeneric("other", function(x, ...) standardGeneric("other"))
-
 
 #' @rdname gtypes.accessors
 #' @aliases other
 #' @export
 #' 
 setMethod("other", "gtypes", function(x, ...) x@other)
+
 
 #' @rdname gtypes.accessors
 #' @export
@@ -203,9 +247,7 @@ setMethod("strata", "gtypes", function(x) {
   id.strata <- x@data %>% 
     dplyr::select(id, stratum) %>% 
     dplyr::distinct()
-  id.strata$stratum %>% 
-    as.character %>% 
-    stats::setNames(id.strata$id)
+  stats::setNames(id.strata$stratum, id.strata$id)
 })
 
 
@@ -234,7 +276,7 @@ setMethod("strata<-", "gtypes", function(x, value) {
     )
   }
   
-  value <- data.frame(
+  value <- tibble::tibble(
     id = names(value),
     new = as.character(value)
   )
@@ -243,7 +285,7 @@ setMethod("strata<-", "gtypes", function(x, value) {
     dplyr::left_join(value, by = "id") %>% 
     dplyr::select(id, new, locus, allele) %>% 
     dplyr::rename(stratum = new) %>% 
-    dplyr::mutate(stratum = factor(stratum))
+    data.table::as.data.table()
   validObject(x)
   x
 })
@@ -260,7 +302,6 @@ setGeneric("schemes", function(x, ...) standardGeneric("schemes"))
 #' 
 setMethod("schemes", "gtypes", function(x, ...) x@schemes)
 
-
 #' @rdname gtypes.accessors
 #' @export
 #' 
@@ -276,27 +317,6 @@ setMethod("schemes<-", "gtypes", function(x, value) {
   x
 })
 
-
-#' @rdname gtypes.accessors
-#' @export
-#' 
-setGeneric("getAlleleNames", function(x, ...) standardGeneric("alleleNames"))
-
-#' @rdname gtypes.accessors
-#' @aliases alleleNames
-#' @export
-#' 
-setMethod("getAlleleNames", "gtypes", function(x) {
-  x@data %>% 
-    split(.$locus) %>% 
-    purrr::map(function(x) {
-      x$allele %>% 
-        as.character %>% 
-        unique %>%
-        na.omit %>% 
-        sort
-    })
-})
 
 
 #' @rdname gtypes.accessors
@@ -336,7 +356,6 @@ setGeneric("description", function(x, ...) standardGeneric("description"))
 #' @export
 #' 
 setMethod("description", "gtypes", function(x, ...) x@description)
-
 
 #' @rdname gtypes.accessors
 #' @export
@@ -410,7 +429,7 @@ setMethod("[",
   
   x@data <- x@data %>% 
     dplyr::filter(id %in% i & locus %in% j & stratum %in% k) %>% 
-    data.table::as.data.table
+    data.table::as.data.table()
   if(nrow(x@data) == 0) stop("the requested indices would form an empty gtypes object")
   
   # filter sequences

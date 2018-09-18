@@ -202,7 +202,7 @@ setMethod("initialize", "gtypes",
       locus = as.character(locus),
       allele = as.character(allele)
     ) %>% 
-    data.table::as.data.table
+    data.table::as.data.table()
   
   # create and return gtypes object
   g <- .Object
