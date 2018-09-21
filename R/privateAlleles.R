@@ -19,15 +19,16 @@
 #' 
 privateAlleles <- function(g) {
   if(ploidy(g) == 1 & !is.null(sequences(g))) g <- labelHaplotypes(g)$gtypes
-  freqs <- alleleFreqs(g, TRUE)
   
-  do.call(rbind, lapply(freqs, function(f) {
-    f <- f[, "freq", , drop = FALSE]
-    f[f > 0] <- 1
-    pa <- rowSums(apply(f, 1, function(x) {
-      if(sum(x > 0) == 1) x else rep(0, length(x))
-    }))
-    names(pa) <- dimnames(f)[[3]]
-    pa
-  }))
+  alleleFreqs(g, TRUE) %>% 
+    purrr::map(function(f) {
+      f[f > 0] <- 1
+      apply(f, 1, function(x) {
+        if(sum(x > 0) == 1) x else rep(0, length(x))
+      }) %>% 
+        rbind() %>% 
+        rowSums() %>% 
+        stats::setNames(dimnames(f)[[2]])
+    }) %>% 
+    do.call(rbind, .)
 }

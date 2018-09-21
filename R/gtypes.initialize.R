@@ -61,6 +61,7 @@ setMethod("initialize", "gtypes",
   if(!(is.matrix(gen.data) | is.data.frame(gen.data))) {
     stop("'gen.data' is not a vector, matrix, or data.frame", call. = FALSE)
   }
+  gen.data <- as.matrix(gen.data)
   
   # check ploidy
   ploidy <- as.integer(ploidy)
@@ -175,7 +176,7 @@ setMethod("initialize", "gtypes",
     }
     setLocusNames(sequences) <- colnames(gen.data)
     for(loc in colnames(gen.data)) {
-      haps <- na.omit(unique(as.character(gen.data[[loc]])))
+      haps <- na.omit(unique(as.character(gen.data[, loc])))
       seq.names <- getSequenceNames(sequences)[[loc]]
       missing <- setdiff(haps, seq.names)
       if(length(missing) > 0) {
@@ -191,9 +192,9 @@ setMethod("initialize", "gtypes",
   gen.data <- cbind(
     id = rownames(gen.data), 
     stratum = as.character(strata), 
-    gen.data,
-    stringsAsFactors = FALSE
+    gen.data
   ) %>% 
+    as.data.frame(stringsAsFactors = FALSE) %>% 
     tidyr::gather(locus, allele, -id, -stratum) %>% 
     dplyr::left_join(locus.names.lookup, by = c("locus" = "old")) %>% 
     dplyr::select(id, stratum, new, allele) %>% 

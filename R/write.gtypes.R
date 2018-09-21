@@ -31,39 +31,48 @@
 #' write.gtypes(dloop.g, as.frequency = TRUE)
 #' }
 #' 
-#' @importFrom utils write.csv
 #' @export
 #' 
-write.gtypes <- function(g, label = NULL, folder = NULL, as.frequency = FALSE, 
-                         by.strata = TRUE, freq.type = c("freq", "prop"), ...) {
+write.gtypes <- function(g, label = NULL, folder = NULL, by.strata = TRUE,
+                         as.frequency = FALSE, freq.type = c("freq", "prop"), ...) {
   label <- .getFileLabel(g, label)
   
   g.mats <- if(ploidy(g) == 1 & as.frequency) {
-    freq.list <- alleleFreqs(g, by.strata = by.strata) 
-    freq.type <- match.arg(freq.type)
-    x <- if(by.strata) {
-      lapply(freq.list, function(x) x[, freq.type, ])
-    } else {
-      lapply(freq.list, function(x) x[, freq.type])
-    }
-    names(x) <- paste(label, names(x), sep = ".")
-    x
+    alleleFreqs(g, by.strata = by.strata, type = freq.type) %>% 
+      sapply(function(x) {
+        as.data.frame.matrix(x) %>% 
+          as.data.frame() %>% 
+          tibble::rownames_to_column("id") %>% 
+          dplyr::select(id, dplyr::everything())
+      }, simplify = FALSE) %>% 
+      stats::setNames(paste(label, names(.)))
   } else {
     x <- list(as.matrix(g, ...))
     names(x) <- label
     x
   }
-  names(g.mats) <- paste(names(g.mats), ".csv", sep = "")
-  if(!is.null(folder)) names(g.mats) <- file.path(folder, names(g.mats))
-  for(f in names(g.mats)) write.csv(g.mats[[f]], file = f, row.names = FALSE)
-  out.files <- names(g.mats)
+  
+  out.files <- NULL
+  for(f in names(g.mats)) {
+    fname <- paste0(f, ".csv")
+    if(!is.null(folder)) fname <- file.path(folder, fname)
+    out.files <- c(out.files, f)
+    utils::write.csv(g.mats[[f]], file = fname, row.names = FALSE)
+  }
   
   if(!is.null(sequences(g))) {
-    for(x in locNames(g)) {
+    for(x in getLocusNames(g)) {
       fname <- paste(label, x, "fasta", sep = ".")
       if(!is.null(folder)) fname <- file.path(folder, fname)
-      write.dna(sequences(g, x), file = fname, format = "fasta", nbcol = -1, 
-                colsep = "", indent = 0, blocksep = 0)
+      ape::write.dna(
+        sequences(g)[[x]], 
+        file = fname, 
+        format = "fasta", 
+        nbcol = -1, 
+        colsep = "", 
+        indent = 0, 
+        blocksep = 0
+      )
       out.files <- c(out.files, fname)
     }
   }

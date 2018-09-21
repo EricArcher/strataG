@@ -27,45 +27,58 @@
 NULL
 
 .baseSmry <- function(x) {
-  list(
-    description = x@description,
-    num.ind = getNumInd(x), 
-    num.loc = getNumLoci(x), 
-    num.strata = getNumStrata(x),
-    unstratified = sum(is.na(strata(x))),
-    schemes = if(!is.null(schemes(x))) colnames(schemes(x))[-1] else NULL,
-    strata.smry = getNumInd(x, TRUE) %>% 
-      left_join(
-        numMissing(x, TRUE) %>% 
-          dplyr::group_by(stratum) %>% 
-          dplyr::summarize(num.missing = mean(num.missing, na.rm = TRUE)),
-        by = "stratum"
-      ) %>% 
-      left_join(
-        numAlleles(x, TRUE) %>% 
-          dplyr::group_by(stratum) %>% 
-          dplyr::summarize(num.alleles = mean(num.alleles, na.rm = TRUE)),
-        by = "stratum"
-      ) %>% 
-      left_join(
-        propUniqueAlleles(x, TRUE) %>% 
-          dplyr::group_by(stratum) %>% 
-          dplyr::summarize(prop.unique.alleles = mean(prop.unique.alleles, na.rm = TRUE)),
-        by = "stratum"
-      ) %>% 
-      left_join(
-        heterozygosity(x, TRUE, "exp") %>% 
-          dplyr::group_by(stratum) %>% 
-          dplyr::summarize(exptd.het = mean(exptd.het, na.rm = TRUE)),
-        by = "stratum"
-      ) %>% 
+  het <- heterozygosity(x, TRUE, "exp") %>% 
+    dplyr::group_by(stratum) %>% 
+    dplyr::summarize(exptd.het = mean(exptd.het, na.rm = TRUE))
+  
+  if(ploidy(x) > 1) {
+    het <- het %>% 
       left_join(
         heterozygosity(x, TRUE, "obs") %>% 
           dplyr::group_by(stratum) %>% 
           dplyr::summarize(obsvd.het = mean(obsvd.het, na.rm = TRUE)),
         by = "stratum"
-      ) %>% 
-      as.data.frame
+      )
+  }
+  
+  strata.smry <- getNumInd(x, TRUE) %>% 
+    left_join(
+      numMissing(x, TRUE) %>% 
+        dplyr::group_by(stratum) %>% 
+        dplyr::summarize(num.missing = mean(num.missing, na.rm = TRUE)),
+      by = "stratum"
+    ) %>% 
+    left_join(
+      numAlleles(x, TRUE) %>% 
+        dplyr::group_by(stratum) %>% 
+        dplyr::summarize(num.alleles = mean(num.alleles, na.rm = TRUE)),
+      by = "stratum"
+    ) %>% 
+    left_join(
+      propUniqueAlleles(x, TRUE) %>% 
+        dplyr::group_by(stratum) %>% 
+        dplyr::summarize(prop.unique.alleles = mean(prop.unique.alleles, na.rm = TRUE)),
+      by = "stratum"
+    ) %>% 
+    left_join(het, by = "stratum") %>% 
+    as.data.frame()
+  
+  if(ploidy(x) == 1) {
+    strata.smry <- strata.smry %>% 
+      rename(
+        num.haplotypes = num.alleles,
+        prop.unique.haplotypes = prop.unique.alleles,
+        haplotypic.diversity = exptd.het
+      )
+  }
+        
+  list(
+    description = x@description,
+    num.ind = getNumInd(x), 
+    num.loc = getNumLoci(x), 
+    num.strata = getNumStrata(x),
+    schemes = if(!is.null(schemes(x))) colnames(schemes(x))[-1] else NULL,
+    strata.smry = strata.smry
   )
 }
 
@@ -84,14 +97,14 @@ NULL
   if(!is.null(x$schemes)) cat("\nStratification schemes:", paste(x$schemes, collapse = ", "))
   cat("\n\nStrata summary:\n")
   print(x$strata.smry)
-  if(x$unstratified > 0) cat(x$unstratified, "samples are unstratified\n")
+  cat("\n")
 }
 
 
 #' #' @rdname summary-gtypes-method
 #' #' @export
 #' #' 
-#' setMethod("summary", "gtypes", function(object, ...) { 
+#' setMethod("summary", "gtypes", function(object, type = c("loci", "individual"), ...) { 
 #'   smry <- .baseSmry(object)
 #'   smry$allele.freqs <- alleleFreqs(object, by.strata = TRUE)
 #'   smry$sample.smry <- summarizeSamples(object)

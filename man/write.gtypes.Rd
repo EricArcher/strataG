@@ -4,8 +4,8 @@
 \alias{write.gtypes}
 \title{Write \code{gtypes}}
 \usage{
-write.gtypes(g, label = NULL, folder = NULL, as.frequency = FALSE,
-  by.strata = TRUE, freq.type = c("freq", "prop"), ...)
+write.gtypes(g, label = NULL, folder = NULL, by.strata = TRUE,
+  as.frequency = FALSE, freq.type = c("freq", "prop"), ...)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
@@ -16,10 +16,10 @@ if present.}
 \item{folder}{folder where file(s) should be written to. If \code{NULL}, 
 files are written to current working directory.}
 
+\item{by.strata}{if \code{as.frequency == TRUE}, calculate frequencies by strata?}
+
 \item{as.frequency}{logical indicating if haploid data should be output 
 as frequency tables.}
-
-\item{by.strata}{if \code{as.frequency == TRUE}, calculate frequencies by strata?}
 
 \item{freq.type}{if \code{as.frequency == TRUE}, write absolute frequencies 
 (\code{"freq"}) or proportions (\code{"prop"}).}

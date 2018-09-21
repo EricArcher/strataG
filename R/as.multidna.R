@@ -45,7 +45,7 @@ as.multidna <- function(x) {
   
   # list of DNAbin
   if(is.list(x) & all(sapply(x, function(elem) inherits(elem, "DNAbin")))) {
-    x <- lapply(x, as.matrix)
+    x <- sapply(x, as.matrix, simplify = FALSE)
     if(is.null(names(x))) names(x) <- paste("gene", 1:length(x), sep = "")
     return(new("multidna", x))
   }

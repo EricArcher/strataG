@@ -4,7 +4,7 @@
 \alias{dupGenotypes}
 \title{Duplicate Genotypes}
 \usage{
-dupGenotypes(g, num.shared = 0.8, num.cores = 1)
+dupGenotypes(g, num.shared = 0.8, num.cores = NULL)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}

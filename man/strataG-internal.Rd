@@ -45,6 +45,10 @@ used is set to the value of \code{detectCores() - 1}.}
 
 \item{fun}{a function that takes one locus column at a time.}
 
+\item{by.strata}{group results by strata?}
+
+\item{min.val}{minimum value to start allele numbering with}
+
 \item{x}{a vector}
 
 \item{sep}{a character for separating}
@@ -76,6 +80,10 @@ Functions intended to be used only by functions within
   \item{.parseLocusNames}{}
   \item{.setupClusters}{}
   \item{.strataPairs}{}
+  \item{.removeIdsMissingAllLoci}{}
+  \item{.applyPerLocus}{}
+  \item{.numericLoci}{}
+  \item{.combineLoci}{}
 }
 }
 \author{

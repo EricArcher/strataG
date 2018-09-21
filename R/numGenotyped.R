@@ -22,7 +22,7 @@ numGenotyped <- function(g, by.strata = FALSE) {
       dplyr::left_join(
         g@data %>% 
           dplyr::group_by(stratum, locus) %>% 
-          dplyr::summarize(num.ind = n_distinct(id)),
+          dplyr::summarize(num.ind = dplyr::n_distinct(id)),
         by = c("stratum", "locus")
       ) 
   } else {
@@ -30,7 +30,7 @@ numGenotyped <- function(g, by.strata = FALSE) {
       dplyr::left_join(
         g@data %>% 
           dplyr::group_by(locus) %>% 
-          dplyr::summarize(num.ind = n_distinct(id)),
+          dplyr::summarize(num.ind = dplyr::n_distinct(id)),
         by = c("locus")
       )
   }

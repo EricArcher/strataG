@@ -1,14 +1,14 @@
-#' @title Observed and Expected Heterozygosity 
-#' @description Calculate observed heterozygosity for diploid data.
+#' @title Heterozygosity 
+#' @description Calculate observed and heterozygosity.
 #' 
 #' @param g a \linkS4class{gtypes} object.
 #' @param by.strata logical - return results by strata?
 #' @param type return \code{expected} or \code{observed} heterozygosity
 #' 
-#' @note For a measure of haplotypic diversity (haploid "heterozygosity"), 
-#'   use \code{exptdHet}. If \code{g} is a haploid object with sequences, make sure to run 
-#'   \code{\link{labelHaplotypes}} if sequences aren't already grouped by 
-#'   haplotype.
+#' @note If \code{g} is a haploid object with sequences, the value for 
+#'   expected heterozygosity (= haplotpyic diversity) will be returned. However,
+#'   make sure to run \code{\link{labelHaplotypes}} first if 
+#'   sequences aren't already grouped by haplotype.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
@@ -16,12 +16,15 @@
 #' data(msats.g)
 #' 
 #' # Expected heterozygosity
-#' exptdHet(msats.g)
+#' heterozygosity(msats.g, type = "expected")
 #' 
-#' # Observed heterozygosity
-#' obsvdHet(msats.g)
+#' # Observed heterozygosity by strata
+#' heterozygosity(msats.g, FALSE, "observed")
+#' 
+#' @export
 #' 
 heterozygosity <- function(g, by.strata = FALSE, type = c("expected", "observed")) {
+  if(ploidy(g) == 1) type <- "expected"
   switch(
     match.arg(type),
     expected = .applyPerLocus(swfscMisc::diversity, g, by.strata = by.strata) %>% 

@@ -43,15 +43,19 @@ sequence2gtypes <- function(x, strata = NULL, seq.names = NULL, schemes = NULL,
   
   # create gen.data data.frame
   ind.names <- unique(unlist(getSequenceNames(x)))
-  gen.data <- do.call(data.frame, lapply(getSequences(x, simplify = FALSE), function(dna) {
-    x.labels <- labels(dna)
-    factor(x.labels[match(ind.names, x.labels)])
-  }))
+  gen.data <- do.call(
+    data.frame, 
+    lapply(getSequences(x, simplify = FALSE), function(dna) {
+      x.labels <- labels(dna)
+      x.labels[match(ind.names, x.labels)]
+    })
+  )
   colnames(gen.data) <- getLocusNames(x)
   rownames(gen.data) <- ind.names
   
   # return new gtypes object
   new("gtypes", gen.data = gen.data, ploidy = 1, strata = strata,
-      schemes = schemes, sequences = x, description = description, other = other
+      schemes = schemes, sequences = x, description = description, 
+      other = other
   )
 }

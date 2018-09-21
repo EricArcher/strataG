@@ -88,7 +88,7 @@ setClass(
     # check sequences
     if(!is.null(object@sequences)) {
       # check that length of sequences equals number of loci
-      dna <- getSequences(sequences(object), simplify = FALSE)
+      dna <- sequences(object)
       num.seqs <- length(dna)
       if(num.seqs > 0 & num.seqs != length(unique(object@data[["locus"]]))) {
         cat("the number of sets of sequences is not equal to the number of loci\n")
@@ -105,7 +105,9 @@ setClass(
 
       # check that sequence haplotype labels can be found
       locus.good <- sapply(loc.names, function(x) {
-        haps <- dplyr::filter(object@data, locus == x)
+        haps <- object@data %>% 
+          dplyr::filter(locus == x) %>% 
+          dplyr::pull(allele)
         seqs <- rownames(as.matrix(dna[[x]]))
         all(na.omit(haps) %in% seqs)
       })

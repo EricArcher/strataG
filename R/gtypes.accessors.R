@@ -8,6 +8,8 @@
 #' @param as.haplotypes return sequences as haplotypes? If \code{TRUE}, contents of 
 #'   \code{@@sequences} slot are returned. If \code{FALSE}, one sequence per 
 #'   individual is returned.
+#' @param as.multidna return sequences as a \linkS4class{multidna} object? If 
+#'   \code{FALSE}, sequences are returned as a list.
 #' @param i,j,k subsetting slots for individuals (\code{i}), loci (\code{j}),
 #'   or strata (\code{k}). See Details for more information.
 #' @param quiet suppress warnings about unmatched requested individuals, loci, 
@@ -210,10 +212,10 @@ setMethod("getStrataNames", "gtypes", function(x, ...) {
 })
           
 
-#' @rdname gtypes.accessors
-#' @export
-#' 
-setGeneric("ploidy", function(x, ...) standardGeneric("ploidy"))
+#' #' @rdname gtypes.accessors
+#' #' @export
+#' #' 
+#' setGeneric("ploidy", function(x, ...) standardGeneric("ploidy"))
 
 #' @rdname gtypes.accessors
 #' @aliases ploidy
@@ -222,10 +224,10 @@ setGeneric("ploidy", function(x, ...) standardGeneric("ploidy"))
 setMethod("ploidy", "gtypes", function(x, ...) x@ploidy)
 
 
-#' @rdname gtypes.accessors
-#' @export
-#' 
-setGeneric("other", function(x, ...) standardGeneric("other"))
+#' #' @rdname gtypes.accessors
+#' #' @export
+#' #' 
+#' setGeneric("other", function(x, ...) standardGeneric("other"))
 
 #' @rdname gtypes.accessors
 #' @aliases other
@@ -234,10 +236,10 @@ setGeneric("other", function(x, ...) standardGeneric("other"))
 setMethod("other", "gtypes", function(x, ...) x@other)
 
 
-#' @rdname gtypes.accessors
-#' @export
-#' 
-setGeneric("strata", function(x, ...) standardGeneric("strata"))
+#' #' @rdname gtypes.accessors
+#' #' @export
+#' #' 
+#' setGeneric("strata", function(x, ...) standardGeneric("strata"))
 
 #' @rdname gtypes.accessors
 #' @aliases strata
@@ -276,16 +278,17 @@ setMethod("strata<-", "gtypes", function(x, value) {
     )
   }
   
-  value <- tibble::tibble(
-    id = names(value),
-    new = as.character(value)
-  )
-
   x@data <- x@data %>% 
-    dplyr::left_join(value, by = "id") %>% 
+    dplyr::left_join(
+      tibble::tibble(
+        id = names(value),
+        new = as.character(value)
+      ), 
+      by = "id") %>% 
     dplyr::select(id, new, locus, allele) %>% 
     dplyr::rename(stratum = new) %>% 
     data.table::as.data.table()
+  
   validObject(x)
   x
 })
@@ -328,21 +331,22 @@ setGeneric("sequences", function(x, ...) standardGeneric("sequences"))
 #' @aliases sequences
 #' @export
 #' 
-setMethod("sequences", "gtypes", function(x, seqName = NULL, as.haplotypes = TRUE, ...) {
+setMethod(
+  "sequences", "gtypes", 
+  function(x, as.haplotypes = TRUE, seqName = NULL, as.multidna = FALSE, ...) {
   if(is.null(x@sequences)) return(NULL)
-  dna <- getSequences(x@sequences, simplify = FALSE)
+  dna <- apex::getSequences(x@sequences, simplify = FALSE)
   if(!as.haplotypes) {
-    dna <- lapply(locNames(x), function(l) {
-      haps <- as.array(x, loci = l)
-      ind.seqs <- dna[[l]][haps]
-      names(ind.seqs) <- indNames(x)
-      ind.seqs
-    })
+    dna <- x@data %>% 
+      split(.$locus) %>% 
+      purrr::map(function(l) {
+        locus <- unique(l$locus)
+        l <- dplyr::filter(l, !duplicated(id))
+        setNames(dna[[locus]][l$allele], l$id)
+      })
   }
   if(!is.null(seqName)) dna <- dna[seqName]
-  dna <- as.multidna(dna)
-  setLocusNames(dna) <- locNames(x)
-  dna
+  if(as.multidna) as.multidna(dna) else dna
 })
 
 
@@ -377,9 +381,10 @@ setMethod("description<-", "gtypes", function(x, value) {
 #' @aliases index subset
 #' @export
 #' 
-setMethod("[", 
-          signature(x = "gtypes", i = "ANY", j = "ANY", drop = "ANY"), 
-          function(x, i, j, k, ..., quiet = TRUE, drop = FALSE) {
+setMethod(
+  "[", 
+  signature(x = "gtypes", i = "ANY", j = "ANY", drop = "ANY"), 
+  function(x, i, j, k, ..., quiet = TRUE, drop = FALSE) {
   
   # check ids (i)
   if(missing(i)) i <- TRUE

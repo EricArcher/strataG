@@ -7,6 +7,10 @@
 #'   \item{.parseLocusNames}{}
 #'   \item{.setupClusters}{}
 #'   \item{.strataPairs}{}
+#'   \item{.removeIdsMissingAllLoci}{}
+#'   \item{.applyPerLocus}{}
+#'   \item{.numericLoci}{}
+#'   \item{.combineLoci}{}
 #' }
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
@@ -146,6 +150,7 @@ NULL
 #' @rdname strataG-internal
 #' @param fun a function that takes one locus column at a time.
 #' @param g a \linkS4class{gtypes} object.
+#' @param by.strata group results by strata?
 #' @keywords internal
 #' 
 .applyPerLocus <- function(fun, g, by.strata = TRUE, ...) {
@@ -164,6 +169,7 @@ NULL
 
 #' @rdname strataG-internal
 #' @param g a \linkS4class{gtypes} object.
+#' @param min.val minimum value to start allele numbering with
 #' @keywords internal
 #' 
 .numericLoci <- function(g, min.val = 0) {

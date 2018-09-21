@@ -17,12 +17,11 @@
 #' 
 #' numAlleles(msats.g)
 #'
-#' @importFrom stats na.omit
 #' @export
 #' 
 numAlleles <- function(g, by.strata = FALSE) {
-  .countAlleles <- function(x) n_distinct(x, na.rm = TRUE)
+  .countAlleles <- function(x) dplyr::n_distinct(x, na.rm = TRUE)
   .applyPerLocus(.countAlleles, g, by.strata = by.strata) %>%
-    rename(num.alleles = value) %>% 
+    dplyr::rename(num.alleles = value) %>% 
     as.data.frame()
 }

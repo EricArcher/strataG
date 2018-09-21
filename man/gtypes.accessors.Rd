@@ -5,27 +5,25 @@
 \alias{gtypes.accessors}
 \alias{accessors}
 \alias{getNumInd,gtypes-method}
-\alias{nInd}
+\alias{getNumInd}
 \alias{getNumLoci,gtypes-method}
-\alias{nLoc}
+\alias{getNumLoci}
 \alias{getNumStrata}
 \alias{getNumStrata,gtypes-method}
-\alias{nStrata}
 \alias{getIndNames}
 \alias{getIndNames,gtypes-method}
-\alias{indNames}
 \alias{getLocusNames,gtypes-method}
-\alias{locNames}
+\alias{getLocusNames}
+\alias{getAlleleNames}
+\alias{getAlleleNames,gtypes-method}
+\alias{getAlleleNames}
 \alias{getStrataNames}
 \alias{getStrataNames,gtypes-method}
-\alias{strataNames}
-\alias{ploidy}
+\alias{getStrataNames}
 \alias{ploidy,gtypes-method}
 \alias{ploidy}
-\alias{other}
 \alias{other,gtypes-method}
 \alias{other}
-\alias{strata}
 \alias{strata,gtypes-method}
 \alias{strata}
 \alias{strata<-}
@@ -37,9 +35,6 @@
 \alias{schemes<-}
 \alias{schemes<-,gtypes-method}
 \alias{schemes}
-\alias{getAlleleNames}
-\alias{getAlleleNames,gtypes-method}
-\alias{alleleNames}
 \alias{sequences}
 \alias{sequences,gtypes-method}
 \alias{sequences}
@@ -64,23 +59,21 @@ getNumStrata(x, ...)
 
 getIndNames(x, ...)
 
-\S4method{getIndNames}{gtypes}(x, ...)
+\S4method{getIndNames}{gtypes}(x, by.strata = FALSE, ...)
 
 \S4method{getLocusNames}{gtypes}(x, ...)
+
+getAlleleNames(x, ...)
+
+\S4method{getAlleleNames}{gtypes}(x, ...)
 
 getStrataNames(x, ...)
 
 \S4method{getStrataNames}{gtypes}(x, ...)
 
-ploidy(x, ...)
-
 \S4method{ploidy}{gtypes}(x, ...)
 
-other(x, ...)
-
 \S4method{other}{gtypes}(x, ...)
-
-strata(x, ...)
 
 \S4method{strata}{gtypes}(x)
 
@@ -96,13 +89,10 @@ schemes(x) <- value
 
 \S4method{schemes}{gtypes}(x) <- value
 
-getAlleleNames(x, ...)
-
-\S4method{getAlleleNames}{gtypes}(x)
-
 sequences(x, ...)
 
-\S4method{sequences}{gtypes}(x, seqName = NULL, as.haplotypes = TRUE, ...)
+\S4method{sequences}{gtypes}(x, as.haplotypes = TRUE, seqName = NULL,
+  as.multidna = FALSE, ...)
 
 description(x, ...)
 
@@ -124,12 +114,15 @@ description(x) <- value
 
 \item{value}{value being assigned by accessor.}
 
-\item{seqName}{the name (or number) of a set of sequences from the 
-\code{@sequences} slot to return.}
-
 \item{as.haplotypes}{return sequences as haplotypes? If \code{TRUE}, contents of 
 \code{@sequences} slot are returned. If \code{FALSE}, one sequence per 
 individual is returned.}
+
+\item{seqName}{the name (or number) of a set of sequences from the 
+\code{@sequences} slot to return.}
+
+\item{as.multidna}{return sequences as a \linkS4class{multidna} object? If 
+\code{FALSE}, sequences are returned as a list.}
 
 \item{i, j, k}{subsetting slots for individuals (\code{i}), loci (\code{j}),
 or strata (\code{k}). See Details for more information.}
@@ -160,6 +153,21 @@ or strata?}
 }
 \description{
 Accessors for slots in \linkS4class{gtypes} objects.
+
+#' @rdname gtypes.accessors
+#' @export
+#' 
+setGeneric("ploidy", function(x, ...) standardGeneric("ploidy"))
+
+#' @rdname gtypes.accessors
+#' @export
+#' 
+setGeneric("other", function(x, ...) standardGeneric("other"))
+
+#' @rdname gtypes.accessors
+#' @export
+#' 
+setGeneric("strata", function(x, ...) standardGeneric("strata"))
 }
 \details{
 Indexing a \code{gtypes} object with integers, characters, or logicals with 

@@ -21,7 +21,14 @@ summarizeSeqs <- function(x) {
   if(!inherits(x, "DNAbin")) stop("'x' must be a DNAbin object")
   
   x <- sapply(
-    x, function(dna) unlist(as.character(as.list(dna))), simplify = FALSE
+    x, 
+    function(dna) {
+      dna %>% 
+        as.list() %>% 
+        as.character() %>% 
+        unlist()
+    },
+    simplify = FALSE
   )
 
   t(sapply(x, function(this.seq) {

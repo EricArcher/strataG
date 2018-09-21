@@ -28,20 +28,25 @@
 #' @export
 #' 
 summarizeLoci <- function(g, by.strata = FALSE, ...) {
-  smry.func <- function(x) {
-    n.gtyped <- numGenotyped(x)
-    cbind(
-      num.genotyped = n.gtyped,
-      prop.genotyped = n.gtyped / nInd(x),
-      num.alleles = numAlleles(x),
-      allelic.richness = allelicRichness(x),
-      prop.unique.alleles = propUniqueAlleles(x),
-      exptd.heterozygosity = exptdHet(x),
-      obsvd.heterozygosity = obsvdHet(x)
-    )
+  by.cols <- if(by.strata) c("stratum", "locus") else "locus"
+  smry <- numGenotyped(g, by.strata) %>% 
+    dplyr::left_join(numMissing(g, by.strata), by = by.cols) %>% 
+    mutate(prop.genotyped = num.genotyped / (num.genotyped + num.missing)) %>% 
+    dplyr::left_join(numAlleles(g, by.strata), by = by.cols) %>% 
+    dplyr::left_join(allelicRichness(g, by.strata), by = by.cols) %>% 
+    dplyr::left_join(propUniqueAlleles(g, by.strata), by = by.cols) %>% 
+    dplyr::left_join(heterozygosity(g, by.strata, "expected"), by = by.cols) %>% 
+    dplyr::left_join(heterozygosity(g, by.strata, "observed"), by = by.cols) 
+
+  if(ploidy(g) == 1) {
+    smry <- smry %>% 
+      rename(
+        num.haplotypes = num.alleles,
+        prop.unique.haplotypes = prop.unique.alleles,
+        haplotypic.diversity = exptd.het.x
+      ) %>% 
+      select(-exptd.het.y)
   }
   
-  if(by.strata) {
-    lapply(strataSplit(g), smry.func)
-  } else smry.func(g)
+  smry
 }

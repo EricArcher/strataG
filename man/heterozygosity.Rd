@@ -2,7 +2,7 @@
 % Please edit documentation in R/heterozygosity.R
 \name{heterozygosity}
 \alias{heterozygosity}
-\title{Observed and Expected Heterozygosity}
+\title{Heterozygosity}
 \usage{
 heterozygosity(g, by.strata = FALSE, type = c("expected", "observed"))
 }
@@ -14,22 +14,22 @@ heterozygosity(g, by.strata = FALSE, type = c("expected", "observed"))
 \item{type}{return \code{expected} or \code{observed} heterozygosity}
 }
 \description{
-Calculate observed heterozygosity for diploid data.
+Calculate observed and heterozygosity.
 }
 \note{
-For a measure of haplotypic diversity (haploid "heterozygosity"), 
-  use \code{exptdHet}. If \code{g} is a haploid object with sequences, make sure to run 
-  \code{\link{labelHaplotypes}} if sequences aren't already grouped by 
-  haplotype.
+If \code{g} is a haploid object with sequences, the value for 
+  expected heterozygosity (= haplotpyic diversity) will be returned. However,
+  make sure to run \code{\link{labelHaplotypes}} first if 
+  sequences aren't already grouped by haplotype.
 }
 \examples{
 data(msats.g)
 
 # Expected heterozygosity
-exptdHet(msats.g)
+heterozygosity(msats.g, type = "expected")
 
-# Observed heterozygosity
-obsvdHet(msats.g)
+# Observed heterozygosity by strata
+heterozygosity(msats.g, FALSE, "observed")
 
 }
 \author{

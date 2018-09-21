@@ -51,6 +51,7 @@ setMethod(
       tidyr::spread(locus, genotype) %>% 
       dplyr::ungroup()
     
+    if(ploidy(x) == 1) one.col = TRUE
     # if loci are to be split into separate columns, use alleleSplit
     if(!one.col) {
       df <- cbind(
@@ -62,6 +63,8 @@ setMethod(
         stringsAsFactors = FALSE
       )
     }
+    
+    df <- dplyr::select(df, id, stratum, dplyr::everything())
     
     # remove ids or strata if requested
     if(!ids) df <- dplyr::select(df, -id)

@@ -1,5 +1,5 @@
 #' @title Remove Sequences
-#' @description Remove sequences not used by samples listed in \code{@@data} slot.
+#' @description Remove sequences not used by samples.
 #'   
 #' @param g a \linkS4class{gtypes} object.
 #' 
@@ -13,12 +13,14 @@
 #' 
 removeSequences <- function(g) {
   if(is.null(sequences(g))) return(g)
-  new.seqs <- lapply(getLocusNames(g), function(x) {
-    haps <- getAlleleNames(g)[[x]]
-    getSequences(sequences(g), x)[haps]
-  })
-  names(new.seqs) <- getLocusNames(g)
-  g@sequences <- as.multidna(new.seqs)
+  haps <- getAlleleNames(g)
+  g@sequences <- g %>% 
+    getLocusNames() %>% 
+    purrr::map(function(x) {
+      sequences(g)[[x]][haps[[x]]]
+    }) %>% 
+    setNames(names(haps)) %>% 
+    as.multidna()
   g
 }
   

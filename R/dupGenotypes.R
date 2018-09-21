@@ -30,35 +30,39 @@
 #' 
 #' @export
 #' 
-dupGenotypes <- function(g, num.shared = 0.8, num.cores = 1) {
+dupGenotypes <- function(g, num.shared = 0.8, num.cores = NULL) {
   #if not already, convert num.shared to %
-  if(num.shared > 1) num.shared <- num.shared / nLoc(g) 
+  if(num.shared > 1) num.shared <- num.shared / getNumLoci(g) 
     
-  shared.locs <- propSharedLoci(g, type = "ids", num.cores = num.cores)
-  dup.df <- shared.locs[shared.locs[, "prop.same"] >= num.shared, ]
-  if(nrow(dup.df) > 0) {
-    dup.df$strata.1 <- as.character(strata(g)[dup.df$ids.1])
-    dup.df$strata.2 <- as.character(strata(g)[dup.df$ids.2])
-    dup.df$mismatch.loci <- sapply(1:nrow(dup.df), function(i) {
-      shared.prop <- as.matrix(dup.df[i, locNames(g)])
-      loc.diff <- locNames(g)[which(shared.prop < 1)]
-      paste(loc.diff, collapse = ", ")
-    })
-    colnames(dup.df)[c(3:5)] <- c(
-      "num.loci.shared", "num.loci.genotyped", "prop.loci.shared"
-    )
-    dup.df <- dup.df[, c("ids.1", "ids.2", "strata.1", "strata.2", 
-                         "num.loci.genotyped", "num.loci.shared", 
-                         "prop.loci.shared", "mismatch.loci")]
-  } 
+  dup.df <- propSharedLoci(g, type = "ids", num.cores = num.cores) %>% 
+    dplyr::filter(prop.loci.shared >= num.shared)
   
-  if(nrow(dup.df) > 0) {
-    sort.order <- order(dup.df$prop.loci.shared, dup.df$num.loci.shared, 
-                        rev(dup.df$ids.1), rev(dup.df$ids.2), decreasing = TRUE
-    )
-    dup.df <- dup.df[sort.order, ]
-    rownames(dup.df) <- NULL
-  } else dup.df <- NULL
+  dup.df <- if(nrow(dup.df) > 0) {
+    st <- strata(g)
+    locs <- getLocusNames(g)
+    dup.df %>% 
+      tidyr::gather(locus, prop.shared, -(ids.1:prop.loci.shared)) %>% 
+      dplyr::filter(prop.shared < 1) %>% 
+      dplyr::group_by(ids.1, ids.2) %>% 
+      dplyr::summarize(mismatch.loci = paste(locus, collapse = ", ")) %>% 
+      dplyr::ungroup() %>% 
+      dplyr::right_join(
+        dplyr::select(dup.df, ids.1:prop.loci.shared),
+        by = c("ids.1", "ids.2")
+      ) %>% 
+      dplyr::mutate(
+        strata.1 = as.character(st[ids.1]),
+        strata.2 = as.character(st[ids.2])
+      ) %>% 
+      dplyr::arrange(
+        dplyr::desc(prop.loci.shared),
+        dplyr::desc(num.loci.shared),
+        dplyr::desc(ids.1),
+        dplyr::desc(ids.2)
+      ) %>% 
+      dplyr::select(ids.1, ids.2, strata.1, strata.2, dplyr::everything()) %>% 
+      as.data.frame()
+  } else NULL
   
   if(is.null(dup.df)) cat("No duplicates found. NULL returned.\n")
   dup.df

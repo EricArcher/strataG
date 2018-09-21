@@ -1,13 +1,12 @@
-#' @title Sample Summaries
-#' @description Compile standard by-sample summaries.
+#' @title Individual Summaries
+#' @description Compile standard by-individual summaries.
 #' 
 #' @param g a \linkS4class{gtypes} object.
-#' @param sort.by.strata logical. Sort data.frame by strata?
 #' 
 #' @return A data.frame with rows for each sample and columns containing:
 #' \describe{
-#'   \item{\code{id}}{The sample id}
-#'   \item{\code{strata}}{The stratum of the sample}
+#'   \item{\code{id}}{The individual id}
+#'   \item{\code{stratum}}{The stratum of the individual}
 #'   \item{\code{num.loci.missing.genotypes}}{The number of genotypes missing}
 #'   \item{\code{pct.loci.missing.genotypes}}{The proportion of genotypes missing}
 #'   \item{\code{pct.loci.homozygous}}{The proportion of loci homozygous}
@@ -22,31 +21,23 @@
 #' 
 #' @export
 #' 
-summarizeSamples <- function(g, sort.by.strata = FALSE) {
-  result <- do.call(rbind, lapply(indNames(g), function(id) {
-    smry <- sapply(locNames(g), function(loc) {
-      gt <- as.array(g, id, loc)
-      missing <- any(is.na(gt))
-      hmzgs <- if(missing) NA else length(unique(unlist(gt))) == 1
-      c(missing = missing, hmzgs = hmzgs)
-    })
-    
-    missing <- sum(smry["missing", ], na.rm = TRUE)
-    result <- data.frame(
-      id = id, 
-      strata = strata(g)[id],
-      num.loci.missing.genotypes = missing,
-      pct.loci.missing.genotypes = missing / nLoc(g)
-    )
-    result$pct.loci.homozygous <- if(ploidy(g) > 1) {
-      mean(smry["hmzgs", ], na.rm = TRUE)
-    } else NULL
-    result
-  }))
-  rownames(result) <- indNames(g)
-  result$id <- as.character(result$id)
-  
-  if(sort.by.strata) result <- result[order(result$strata, result$id), ]
-  result
+summarizeInd <- function(g) {
+  g@data %>%
+    dplyr::group_by(id, locus) %>% 
+    dplyr::summarize(is.hmzgs = ifelse(
+      any(is.na(allele)),
+      NA,
+      length(unique(allele)) == 1
+    )) %>% 
+    dplyr::group_by(id) %>% 
+    dplyr::summarize(
+      num.loci.genotyped = sum(!is.na(is.hmzgs)),
+      num.loci.missing.genotypes = sum(is.na(is.hmzgs)),
+      pct.loci.missing.genotypes = mean(is.na(is.hmzgs)),
+      pct.loci.homozygous = sum(is.hmzgs, na.rm = TRUE) / dplyr::n()
+    ) %>% 
+    dplyr::mutate(stratum = strata(g)[id]) %>% 
+    dplyr::select(id, stratum, dplyr::everything()) %>% 
+    dplyr::arrange(stratum, id) %>% 
+    as.data.frame()
 }
-  
