@@ -43,9 +43,9 @@ write.gtypes <- function(g, label = NULL, folder = NULL, by.strata = TRUE,
         as.data.frame.matrix(x) %>% 
           as.data.frame() %>% 
           tibble::rownames_to_column("id") %>% 
-          dplyr::select(id, dplyr::everything())
+          dplyr::select(.data$id, dplyr::everything())
       }, simplify = FALSE) %>% 
-      stats::setNames(paste(label, names(.)))
+      stats::setNames(paste(label, names(.data)))
   } else {
     x <- list(as.matrix(g, ...))
     names(x) <- label
@@ -61,7 +61,7 @@ write.gtypes <- function(g, label = NULL, folder = NULL, by.strata = TRUE,
   }
   
   if(!is.null(sequences(g))) {
-    for(x in getLocusNames(g)) {
+    for(x in getLociNames(g)) {
       fname <- paste(label, x, "fasta", sep = ".")
       if(!is.null(folder)) fname <- file.path(folder, fname)
       ape::write.dna(

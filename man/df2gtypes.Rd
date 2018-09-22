@@ -67,8 +67,8 @@ dl.g
 
 }
 \seealso{
-\link{initialize.gtypes}, \link{sequence2gtypes}, 
-  \link{as.data.frame.gtypes}, \link{gtypes2genind}, \link{gtypes2loci}
+\link{gtypes.initialize}, \link{sequence2gtypes}, 
+  \link{as.data.frame.gtypes}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

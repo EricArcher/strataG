@@ -167,9 +167,19 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
     test.names <- paste("test.seq.", 1:nrow(test.seqs), sep = "")
     rownames(test.seqs) <- test.names
     # get distances between test sequences and sequences without n's
-    new.mat <- as.DNAbin(rbind(hap.seqs, test.seqs))
-    hap.dist <- ape::dist.dna(new.mat, model = "N", pairwise.deletion = TRUE, as.matrix = TRUE)
-    if(use.indels) hap.dist <- hap.dist + ape::dist.dna(new.mat, model = "indelblock", as.matrix = TRUE)
+    new.mat <- ape::as.DNAbin(rbind(hap.seqs, test.seqs))
+    hap.dist <- ape::dist.dna(
+      new.mat, 
+      model = "N", 
+      pairwise.deletion = TRUE, 
+      as.matrix = TRUE
+    )
+    if(use.indels) hap.dist <- hap.dist + 
+      ape::dist.dna(
+        new.mat, 
+        model = "indelblock", 
+        as.matrix = TRUE
+      )
     hap.dist[test.names, !colnames(hap.dist) %in% test.names, drop = FALSE]
   }, simplify = FALSE, USE.NAMES = TRUE)
   
@@ -203,19 +213,23 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
     df
   } else NULL
   
-  list(haps = hap.vec, hap.seqs = as.DNAbin(hap.seqs), unassigned = unassigned.df)
+  list(
+    haps = hap.vec, 
+    hap.seqs = ape::as.DNAbin(hap.seqs), 
+    unassigned = unassigned.df
+  )
 }
 
 #' @rdname labelHaplotypes
 #' @export
 #'
-labelHaplotypes.list <- function(x, ...) labelHaplotypes(as.DNAbin(x),...)
+labelHaplotypes.list <- function(x, ...) labelHaplotypes(ape::as.DNAbin(x),...)
 
 
 #' @rdname labelHaplotypes
 #' @export
 #'
-labelHaplotypes.character <- function(x, ...) labelHaplotypes(as.DNAbin(x), ...)
+labelHaplotypes.character <- function(x, ...) labelHaplotypes(ape::as.DNAbin(x), ...)
 
 
 #' @rdname labelHaplotypes

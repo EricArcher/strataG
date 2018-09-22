@@ -35,7 +35,9 @@ Identify duplicate or very similar genotypes.
 data(msats.g)
 
 # identify potential duplicates in Coastal strata
-dupes <- dupGenotypes(msats.g[, , "Coastal"])
+coastal <- msats.g[, , "Coastal"]
+coastal.5 <- coastal[getIndNames(coastal)[1:5], , ]
+dupes <- dupGenotypes(coastal.5, num.cores = 1)
 dupes
 
 }

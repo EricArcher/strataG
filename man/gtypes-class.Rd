@@ -58,8 +58,7 @@ dloop.g
 }
 \seealso{
 \code{\link{df2gtypes}}, \code{\link{sequence2gtypes}},
-  \code{\link{genind2gtypes}}, \code{\link{gtypes.accessors}},
-  \code{\link{initialize.gtypes}}
+  \code{\link{gtypes.accessors}}, \code{\link{gtypes.initialize}}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

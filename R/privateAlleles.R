@@ -18,6 +18,7 @@
 #' @export
 #' 
 privateAlleles <- function(g) {
+  . <- NULL # To pass CRAN check
   if(ploidy(g) == 1 & !is.null(sequences(g))) g <- labelHaplotypes(g)$gtypes
   
   alleleFreqs(g, TRUE) %>% 

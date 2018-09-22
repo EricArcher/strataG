@@ -17,7 +17,7 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \link{df2gtypes} \link[strataG]{as.matrix} \link[strataG]{as.array}
+#' @seealso \link{df2gtypes} \link[strataG]{as.matrix}
 #' 
 #' @examples 
 #' data(msats.g)
@@ -46,9 +46,9 @@ setMethod(
     
     # create data.frame of one column per locus
     df <- x@data %>% 
-      dplyr::group_by(stratum, id, locus) %>% 
-      dplyr::summarize(genotype = .combineLoci(allele, sep, sort.alleles)) %>% 
-      tidyr::spread(locus, genotype) %>% 
+      dplyr::group_by(.data$stratum, .data$id, .data$locus) %>% 
+      dplyr::summarize(genotype = .combineLoci(.data$allele, sep, sort.alleles)) %>% 
+      tidyr::spread(.data$locus, .data$genotype) %>% 
       dplyr::ungroup()
     
     if(ploidy(x) == 1) one.col = TRUE
@@ -57,20 +57,20 @@ setMethod(
       df <- cbind(
         df[, c("id", "stratum")],
         df %>% 
-          dplyr::select(-id, -stratum) %>% 
+          dplyr::select(-.data$id, -.data$stratum) %>% 
           as.data.frame() %>% 
           alleleSplit(sep = sep),
         stringsAsFactors = FALSE
       )
     }
     
-    df <- dplyr::select(df, id, stratum, dplyr::everything())
+    df <- dplyr::select(df, .data$id, .data$stratum, dplyr::everything())
     
     # remove ids or strata if requested
-    if(!ids) df <- dplyr::select(df, -id)
-    if(!strata) df <- dplyr::select(df, -stratum)
+    if(!ids) df <- dplyr::select(df, -.data$id)
+    if(!strata) df <- dplyr::select(df, -.data$stratum)
     
     df %>% 
-      dplyr::mutate_all(funs(as.character(.))) %>% 
+      dplyr::mutate_all(dplyr::funs("as.character")) %>% 
       as.data.frame()
 })

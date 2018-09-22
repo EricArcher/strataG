@@ -39,17 +39,19 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
-#' @seealso \link{df2gtypes}, \link{sequence2gtypes},
-#'   \link{gtypes2genind}, \link{gtypes2loci}
+#' @seealso \link{df2gtypes}, \link{sequence2gtypes}
+#  \link{gtypes2genind}, \link{gtypes2loci}
 #'
-#' @aliases initialize.gtypes new
+#' @aliases gtypes.initialize new
 #' @importFrom methods setMethod
 #' 
-setMethod("initialize", "gtypes",
-          function(.Object, gen.data, ploidy, ind.names = NULL,
-                   sequences = NULL, strata = NULL, schemes = NULL,
-                   description = NULL, other = NULL,
-                   remove.sequences = FALSE) {
+setMethod(
+  "initialize", 
+  "gtypes",
+  function(.Object, gen.data, ploidy, ind.names = NULL,
+           sequences = NULL, strata = NULL, schemes = NULL,
+           description = NULL, other = NULL,
+           remove.sequences = FALSE) {
   
   if(is.null(gen.data) | is.null(ploidy)) return(.Object)
             
@@ -132,7 +134,7 @@ setMethod("initialize", "gtypes",
       }
     }
     rownames(schemes) <- NULL
-    schemes <- dplyr::select(schemes, id, dplyr::everything())
+    schemes <- dplyr::select(schemes, .data$id, dplyr::everything())
 
     # check that ids in schemes can be found
     if(length(intersect(schemes$id, rownames(gen.data))) == 0) {
@@ -161,8 +163,8 @@ setMethod("initialize", "gtypes",
     colnames(gen.data) <- .expandLocusNames(generic.locus.names, ploidy)
   } 
   locus.names.lookup <- dplyr::tibble(
-    old = colnames(gen.data),
-    new = rep(.parseLocusNames(colnames(gen.data), ploidy), each = ploidy)
+    locus = colnames(gen.data),
+    .new = rep(.parseLocusNames(colnames(gen.data), ploidy), each = ploidy)
   )
   
   # check sequences
@@ -195,13 +197,13 @@ setMethod("initialize", "gtypes",
     gen.data
   ) %>% 
     as.data.frame(stringsAsFactors = FALSE) %>% 
-    tidyr::gather(locus, allele, -id, -stratum) %>% 
-    dplyr::left_join(locus.names.lookup, by = c("locus" = "old")) %>% 
-    dplyr::select(id, stratum, new, allele) %>% 
-    dplyr::rename(locus = new) %>% 
+    tidyr::gather("locus", "allele", -.data$id, -.data$stratum) %>% 
+    dplyr::left_join(locus.names.lookup, by = "locus") %>% 
+    dplyr::select(.data$id, .data$stratum, .data$.new, .data$allele) %>% 
+    dplyr::rename(locus = .data$.new) %>% 
     dplyr::mutate(
-      locus = as.character(locus),
-      allele = as.character(allele)
+      locus = as.character(.data$locus),
+      allele = as.character(.data$allele)
     ) %>% 
     data.table::as.data.table()
   

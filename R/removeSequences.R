@@ -15,11 +15,11 @@ removeSequences <- function(g) {
   if(is.null(sequences(g))) return(g)
   haps <- getAlleleNames(g)
   g@sequences <- g %>% 
-    getLocusNames() %>% 
+    getLociNames() %>% 
     purrr::map(function(x) {
       sequences(g)[[x]][haps[[x]]]
     }) %>% 
-    setNames(names(haps)) %>% 
+    stats::setNames(names(haps)) %>% 
     as.multidna()
   g
 }

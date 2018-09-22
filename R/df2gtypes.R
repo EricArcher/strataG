@@ -34,8 +34,9 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \link{initialize.gtypes}, \link{sequence2gtypes}, 
-#'   \link{as.data.frame.gtypes}, \link{gtypes2genind}, \link{gtypes2loci}
+#' @seealso \link{gtypes.initialize}, \link{sequence2gtypes}, 
+#'   \link{as.data.frame.gtypes} 
+#  , \link{gtypes2genind}, \link{gtypes2loci}
 #' 
 #' @examples
 #' #--- create a diploid (microsatellite) gtypes object
@@ -51,7 +52,6 @@
 #' dl.g <- df2gtypes(seq.df, ploidy = 1, sequences = dolph.haps)
 #' dl.g
 #' 
-#' @importFrom methods new
 #' @export
 #' 
 df2gtypes <- function(x, ploidy, id.col = 1, strata.col = 2, loc.col = 3, 
@@ -89,8 +89,15 @@ df2gtypes <- function(x, ploidy, id.col = 1, strata.col = 2, loc.col = 3,
   gen.data <- x[, loc.col:ncol(x), drop = FALSE]
   
   # return new gtypes object
-  new("gtypes", gen.data = gen.data, ploidy = ploidy, ind.names = ind.names,
-      strata = strata, schemes = schemes, sequences = sequences, 
-      description = description, other = other
+  methods::new(
+    "gtypes", 
+    gen.data = gen.data, 
+    ploidy = ploidy, 
+    ind.names = ind.names,
+    strata = strata, 
+    schemes = schemes, 
+    sequences = sequences, 
+    description = description, 
+    other = other
   )
 }

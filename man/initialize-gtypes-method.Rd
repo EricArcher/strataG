@@ -3,7 +3,7 @@
 \docType{methods}
 \name{initialize,gtypes-method}
 \alias{initialize,gtypes-method}
-\alias{initialize.gtypes}
+\alias{gtypes.initialize}
 \alias{new}
 \title{\code{gtypes} Constructor}
 \usage{
@@ -61,8 +61,7 @@ genes are given as a \linkS4class{multidna} object, it is assumed that they
 are in the same order as the columns in \code{gen.data}.
 }
 \seealso{
-\link{df2gtypes}, \link{sequence2gtypes},
-  \link{gtypes2genind}, \link{gtypes2loci}
+\link{df2gtypes}, \link{sequence2gtypes}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

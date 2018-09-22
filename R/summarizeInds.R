@@ -17,27 +17,29 @@
 #' @examples
 #' data(msats.g)
 #' 
-#' summarizeSamples(msats.g)
+#' summarizeInds(msats.g)
 #' 
 #' @export
 #' 
-summarizeInd <- function(g) {
+summarizeInds <- function(g) {
   g@data %>%
-    dplyr::group_by(id, locus) %>% 
+    dplyr::group_by(.data$id, .data$locus) %>% 
     dplyr::summarize(is.hmzgs = ifelse(
-      any(is.na(allele)),
+      any(is.na(.data$allele)),
       NA,
-      length(unique(allele)) == 1
+      length(unique(.data$allele)) == 1
     )) %>% 
-    dplyr::group_by(id) %>% 
+    dplyr::ungroup() %>% 
+    dplyr::group_by(.data$id) %>% 
     dplyr::summarize(
-      num.loci.genotyped = sum(!is.na(is.hmzgs)),
-      num.loci.missing.genotypes = sum(is.na(is.hmzgs)),
-      pct.loci.missing.genotypes = mean(is.na(is.hmzgs)),
-      pct.loci.homozygous = sum(is.hmzgs, na.rm = TRUE) / dplyr::n()
+      num.loci.genotyped = sum(!is.na(.data$is.hmzgs)),
+      num.loci.missing.genotypes = sum(is.na(.data$is.hmzgs)),
+      pct.loci.missing.genotypes = mean(is.na(.data$is.hmzgs)),
+      pct.loci.homozygous = sum(.data$is.hmzgs, na.rm = TRUE) / dplyr::n()
     ) %>% 
-    dplyr::mutate(stratum = strata(g)[id]) %>% 
-    dplyr::select(id, stratum, dplyr::everything()) %>% 
-    dplyr::arrange(stratum, id) %>% 
+    dplyr::ungroup() %>% 
+    dplyr::mutate(stratum = strata(g)[.data$id]) %>% 
+    dplyr::select(.data$id, .data$stratum, dplyr::everything()) %>% 
+    dplyr::arrange(.data$stratum, .data$id) %>% 
     as.data.frame()
 }

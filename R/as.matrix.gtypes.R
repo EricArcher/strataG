@@ -16,7 +16,7 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noa.gov}
 #' 
-#' @seealso \link{df2gtypes} \link[strataG]{as.data.frame} \link[strataG]{as.array}
+#' @seealso \link{df2gtypes} \link[strataG]{as.data.frame}
 #' 
 #' @examples 
 #' data(msats.g)
@@ -35,12 +35,12 @@
 #' 
 #' @aliases as.matrix,gtypes-method as.matrix.gtypes as.matrix
 #' @importFrom methods setMethod
-#' @importFrom utils unstack
 #' 
 #' @export
 #' 
 setMethod(
-  "as.matrix", "gtypes",
+  "as.matrix", 
+  "gtypes",
   function(x, one.col = FALSE, sep = "/", ids = TRUE, 
            strata = TRUE, sort.alleles = TRUE, ...) {
 

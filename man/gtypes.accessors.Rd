@@ -12,18 +12,22 @@
 \alias{getNumStrata,gtypes-method}
 \alias{getIndNames}
 \alias{getIndNames,gtypes-method}
-\alias{getLocusNames,gtypes-method}
-\alias{getLocusNames}
+\alias{getLociNames}
+\alias{getLociNames,gtypes-method}
+\alias{getLociNames}
 \alias{getAlleleNames}
 \alias{getAlleleNames,gtypes-method}
 \alias{getAlleleNames}
 \alias{getStrataNames}
 \alias{getStrataNames,gtypes-method}
 \alias{getStrataNames}
+\alias{ploidy}
 \alias{ploidy,gtypes-method}
 \alias{ploidy}
+\alias{other}
 \alias{other,gtypes-method}
 \alias{other}
+\alias{strata}
 \alias{strata,gtypes-method}
 \alias{strata}
 \alias{strata<-}
@@ -61,7 +65,9 @@ getIndNames(x, ...)
 
 \S4method{getIndNames}{gtypes}(x, by.strata = FALSE, ...)
 
-\S4method{getLocusNames}{gtypes}(x, ...)
+getLociNames(x, ...)
+
+\S4method{getLociNames}{gtypes}(x, ...)
 
 getAlleleNames(x, ...)
 
@@ -71,9 +77,15 @@ getStrataNames(x, ...)
 
 \S4method{getStrataNames}{gtypes}(x, ...)
 
+ploidy(x, ...)
+
 \S4method{ploidy}{gtypes}(x, ...)
 
+other(x, ...)
+
 \S4method{other}{gtypes}(x, ...)
+
+strata(x, ...)
 
 \S4method{strata}{gtypes}(x)
 
@@ -153,21 +165,6 @@ or strata?}
 }
 \description{
 Accessors for slots in \linkS4class{gtypes} objects.
-
-#' @rdname gtypes.accessors
-#' @export
-#' 
-setGeneric("ploidy", function(x, ...) standardGeneric("ploidy"))
-
-#' @rdname gtypes.accessors
-#' @export
-#' 
-setGeneric("other", function(x, ...) standardGeneric("other"))
-
-#' @rdname gtypes.accessors
-#' @export
-#' 
-setGeneric("strata", function(x, ...) standardGeneric("strata"))
 }
 \details{
 Indexing a \code{gtypes} object with integers, characters, or logicals with 
@@ -184,13 +181,15 @@ Indexing a \code{gtypes} object with integers, characters, or logicals with
 data(msats.g)
 msats.g <- stratify(msats.g, "fine")
 
-nStrata(msats.g)
-strataNames(msats.g)
-nLoc(msats.g)
-locNames(msats.g)
+getNumStrata(msats.g)
+getStrataNames(msats.g)
+getNumLoci(msats.g)
+getLociNames(msats.g)
 
 # reassign all samples to two randomly chosen strata
-strata(msats.g) <- sample(c("A", "B"), nInd(msats.g), rep = TRUE)
+new.strata <- sample(c("A", "B"), getNumInd(msats.g), rep = TRUE)
+names(new.strata) <- getIndNames(msats.g)
+strata(msats.g) <- new.strata
 msats.g
 
 
@@ -200,28 +199,22 @@ data(woodmouse)
 genes <- list(gene1=woodmouse[,1:500], gene2=woodmouse[,501:965])
 x <- new("multidna", genes)
 wood.g <- sequence2gtypes(x)
-strata(wood.g) <- sample(c("A", "B"), nInd(wood.g), rep = TRUE)
+new.strata <- sample(c("A", "B"), getNumInd(wood.g), rep = TRUE)
+names(new.strata) <- getIndNames(wood.g)
+strata(wood.g) <- new.strata
 wood.g
 
 # get the multidna sequence object
-multi.seqs <- sequences(wood.g)
+multi.seqs <- sequences(wood.g, as.multidna = TRUE)
 class(multi.seqs) # "multidna"
 
 # get a list of DNAbin objects
-library(apex)
-dnabin.list <- getSequences(multi.seqs)
+dnabin.list <- sequences(wood.g)
 class(dnabin.list) # "list"
 
 # get a DNAbin object of the first locus
-dnabin.1 <- getSequences(multi.seqs, locNames(wood.g)[1])
+dnabin.1 <- sequences(wood.g)[[1]]
 class(dnabin.1) # "DNAbin"
-
-# NOTE: The default to the 'simplify' argument in 'getSequences' is TRUE, 
-#   so if there is only one locus, 'getSequences' will return a DNAbin object
-#   rather than a single element list unless 'simplify = FALSE':
-gene1 <- wood.g[, "gene1", ]
-gene1.dnabin <- getSequences(sequences(gene1))
-class(gene1.dnabin) # "DNAbin"
 
 }
 \author{

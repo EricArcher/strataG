@@ -116,7 +116,7 @@ NULL
   combn(st, 2) %>% 
     t() %>%  
     as.data.frame(stringsAsFactors = FALSE) %>% 
-    setNames(c("strata.1", "strata.2"))
+    stats::setNames(c("strata.1", "strata.2"))
 }
 
 
@@ -126,11 +126,11 @@ NULL
 #' 
 .removeIdsMissingAllLoci <- function(g) {
   to.remove <- g@data %>% 
-    dplyr::group_by(id) %>% 
-    dplyr::summarize(to.remove = all(is.na(allele))) %>% 
-    dplyr::filter(to.remove) %>% 
-    dplyr::pull(id) %>% 
-    as.character
+    dplyr::group_by(.data$id) %>% 
+    dplyr::summarize(to.remove = all(is.na(.data$allele))) %>% 
+    dplyr::filter(.data$to.remove) %>% 
+    dplyr::pull(.data$id) %>% 
+    as.character()
 
   if(length(to.remove) > 0) {
     warning(
@@ -139,8 +139,8 @@ NULL
       call. = FALSE
     )
     g@data <- g@data %>% 
-      dplyr::filter(!id %in% to.remove) %>% 
-      data.table::as.data.table
+      dplyr::filter(!.data$id %in% to.remove) %>% 
+      data.table::as.data.table()
   }
   g@data <- droplevels(g@data)
   g
@@ -156,14 +156,14 @@ NULL
 .applyPerLocus <- function(fun, g, by.strata = TRUE, ...) {
   result <- if(by.strata) {
     g@data %>% 
-      group_by(stratum, locus) %>%  
-      summarize(value = fun(allele, ...))
+      dplyr::group_by(.data$stratum, .data$locus) %>%  
+      dplyr::summarize(value = fun(.data$allele, ...))
   } else {
     g@data %>% 
-      group_by(locus) %>%  
-      summarize(value = fun(allele, ...))
+      dplyr::group_by(.data$locus) %>%  
+      dplyr::summarize(value = fun(.data$allele, ...))
   }
-  ungroup(result)
+  dplyr::ungroup(result)
 }
 
 

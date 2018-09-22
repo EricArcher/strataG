@@ -22,6 +22,6 @@
 numAlleles <- function(g, by.strata = FALSE) {
   .countAlleles <- function(x) dplyr::n_distinct(x, na.rm = TRUE)
   .applyPerLocus(.countAlleles, g, by.strata = by.strata) %>%
-    dplyr::rename(num.alleles = value) %>% 
+    dplyr::rename(num.alleles = .data$value) %>% 
     as.data.frame()
 }

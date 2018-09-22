@@ -25,22 +25,25 @@
 propUniqueAlleles <- function(g, by.strata = FALSE) { 
   df <- if(by.strata) {
     g@data %>% 
-      dplyr::group_by(stratum, locus, allele) %>% 
-      dplyr::summarize(n = n_distinct(id)) %>% 
-      dplyr::group_by(stratum, locus) %>% 
-      dplyr::summarize(num.unique = sum(n == 1)) %>% 
+      dplyr::group_by(.data$stratum, .data$locus, .data$allele) %>% 
+      dplyr::summarize(n = dplyr::n_distinct(.data$id)) %>% 
+      dplyr::ungroup() %>% 
+      dplyr::group_by(.data$stratum, .data$locus) %>% 
+      dplyr::summarize(num.unique = sum(.data$n == 1)) %>% 
+      dplyr::ungroup() %>% 
       dplyr::left_join(numGenotyped(g, by.strata), by = c("stratum", "locus")) 
   } else {
     g@data %>% 
-      dplyr::group_by(locus, allele) %>% 
-      dplyr::summarize(n = n_distinct(id)) %>% 
-      dplyr::group_by(locus) %>% 
-      dplyr::summarize(num.unique = sum(n == 1)) %>% 
+      dplyr::group_by(.data$locus, .data$allele) %>% 
+      dplyr::summarize(n = dplyr::n_distinct(.data$id)) %>% 
+      dplyr::ungroup() %>% 
+      dplyr::group_by(.data$locus) %>% 
+      dplyr::summarize(num.unique = sum(.data$n == 1)) %>% 
+      dplyr::ungroup() %>% 
       dplyr::left_join(numGenotyped(g, by.strata), by = c("locus"))
   } 
   df %>% 
-    dplyr::mutate(prop.unique.alleles = num.unique / num.genotyped) %>% 
-    dplyr::select(-num.unique, -num.genotyped) %>% 
-    dplyr::ungroup() %>% 
+    dplyr::mutate(prop.unique.alleles = .data$num.unique / .data$num.genotyped) %>% 
+    dplyr::select(-.data$num.unique, -.data$num.genotyped) %>% 
     as.data.frame()
 }

@@ -17,12 +17,18 @@ Authors@R: c(
 URL: https://github.com/EricArcher/strataG
 BugReports: https://github.com/EricArcher/strataG/issues
 Depends:
-    R (>= 3.2.0), apex, ape, adegenet
+    R (>= 3.2.0), apex, magrittr, rlang
 Suggests:
     knitr,
     rmarkdown,
     testthat
 Imports:
+    ape,
+    adegenet,
+    dplyr,
+    tibble,
+    tidyr,
+    purrr,
     data.table,
     copula,
     DT,
@@ -64,12 +70,13 @@ Collate:
     permuteStrata.R
     privateAlleles.R
     propUniqueAlleles.R
+    readGenData.R
     removeSequences.R
     sharedLoci.R
     strataSplit.R
     stratify.R
     summarizeLoci.R
-    summarizeSamples.R
+    summarizeInds.R
     summarizeSeqs.R
     gtypes.show.R
     gtypes.summary.R

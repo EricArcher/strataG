@@ -51,7 +51,7 @@ head(genotypes.mat)
 
 }
 \seealso{
-\link{df2gtypes} \link[strataG]{as.data.frame} \link[strataG]{as.array}
+\link{df2gtypes} \link[strataG]{as.data.frame}
 }
 \author{
 Eric Archer \email{eric.archer@noa.gov}

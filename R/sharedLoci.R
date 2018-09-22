@@ -134,18 +134,18 @@ sharedAlleles <- function(g, smry = c("num", "which")) {
 
 
 #' @rdname sharedLoci
-#' @param g a \code{gtypes} object
 #' @param ids character vector of two sample ids to compare.
+#' @param g a \code{gtypes} object
 #' @keywords internal
 #' 
 .propSharedIds <- function(ids, g) {
   g@data %>% 
-    dplyr::group_by(locus) %>% 
-    do({
-      gt1 <- dplyr::filter(., id == ids[1]) %>% 
-        dplyr::pull(allele)
-      gt2 <- dplyr::filter(., id == ids[2]) %>% 
-        dplyr::pull(allele)
+    dplyr::group_by(.data$locus) %>% 
+    dplyr::do({
+      gt1 <- dplyr::filter(.data, .data$id == ids[1]) %>% 
+        dplyr::pull(.data$allele)
+      gt2 <- dplyr::filter(.data, .data$id == ids[2]) %>% 
+        dplyr::pull(.data$allele)
       if(any(is.na(c(gt1, gt2)))) {
         data.frame(prop.shared = NA)
       } else {
@@ -154,6 +154,6 @@ sharedAlleles <- function(g, smry = c("num", "which")) {
         )
       }
     }) %>% 
-    ungroup() %>% 
+    dplyr::ungroup() %>% 
     as.data.frame()
 }

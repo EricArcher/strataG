@@ -28,22 +28,24 @@ heterozygosity <- function(g, by.strata = FALSE, type = c("expected", "observed"
   switch(
     match.arg(type),
     expected = .applyPerLocus(swfscMisc::diversity, g, by.strata = by.strata) %>% 
-      dplyr::rename(exptd.het = value) %>% 
+      dplyr::rename(exptd.het = .data$value) %>% 
       as.data.frame(),
     observed = {
       is.het <- if(by.strata) {
         g@data %>% 
-          dplyr::group_by(stratum, locus, id) %>% 
-          dplyr::summarize(is.het = n_distinct(allele) > 1) %>% 
-          dplyr::group_by(stratum, locus)
+          dplyr::group_by(.data$stratum, .data$locus, .data$id) %>% 
+          dplyr::summarize(is.het = dplyr::n_distinct(.data$allele) > 1) %>% 
+          dplyr::ungroup() %>% 
+          dplyr::group_by(.data$stratum, .data$locus)
       } else {        
         g@data %>% 
-          dplyr::group_by(locus, id) %>% 
-          dplyr::summarize(is.het = n_distinct(allele) > 1) %>% 
-          dplyr::group_by(locus)
+          dplyr::group_by(.data$locus, .data$id) %>% 
+          dplyr::summarize(is.het = dplyr::n_distinct(.data$allele) > 1) %>% 
+          dplyr::ungroup() %>% 
+          dplyr::group_by(.data$locus)
       }
       is.het %>% 
-        dplyr::summarize(obsvd.het = mean(is.het, na.rm = TRUE)) %>% 
+        dplyr::summarize(obsvd.het = mean(.data$is.het, na.rm = TRUE)) %>% 
         dplyr::ungroup() %>% 
         as.data.frame()
     }

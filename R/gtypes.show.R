@@ -12,4 +12,3 @@ setMethod("show", "gtypes", function(object) {
   .printBaseSmry(.baseSmry(object))
   invisible(NULL)
 })
-  

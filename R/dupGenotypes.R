@@ -25,7 +25,9 @@
 #' data(msats.g)
 #' 
 #' # identify potential duplicates in Coastal strata
-#' dupes <- dupGenotypes(msats.g[, , "Coastal"])
+#' coastal <- msats.g[, , "Coastal"]
+#' coastal.5 <- coastal[getIndNames(coastal)[1:5], , ]
+#' dupes <- dupGenotypes(coastal.5, num.cores = 1)
 #' dupes
 #' 
 #' @export
@@ -35,32 +37,42 @@ dupGenotypes <- function(g, num.shared = 0.8, num.cores = NULL) {
   if(num.shared > 1) num.shared <- num.shared / getNumLoci(g) 
     
   dup.df <- propSharedLoci(g, type = "ids", num.cores = num.cores) %>% 
-    dplyr::filter(prop.loci.shared >= num.shared)
+    dplyr::filter(.data$prop.loci.shared >= num.shared)
   
   dup.df <- if(nrow(dup.df) > 0) {
     st <- strata(g)
-    locs <- getLocusNames(g)
+    locs <- getLociNames(g)
     dup.df %>% 
-      tidyr::gather(locus, prop.shared, -(ids.1:prop.loci.shared)) %>% 
-      dplyr::filter(prop.shared < 1) %>% 
-      dplyr::group_by(ids.1, ids.2) %>% 
-      dplyr::summarize(mismatch.loci = paste(locus, collapse = ", ")) %>% 
+      tidyr::gather(
+        "locus", 
+        "prop.shared", 
+        -(.data$ids.1:.data$prop.loci.shared)
+      ) %>% 
+      dplyr::filter(.data$prop.shared < 1) %>% 
+      dplyr::group_by(.data$ids.1, .data$ids.2) %>% 
+      dplyr::summarize(mismatch.loci = paste(.data$locus, collapse = ", ")) %>% 
       dplyr::ungroup() %>% 
       dplyr::right_join(
-        dplyr::select(dup.df, ids.1:prop.loci.shared),
+        dplyr::select(dup.df, .data$ids.1:.data$prop.loci.shared),
         by = c("ids.1", "ids.2")
       ) %>% 
       dplyr::mutate(
-        strata.1 = as.character(st[ids.1]),
-        strata.2 = as.character(st[ids.2])
+        strata.1 = as.character(st[.data$ids.1]),
+        strata.2 = as.character(st[.data$ids.2])
       ) %>% 
       dplyr::arrange(
-        dplyr::desc(prop.loci.shared),
-        dplyr::desc(num.loci.shared),
-        dplyr::desc(ids.1),
-        dplyr::desc(ids.2)
+        dplyr::desc(.data$prop.loci.shared),
+        dplyr::desc(.data$num.loci.shared),
+        dplyr::desc(.data$ids.1),
+        dplyr::desc(.data$ids.2)
       ) %>% 
-      dplyr::select(ids.1, ids.2, strata.1, strata.2, dplyr::everything()) %>% 
+      dplyr::select(
+        .data$ids.1, 
+        .data$ids.2, 
+        .data$strata.1, 
+        .data$strata.2, 
+        dplyr::everything()
+      ) %>% 
       as.data.frame()
   } else NULL
   

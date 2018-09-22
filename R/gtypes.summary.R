@@ -28,47 +28,47 @@ NULL
 
 .baseSmry <- function(x) {
   het <- heterozygosity(x, TRUE, "exp") %>% 
-    dplyr::group_by(stratum) %>% 
-    dplyr::summarize(exptd.het = mean(exptd.het, na.rm = TRUE))
+    dplyr::group_by(.data$stratum) %>% 
+    dplyr::summarize(exptd.het = mean(.data$exptd.het, na.rm = TRUE))
   
   if(ploidy(x) > 1) {
     het <- het %>% 
-      left_join(
+      dplyr::left_join(
         heterozygosity(x, TRUE, "obs") %>% 
-          dplyr::group_by(stratum) %>% 
-          dplyr::summarize(obsvd.het = mean(obsvd.het, na.rm = TRUE)),
+          dplyr::group_by(.data$stratum) %>% 
+          dplyr::summarize(obsvd.het = mean(.data$obsvd.het, na.rm = TRUE)),
         by = "stratum"
       )
   }
   
   strata.smry <- getNumInd(x, TRUE) %>% 
-    left_join(
+    dplyr::left_join(
       numMissing(x, TRUE) %>% 
-        dplyr::group_by(stratum) %>% 
-        dplyr::summarize(num.missing = mean(num.missing, na.rm = TRUE)),
+        dplyr::group_by(.data$stratum) %>% 
+        dplyr::summarize(num.missing = mean(.data$num.missing, na.rm = TRUE)),
       by = "stratum"
     ) %>% 
-    left_join(
+    dplyr::left_join(
       numAlleles(x, TRUE) %>% 
-        dplyr::group_by(stratum) %>% 
-        dplyr::summarize(num.alleles = mean(num.alleles, na.rm = TRUE)),
+        dplyr::group_by(.data$stratum) %>% 
+        dplyr::summarize(num.alleles = mean(.data$num.alleles, na.rm = TRUE)),
       by = "stratum"
     ) %>% 
-    left_join(
+    dplyr::left_join(
       propUniqueAlleles(x, TRUE) %>% 
-        dplyr::group_by(stratum) %>% 
-        dplyr::summarize(prop.unique.alleles = mean(prop.unique.alleles, na.rm = TRUE)),
+        dplyr::group_by(.data$stratum) %>% 
+        dplyr::summarize(prop.unique.alleles = mean(.data$prop.unique.alleles, na.rm = TRUE)),
       by = "stratum"
     ) %>% 
-    left_join(het, by = "stratum") %>% 
+    dplyr::left_join(het, by = "stratum") %>% 
     as.data.frame()
   
   if(ploidy(x) == 1) {
     strata.smry <- strata.smry %>% 
-      rename(
-        num.haplotypes = num.alleles,
-        prop.unique.haplotypes = prop.unique.alleles,
-        haplotypic.diversity = exptd.het
+      dplyr::rename(
+        num.haplotypes = .data$num.alleles,
+        prop.unique.haplotypes = .data$prop.unique.alleles,
+        haplotypic.diversity = .data$exptd.het
       )
   }
         
@@ -99,58 +99,3 @@ NULL
   print(x$strata.smry)
   cat("\n")
 }
-
-
-#' #' @rdname summary-gtypes-method
-#' #' @export
-#' #' 
-#' setMethod("summary", "gtypes", function(object, type = c("loci", "individual"), ...) { 
-#'   smry <- .baseSmry(object)
-#'   smry$allele.freqs <- alleleFreqs(object, by.strata = TRUE)
-#'   smry$sample.smry <- summarizeSamples(object)
-#'   smry$locus.smry <- if(ploidy(object) > 1) summarizeLoci(object) else NULL
-#'   smry$seq.smry <- if(!is.null(sequences(object))) {
-#'     sequences <- getSequences(sequences(object), simplify = FALSE)
-#'     do.call(rbind, sapply(sequences, function(dna) {
-#'       dna <- as.matrix(dna)
-#'       dna.len <- unlist(lapply(dna, length))
-#'       len.range <- range(dna.len)
-#'       result <- data.frame(
-#'         num.seqs = nrow(dna), 
-#'         min.length = len.range[1], 
-#'         mean.length = round(mean(dna.len)), max.length = len.range[2]
-#'       )
-#'       cbind(result, rbind(base.freq(dna)))
-#'     }, simplify = FALSE))
-#'   } else NULL
-#'   
-#'   class(smry) <- c("gtypeSummary", "list")
-#'   smry
-#' })
-#' 
-#' 
-#' #' @rdname summary-gtypes-method
-#' #' @export
-#' #' 
-#' print.gtypeSummary <- function(x, ... ) { 
-#'   .printBaseSmry(x)
-#'   if(!is.null(x$locus.smry)) {
-#'     cols <- c(1, 3, 5, 7)
-#'     num.rows <- nrow(x$locus.smry)
-#'     if(num.rows > 20) {
-#'       cat("\nLocus summary (first and last 10):\n")
-#'       print(x$locus.smry[1:10, cols, drop = FALSE])
-#'       cat("---\n")
-#'       print(x$locus.smry[(num.rows - 10):num.rows, cols, drop = FALSE])
-#'     } else {
-#'       cat("\nLocus summary:\n")
-#'       print(x$locus.smry[, cols, drop = FALSE])
-#'     }
-#'   }
-#'   if(!is.null(x$seq.smry)) {
-#'     cat("\nSequence summary:\n")
-#'     print(x$seq.smry)
-#'   }
-#'   cat("\n")
-#'   invisible(x)
-#' }

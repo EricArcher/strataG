@@ -40,7 +40,7 @@ as.multidna <- function(x) {
   
   # character matrix or list of character vectors
   if(is.character(x) | (is.list(x) & all(sapply(x, is.character)))) {
-    x <- list(as.DNAbin(x))
+    x <- list(ape::as.DNAbin(x))
   }
   
   # list of DNAbin

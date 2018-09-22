@@ -21,7 +21,7 @@ allelicRichness <- function(g, by.strata = FALSE) {
   join.by <- if(by.strata) c("stratum", "locus") else "locus"
   numAlleles(g, by.strata) %>% 
     dplyr::left_join(numGenotyped(g, by.strata), by = join.by) %>% 
-    dplyr::mutate(allelic.richness = num.alleles / num.genotyped) %>% 
-    dplyr::select(-num.alleles, -num.genotyped) %>% 
+    dplyr::mutate(allelic.richness = .data$num.alleles / .data$num.genotyped) %>% 
+    dplyr::select(-.data$num.alleles, -.data$num.genotyped) %>% 
     as.data.frame()
 }

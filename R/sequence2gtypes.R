@@ -54,8 +54,14 @@ sequence2gtypes <- function(x, strata = NULL, seq.names = NULL, schemes = NULL,
   rownames(gen.data) <- ind.names
   
   # return new gtypes object
-  new("gtypes", gen.data = gen.data, ploidy = 1, strata = strata,
-      schemes = schemes, sequences = x, description = description, 
-      other = other
+  new(
+    "gtypes", 
+    gen.data = gen.data, 
+    ploidy = 1, 
+    strata = strata,
+    schemes = schemes, 
+    sequences = x, 
+    description = description, 
+    other = other
   )
 }

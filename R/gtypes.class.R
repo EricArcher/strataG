@@ -22,8 +22,7 @@ setClassUnion("dnaSequences", c("multidna", "NULL"))
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
 #' @seealso \code{\link{df2gtypes}}, \code{\link{sequence2gtypes}},
-#'   \code{\link{genind2gtypes}}, \code{\link{gtypes.accessors}},
-#'   \code{\link{initialize.gtypes}}
+#'   \code{\link{gtypes.accessors}}, \code{\link{gtypes.initialize}}
 #' @examples
 #'
 #' #--- create a diploid (microsatellite) gtypes object
@@ -47,7 +46,7 @@ setClassUnion("dnaSequences", c("multidna", "NULL"))
 #' dloop.g
 #' 
 #' @aliases gtypes
-#' @import adegenet ape apex data.table
+#' @import data.table apex
 #' @importFrom methods setClass
 #' @export
 #' 
@@ -60,8 +59,12 @@ setClass(
   ),
   
   prototype = prototype(
-    data = NULL, sequences = NULL, ploidy = 0L, 
-    schemes = NULL, description = NULL, other = NULL
+    data = NULL, 
+    sequences = NULL, 
+    ploidy = 0L, 
+    schemes = NULL, 
+    description = NULL, 
+    other = NULL
   ),
   
   validity = function(object) {
@@ -106,8 +109,8 @@ setClass(
       # check that sequence haplotype labels can be found
       locus.good <- sapply(loc.names, function(x) {
         haps <- object@data %>% 
-          dplyr::filter(locus == x) %>% 
-          dplyr::pull(allele)
+          dplyr::filter(.data$locus == x) %>% 
+          dplyr::pull(.data$allele)
         seqs <- rownames(as.matrix(dna[[x]]))
         all(na.omit(haps) %in% seqs)
       })

@@ -21,22 +21,22 @@ numGenotyped <- function(g, by.strata = FALSE) {
     df %>% 
       dplyr::left_join(
         g@data %>% 
-          dplyr::group_by(stratum, locus) %>% 
-          dplyr::summarize(num.ind = dplyr::n_distinct(id)),
+          dplyr::group_by(.data$stratum, .data$locus) %>% 
+          dplyr::summarize(num.ind = dplyr::n_distinct(.data$id)),
         by = c("stratum", "locus")
       ) 
   } else {
     df %>% 
       dplyr::left_join(
         g@data %>% 
-          dplyr::group_by(locus) %>% 
-          dplyr::summarize(num.ind = dplyr::n_distinct(id)),
+          dplyr::group_by(.data$locus) %>% 
+          dplyr::summarize(num.ind = dplyr::n_distinct(.data$id)),
         by = c("locus")
       )
   }
   df %>% 
-    dplyr::mutate(num.genotyped = num.ind - num.missing) %>% 
-    dplyr::select(-num.missing, -num.ind) %>% 
+    dplyr::mutate(num.genotyped = .data$num.ind - .data$num.missing) %>% 
+    dplyr::select(-.data$num.missing, -.data$num.ind) %>% 
     dplyr::ungroup() %>% 
     as.data.frame()
 }

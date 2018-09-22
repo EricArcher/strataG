@@ -54,13 +54,15 @@
 #' data(msats.g)
 #' msats.g <- stratify(msats.g, "fine")
 #' 
-#' nStrata(msats.g)
-#' strataNames(msats.g)
-#' nLoc(msats.g)
-#' locNames(msats.g)
+#' getNumStrata(msats.g)
+#' getStrataNames(msats.g)
+#' getNumLoci(msats.g)
+#' getLociNames(msats.g)
 #' 
 #' # reassign all samples to two randomly chosen strata
-#' strata(msats.g) <- sample(c("A", "B"), nInd(msats.g), rep = TRUE)
+#' new.strata <- sample(c("A", "B"), getNumInd(msats.g), rep = TRUE)
+#' names(new.strata) <- getIndNames(msats.g)
+#' strata(msats.g) <- new.strata
 #' msats.g
 #' 
 #' 
@@ -70,32 +72,26 @@
 #' genes <- list(gene1=woodmouse[,1:500], gene2=woodmouse[,501:965])
 #' x <- new("multidna", genes)
 #' wood.g <- sequence2gtypes(x)
-#' strata(wood.g) <- sample(c("A", "B"), nInd(wood.g), rep = TRUE)
+#' new.strata <- sample(c("A", "B"), getNumInd(wood.g), rep = TRUE)
+#' names(new.strata) <- getIndNames(wood.g)
+#' strata(wood.g) <- new.strata
 #' wood.g
 #' 
 #' # get the multidna sequence object
-#' multi.seqs <- sequences(wood.g)
+#' multi.seqs <- sequences(wood.g, as.multidna = TRUE)
 #' class(multi.seqs) # "multidna"
 #'
 #' # get a list of DNAbin objects
-#' library(apex)
-#' dnabin.list <- getSequences(multi.seqs)
+#' dnabin.list <- sequences(wood.g)
 #' class(dnabin.list) # "list"
 #' 
 #' # get a DNAbin object of the first locus
-#' dnabin.1 <- getSequences(multi.seqs, locNames(wood.g)[1])
+#' dnabin.1 <- sequences(wood.g)[[1]]
 #' class(dnabin.1) # "DNAbin"
-#' 
-#' # NOTE: The default to the 'simplify' argument in 'getSequences' is TRUE, 
-#' #   so if there is only one locus, 'getSequences' will return a DNAbin object
-#' #   rather than a single element list unless 'simplify = FALSE':
-#' gene1 <- wood.g[, "gene1", ]
-#' gene1.dnabin <- getSequences(sequences(gene1))
-#' class(gene1.dnabin) # "DNAbin"
 #' 
 #' @name gtypes.accessors
 #' @aliases accessors
-#' @importFrom methods setGeneric setMethod validObject new
+#' @importFrom methods setMethod setGeneric
 #' 
 NULL
 
@@ -106,8 +102,8 @@ NULL
 setMethod("getNumInd", "gtypes", function(x, by.strata = FALSE, ...) {
   if(by.strata) {
     x@data %>% 
-      dplyr::group_by(stratum) %>% 
-      dplyr::summarize(num.ind = n_distinct(id)) %>% 
+      dplyr::group_by(.data$stratum) %>% 
+      dplyr::summarize(num.ind = dplyr::n_distinct(.data$id)) %>% 
       dplyr::ungroup() %>% 
       as.data.frame()
   } else {
@@ -120,8 +116,7 @@ setMethod("getNumInd", "gtypes", function(x, by.strata = FALSE, ...) {
 #' @export
 #' 
 setMethod("getNumLoci", "gtypes", function(x, ...) {
-  x@data$locus %>% 
-    dplyr::n_distinct(na.rm = TRUE)
+  dplyr::n_distinct(x@data$locus, na.rm = TRUE)
 })
 
 #' @rdname gtypes.accessors
@@ -134,8 +129,7 @@ setGeneric("getNumStrata", function(x, ...) standardGeneric("getNumStrata"))
 #' @export
 #' 
 setMethod("getNumStrata", "gtypes", function(x, ...) {
-  x@data$stratum %>% 
-    dplyr::n_distinct(na.rm = TRUE)
+  dplyr::n_distinct(x@data$stratum, na.rm = TRUE)
 })
 
 #' @rdname gtypes.accessors
@@ -149,8 +143,7 @@ setGeneric("getIndNames", function(x, ...) standardGeneric("getIndNames"))
 #' 
 setMethod("getIndNames", "gtypes", function(x, by.strata = FALSE, ...) {
   if(by.strata) {
-    x@data %>% 
-      split(.$stratum) %>% 
+    split(x@data$stratum) %>% 
       purrr::map(function(s) {
         s$id %>% 
           unique() %>%
@@ -159,20 +152,21 @@ setMethod("getIndNames", "gtypes", function(x, by.strata = FALSE, ...) {
           sort()
       })
   } else {
-    x@data[["id"]] %>% 
-      unique() %>% 
-      sort()
+    sort(unique(x@data[["id"]]))
   }
 })
 
 #' @rdname gtypes.accessors
-#' @aliases getLocusNames
 #' @export
 #' 
-setMethod("getLocusNames", "gtypes", function(x, ...) {
-  x@data[["locus"]] %>% 
-    unique() %>% 
-    sort()
+setGeneric("getLociNames", function(x, ...) standardGeneric("getLociNames"))
+
+#' @rdname gtypes.accessors
+#' @aliases getLociNames
+#' @export
+#' 
+setMethod("getLociNames", "gtypes", function(x, ...) {
+  sort(unique(x@data[["locus"]]))
 })
 
 #' @rdname gtypes.accessors
@@ -185,14 +179,9 @@ setGeneric("getAlleleNames", function(x, ...) standardGeneric("getAlleleNames"))
 #' @export
 #' 
 setMethod("getAlleleNames", "gtypes", function(x, ...) {
-  x@data %>% 
-    split(.$locus) %>% 
+  split(x@data$locus) %>% 
     purrr::map(function(s) {
-      s$allele %>% 
-        unique() %>%
-        stats::na.omit() %>% 
-        sort() %>% 
-        as.character()
+      as.character(sort(stats::na.omit(unique(s$allele))))
     })
 })
 
@@ -206,16 +195,14 @@ setGeneric("getStrataNames", function(x, ...) standardGeneric("getStrataNames"))
 #' @export
 #' 
 setMethod("getStrataNames", "gtypes", function(x, ...) {
-  x@data[["stratum"]] %>% 
-    unique() %>% 
-    sort()
+  sort(unique(x@data[["stratum"]]))
 })
           
 
-#' #' @rdname gtypes.accessors
-#' #' @export
-#' #' 
-#' setGeneric("ploidy", function(x, ...) standardGeneric("ploidy"))
+#' @rdname gtypes.accessors
+#' @export
+#'
+setGeneric("ploidy", function(x, ...) standardGeneric("ploidy"))
 
 #' @rdname gtypes.accessors
 #' @aliases ploidy
@@ -224,10 +211,10 @@ setMethod("getStrataNames", "gtypes", function(x, ...) {
 setMethod("ploidy", "gtypes", function(x, ...) x@ploidy)
 
 
-#' #' @rdname gtypes.accessors
-#' #' @export
-#' #' 
-#' setGeneric("other", function(x, ...) standardGeneric("other"))
+#' @rdname gtypes.accessors
+#' @export
+#'
+setGeneric("other", function(x, ...) standardGeneric("other"))
 
 #' @rdname gtypes.accessors
 #' @aliases other
@@ -236,10 +223,10 @@ setMethod("ploidy", "gtypes", function(x, ...) x@ploidy)
 setMethod("other", "gtypes", function(x, ...) x@other)
 
 
-#' #' @rdname gtypes.accessors
-#' #' @export
-#' #' 
-#' setGeneric("strata", function(x, ...) standardGeneric("strata"))
+#' @rdname gtypes.accessors
+#' @export
+#'
+setGeneric("strata", function(x, ...) standardGeneric("strata"))
 
 #' @rdname gtypes.accessors
 #' @aliases strata
@@ -247,7 +234,7 @@ setMethod("other", "gtypes", function(x, ...) x@other)
 #' 
 setMethod("strata", "gtypes", function(x) {
   id.strata <- x@data %>% 
-    dplyr::select(id, stratum) %>% 
+    dplyr::select(.data$id, .data$stratum) %>% 
     dplyr::distinct()
   stats::setNames(id.strata$stratum, id.strata$id)
 })
@@ -280,16 +267,14 @@ setMethod("strata<-", "gtypes", function(x, value) {
   
   x@data <- x@data %>% 
     dplyr::left_join(
-      tibble::tibble(
-        id = names(value),
-        new = as.character(value)
-      ), 
-      by = "id") %>% 
-    dplyr::select(id, new, locus, allele) %>% 
-    dplyr::rename(stratum = new) %>% 
+      tibble::tibble(id = names(value), .new = as.character(value)), 
+      by = "id"
+    ) %>% 
+    dplyr::select(.data$id, .data$.new, .data$locus, .data$allele) %>% 
+    dplyr::rename(stratum = .data$.new) %>% 
     data.table::as.data.table()
   
-  validObject(x)
+  methods::validObject(x)
   x
 })
 
@@ -316,7 +301,7 @@ setGeneric("schemes<-", function(x, value) standardGeneric("schemes<-"))
 #' 
 setMethod("schemes<-", "gtypes", function(x, value) {
   x@schemes <- value
-  validObject(x)
+  methods::validObject(x)
   x
 })
 
@@ -332,21 +317,21 @@ setGeneric("sequences", function(x, ...) standardGeneric("sequences"))
 #' @export
 #' 
 setMethod(
-  "sequences", "gtypes", 
+  "sequences", 
+  "gtypes", 
   function(x, as.haplotypes = TRUE, seqName = NULL, as.multidna = FALSE, ...) {
-  if(is.null(x@sequences)) return(NULL)
-  dna <- apex::getSequences(x@sequences, simplify = FALSE)
-  if(!as.haplotypes) {
-    dna <- x@data %>% 
-      split(.$locus) %>% 
-      purrr::map(function(l) {
-        locus <- unique(l$locus)
-        l <- dplyr::filter(l, !duplicated(id))
-        setNames(dna[[locus]][l$allele], l$id)
-      })
-  }
-  if(!is.null(seqName)) dna <- dna[seqName]
-  if(as.multidna) as.multidna(dna) else dna
+    if(is.null(x@sequences)) return(NULL)
+    dna <- getSequences(x@sequences, simplify = FALSE)
+    if(!as.haplotypes) {
+      dna <- split(x@data$locus) %>% 
+        purrr::map(function(l) {
+          locus <- unique(l$locus)
+          l <- dplyr::filter(l, !duplicated(.data$id))
+          stats::setNames(dna[[locus]][l$allele], l$id)
+        })
+    }
+    if(!is.null(seqName)) dna <- dna[seqName]
+    if(as.multidna) as.multidna(dna) else dna
 })
 
 
@@ -372,7 +357,7 @@ setGeneric("description<-", function(x, value) standardGeneric("description<-"))
 #' 
 setMethod("description<-", "gtypes", function(x, value) {
   x@description <- value
-  validObject(x)
+  methods::validObject(x)
   x
 })
 
@@ -403,7 +388,7 @@ setMethod(
   # check loci (j)
   if(missing(j)) j <- TRUE
   if(is.factor(j)) j <- as.character(j)
-  locs <- getLocusNames(x)
+  locs <- getLociNames(x)
   j <- if(is.character(j)) {
     j <- unique(j)
     missing.locs <- setdiff(j, locs)
@@ -433,7 +418,7 @@ setMethod(
   if(length(k) == 0) stop("no strata selected")
   
   x@data <- x@data %>% 
-    dplyr::filter(id %in% i & locus %in% j & stratum %in% k) %>% 
+    dplyr::filter(.data$id %in% i & .data$locus %in% j & .data$stratum %in% k) %>% 
     data.table::as.data.table()
   if(nrow(x@data) == 0) stop("the requested indices would form an empty gtypes object")
   

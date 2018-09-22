@@ -43,19 +43,19 @@ stratify <- function(g, scheme = NULL, drop = TRUE) {
     stop(paste("scheme '", scheme, "' cannot be found", sep = ""))
   } else {
     schemes(g) %>% 
-      dplyr::rename('.new' = scheme) %>% 
-      dplyr::select(id, .new)
+      dplyr::rename(.new = scheme) %>% 
+      dplyr::select(.data$id, .data$.new)
   }
       
   g@data <- g@data %>% 
     dplyr::left_join(scheme, by = "id") %>% 
-    dplyr::select(id, .new, locus, allele) %>% 
-    dplyr::rename(stratum = .new) %>% 
+    dplyr::select(.data$id, .data$.new, .data$locus, .data$allele) %>% 
+    dplyr::rename(stratum = .data$.new) %>% 
     data.table::as.data.table()
 
   if(drop) {
     g@data <- g@data %>% 
-      dplyr::filter(!is.na(stratum)) %>% 
+      dplyr::filter(!is.na(.data$stratum)) %>% 
       data.table::as.data.table()
     g <- removeSequences(g)
   } 

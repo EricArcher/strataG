@@ -51,7 +51,7 @@ str(genotypes.df)
 
 }
 \seealso{
-\link{df2gtypes} \link[strataG]{as.matrix} \link[strataG]{as.array}
+\link{df2gtypes} \link[strataG]{as.matrix}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

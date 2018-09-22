@@ -15,8 +15,6 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
-#' @seealso \link{alleleFreqFormat}
-#'
 #' @examples
 #' data(msats.g)
 #' 
@@ -30,17 +28,11 @@
 #' 
 alleleFreqs <- function(g, by.strata = FALSE, type = c("freq", "prop")) {
   af <- if(by.strata) {
-    g@data %>% 
-      split(.$locus) %>% 
-      purrr::map(function(x) {
-        table(x$allele, x$stratum)
-      })
+    split(g@data, g@data$locus) %>% 
+      purrr::map(function(x) table(x$allele, x$stratum))
   } else {
-    g@data %>% 
-      split(.$locus) %>% 
-      purrr::map(function(x) {
-        table(x$allele)
-      })
+    split(g@data, g@data$locus) %>% 
+      purrr::map(function(x) table(x$allele))
   }
   
   if(match.arg(type) == "prop") {
