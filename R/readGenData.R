@@ -13,12 +13,14 @@
 #' @export
 #' 
 readGenData <- function(file, na.strings = c(NA, "NA", "", " ", "?", "."), ...) {
-  utils::read.csv(
+  df <- utils::read.csv(
     file = file, 
     na.strings = na.strings,
     colClasses = "character", 
     stringsAsFactors = FALSE, 
     ...
-  ) %>% 
-    dplyr::filter(rowSums(is.na(.data) | .data == "") != ncol(.data))
+  ) 
+  all.nas <- is.na(df)
+  all.empty <- df == ""
+  dplyr::filter(df, rowSums(all.nas | all.empty) != ncol(df))
 }

@@ -71,6 +71,24 @@ NULL
         haplotypic.diversity = .data$exptd.het
       )
   }
+  
+  x.seqs <- sequences(x)
+  seq.smry <- if(!is.null(x.seqs)) {
+    do.call(rbind, lapply(names(x.seqs), function(gene) {
+      x.seqs[[gene]] %>% 
+        summarizeSeqs() %>% 
+        as.data.frame() %>% 
+        dplyr::summarize(
+          num.seqs = dplyr::n(),
+          mean.length = mean(.data$length),
+          mean.num.ns = mean(.data$num.ns),
+          mean.num.indels = mean(.data$num.indels)
+        ) %>% 
+        dplyr::mutate(locus = gene) %>% 
+        dplyr::select(.data$locus, dplyr::everything()) %>% 
+        as.data.frame() 
+    }))
+  } else NULL
         
   list(
     description = x@description,
@@ -78,7 +96,8 @@ NULL
     num.loc = getNumLoci(x), 
     num.strata = getNumStrata(x),
     schemes = if(!is.null(schemes(x))) colnames(schemes(x))[-1] else NULL,
-    strata.smry = strata.smry
+    strata.smry = strata.smry,
+    seq.smry = seq.smry
   )
 }
 
@@ -97,5 +116,9 @@ NULL
   if(!is.null(x$schemes)) cat("\nStratification schemes:", paste(x$schemes, collapse = ", "))
   cat("\n\nStrata summary:\n")
   print(x$strata.smry)
+  if(!is.null(x$seq.smry)) {
+    cat("\nSequence summary:\n")
+    print(x$seq.smry)
+  }
   cat("\n")
 }

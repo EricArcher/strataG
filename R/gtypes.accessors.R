@@ -179,7 +179,7 @@ setGeneric("getAlleleNames", function(x, ...) standardGeneric("getAlleleNames"))
 #' @export
 #' 
 setMethod("getAlleleNames", "gtypes", function(x, ...) {
-  split(x@data$locus) %>% 
+  split(x@data, x@data$locus) %>% 
     purrr::map(function(s) {
       as.character(sort(stats::na.omit(unique(s$allele))))
     })
