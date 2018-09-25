@@ -38,7 +38,7 @@ sequence2gtypes <- function(x, strata = NULL, seq.names = NULL, schemes = NULL,
     if(length(seq.names) != getNumLoci(x)) {
       stop("length of 'seq.names' is not equal to number of genes")
     }
-    setLocusNames(x) <- seq.names
+    x <- apex::"setLocusNames<-"(x, seq.names)
   }
   
   # create gen.data data.frame
