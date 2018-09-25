@@ -52,16 +52,16 @@ test_that("gtypes individual, strata, and locus names are correctly returned", {
 test_that("strata slot components are correctly returned and assigned", {
   data(msats.g)
   g <- msats.g
-  strata(g) <- setNames(
+  setStrata(g) <- setNames(
     sample(letters[1:2], getNumInd(g), rep = TRUE), 
     getIndNames(g)
   )
   
-  expect_equal(length(strata(g)), getNumInd(g))
-  expect_true(all(names(strata(g)) %in% getIndNames(g)))
-  expect_true(all(strata(g) %in% getStrataNames(g)))
-  expect_error(strata(g) <- c("a", "b"))
-  expect_error(strata(g) <- sample(letters, getNumInd(g), rep = TRUE))
+  expect_equal(length(getStrata(g)), getNumInd(g))
+  expect_true(all(names(getStrata(g)) %in% getIndNames(g)))
+  expect_true(all(getStrata(g) %in% getStrataNames(g)))
+  expect_error(setStrata(g) <- c("a", "b"))
+  expect_error(setStrata(g) <- sample(letters, getNumInd(g), rep = TRUE))
 })
 
 test_that("indexing a gtypes object works for individuals, loci, and strata", {

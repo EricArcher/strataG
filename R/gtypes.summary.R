@@ -31,7 +31,7 @@ NULL
     dplyr::group_by(.data$stratum) %>% 
     dplyr::summarize(exptd.het = mean(.data$exptd.het, na.rm = TRUE))
   
-  if(ploidy(x) > 1) {
+  if(getPloidy(x) > 1) {
     het <- het %>% 
       dplyr::left_join(
         heterozygosity(x, TRUE, "obs") %>% 
@@ -63,7 +63,7 @@ NULL
     dplyr::left_join(het, by = "stratum") %>% 
     as.data.frame()
   
-  if(ploidy(x) == 1) {
+  if(getPloidy(x) == 1) {
     strata.smry <- strata.smry %>% 
       dplyr::rename(
         num.haplotypes = .data$num.alleles,
@@ -72,7 +72,7 @@ NULL
       )
   }
   
-  x.seqs <- sequences(x)
+  x.seqs <- getSequences(x)
   seq.smry <- if(!is.null(x.seqs)) {
     do.call(rbind, lapply(names(x.seqs), function(gene) {
       x.seqs[[gene]] %>% 
@@ -95,7 +95,7 @@ NULL
     num.ind = getNumInd(x), 
     num.loc = getNumLoci(x), 
     num.strata = getNumStrata(x),
-    schemes = if(!is.null(schemes(x))) colnames(schemes(x))[-1] else NULL,
+    schemes = if(!is.null(getSchemes(x))) colnames(getSchemes(x))[-1] else NULL,
     strata.smry = strata.smry,
     seq.smry = seq.smry
   )

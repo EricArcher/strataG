@@ -18,10 +18,10 @@
 #' @export
 #' 
 permuteStrata <- function(g) {
-  st <- strata(g)
+  st <- getStrata(g)
   no.nas <- st[!is.na(st)]
   no.na.perm <- sample(no.nas)
   names(no.na.perm) <- names(no.nas)
-  strata(g) <- stats::setNames(no.na.perm[names(st)], names(st))
+  setStrata(g) <- stats::setNames(no.na.perm[names(st)], names(st))
   g
 }

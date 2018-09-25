@@ -40,7 +40,8 @@
 #' @export
 #' 
 setMethod(
-  "as.data.frame", "gtypes",
+  "as.data.frame", 
+  "gtypes",
   function(x, one.col = FALSE, sep = "/", ids = TRUE, 
            strata = TRUE, sort.alleles = TRUE, ...) {
     
@@ -51,7 +52,7 @@ setMethod(
       tidyr::spread(.data$locus, .data$genotype) %>% 
       dplyr::ungroup()
     
-    if(ploidy(x) == 1) one.col = TRUE
+    if(getPloidy(x) == 1) one.col = TRUE
     # if loci are to be split into separate columns, use alleleSplit
     if(!one.col) {
       df <- cbind(

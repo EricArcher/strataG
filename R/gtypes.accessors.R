@@ -62,7 +62,7 @@
 #' # reassign all samples to two randomly chosen strata
 #' new.strata <- sample(c("A", "B"), getNumInd(msats.g), rep = TRUE)
 #' names(new.strata) <- getIndNames(msats.g)
-#' strata(msats.g) <- new.strata
+#' setStrata(msats.g) <- new.strata
 #' msats.g
 #' 
 #' 
@@ -74,19 +74,19 @@
 #' wood.g <- sequence2gtypes(x)
 #' new.strata <- sample(c("A", "B"), getNumInd(wood.g), rep = TRUE)
 #' names(new.strata) <- getIndNames(wood.g)
-#' strata(wood.g) <- new.strata
+#' setStrata(wood.g) <- new.strata
 #' wood.g
 #' 
 #' # get the multidna sequence object
-#' multi.seqs <- sequences(wood.g, as.multidna = TRUE)
+#' multi.seqs <- getSequences(wood.g, as.multidna = TRUE)
 #' class(multi.seqs) # "multidna"
 #'
 #' # get a list of DNAbin objects
-#' dnabin.list <- sequences(wood.g)
+#' dnabin.list <- getSequences(wood.g)
 #' class(dnabin.list) # "list"
 #' 
 #' # get a DNAbin object of the first locus
-#' dnabin.1 <- sequences(wood.g)[[1]]
+#' dnabin.1 <- getSequences(wood.g)[[1]]
 #' class(dnabin.1) # "DNAbin"
 #' 
 #' @name gtypes.accessors
@@ -202,37 +202,37 @@ setMethod("getStrataNames", "gtypes", function(x, ...) {
 #' @rdname gtypes.accessors
 #' @export
 #'
-setGeneric("ploidy", function(x, ...) standardGeneric("ploidy"))
+setGeneric("getPloidy", function(x, ...) standardGeneric("getPloidy"))
 
 #' @rdname gtypes.accessors
-#' @aliases ploidy
+#' @aliases getPloidy
 #' @export
 #' 
-setMethod("ploidy", "gtypes", function(x, ...) x@ploidy)
+setMethod("getPloidy", "gtypes", function(x, ...) x@ploidy)
 
 
 #' @rdname gtypes.accessors
 #' @export
 #'
-setGeneric("other", function(x, ...) standardGeneric("other"))
+setGeneric("getOther", function(x, ...) standardGeneric("getOther"))
 
 #' @rdname gtypes.accessors
-#' @aliases other
+#' @aliases getOther
 #' @export
 #' 
-setMethod("other", "gtypes", function(x, ...) x@other)
+setMethod("getOther", "gtypes", function(x, ...) x@other)
 
 
 #' @rdname gtypes.accessors
 #' @export
 #'
-setGeneric("strata", function(x, ...) standardGeneric("strata"))
+setGeneric("getStrata", function(x, ...) standardGeneric("getStrata"))
 
 #' @rdname gtypes.accessors
-#' @aliases strata
+#' @aliases getStrata
 #' @export
 #' 
-setMethod("strata", "gtypes", function(x) {
+setMethod("getStrata", "gtypes", function(x) {
   id.strata <- x@data %>% 
     dplyr::select(.data$id, .data$stratum) %>% 
     dplyr::distinct()
@@ -243,13 +243,13 @@ setMethod("strata", "gtypes", function(x) {
 #' @rdname gtypes.accessors
 #' @export
 #' 
-setGeneric("strata<-", function(x, value) standardGeneric("strata<-"))
+setGeneric("setStrata<-", function(x, value) standardGeneric("setStrata<-"))
 
 #' @rdname gtypes.accessors
-#' @aliases strata
+#' @aliases setStrata
 #' @export
 #' 
-setMethod("strata<-", "gtypes", function(x, value) {
+setMethod("setStrata<-", "gtypes", function(x, value) {
   if(!is.vector(value)) {
     stop("strata must be assigned as a vector", call. = FALSE)
   }
@@ -282,24 +282,24 @@ setMethod("strata<-", "gtypes", function(x, value) {
 #' @rdname gtypes.accessors
 #' @export
 #' 
-setGeneric("schemes", function(x, ...) standardGeneric("schemes"))
+setGeneric("getSchemes", function(x, ...) standardGeneric("getSchemes"))
 
 #' @rdname gtypes.accessors
-#' @aliases schemes
+#' @aliases getSchemes
 #' @export
 #' 
-setMethod("schemes", "gtypes", function(x, ...) x@schemes)
+setMethod("getSchemes", "gtypes", function(x, ...) x@schemes)
 
 #' @rdname gtypes.accessors
 #' @export
 #' 
-setGeneric("schemes<-", function(x, value) standardGeneric("schemes<-"))
+setGeneric("setSchemes<-", function(x, value) standardGeneric("setSchemes<-"))
 
 #' @rdname gtypes.accessors
-#' @aliases schemes
+#' @aliases setSchemes
 #' @export
 #' 
-setMethod("schemes<-", "gtypes", function(x, value) {
+setMethod("setSchemes<-", "gtypes", function(x, value) {
   x@schemes <- value
   methods::validObject(x)
   x
@@ -310,25 +310,27 @@ setMethod("schemes<-", "gtypes", function(x, value) {
 #' @rdname gtypes.accessors
 #' @export
 #' 
-setGeneric("sequences", function(x, ...) standardGeneric("sequences"))
+setGeneric("getSequences", function(x, ...) standardGeneric("getSequences"))
 
 #' @rdname gtypes.accessors
-#' @aliases sequences
+#' @aliases getSequences
 #' @export
 #' 
 setMethod(
-  "sequences", 
+  "getSequences", 
   "gtypes", 
   function(x, as.haplotypes = TRUE, seqName = NULL, as.multidna = FALSE, ...) {
     if(is.null(x@sequences)) return(NULL)
-    dna <- getSequences(x@sequences, simplify = FALSE)
+    dna <- apex::getSequences(x@sequences, simplify = FALSE)
     if(!as.haplotypes) {
-      dna <- split(x@data$locus) %>% 
-        purrr::map(function(l) {
+      dna <- purrr::map(
+        split(x@data$locus),
+        function(l) {
           locus <- unique(l$locus)
           l <- dplyr::filter(l, !duplicated(.data$id))
           stats::setNames(dna[[locus]][l$allele], l$id)
-        })
+        }
+      )
     }
     if(!is.null(seqName)) dna <- dna[seqName]
     if(as.multidna) as.multidna(dna) else dna
@@ -338,24 +340,24 @@ setMethod(
 #' @rdname gtypes.accessors
 #' @export
 #' 
-setGeneric("description", function(x, ...) standardGeneric("description"))
+setGeneric("getDescription", function(x, ...) standardGeneric("getDescription"))
 
 #' @rdname gtypes.accessors
-#' @aliases description
+#' @aliases getDescription
 #' @export
 #' 
-setMethod("description", "gtypes", function(x, ...) x@description)
+setMethod("getDescription", "gtypes", function(x, ...) x@description)
 
 #' @rdname gtypes.accessors
 #' @export
 #' 
-setGeneric("description<-", function(x, value) standardGeneric("description<-"))
+setGeneric("setDescription<-", function(x, value) standardGeneric("setDescription<-"))
 
 #' @rdname gtypes.accessors
-#' @aliases description
+#' @aliases setDescription
 #' @export
 #' 
-setMethod("description<-", "gtypes", function(x, value) {
+setMethod("setDescription<-", "gtypes", function(x, value) {
   x@description <- value
   methods::validObject(x)
   x

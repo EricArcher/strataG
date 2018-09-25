@@ -25,7 +25,7 @@ NULL
 #' @keywords internal
 #' 
 .getFileLabel <- function(g, label = NULL) {
-  desc <- description(g)
+  desc <- getDescription(g)
   label <- if(!is.null(label)) {
     label 
   } else if(!is.null(desc)) {

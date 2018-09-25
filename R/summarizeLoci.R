@@ -38,7 +38,7 @@ summarizeLoci <- function(g, by.strata = FALSE, ...) {
     dplyr::left_join(heterozygosity(g, by.strata, "expected"), by = by.cols) %>% 
     dplyr::left_join(heterozygosity(g, by.strata, "observed"), by = by.cols) 
 
-  if(ploidy(g) == 1) {
+  if(getPloidy(g) == 1) {
     smry <- smry %>% 
       dplyr::rename(
         num.haplotypes = .data$num.alleles,

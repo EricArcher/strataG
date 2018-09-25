@@ -7,7 +7,7 @@
 #'   
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \link{sequences}, \link{getSequences}
+#' @seealso \link{getSequences}
 #' 
 #' @examples 
 #' # convert list of character vectors
@@ -32,7 +32,7 @@ as.multidna <- function(x) {
     if(is.null(x@sequences)) {
       stop("the gtypes object does not contain sequences")
     }
-    return(x@sequences)
+    return(getSequences(x@sequences, as.multidna = TRUE))
   }
   
   # a DNAbin

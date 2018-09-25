@@ -25,7 +25,7 @@ Choose a new stratification scheme from the \code{schemes}
 }
 \note{
 If \code{scheme} is a vector or factor and has names, then the 
-  they will be used to match with \code{\link{indNames}} of \code{g}. 
+  they will be used to match with \code{\link{getIndNames}} of \code{g}. 
   Otherwise \code{scheme} should be the same length as the number of 
   samples in \code{g} or values in \code{scheme} will be recycled as 
   necessary.
@@ -39,7 +39,7 @@ broad.msats
 
 }
 \seealso{
-\link{schemes}
+\link{getSchemes}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

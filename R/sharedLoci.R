@@ -150,7 +150,7 @@ sharedAlleles <- function(g, smry = c("num", "which")) {
         data.frame(prop.shared = NA)
       } else {
         data.frame(
-          prop.shared = sum(gt1 %in% gt2, gt2 %in% gt1) / (2 * ploidy(g))
+          prop.shared = sum(gt1 %in% gt2, gt2 %in% gt1) / (2 * getPloidy(g))
         )
       }
     }) %>% 

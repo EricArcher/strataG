@@ -10,8 +10,8 @@ test_that("a haploid data frame can be converted to gtypes", {
   )
   
   expect_that(g, is_a("gtypes"))
-  expect_equal(ploidy(g), 1)
-  expect_equal(length(sequences(g)), 1)
+  expect_equal(getPloidy(g), 1)
+  expect_equal(length(getSequences(g)), 1)
 })
 
 test_that("a diploid data frame can be converted to gtypes", {
@@ -27,7 +27,7 @@ test_that("a diploid data frame can be converted to gtypes", {
   g <- stratify(g, "broad")
   
   expect_that(g, is_a("gtypes"))
-  expect_equal(ploidy(g), 2)
+  expect_equal(getPloidy(g), 2)
 })
 
 test_that("sequences can be converted to gtypes", {
@@ -40,6 +40,6 @@ test_that("sequences can be converted to gtypes", {
   g <- stratify(g, "fine")
   
   expect_that(g, is_a("gtypes"))
-  expect_equal(ploidy(g), 1)
-  expect_equal(length(sequences(g)), 1)
+  expect_equal(getPloidy(g), 1)
+  expect_equal(length(getSequences(g)), 1)
 })

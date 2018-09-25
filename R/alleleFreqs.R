@@ -28,22 +28,28 @@
 #' 
 alleleFreqs <- function(g, by.strata = FALSE, type = c("freq", "prop")) {
   af <- if(by.strata) {
-    split(g@data, g@data$locus) %>% 
-      purrr::map(function(x) table(x$allele, x$stratum))
+    purrr::map(
+      split(g@data, g@data$locus),
+      function(x) table(x$allele, x$stratum)
+    )
   } else {
-    split(g@data, g@data$locus) %>% 
-      purrr::map(function(x) table(x$allele))
+    purrr::map(
+      split(g@data, g@data$locus),
+      function(x) table(x$allele)
+    )
   }
   
   if(match.arg(type) == "prop") {
-    af %>% 
-      purrr::map(function(x) {
+    purrr::map(
+      af,
+      function(x) {
         if(length(dim(x)) == 1) {
           prop.table(x)
         } else {
           prop.table(x, length(dim(x)))
         }
-      })
+      }
+    )
   } else {
     af
   }

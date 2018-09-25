@@ -179,7 +179,7 @@ setMethod(
     setLocusNames(sequences) <- colnames(gen.data)
     for(loc in colnames(gen.data)) {
       haps <- na.omit(unique(as.character(gen.data[, loc])))
-      seq.names <- getSequenceNames(sequences)[[loc]]
+      seq.names <- apex::getSequenceNames(sequences)[[loc]]
       missing <- setdiff(haps, seq.names)
       if(length(missing) > 0) {
         stop(

@@ -237,16 +237,12 @@ labelHaplotypes.character <- function(x, ...) labelHaplotypes(ape::as.DNAbin(x),
 #'
 labelHaplotypes.gtypes <- function(x, ...) {
   # check that sequences are present
-  if(ploidy(x) > 1 | is.null(sequences(x))) {
+  if(getPloidy(x) > 1 | is.null(getSequences(x))) {
     stop("'x' is not haploid or does not have any sequences")
   }
 
   # label haplotypes for each gene
-  new.haps <- lapply(
-    getSequences(sequences(x, as.multidna = TRUE), simplify = FALSE), 
-    labelHaplotypes, 
-    ...
-  )
+  new.haps <- purrr::map(getSequences(x), labelHaplotypes, ...)
   has.errors <- sapply(new.haps, is.null)
   if(sum(has.errors) > 0) {
     has.errors <- paste(names(new.haps)[has.errors], collapse = ", ")
@@ -268,13 +264,19 @@ labelHaplotypes.gtypes <- function(x, ...) {
   unassigned <- lapply(new.haps, function(x) x$unassigned)
 
   # create new gtypes
-  st <- strata(x)
+  st <- getStrata(x)
   x <- df2gtypes(
-    hap.df, ploidy = 1, id.col = 1, strata.col = 2, loc.col = 3,
-    sequences = hap.seqs, description = description(x), schemes = schemes(x),
-    other = other(x)
+    hap.df, 
+    ploidy = 1, 
+    id.col = 1, 
+    strata.col = 2, 
+    loc.col = 3,
+    sequences = hap.seqs, 
+    description = getDescription(x), 
+    schemes = getSchemes(x),
+    other = getOther(x)
   )
-  strata(x) <- st
+  setStrata(x) <- st
 
   list(gtypes = x, unassigned = unassigned)
 }

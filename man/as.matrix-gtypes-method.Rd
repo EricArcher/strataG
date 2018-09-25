@@ -7,8 +7,8 @@
 \alias{as.matrix}
 \title{Convert \code{gtypes} To \code{matrix}}
 \usage{
-\S4method{as.matrix}{gtypes}(x, one.col = FALSE, sep = "/", ids = TRUE,
-  strata = TRUE, sort.alleles = TRUE, ...)
+\S4method{as.matrix}{gtypes}(x, one.col = FALSE, sep = "/",
+  ids = TRUE, strata = TRUE, sort.alleles = TRUE, ...)
 }
 \arguments{
 \item{x}{a \linkS4class{gtypes} object.}

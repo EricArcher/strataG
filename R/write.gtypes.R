@@ -37,7 +37,7 @@ write.gtypes <- function(g, label = NULL, folder = NULL, by.strata = TRUE,
                          as.frequency = FALSE, freq.type = c("freq", "prop"), ...) {
   label <- .getFileLabel(g, label)
   
-  g.mats <- if(ploidy(g) == 1 & as.frequency) {
+  g.mats <- if(getPloidy(g) == 1 & as.frequency) {
     alleleFreqs(g, by.strata = by.strata, type = freq.type) %>% 
       sapply(function(x) {
         as.data.frame.matrix(x) %>% 
@@ -60,12 +60,12 @@ write.gtypes <- function(g, label = NULL, folder = NULL, by.strata = TRUE,
     utils::write.csv(g.mats[[f]], file = fname, row.names = FALSE)
   }
   
-  if(!is.null(sequences(g))) {
+  if(!is.null(getSequences(g))) {
     for(x in getLociNames(g)) {
       fname <- paste(label, x, "fasta", sep = ".")
       if(!is.null(folder)) fname <- file.path(folder, fname)
       ape::write.dna(
-        sequences(g)[[x]], 
+        getSequences(g)[[x]], 
         file = fname, 
         format = "fasta", 
         nbcol = -1, 

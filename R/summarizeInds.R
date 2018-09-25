@@ -38,7 +38,7 @@ summarizeInds <- function(g) {
       pct.loci.homozygous = sum(.data$is.hmzgs, na.rm = TRUE) / dplyr::n()
     ) %>% 
     dplyr::ungroup() %>% 
-    dplyr::mutate(stratum = strata(g)[.data$id]) %>% 
+    dplyr::mutate(stratum = getStrata(g)[.data$id]) %>% 
     dplyr::select(.data$id, .data$stratum, dplyr::everything()) %>% 
     dplyr::arrange(.data$stratum, .data$id) %>% 
     as.data.frame()

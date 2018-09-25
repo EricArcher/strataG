@@ -12,13 +12,11 @@
 #' @export
 #' 
 removeSequences <- function(g) {
-  if(is.null(sequences(g))) return(g)
+  if(is.null(getSequences(g))) return(g)
   haps <- getAlleleNames(g)
   g@sequences <- g %>% 
     getLociNames() %>% 
-    purrr::map(function(x) {
-      sequences(g)[[x]][haps[[x]]]
-    }) %>% 
+    purrr::map(function(x) getSequences(g)[[x]][haps[[x]]]) %>% 
     stats::setNames(names(haps)) %>% 
     as.multidna()
   g

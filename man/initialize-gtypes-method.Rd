@@ -7,9 +7,10 @@
 \alias{new}
 \title{\code{gtypes} Constructor}
 \usage{
-\S4method{initialize}{gtypes}(.Object, gen.data, ploidy, ind.names = NULL,
-  sequences = NULL, strata = NULL, schemes = NULL, description = NULL,
-  other = NULL, remove.sequences = FALSE)
+\S4method{initialize}{gtypes}(.Object, gen.data, ploidy,
+  ind.names = NULL, sequences = NULL, strata = NULL,
+  schemes = NULL, description = NULL, other = NULL,
+  remove.sequences = FALSE)
 }
 \arguments{
 \item{.Object}{the object skeleton, automatically generated when 

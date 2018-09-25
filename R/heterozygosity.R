@@ -24,7 +24,7 @@
 #' @export
 #' 
 heterozygosity <- function(g, by.strata = FALSE, type = c("expected", "observed")) {
-  if(ploidy(g) == 1) type <- "expected"
+  if(getPloidy(g) == 1) type <- "expected"
   switch(
     match.arg(type),
     expected = .applyPerLocus(swfscMisc::diversity, g, by.strata = by.strata) %>% 

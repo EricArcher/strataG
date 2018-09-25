@@ -14,40 +14,31 @@
 \alias{getIndNames,gtypes-method}
 \alias{getLociNames}
 \alias{getLociNames,gtypes-method}
-\alias{getLociNames}
 \alias{getAlleleNames}
 \alias{getAlleleNames,gtypes-method}
-\alias{getAlleleNames}
 \alias{getStrataNames}
 \alias{getStrataNames,gtypes-method}
-\alias{getStrataNames}
-\alias{ploidy}
-\alias{ploidy,gtypes-method}
-\alias{ploidy}
-\alias{other}
-\alias{other,gtypes-method}
-\alias{other}
-\alias{strata}
-\alias{strata,gtypes-method}
-\alias{strata}
-\alias{strata<-}
-\alias{strata<-,gtypes-method}
-\alias{strata}
-\alias{schemes}
-\alias{schemes,gtypes-method}
-\alias{schemes}
-\alias{schemes<-}
-\alias{schemes<-,gtypes-method}
-\alias{schemes}
-\alias{sequences}
-\alias{sequences,gtypes-method}
-\alias{sequences}
-\alias{description}
-\alias{description,gtypes-method}
-\alias{description}
-\alias{description<-}
-\alias{description<-,gtypes-method}
-\alias{description}
+\alias{getPloidy}
+\alias{getPloidy,gtypes-method}
+\alias{getOther}
+\alias{getOther,gtypes-method}
+\alias{getStrata}
+\alias{getStrata,gtypes-method}
+\alias{setStrata<-}
+\alias{setStrata<-,gtypes-method}
+\alias{setStrata}
+\alias{getSchemes}
+\alias{getSchemes,gtypes-method}
+\alias{setSchemes<-}
+\alias{setSchemes<-,gtypes-method}
+\alias{setSchemes}
+\alias{getSequences}
+\alias{getSequences,gtypes-method}
+\alias{getDescription}
+\alias{getDescription,gtypes-method}
+\alias{setDescription<-}
+\alias{setDescription<-,gtypes-method}
+\alias{setDescription}
 \alias{[,gtypes,ANY,ANY,ANY-method}
 \alias{index}
 \alias{subset}
@@ -77,42 +68,42 @@ getStrataNames(x, ...)
 
 \S4method{getStrataNames}{gtypes}(x, ...)
 
-ploidy(x, ...)
+getPloidy(x, ...)
 
-\S4method{ploidy}{gtypes}(x, ...)
+\S4method{getPloidy}{gtypes}(x, ...)
 
-other(x, ...)
+getOther(x, ...)
 
-\S4method{other}{gtypes}(x, ...)
+\S4method{getOther}{gtypes}(x, ...)
 
-strata(x, ...)
+getStrata(x, ...)
 
-\S4method{strata}{gtypes}(x)
+\S4method{getStrata}{gtypes}(x)
 
-strata(x) <- value
+setStrata(x) <- value
 
-\S4method{strata}{gtypes}(x) <- value
+\S4method{setStrata}{gtypes}(x) <- value
 
-schemes(x, ...)
+getSchemes(x, ...)
 
-\S4method{schemes}{gtypes}(x, ...)
+\S4method{getSchemes}{gtypes}(x, ...)
 
-schemes(x) <- value
+setSchemes(x) <- value
 
-\S4method{schemes}{gtypes}(x) <- value
+\S4method{setSchemes}{gtypes}(x) <- value
 
-sequences(x, ...)
+getSequences(x, ...)
 
-\S4method{sequences}{gtypes}(x, as.haplotypes = TRUE, seqName = NULL,
-  as.multidna = FALSE, ...)
+\S4method{getSequences}{gtypes}(x, as.haplotypes = TRUE,
+  seqName = NULL, as.multidna = FALSE, ...)
 
-description(x, ...)
+getDescription(x, ...)
 
-\S4method{description}{gtypes}(x, ...)
+\S4method{getDescription}{gtypes}(x, ...)
 
-description(x) <- value
+setDescription(x) <- value
 
-\S4method{description}{gtypes}(x) <- value
+\S4method{setDescription}{gtypes}(x) <- value
 
 \S4method{[}{gtypes,ANY,ANY,ANY}(x, i, j, k, ..., quiet = TRUE,
   drop = FALSE)
@@ -189,7 +180,7 @@ getLociNames(msats.g)
 # reassign all samples to two randomly chosen strata
 new.strata <- sample(c("A", "B"), getNumInd(msats.g), rep = TRUE)
 names(new.strata) <- getIndNames(msats.g)
-strata(msats.g) <- new.strata
+setStrata(msats.g) <- new.strata
 msats.g
 
 
@@ -201,19 +192,19 @@ x <- new("multidna", genes)
 wood.g <- sequence2gtypes(x)
 new.strata <- sample(c("A", "B"), getNumInd(wood.g), rep = TRUE)
 names(new.strata) <- getIndNames(wood.g)
-strata(wood.g) <- new.strata
+setStrata(wood.g) <- new.strata
 wood.g
 
 # get the multidna sequence object
-multi.seqs <- sequences(wood.g, as.multidna = TRUE)
+multi.seqs <- getSequences(wood.g, as.multidna = TRUE)
 class(multi.seqs) # "multidna"
 
 # get a list of DNAbin objects
-dnabin.list <- sequences(wood.g)
+dnabin.list <- getSequences(wood.g)
 class(dnabin.list) # "list"
 
 # get a DNAbin object of the first locus
-dnabin.1 <- sequences(wood.g)[[1]]
+dnabin.1 <- getSequences(wood.g)[[1]]
 class(dnabin.1) # "DNAbin"
 
 }

@@ -42,15 +42,15 @@ sequence2gtypes <- function(x, strata = NULL, seq.names = NULL, schemes = NULL,
   }
   
   # create gen.data data.frame
-  ind.names <- unique(unlist(getSequenceNames(x)))
+  ind.names <- unique(unlist(apex::getSequenceNames(x)))
   gen.data <- do.call(
     data.frame, 
-    lapply(getSequences(x, simplify = FALSE), function(dna) {
+    lapply(apex::getSequences(x, simplify = FALSE), function(dna) {
       x.labels <- labels(dna)
       x.labels[match(ind.names, x.labels)]
     })
   )
-  colnames(gen.data) <- getLocusNames(x)
+  colnames(gen.data) <- apex::getLocusNames(x)
   rownames(gen.data) <- ind.names
   
   # return new gtypes object

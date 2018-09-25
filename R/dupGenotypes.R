@@ -40,7 +40,7 @@ dupGenotypes <- function(g, num.shared = 0.8, num.cores = NULL) {
     dplyr::filter(.data$prop.loci.shared >= num.shared)
   
   dup.df <- if(nrow(dup.df) > 0) {
-    st <- strata(g)
+    st <- getStrata(g)
     locs <- getLociNames(g)
     dup.df %>% 
       tidyr::gather(

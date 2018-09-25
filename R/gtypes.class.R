@@ -91,7 +91,7 @@ setClass(
     # check sequences
     if(!is.null(object@sequences)) {
       # check that length of sequences equals number of loci
-      dna <- sequences(object)
+      dna <- getSequences(object)
       num.seqs <- length(dna)
       if(num.seqs > 0 & num.seqs != length(unique(object@data[["locus"]]))) {
         cat("the number of sets of sequences is not equal to the number of loci\n")
@@ -101,7 +101,7 @@ setClass(
       # check that locus names are the same in the @data 'locus' column and
       #   names of @sequences
       loc.names <- sort(unique(object@data[["locus"]]))
-      if(!identical(loc.names, sort(getLocusNames(object@sequences)))) {
+      if(!identical(loc.names, sort(apex::getLocusNames(object@sequences)))) {
         cat("the names of the sets of sequences is not the same as the loci\n")
         return(FALSE)
       }

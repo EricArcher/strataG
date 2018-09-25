@@ -24,6 +24,6 @@ numMissing <- function(g, by.strata = FALSE, prop = FALSE) {
   }
   .applyPerLocus(.countNAs, g, by.strata = by.strata, prop = prop) %>% 
     dplyr::rename(num.missing = .data$value) %>% 
-    dplyr::mutate(num.missing = .data$num.missing / ploidy(g)) %>% 
+    dplyr::mutate(num.missing = .data$num.missing / getPloidy(g)) %>% 
     as.data.frame()
 }

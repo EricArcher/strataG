@@ -10,7 +10,7 @@
 #'   in stratification scheme)
 #'
 #' @note If \code{scheme} is a vector or factor and has names, then the 
-#'   they will be used to match with \code{\link{indNames}} of \code{g}. 
+#'   they will be used to match with \code{\link{getIndNames}} of \code{g}. 
 #'   Otherwise \code{scheme} should be the same length as the number of 
 #'   samples in \code{g} or values in \code{scheme} will be recycled as 
 #'   necessary.
@@ -19,7 +19,7 @@
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \link{schemes}
+#' @seealso \link{getSchemes}
 #'
 #' @examples
 #' data(msats.g)
@@ -39,10 +39,10 @@ stratify <- function(g, scheme = NULL, drop = TRUE) {
     stop("'scheme' must be a vector or a factor")
   } else if(length(scheme) != 1) {
     stop("'scheme' must be one element long")
-  } else if(!scheme %in% colnames(schemes(g))) {
+  } else if(!scheme %in% colnames(getSchemes(g))) {
     stop(paste("scheme '", scheme, "' cannot be found", sep = ""))
   } else {
-    schemes(g) %>% 
+    getSchemes(g) %>% 
       dplyr::rename(.new = scheme) %>% 
       dplyr::select(.data$id, .data$.new)
   }

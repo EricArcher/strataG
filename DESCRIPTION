@@ -85,5 +85,6 @@ Collate:
     sequence2gtypes.R
 LazyData: TRUE
 VignetteBuilder: knitr
-LinkingTo: Rcpp
-RoxygenNote: 6.0.1
+# LinkingTo: Rcpp
+Encoding: UTF-8
+RoxygenNote: 6.1.0
