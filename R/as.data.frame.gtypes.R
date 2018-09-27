@@ -34,6 +34,10 @@
 #' genotypes.df <- as.data.frame(msats.g, one.col = TRUE, ids = FALSE, strata = FALSE)
 #' str(genotypes.df)
 #' 
+#' # as a matrix instead
+#' genotypes.mat <- as.matrix(msats.g)
+#' str(genotypes.mat)
+#' 
 #' @aliases as.data.frame,gtypes-method as.data.frame.gtypes as.data.frame
 #' @importFrom methods setMethod
 #'
@@ -75,3 +79,26 @@ setMethod(
       dplyr::mutate_all(dplyr::funs("as.character")) %>% 
       as.data.frame()
 })
+
+
+#' @rdname as.data.frame.gtypes
+#' @aliases as.matrix,gtypes-method as.matrix.gtypes as.matrix
+#' @importFrom methods setMethod
+#' 
+#' @export
+#' 
+setMethod(
+  "as.matrix", 
+  "gtypes",
+  function(x, one.col = FALSE, sep = "/", ids = TRUE, 
+           strata = TRUE, sort.alleles = TRUE, ...) {
+    
+    as.matrix(as.data.frame(
+      x = x,
+      one.col = one.col,
+      sep = sep,
+      ids = ids,
+      strata = strata,
+      sort.alleles = sort.alleles
+    ))
+  })

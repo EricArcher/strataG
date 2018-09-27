@@ -5,9 +5,15 @@
 \alias{as.data.frame.gtypes}
 \alias{as.data.frame,gtypes-method}
 \alias{as.data.frame}
+\alias{as.matrix,gtypes-method}
+\alias{as.matrix.gtypes}
+\alias{as.matrix}
 \title{Convert \code{gtypes} To \code{data.frame}}
 \usage{
 \S4method{as.data.frame}{gtypes}(x, one.col = FALSE, sep = "/",
+  ids = TRUE, strata = TRUE, sort.alleles = TRUE, ...)
+
+\S4method{as.matrix}{gtypes}(x, one.col = FALSE, sep = "/",
   ids = TRUE, strata = TRUE, sort.alleles = TRUE, ...)
 }
 \arguments{
@@ -48,6 +54,10 @@ str(onecol.df)
 # just the genotypes
 genotypes.df <- as.data.frame(msats.g, one.col = TRUE, ids = FALSE, strata = FALSE)
 str(genotypes.df)
+
+# as a matrix instead
+genotypes.mat <- as.matrix(msats.g)
+str(genotypes.mat)
 
 }
 \seealso{

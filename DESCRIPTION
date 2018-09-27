@@ -58,7 +58,6 @@ Collate:
     is.gtypes.R
     gtypes.initialize.R
     strataG-internal.R
-    as.matrix.gtypes.R
     as.data.frame.gtypes.R
     alleleFreqs.R
     alleleSplit.R
