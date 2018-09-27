@@ -324,7 +324,7 @@ setMethod(
     dna <- apex::getSequences(x@sequences, simplify = FALSE)
     if(!as.haplotypes) {
       dna <- purrr::map(
-        split(x@data$locus),
+        split(x@data, x@data$locus),
         function(l) {
           locus <- unique(l$locus)
           l <- dplyr::filter(l, !duplicated(.data$id))

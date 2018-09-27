@@ -32,7 +32,7 @@ as.multidna <- function(x) {
     if(is.null(x@sequences)) {
       stop("the gtypes object does not contain sequences")
     }
-    return(getSequences(x@sequences, as.multidna = TRUE))
+    return(getSequences(x, as.multidna = TRUE))
   }
   
   # a DNAbin

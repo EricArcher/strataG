@@ -8,7 +8,7 @@
 \alias{as.matrix,gtypes-method}
 \alias{as.matrix.gtypes}
 \alias{as.matrix}
-\title{Convert \code{gtypes} To \code{data.frame}}
+\title{Convert \code{gtypes} to data.frame or matrix}
 \usage{
 \S4method{as.data.frame}{gtypes}(x, one.col = FALSE, sep = "/",
   ids = TRUE, strata = TRUE, sort.alleles = TRUE, ...)
@@ -27,10 +27,12 @@ locus.}
 
 \item{ids}{logical. include a column for individual identifiers (\code{ids})?}
 
-\item{strata}{logical. include a column for current statification (\code{strata})?}
+\item{strata}{logical. include a column for current statification 
+(\code{strata})?}
 
-\item{sort.alleles}{logical. for non-haploid objects, should alleles be sorted 
-in genotypes or left in original order? (only takes affect if \code{one.col = TRUE})}
+\item{sort.alleles}{logical. for non-haploid objects, should alleles be
+sorted in genotypes or left in original order? (only takes affect if
+\code{one.col = TRUE})}
 
 \item{...}{additional arguments to be passed to or from methods.}
 }
@@ -38,7 +40,8 @@ in genotypes or left in original order? (only takes affect if \code{one.col = TR
 A \code{data.frame} with one row per sample.
 }
 \description{
-Create a data.frame from a \linkS4class{gtypes} object.
+Create a formatted data.frame or matrix 
+  from a \linkS4class{gtypes} object.
 }
 \examples{
 data(msats.g)

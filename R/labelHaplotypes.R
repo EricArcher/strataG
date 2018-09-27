@@ -39,6 +39,8 @@
 #'  }
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' 
+#' @seealso \code{\link{expandHaplotypes}}
 #'
 #' @examples
 #' # create 5 example short haplotypes

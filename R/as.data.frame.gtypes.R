@@ -1,6 +1,7 @@
 #' @name as.data.frame.gtypes
-#' @title Convert \code{gtypes} To \code{data.frame}
-#' @description Create a data.frame from a \linkS4class{gtypes} object.
+#' @title Convert \code{gtypes} to data.frame or matrix
+#' @description Create a formatted data.frame or matrix 
+#'   from a \linkS4class{gtypes} object.
 #'   
 #' @param x a \linkS4class{gtypes} object.
 #' @param one.col logical. If \code{TRUE}, then result has one column per 
@@ -8,9 +9,11 @@
 #' @param sep character to use to separate alleles if \code{one.col} is 
 #'   \code{TRUE}.
 #' @param ids logical. include a column for individual identifiers (\code{ids})?
-#' @param strata logical. include a column for current statification (\code{strata})?
-#' @param sort.alleles logical. for non-haploid objects, should alleles be sorted 
-#'   in genotypes or left in original order? (only takes affect if \code{one.col = TRUE})
+#' @param strata logical. include a column for current statification 
+#'   (\code{strata})?
+#' @param sort.alleles logical. for non-haploid objects, should alleles be
+#'   sorted in genotypes or left in original order? (only takes affect if
+#'   \code{one.col = TRUE})
 #' @param ... additional arguments to be passed to or from methods.
 #'   
 #' @return A \code{data.frame} with one row per sample.

@@ -85,6 +85,16 @@ Collate:
     write.gtypes.R
     df2gtypes.R
     sequence2gtypes.R
+    baseFreqs.R
+    createConsensus.R
+    iupacCode.R
+    validIupacCodes.R
+    expandHaplotypes.R
+    trimNs.R
+    fasta.R
+    fixedSites.R
+    variableSites.R
+    nucleotideDiversity.R
 LazyData: TRUE
 VignetteBuilder: knitr
 # LinkingTo: Rcpp

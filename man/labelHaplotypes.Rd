@@ -90,6 +90,9 @@ hap.assign <- labelHaplotypes(sample.seqs, prefix = "Hap.")
 hap.assign
 
 }
+\seealso{
+\code{\link{expandHaplotypes}}
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
