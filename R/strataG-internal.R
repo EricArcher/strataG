@@ -150,10 +150,10 @@ NULL
 #' @rdname strataG-internal
 #' @param fun a function that takes one locus column at a time.
 #' @param g a \linkS4class{gtypes} object.
-#' @param by.strata group results by strata?
+#' @param by.strata logical - return results grouped by strata?
 #' @keywords internal
 #' 
-.applyPerLocus <- function(fun, g, by.strata = TRUE, ...) {
+.applyPerLocus <- function(fun, g, by.strata = FALSE, ...) {
   result <- if(by.strata) {
     g@data %>% 
       dplyr::group_by(.data$stratum, .data$locus) %>%  

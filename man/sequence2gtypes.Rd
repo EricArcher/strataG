@@ -40,6 +40,11 @@ dloop.fine <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop",
 description = "dLoop: fine-scale stratification")
 
 }
+\seealso{
+\link{gtypes.initialize}, \link{as.matrix.gtypes}, 
+  \link{as.data.frame.gtypes}, \link{gtypes2genind}, \link{gtypes2loci},
+  \link{gtypes2phyDat}
+}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

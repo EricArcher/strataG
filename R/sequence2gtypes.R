@@ -16,6 +16,10 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
+#' @seealso \link{gtypes.initialize}, \link{as.matrix.gtypes}, 
+#'   \link{as.data.frame.gtypes}, \link{gtypes2genind}, \link{gtypes2loci},
+#'   \link{gtypes2phyDat}
+#' 
 #' @examples
 #' #--- create a haploid sequence (mtDNA) gtypes object
 #' data(dolph.strata)

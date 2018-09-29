@@ -4,13 +4,16 @@
 \alias{variableSites}
 \title{Variable Sites}
 \usage{
-variableSites(x, bases = c("a", "c", "g", "t", "-"))
+variableSites(x, bases = c("a", "c", "g", "t", "-"), simplify = TRUE)
 }
 \arguments{
 \item{x}{a \linkS4class{gtypes} object with sequences, 
 a \code{\link[ape]{DNAbin}} object, or a list of sequences.}
 
 \item{bases}{character vector of bases to consider.}
+
+\item{simplify}{if there is a single locus, return result in a simplified
+form? If \code{FALSE} a list will be returned wth one element per locus.}
 }
 \value{
 A list with: \describe{

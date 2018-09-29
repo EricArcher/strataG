@@ -42,7 +42,7 @@
 #' @seealso \link{df2gtypes}, \link{sequence2gtypes}
 #  \link{gtypes2genind}, \link{gtypes2loci}
 #'
-#' @aliases gtypes.initialize new
+#' @aliases gtypes.initialize initialize.gtypes new
 #' @importFrom methods setMethod
 #' 
 setMethod(

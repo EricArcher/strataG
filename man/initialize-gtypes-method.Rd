@@ -4,6 +4,7 @@
 \name{initialize,gtypes-method}
 \alias{initialize,gtypes-method}
 \alias{gtypes.initialize}
+\alias{initialize.gtypes}
 \alias{new}
 \title{\code{gtypes} Constructor}
 \usage{

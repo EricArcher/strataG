@@ -25,7 +25,7 @@
 
 .removeIdsMissingAllLoci(g)
 
-.applyPerLocus(fun, g, by.strata = TRUE, ...)
+.applyPerLocus(fun, g, by.strata = FALSE, ...)
 
 .numericLoci(g, min.val = 0)
 
@@ -45,7 +45,7 @@ used is set to the value of \code{detectCores() - 1}.}
 
 \item{fun}{a function that takes one locus column at a time.}
 
-\item{by.strata}{group results by strata?}
+\item{by.strata}{logical - return results grouped by strata?}
 
 \item{min.val}{minimum value to start allele numbering with}
 

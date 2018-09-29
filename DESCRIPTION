@@ -17,7 +17,7 @@ Authors@R: c(
 URL: https://github.com/EricArcher/strataG
 BugReports: https://github.com/EricArcher/strataG/issues
 Depends:
-    R (>= 3.2.0)
+    R (>= 3.5.0)
 Suggests:
     knitr,
     rmarkdown,
@@ -95,6 +95,17 @@ Collate:
     fixedSites.R
     variableSites.R
     nucleotideDiversity.R
+    fixedDifferences.R
+    lowFreqSubs.R
+    sequenceLikelihoods.R
+    nucleotideDivergence.R
+    popGenEqns.R
+    freq2GenData.R
+    gtypes2genind.R
+    gtypes2loci.R
+    gtypes2phyDat.R
+    theta.R
+    maf.R
 LazyData: TRUE
 VignetteBuilder: knitr
 # LinkingTo: Rcpp
