@@ -106,6 +106,9 @@ Collate:
     gtypes2phyDat.R
     theta.R
     maf.R
+    TiTvRatio.R
+    simGammaHaps.R
+    mostDistantSequences.R
 LazyData: TRUE
 VignetteBuilder: knitr
 # LinkingTo: Rcpp
