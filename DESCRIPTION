@@ -109,6 +109,10 @@ Collate:
     TiTvRatio.R
     simGammaHaps.R
     mostDistantSequences.R
+    mostRepresentativeSequences.R
+    numericSNPmat.R
+    write.nexus.snapp.R
+    mega.R
 LazyData: TRUE
 VignetteBuilder: knitr
 # LinkingTo: Rcpp

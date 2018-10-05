@@ -21,23 +21,20 @@
 #' @examples
 #' data(dolph.haps)
 #' 
-#' mostDistantSequences(dolph.haps)
+#' mostDistantSequences(dolph.haps, 5)
 #' 
 #' @export
 #' 
-mostDistantSequences <- function(x, num.seqs = NULL, model = "raw", 
-                                 pairwise.deletion = TRUE, simplify = TRUE) { 
+mostDistantSequences <- function(
+  x, num.seqs = NULL, model = "raw", pairwise.deletion = TRUE, simplify = TRUE
+) { 
   
   x <- if(is.gtypes(x)) {
     getSequences(x, as.haplotypes = TRUE, as.multidna = TRUE)
   } else {
     as.multidna(x)
   }
-  x <- apex::getSequences(x, simplify = FALSE) 
-  
-  max.num <- min(sapply(x, length))
-  if(is.null(num.seqs)) num.seqs <- max.num
-  if(num.seqs > max.num) num.seqs <- max.num
+  x <- apex::getSequences(x, simplify = FALSE)
   
   result <- purrr::map(x, function(dna) {
     # calculate distance between sequences
@@ -63,11 +60,17 @@ mostDistantSequences <- function(x, num.seqs = NULL, model = "raw",
         sqrt(sum(p ^ 2, na.rm = TRUE))
       }) %>% 
       sort(decreasing = TRUE)
+    
+    num.seqs <- if(is.null(num.seqs)) {
+      length(dna) 
+    } else {
+      min(num.seqs, length(dna))
+    }
     ids <- rep(as.character(NA), length = num.seqs)
     ids[1] <- names(dist.to.centroid)[1]
     if(num.seqs == 1) return(ids)
     
-    for(i in 2:num.seqs) {      
+    for(i in 2:length(ids)) {      
       current.ids <- ids[1:(i - 1)]
       # add sequence with greatest mean distance and variance to current set
       ids[i] <- setdiff(rownames(seq.dist), current.ids) %>% 

@@ -34,7 +34,7 @@ Finds the set of sequences that are on the edges of the cloud of
 \examples{
 data(dolph.haps)
 
-mostDistantSequences(dolph.haps)
+mostDistantSequences(dolph.haps, 5)
 
 }
 \author{
