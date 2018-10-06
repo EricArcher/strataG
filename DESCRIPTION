@@ -113,6 +113,7 @@ Collate:
     numericSNPmat.R
     write.nexus.snapp.R
     mega.R
+    mRatio.R
 LazyData: TRUE
 VignetteBuilder: knitr
 # LinkingTo: Rcpp
