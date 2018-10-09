@@ -9,9 +9,10 @@
 #'   vector (\code{by.strata = FALSE}) or matrix (\code{by.strata = TRUE}) 
 #'   with the frequency or proportion of each allele. 
 #'   
-#' @note If \code{g} is a haploid object with sequences, make sure to run 
+#' @note If \code{g} is a haploid object with sequences, the function will run 
 #'   \code{\link{labelHaplotypes}} if sequences aren't already grouped by 
-#'   haplotype.
+#'   haplotype. The \code{gtypes} object used with haplotype assignments and 
+#'   unassigned individuals will be stored in \code{attr(*, "gtypes")}.
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
@@ -27,6 +28,8 @@
 #' @export
 #' 
 alleleFreqs <- function(g, by.strata = FALSE, type = c("freq", "prop")) {
+  g <- .checkHapsLabelled(g)
+  
   af <- if(by.strata) {
     purrr::map(
       split(g@data, g@data$locus),
@@ -39,7 +42,7 @@ alleleFreqs <- function(g, by.strata = FALSE, type = c("freq", "prop")) {
     )
   }
   
-  if(match.arg(type) == "prop") {
+  af <- if(match.arg(type) == "prop") {
     purrr::map(
       af,
       function(x) {
@@ -50,7 +53,10 @@ alleleFreqs <- function(g, by.strata = FALSE, type = c("freq", "prop")) {
         }
       }
     )
-  } else {
-    af
-  }
+  } else af
+  
+  unassigned <- getOther(g, "haps.unassigned")
+  if(!is.null(unassigned)) attr(af, "gtypes") <- g
+  
+  af
 }

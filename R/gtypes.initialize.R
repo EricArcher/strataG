@@ -214,7 +214,7 @@ setMethod(
   g@sequences <- sequences
   g@schemes <- schemes
   g@description <- description
-  g@other <- other
+  g@other <- if(is.null(other)) list() else other
 
   # Check for samples missing data for all loci
   g <- .removeIdsMissingAllLoci(g)

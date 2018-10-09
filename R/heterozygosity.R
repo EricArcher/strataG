@@ -6,9 +6,7 @@
 #' @param type return \code{expected} or \code{observed} heterozygosity
 #' 
 #' @note If \code{g} is a haploid object with sequences, the value for 
-#'   expected heterozygosity (= haplotpyic diversity) will be returned. However,
-#'   make sure to run \code{\link{labelHaplotypes}} first if 
-#'   sequences aren't already grouped by haplotype.
+#'   expected heterozygosity (= haplotpyic diversity) will be returned.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
@@ -25,6 +23,8 @@
 #' 
 heterozygosity <- function(g, by.strata = FALSE, type = c("expected", "observed")) {
   if(getPloidy(g) == 1) type <- "expected"
+  g <- .checkHapsLabelled(g)
+  
   switch(
     match.arg(type),
     expected = .applyPerLocus(swfscMisc::diversity, g, by.strata = by.strata) %>% 

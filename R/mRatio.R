@@ -20,8 +20,7 @@
 #'   population size using data form microsatellite loci. Molecular Ecology
 #'   10(2):305-318.
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov} (adapted from code by Sean
-#'   Hoban)
+#' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
 #' @examples
 #' data(msats.g)

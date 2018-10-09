@@ -37,11 +37,6 @@ data.frame summary of pairwise shared loci.
 Calculate proportion of alleles and number of loci shared 
   between pairs of individuals or strata.
 }
-\note{
-If \code{g} is a haploid object with sequences, make sure to run 
-  \code{\link{labelHaplotypes}} if sequences aren't already grouped by 
-  haplotype.
-}
 \examples{
 data(msats.g)
 msats.g <- stratify(msats.g, "fine")

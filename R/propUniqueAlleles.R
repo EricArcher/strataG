@@ -6,10 +6,6 @@
 #' 
 #' @return a vector of the proportion of unique (occuring only in one individual) 
 #'   alleles for each locus.
-#' 
-#' @note If \code{g} is a haploid object with sequences, make sure to run 
-#'   \code{\link{labelHaplotypes}} if sequences aren't already grouped by 
-#'   haplotype.
 #'   
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
@@ -23,6 +19,8 @@
 #' @export
 #' 
 propUniqueAlleles <- function(g, by.strata = FALSE) { 
+  g <- .checkHapsLabelled(g)
+  
   df <- if(by.strata) {
     g@data %>% 
       dplyr::group_by(.data$stratum, .data$locus, .data$allele) %>% 

@@ -11,6 +11,7 @@
 \alias{.applyPerLocus}
 \alias{.numericLoci}
 \alias{.combineLoci}
+\alias{.checkHapsLabelled}
 \title{Internal Functions}
 \usage{
 .getFileLabel(g, label = NULL)
@@ -30,6 +31,8 @@
 .numericLoci(g, min.val = 0)
 
 .combineLoci(x, sep, sort)
+
+.checkHapsLabelled(g)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
@@ -61,6 +64,8 @@ two columns named something like 'ABCD.1' and 'ABCD.2', or
 'ABCD_A' and 'ABCD_B'.\cr}
 
 \item{ploidy}{integer representing the ploidy of the data.}
+
+\item{g}{a \linkS4class{gtypes} object.}
 
 \item{g}{a \linkS4class{gtypes} object.}
 

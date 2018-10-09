@@ -21,8 +21,7 @@ are generated.}
 
 \item{description}{an optional label for the object.}
 
-\item{other}{a slot to carry other related information - unused in package
-analyses.}
+\item{other}{a list to carry other related information (optional).}
 }
 \value{
 a \linkS4class{gtypes} object.

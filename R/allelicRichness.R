@@ -17,7 +17,7 @@
 #' @export
 #' 
 allelicRichness <- function(g, by.strata = FALSE) {
-  if(getPloidy(g) == 1 & !is.null(getSequences(g))) g <- labelHaplotypes(g)$gtypes
+  g <- .checkHapsLabelled(g)
   join.by <- if(by.strata) c("stratum", "locus") else "locus"
   numAlleles(g, by.strata) %>% 
     dplyr::left_join(numGenotyped(g, by.strata), by = join.by) %>% 

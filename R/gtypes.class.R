@@ -42,8 +42,7 @@ setClassUnion("dnaSequences", c("multidna", "NULL"))
 #'                schemes = strata.schemes, sequences = dolph.seqs, 
 #'                strata = "fine")
 #' dloop.g
-#' dloop.g <- labelHaplotypes(dloop.g, "Hap.")$gtypes
-#' dloop.g
+#' labelHaplotypes(dloop.g, "Hap.")
 #' 
 #' @aliases gtypes
 #' @import data.table apex
@@ -55,7 +54,7 @@ setClass(
   slots = c(
     data = "data.table", sequences = "dnaSequences",
     ploidy = "integer", schemes = "data.frameOrNULL", 
-    description = "charOrNULL", other = "ANY"
+    description = "charOrNULL", other = "list"
   ),
   
   prototype = prototype(
@@ -64,7 +63,7 @@ setClass(
     ploidy = 0L, 
     schemes = NULL, 
     description = NULL, 
-    other = NULL
+    other = list()
   ),
   
   validity = function(object) {

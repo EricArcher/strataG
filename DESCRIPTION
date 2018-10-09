@@ -114,6 +114,7 @@ Collate:
     write.nexus.snapp.R
     mega.R
     mRatio.R
+    neiDa.R
 LazyData: TRUE
 VignetteBuilder: knitr
 # LinkingTo: Rcpp

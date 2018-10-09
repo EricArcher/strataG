@@ -44,6 +44,5 @@ Garza, J.C. and E.G. Williamson. 2001. Detection of reduction in
   10(2):305-318.
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov} (adapted from code by Sean
-  Hoban)
+Eric Archer \email{eric.archer@noaa.gov}
 }

@@ -17,6 +17,7 @@
 #' @param drop if \code{TRUE} the return object will have unused sequences removed.
 #' @param ... other arguments passed from generics (ignored).
 #' @param value value being assigned by accessor.
+#' @param name name of the value going into the \code{other} list.
 #' 
 #' @details 
 #' Indexing a \code{gtypes} object with integers, characters, or logicals with 
@@ -88,6 +89,19 @@
 #' # get a DNAbin object of the first locus
 #' dnabin.1 <- getSequences(wood.g)[[1]]
 #' class(dnabin.1) # "DNAbin"
+#' 
+#' # getting and setting values in the `other` slot:
+#' getOther(dloop.g)
+#' 
+#' setOther(dloop.g, "timestamp") <- timestamp()
+#' setOther(dloop.g, "Author") <- "Hoban Washburne"
+#' 
+#' getOther(dloop.g)
+#' getOther(dloop.g, "timestamp")
+#' 
+#' setOther(dloop.g, "Author") <- NULL
+#' getOther(dloop.g)
+#' 
 #' 
 #' @name gtypes.accessors
 #' @aliases accessors
@@ -209,18 +223,6 @@ setGeneric("getPloidy", function(x, ...) standardGeneric("getPloidy"))
 #' @export
 #' 
 setMethod("getPloidy", "gtypes", function(x, ...) x@ploidy)
-
-
-#' @rdname gtypes.accessors
-#' @export
-#'
-setGeneric("getOther", function(x, ...) standardGeneric("getOther"))
-
-#' @rdname gtypes.accessors
-#' @aliases getOther
-#' @export
-#' 
-setMethod("getOther", "gtypes", function(x, ...) x@other)
 
 
 #' @rdname gtypes.accessors
@@ -362,6 +364,43 @@ setMethod("setDescription<-", "gtypes", function(x, value) {
   methods::validObject(x)
   x
 })
+
+
+
+#' @rdname gtypes.accessors
+#' @export
+#'
+setGeneric("getOther", function(x, ...) standardGeneric("getOther"))
+
+#' @rdname gtypes.accessors
+#' @aliases getOther
+#' @export
+#' 
+setMethod("getOther", "gtypes", function(x, value = NULL, ...) {
+  if(is.null(value)) {
+    x@other 
+  } else if(length(value) == 1) {
+    x@other[[value]]
+  } else {
+    x@other[value]
+  }
+})
+
+#' @rdname gtypes.accessors
+#' @export
+#' 
+setGeneric("setOther<-", function(x, name, value) standardGeneric("setOther<-"))
+
+#' @rdname gtypes.accessors
+#' @aliases setOther
+#' @export
+#' 
+setMethod("setOther<-", "gtypes", function(x, name, value) {
+  x@other[[name]] <- value
+  methods::validObject(x)
+  x
+})
+
 
 
 #' @rdname gtypes.accessors

@@ -57,7 +57,9 @@ NULL
     dplyr::left_join(
       propUniqueAlleles(x, TRUE) %>% 
         dplyr::group_by(.data$stratum) %>% 
-        dplyr::summarize(prop.unique.alleles = mean(.data$prop.unique.alleles, na.rm = TRUE)),
+        dplyr::summarize(
+          prop.unique.alleles = mean(.data$prop.unique.alleles, na.rm = TRUE)
+        ),
       by = "stratum"
     ) %>% 
     dplyr::left_join(het, by = "stratum") %>% 
@@ -97,7 +99,8 @@ NULL
     num.strata = getNumStrata(x),
     schemes = if(!is.null(getSchemes(x))) colnames(getSchemes(x))[-1] else NULL,
     strata.smry = strata.smry,
-    seq.smry = seq.smry
+    seq.smry = seq.smry, 
+    other = names(getOther(x))
   )
 }
 
@@ -113,7 +116,12 @@ NULL
   cat("<<<", x$description, ">>>\n")
   cat("\nContents: ")
   cat(ind.txt, loc.txt, strata.txt, sep = ", ")
-  if(!is.null(x$schemes)) cat("\nStratification schemes:", paste(x$schemes, collapse = ", "))
+  if(!is.null(x$schemes)) {
+    cat("\nStratification schemes:", paste(x$schemes, collapse = ", "))
+  }
+  if(!is.null(x$other)) {
+    cat("\nOther info:", paste(x$other, collapse = ", "))
+  }
   cat("\n\nStrata summary:\n")
   print(x$strata.smry)
   if(!is.null(x$seq.smry)) {

@@ -30,8 +30,7 @@ samples are labelled with consecutive numbers.}
 
 \item{description}{a label for the object (optional).}
 
-\item{other}{a slot to carry other related information - unused in package
-analyses (optional).}
+\item{other}{a list to carry other related information (optional).}
 }
 \value{
 a \linkS4class{gtypes} object.

@@ -52,8 +52,7 @@ dloop.g <- new("gtypes", gen.data = dloop.haps, ploidy = 1,
                schemes = strata.schemes, sequences = dolph.seqs, 
                strata = "fine")
 dloop.g
-dloop.g <- labelHaplotypes(dloop.g, "Hap.")$gtypes
-dloop.g
+labelHaplotypes(dloop.g, "Hap.")
 
 }
 \seealso{

@@ -22,9 +22,10 @@ A list of allele frequencies for each locus. Each element is a
 Calculate allele frequencies or proportions for each locus.
 }
 \note{
-If \code{g} is a haploid object with sequences, make sure to run 
+If \code{g} is a haploid object with sequences, the function will run 
   \code{\link{labelHaplotypes}} if sequences aren't already grouped by 
-  haplotype.
+  haplotype. The \code{gtypes} object used with haplotype assignments and 
+  unassigned individuals will be stored in \code{attr(*, "gtypes")}.
 }
 \examples{
 data(msats.g)

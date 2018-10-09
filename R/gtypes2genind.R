@@ -57,6 +57,8 @@ genind2gtypes <- function(x) {
   gen.mat <- adegenet::genind2df(x, usepop = TRUE, oneColPerAll = TRUE)
   gen.mat[gen.mat == "NA"] <- NA
   has.pop <- !is.null(x@pop)
+  # other <- 
+  # if(!is.null(other)) other <- list(genind = other)
   df2gtypes(
     x = gen.mat,
     ploidy = x@ploidy[1],
@@ -64,6 +66,6 @@ genind2gtypes <- function(x) {
     strata.col = if(has.pop) 1 else NULL,
     loc.col = if(has.pop) 2 else 1,
     schemes = x@strata,
-    other = adegenet::other(x)
+    other = list(genind = adegenet::other(x))
   )  
 }

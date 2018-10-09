@@ -9,8 +9,7 @@
 #'   are generated.
 #' @param schemes an optional data.frame of stratification schemes.
 #' @param description an optional label for the object.
-#' @param other a slot to carry other related information - unused in package
-#'   analyses.
+#' @param other a list to carry other related information (optional).
 #' 
 #' @return a \linkS4class{gtypes} object.
 #' 
@@ -66,6 +65,6 @@ sequence2gtypes <- function(x, strata = NULL, seq.names = NULL, schemes = NULL,
     schemes = schemes, 
     sequences = x, 
     description = description, 
-    other = other
+    other = if(is.null(other)) list() else other
   )
 }

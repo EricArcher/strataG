@@ -15,8 +15,7 @@
 #'   \linkS4class{multidna} object containing sequences. 
 #' @param schemes an optional data.frame of stratification schemes.
 #' @param description a label for the object (optional).
-#' @param other a slot to carry other related information - unused in package
-#'   analyses (optional).
+#' @param other a list to carry other related information (optional).
 #' 
 #' @details
 #' The genetic data in \code{x} starting at \code{loc.col} should be 
@@ -98,6 +97,6 @@ df2gtypes <- function(x, ploidy, id.col = 1, strata.col = 2, loc.col = 3,
     schemes = schemes, 
     sequences = sequences, 
     description = description, 
-    other = other
+    other = if(is.null(other)) list() else other
   )
 }

@@ -20,8 +20,6 @@
 \alias{getStrataNames,gtypes-method}
 \alias{getPloidy}
 \alias{getPloidy,gtypes-method}
-\alias{getOther}
-\alias{getOther,gtypes-method}
 \alias{getStrata}
 \alias{getStrata,gtypes-method}
 \alias{setStrata<-}
@@ -39,6 +37,11 @@
 \alias{setDescription<-}
 \alias{setDescription<-,gtypes-method}
 \alias{setDescription}
+\alias{getOther}
+\alias{getOther,gtypes-method}
+\alias{setOther<-}
+\alias{setOther<-,gtypes-method}
+\alias{setOther}
 \alias{[,gtypes,ANY,ANY,ANY-method}
 \alias{index}
 \alias{subset}
@@ -72,10 +75,6 @@ getPloidy(x, ...)
 
 \S4method{getPloidy}{gtypes}(x, ...)
 
-getOther(x, ...)
-
-\S4method{getOther}{gtypes}(x, ...)
-
 getStrata(x, ...)
 
 \S4method{getStrata}{gtypes}(x)
@@ -105,6 +104,14 @@ setDescription(x) <- value
 
 \S4method{setDescription}{gtypes}(x) <- value
 
+getOther(x, ...)
+
+\S4method{getOther}{gtypes}(x, value = NULL, ...)
+
+setOther(x, name) <- value
+
+\S4method{setOther}{gtypes}(x, name) <- value
+
 \S4method{[}{gtypes,ANY,ANY,ANY}(x, i, j, k, ..., quiet = TRUE,
   drop = FALSE)
 }
@@ -126,6 +133,8 @@ individual is returned.}
 
 \item{as.multidna}{return sequences as a \linkS4class{multidna} object? If 
 \code{FALSE}, sequences are returned as a list.}
+
+\item{name}{name of the value going into the \code{other} list.}
 
 \item{i, j, k}{subsetting slots for individuals (\code{i}), loci (\code{j}),
 or strata (\code{k}). See Details for more information.}
@@ -206,6 +215,19 @@ class(dnabin.list) # "list"
 # get a DNAbin object of the first locus
 dnabin.1 <- getSequences(wood.g)[[1]]
 class(dnabin.1) # "DNAbin"
+
+# getting and setting values in the `other` slot:
+getOther(dloop.g)
+
+setOther(dloop.g, "timestamp") <- timestamp()
+setOther(dloop.g, "Author") <- "Hoban Washburne"
+
+getOther(dloop.g)
+getOther(dloop.g, "timestamp")
+
+setOther(dloop.g, "Author") <- NULL
+getOther(dloop.g)
+
 
 }
 \author{

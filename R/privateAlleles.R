@@ -19,7 +19,7 @@
 #' 
 privateAlleles <- function(g) {
   . <- NULL # To pass CRAN check
-  if(getPloidy(g) == 1 & !is.null(getSequences(g))) g <- labelHaplotypes(g)$gtypes
+  g <- .checkHapsLabelled(g)
   
   alleleFreqs(g, TRUE) %>% 
     purrr::map(function(f) {

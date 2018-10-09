@@ -196,3 +196,15 @@ NULL
     paste(x, collapse = sep)
   }
 }
+
+#' @rdname strataG-internal
+#' @param g a \linkS4class{gtypes} object.
+#' @keywords internal
+#' 
+.checkHapsLabelled <- function(g) {
+  if(
+    getPloidy(g) == 1 & 
+    !is.null(getSequences(g)) & 
+    !is.null(getOther(g, "haps.unassigned"))
+  ) labelHaplotypes(g) else g
+}

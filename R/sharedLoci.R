@@ -12,10 +12,6 @@
 #'  by \code{\link[parallel]{detectCores}} - 1.
 #' 
 #' @return data.frame summary of pairwise shared loci.
-#' 
-#' @note If \code{g} is a haploid object with sequences, make sure to run 
-#'   \code{\link{labelHaplotypes}} if sequences aren't already grouped by 
-#'   haplotype.
 #'   
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
@@ -37,6 +33,8 @@ NULL
 #' @export
 #' 
 propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = NULL) {
+  g <- .checkHapsLabelled(g)
+  
   type <- match.arg(type)
   if(type == "strata" & getNumStrata(g) == 1) {
     stop("'type' cannot be 'strata' if only one stratum is present.")
@@ -96,10 +94,15 @@ propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = NULL) {
     )
   }))
   
-  type.pairs %>% 
+  smry <- type.pairs %>% 
     as.data.frame(stringsAsFactors = FALSE) %>% 
     stats::setNames(paste(type, 1:2, sep = ".")) %>% 
     cbind(shared.summary, shared)
+  
+  unassigned <- getOther(g, "haps.unassigned")
+  if(!is.null(unassigned)) attr(smry, "gtypes") <- g
+  
+  smry
 }
 
 
@@ -107,6 +110,8 @@ propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = NULL) {
 #' @export
 #'  
 sharedAlleles <- function(g, smry = c("num", "which")) {
+  g <- .checkHapsLabelled(g)
+  
   st.pairs <- .strataPairs(g)
   if(is.null(st.pairs)) stop("'g' must have at least two strata")
   smry <- match.arg(smry)
@@ -129,7 +134,12 @@ sharedAlleles <- function(g, smry = c("num", "which")) {
     result
   }))
   
-  return(data.frame(st.pairs, shared, stringsAsFactors = FALSE))
+  shared <- data.frame(st.pairs, shared, stringsAsFactors = FALSE)
+  
+  unassigned <- getOther(g, "haps.unassigned")
+  if(!is.null(unassigned)) attr(shared, "gtypes") <- g
+  
+  shared
 }
 
 

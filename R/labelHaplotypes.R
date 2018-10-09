@@ -31,12 +31,9 @@
 #'      remain unassigned.}
 #'  }
 #'
-#'  For \code{gtypes}, a list with the following elements:
-#'  \describe{
-#'    \item{gtypes}{the new \code{gtypes} object with the haplotypes reassigned.}
-#'    \item{unassigned}{a list containing the \code{unassigned} \code{data.frame}
-#'      for each gene if present, otherwise \code{NULL}.}
-#'  }
+#'  For \code{gtypes}, a new \code{gtypes} object with unassigned individuals
+#'  stored in the @@other slot in an element named \code{'haps.unassigned'} (see
+#'  \code{\link{getOther}}).
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
@@ -266,8 +263,7 @@ labelHaplotypes.gtypes <- function(x, ...) {
   unassigned <- lapply(new.haps, function(x) x$unassigned)
 
   # create new gtypes
-  st <- getStrata(x)
-  x <- df2gtypes(
+  df2gtypes(
     hap.df, 
     ploidy = 1, 
     id.col = 1, 
@@ -276,9 +272,6 @@ labelHaplotypes.gtypes <- function(x, ...) {
     sequences = hap.seqs, 
     description = getDescription(x), 
     schemes = getSchemes(x),
-    other = getOther(x)
+    other = c(getOther(x), list(haps.unassigned = unassigned))
   )
-  setStrata(x) <- st
-
-  list(gtypes = x, unassigned = unassigned)
 }

@@ -18,9 +18,7 @@ Calculate observed and heterozygosity.
 }
 \note{
 If \code{g} is a haploid object with sequences, the value for 
-  expected heterozygosity (= haplotpyic diversity) will be returned. However,
-  make sure to run \code{\link{labelHaplotypes}} first if 
-  sequences aren't already grouped by haplotype.
+  expected heterozygosity (= haplotpyic diversity) will be returned.
 }
 \examples{
 data(msats.g)
