@@ -115,6 +115,8 @@ Collate:
     mega.R
     mRatio.R
     neiDa.R
+    mafft.R
+    arlequin.R
 LazyData: TRUE
 VignetteBuilder: knitr
 # LinkingTo: Rcpp
