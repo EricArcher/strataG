@@ -33,6 +33,7 @@ Imports:
     data.table (>= 1.11.4),
     copula,
     DT,
+    genepop (>= 1.0.5),
     ggplot2,
     graphics,
     grid,
@@ -118,6 +119,10 @@ Collate:
     mafft.R
     arlequin.R
     ldNe.R
+    genepop.R
+    hweTest.R
+    jackHWE.R
+    LDgenepop.R
 LazyData: TRUE
 VignetteBuilder: knitr
 # LinkingTo: Rcpp

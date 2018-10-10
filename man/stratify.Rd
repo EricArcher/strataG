@@ -11,7 +11,8 @@ stratify(g, scheme = NULL, drop = TRUE)
 
 \item{scheme}{either the column name of a stratification scheme stored 
 in the data.frame of the \code{schemes} slot of \code{g}, or a vector or 
-factor identifying which stratum each sample belongs to.}
+factor identifying which stratum each sample belongs to. If \code{NULL},
+all individuals are assigned to a single stratum named \code{"Default"}.}
 
 \item{drop}{remove samples not assigned to a stratum? (those assigned \code{NA} 
 in stratification scheme)}
