@@ -33,7 +33,6 @@ colnames(snps) <- paste("Loc", LETTERS[1:3], sep = "_")
 snps
 alleleSplit(snps)
 
-
 # A sample microsatellie data set with alleles separated by "/"
 alleles <- seq(100, 150, 2)
 msats <- do.call(cbind, lapply(1:3, function(i) {

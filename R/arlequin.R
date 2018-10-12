@@ -186,21 +186,18 @@ write.arlequin <- function(g, label = NULL, locus = 1) {
         append = TRUE
       )
     } else { # Microsats
-      loc.mat <- purrr::map(getIndNames(st), function(id) {
-        st[id, , ]@data %>% 
-          dplyr::mutate(
-            allele = ifelse(is.na(.data$allele), "?", .data$allele),
-            a = rep(1:getPloidy(st), getNumLoci(st))
-          ) %>% 
-          dplyr::select(-.data$id, -.data$stratum) %>% 
-          tidyr::spread(.data$locus, .data$allele) %>% 
-          dplyr::mutate(
-            id = ifelse(.data$a == 1, id, paste(rep(" ", nchar(id)), collapse = "")),
-            a = ifelse(.data$a == 1, "1", " ")
-          ) %>% 
-          dplyr::select(.data$id, .data$a, dplyr::everything())
-      }) %>% 
-        dplyr::bind_rows() %>% 
+      loc.mat <- .stackedAlleles(st, na.val = "?") %>% 
+        dplyr::mutate(
+          id = ifelse(
+            .data$allele == 1, 
+            .data$id, 
+            sapply(nchar(.data$id), function(i) {
+              paste(rep(" ", i), collapse = "")
+            })
+          ),
+          allele = ifelse(.data$allele == 1, "1", " ")
+        ) %>% 
+        dplyr::select(.data$id, .data$allele, dplyr::everything()) %>% 
         as.matrix()
       
       write(

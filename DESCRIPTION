@@ -123,6 +123,9 @@ Collate:
     hweTest.R
     jackHWE.R
     LDgenepop.R
+    fastsimcoal.R
+    fastsimcoal.input.R
+    structure.R
 LazyData: TRUE
 VignetteBuilder: knitr
 # LinkingTo: Rcpp

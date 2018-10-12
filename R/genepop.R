@@ -105,8 +105,7 @@ genepopWrite <- function(g, label = NULL) {
   .convertAlleles <- function(x) {
     x <- as.numeric(factor(x))
     x[is.na(x)] <- 0
-    max.width <- 
-    formatC(x, width = max(2, nchar(x)), flag = "0")
+    max.width <- formatC(x, width = max(2, nchar(x)), flag = "0")
   }
   
   # convert alleles to genotypes in GENEPOP format, substitute , for _ in

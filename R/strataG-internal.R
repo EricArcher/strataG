@@ -172,14 +172,36 @@ NULL
 #' @param min.val minimum value to start allele numbering with
 #' @keywords internal
 #' 
-.numericLoci <- function(g, min.val = 0) {
-  ids <- NULL # For CRAN CHECK
-  .convToNum <- function(x) min.val + (as.numeric(droplevels(x)) - 1)
-  list(
-    ids = g@data[, unique(ids)],
-    loci = as.matrix(g@data[, sapply(.SD, .convToNum), .SDcols = !c("ids", "strata")])
-  )
+.alleles2integer <- function(g, min.val = 0) {
+  g@data %>% 
+    dplyr::group_by(.data$locus) %>% 
+    dplyr::mutate(allele = min.val - 1 + as.integer(factor(.data$allele))) %>% 
+    dplyr::ungroup() 
 }
+
+
+#' @rdname strataG-internal
+#' @param g a \linkS4class{gtypes} object.
+#' @param alleles2integer convert alleles to integers?
+#' @param na.val value to replace NAs with.
+#' @keywords internal
+#' 
+.stackedAlleles <- function(g, alleles2integer = FALSE, na.val = NULL, ...) {
+  x <- if(alleles2integer) .alleles2integer(g, ...) else g@data
+  if(!is.null(na.val)) {
+    x <- x %>% 
+      dplyr::mutate(
+        allele = ifelse(is.na(.data$allele), na.val, .data$allele)
+      )
+  }
+  x %>% 
+    dplyr::arrange(.data$id, .data$locus) %>% 
+    dplyr::mutate(a = rep(1:getPloidy(g), dplyr::n() / getPloidy(g))) %>% 
+    tidyr::spread(.data$locus, .data$allele) %>% 
+    dplyr::rename(allele = "a") %>% 
+    dplyr::select(.data$id, .data$stratum, .data$allele, dplyr::everything())
+}
+
 
 #' @rdname strataG-internal
 #' @param x a vector

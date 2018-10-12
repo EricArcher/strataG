@@ -9,7 +9,8 @@
 \alias{.strataPairs}
 \alias{.removeIdsMissingAllLoci}
 \alias{.applyPerLocus}
-\alias{.numericLoci}
+\alias{.alleles2integer}
+\alias{.stackedAlleles}
 \alias{.combineLoci}
 \alias{.checkHapsLabelled}
 \title{Internal Functions}
@@ -28,7 +29,9 @@
 
 .applyPerLocus(fun, g, by.strata = FALSE, ...)
 
-.numericLoci(g, min.val = 0)
+.alleles2integer(g, min.val = 0)
+
+.stackedAlleles(g, alleles2integer = FALSE, na.val = NULL, ...)
 
 .combineLoci(x, sep, sort)
 
@@ -52,6 +55,10 @@ used is set to the value of \code{detectCores() - 1}.}
 
 \item{min.val}{minimum value to start allele numbering with}
 
+\item{alleles2integer}{convert alleles to integers?}
+
+\item{na.val}{value to replace NAs with.}
+
 \item{x}{a vector}
 
 \item{sep}{a character for separating}
@@ -64,6 +71,8 @@ two columns named something like 'ABCD.1' and 'ABCD.2', or
 'ABCD_A' and 'ABCD_B'.\cr}
 
 \item{ploidy}{integer representing the ploidy of the data.}
+
+\item{g}{a \linkS4class{gtypes} object.}
 
 \item{g}{a \linkS4class{gtypes} object.}
 
