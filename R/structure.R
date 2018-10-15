@@ -10,7 +10,7 @@
 #' @param label label to use for input and output files
 #' @param delete.files logical. Delete all files when STRUCTURE is finished?
 #' @param exec name of executable for STRUCTURE. Defaults to "structure".
-#' @param ... arguments to be passed to \code{structure.write}.
+#' @param ... arguments to be passed to \code{structureWrite}.
 #' @param maxpops number of groups.
 #' @param burnin number of iterations for MCMC burnin.
 #' @param numreps number of MCMC replicates.
@@ -41,10 +41,10 @@
 #'    
 #' @return
 #' \describe{
-#'  \item{\code{structure.run}}{a list where each element is a list with results 
-#'    from \code{structure.read} and a vector of the filenames used}
-#'  \item{\code{structure.write}}{a vector of the filenames used by STRUCTURE}
-#'  \item{\code{structure.read}}{a list containing:
+#'  \item{\code{structureRun}}{a list where each element is a list with results 
+#'    from \code{structureRead} and a vector of the filenames used}
+#'  \item{\code{structureWrite}}{a vector of the filenames used by STRUCTURE}
+#'  \item{\code{structureRead}}{a list containing:
 #'    \describe{
 #'      \item{\code{summary}}{new locus name, which is a combination of loci in
 #'        group}
@@ -312,7 +312,7 @@ structureWrite <- function(
   invisible(list(
     files = c(data = in.file, mainparams = main.file, 
               extraparams = extra.file, out = out.file),
-    pops = getNumStrata(g)
+    pops = getStrataNames(g)
   ))
 }
 
@@ -439,26 +439,24 @@ structureRead <- function(file, pops = NULL) {
   q.mat.txt <- sub("[)]", "", q.mat.txt)
   q.mat.txt <- sub("[|][ ]+$", "", q.mat.txt)
   
-  # Parse population assignment portion of table to create single-line 
-  #   data.frame
-  purrr::map(q.mat.txt, function(x) {
-    # Split on spaces and remove empty spaces and colons
-    x <- strsplit(x, " ")[[1]]
-    x <- x[!x %in% c("", ":")]
-    p <- as.numeric(x[4])
-    
-    tibble::tibble(
-      row = as.numeric(x[1]), 
-      id = x[2], 
-      pct.miss = as.numeric(x[3]), 
-      orig.pop = if(is.null(pops)) p else pops[p]
+  cols1to4 <- c("row", "id", "pct.miss", "orig.pop")
+  
+  strsplit(q.mat.txt, " ") %>% 
+    purrr::map(function(q) {
+      q <- q[! q %in% c("", " ", ":")] %>% 
+        as.character() %>% 
+        rbind() %>% 
+        as.data.frame(stringsAsFactors = FALSE) 
+      stats::setNames(q, c(cols1to4, paste("Group", 1:(ncol(q) - 4), sep = ".")))
+    }) %>% 
+    dplyr::bind_rows() %>% 
+    dplyr::mutate_at(
+      dplyr::vars("row", "pct.miss", "orig.pop", dplyr::starts_with("Group.")), 
+      as.numeric
     ) %>% 
-      dplyr::bind_cols(
-        stats::setNames(
-          as.data.frame(rbind(as.numeric(x[-(1:4)]))),
-          paste("Group", 1:(ncol(x) - 4), sep = ".")
-        )
-      )
-  }) %>% 
-    dplyr::bind_rows()
+    dplyr::mutate(orig.pop = if(!is.null(pops)) {
+      pops[.data$orig.pop] 
+    } else {
+      .data$orig.pop
+    })
 }
