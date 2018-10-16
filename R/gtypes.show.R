@@ -1,3 +1,4 @@
+#' @name gtypes.show
 #' @title Show a gtypes object
 #' @description Show a gtypes object
 #' 
@@ -13,7 +14,7 @@ setMethod("show", "gtypes", function(object) {
   invisible(NULL)
 })
 
-#' @rdname gtypes.summary
+#' @rdname gtypes.show
 #' @param g a \linkS4class{gtypes} object.
 #' @keywords internal
 #' 
@@ -68,7 +69,7 @@ setMethod("show", "gtypes", function(object) {
   )
 }
 
-#' @rdname gtypes.summary
+#' @rdname gtypes.show
 #' @param x list from .baseSmry
 #' @keywords internal
 #' 

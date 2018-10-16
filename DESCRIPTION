@@ -128,6 +128,8 @@ Collate:
     structurePlot.R
     evanno.R
     clumpp.R
+    fusFs.R
+    tajimasD.R
 LazyData: TRUE
 VignetteBuilder: knitr
 # LinkingTo: Rcpp
