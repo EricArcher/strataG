@@ -82,6 +82,7 @@ Collate:
     summarizeInds.R
     summarizeSeqs.R
     gtypes.show.R
+    gtypes.summary.R
     write.gtypes.R
     df2gtypes.R
     sequence2gtypes.R

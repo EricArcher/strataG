@@ -5,6 +5,7 @@
 \alias{gtypes.show}
 \alias{show.gtypes}
 \alias{.baseSmry}
+\alias{.printSmryHeader}
 \alias{.printBaseSmry}
 \title{Show a gtypes object}
 \usage{
@@ -12,12 +13,16 @@
 
 .baseSmry(g)
 
+.printSmryHeader(x)
+
 .printBaseSmry(x)
 }
 \arguments{
 \item{object}{a \linkS4class{gtypes} object.}
 
 \item{g}{a \linkS4class{gtypes} object.}
+
+\item{x}{list from .baseSmry}
 
 \item{x}{list from .baseSmry}
 }

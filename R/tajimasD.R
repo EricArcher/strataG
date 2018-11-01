@@ -4,6 +4,7 @@
 #' 
 #' @param x set of DNA sequences or a haploid \linkS4class{gtypes} 
 #'   object with sequences.
+#' @param CI desired central confidence interval.
 #' 
 #' @return A named vector with the estimate for \code{D} and 
 #'   the \code{p.value} that it is different from 0.
@@ -20,10 +21,10 @@
 #' 
 #' @export
 #' 
-tajimasD <- function(x) {
+tajimasD <- function(x, CI = 0.95) {
   # making life easier:
   # D.to.x <- function(D, Dmin, Dmax) (D - Dmin) / (Dmax - Dmin) # conversion 1
-  # x.to.D <- function(x, Dmin, Dmax) x * (Dmax - Dmin) + Dmin   # conversion 2
+  x.to.D <- function(x, Dmin, Dmax) x * (Dmax - Dmin) + Dmin   # conversion 2
   
   # distribution function from Tajima paper:
   beta.D <- function(tajima.D, alpha, beta, Dmin, Dmax) { 
@@ -84,8 +85,9 @@ tajimasD <- function(x) {
     Beta <- (1 + DMin * DMax) * DMin / (DMax - DMin)
     
     # 95% confidence interval:
-    # LB <- x.to.D(stats::qbeta(.025, Beta, Alpha), DMin, DMax)
-    # UB <- x.to.D(stats::qbeta(.975, Beta, Alpha), DMin, DMax)
+    lci.p <- (1 - CI) / 2
+    LCI <- x.to.D(stats::qbeta(lci.p, Beta, Alpha), DMin, DMax)
+    UCI <- x.to.D(stats::qbeta(1 - lci.p, Beta, Alpha), DMin, DMax)
     
     # important probabilities 
     # D negative: intregrate from Dmin to D, 
@@ -100,14 +102,13 @@ tajimasD <- function(x) {
         Dmin = DMin, 
         Dmax = DMax
       )
-      tibble::tibble(D = D_obs, p.value = prob$value)
+      tibble::tibble(D = D_obs, p.value = prob$value, LCI = LCI, UCI = UCI)
     }, error = function(e) {
       warning("error in Tajima's D integration, NA returned")
-      tibble::tibble(D = NA, p.value = NA)
+      tibble::tibble(D = NA, p.value = NA, LCI = NA, UCI = NA)
     })
   }) %>% 
     dplyr::bind_rows() %>% 
-    dplyr::mutate(loci = names(x)) %>% 
-    as.data.frame() %>% 
-    tibble::column_to_rownames("loci") 
+    dplyr::mutate(locus = names(x)) %>% 
+    as.data.frame()
 }

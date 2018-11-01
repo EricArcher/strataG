@@ -22,9 +22,9 @@
 #' 
 #' @return \describe{
 #'   \item{\code{genepop}}{a list with a vector of the locus names and a vector 
-#'     of the input and output filenames}
+#'     of the input and output filenames.}
 #'   \item{\code{genepopWrite}}{a list with the filename written and a vector
-#'     mapping locus names in the file to the original locus names.
+#'     mapping locus names in the file to the original locus names.}
 #' }
 #' 
 #' @references GENEPOP 4.3 (08 July 2014; Rousset, 2008)\cr

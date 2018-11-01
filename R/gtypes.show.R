@@ -73,7 +73,7 @@ setMethod("show", "gtypes", function(object) {
 #' @param x list from .baseSmry
 #' @keywords internal
 #' 
-.printBaseSmry <- function(x) {
+.printSmryHeader <- function(x) {
   ind.txt <- paste(x$num.ind, " sample", 
                    ifelse(x$num.ind > 1, "s", ""), sep = "")
   loc.txt <- paste(x$num.loc, " loc", 
@@ -85,6 +85,15 @@ setMethod("show", "gtypes", function(object) {
   cat("<<<", x$description, ">>>\n")
   cat("\nContents: ")
   cat(ind.txt, loc.txt, strata.txt, sep = ", ")
+  cat("\n")
+}
+
+#' @rdname gtypes.show
+#' @param x list from .baseSmry
+#' @keywords internal
+#' 
+.printBaseSmry <- function(x) {
+  .printSmryHeader(x)
   if(!is.null(x$schemes)) {
     cat("\nStratification schemes:", paste(x$schemes, collapse = ", "))
   }

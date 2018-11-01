@@ -38,23 +38,24 @@
 mafft <- function(x, run.label = "align.mafft", delete.output = TRUE, 
                   op = 3, ep = 0.123, maxiterate = 0, quiet = FALSE, 
                   num.cores = 1, opts = "--auto") {
-  in.fasta <- paste(run.label, ".in.fasta", sep = "")
-  aligned.fasta <- paste(run.label, ".aligned.fasta", sep = "")
-  write.fasta(x, file = in.fasta)
-  mafft.cmd <- paste(
-    "mafft", 
-    opts, 
-    "--op", op,
-    "--ep", ep,
-    "--maxiterate", maxiterate,
-    ifelse(quiet, "--quiet", ""),
-    "--thread", num.cores,
-    in.fasta, ">", aligned.fasta
-  )
-  err.code <- system(mafft.cmd, intern = FALSE)
-  if(!err.code == 0) return(NA)
-  aligned <- read.fasta(aligned.fasta)
-  file.remove(in.fasta)
-  if(delete.output) file.remove(aligned.fasta)
-  aligned
+  write.fasta(x, file = run.label) %>% 
+    purrr::map(function(f) {
+      aligned.fasta <- paste("mafft aligned", f)
+      mafft.cmd <- paste(
+        "mafft", 
+        opts, 
+        "--op", op,
+        "--ep", ep,
+        "--maxiterate", maxiterate,
+        ifelse(quiet, "--quiet", ""),
+        "--thread", num.cores,
+        f, ">", aligned.fasta
+      )
+      err.code <- system(mafft.cmd, intern = FALSE)
+      if(!err.code == 0) return(NA)
+      aligned <- read.fasta(aligned.fasta)
+      file.remove(f)
+      if(delete.output) file.remove(aligned.fasta)
+      aligned
+    })
 }

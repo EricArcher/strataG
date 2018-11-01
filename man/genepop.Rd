@@ -33,6 +33,14 @@ arguments.}
 
 \item{exec}{name of Genepop executable}
 }
+\value{
+\describe{
+  \item{\code{genepop}}{a list with a vector of the locus names and a vector 
+    of the input and output filenames.}
+  \item{\code{genepopWrite}}{a list with the filename written and a vector
+    mapping locus names in the file to the original locus names.}
+}
+}
 \description{
 Format output files and run GENEPOP. Filenames used are returned 
   so that output files can be viewed or read and parsed into R.

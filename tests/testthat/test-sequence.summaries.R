@@ -23,8 +23,10 @@ test_that("base frequencies are computed correctly", {
   
   expect_true(bf$site.freqs["a", 1] == 0)
   expect_true(bf$site.freqs["g", 1] == 33)
-  expect_true(round(bf$base.freqs["a"], 3) == 0.3)
-  expect_true(round(bf$base.freqs["-"], 3) == 0.005)
+  expect_true(bf$base.freqs["a"] == 3977)
+  expect_true(bf$base.freqs["-"] == 61)
+  expect_true(bf$ind.freqs["Hap.01", "a"] == 120)
+  expect_true(bf$ind.freqs["Hap.33", "g"] == 52)
 })
 
 test_that("fixed sites are computed correctly", {

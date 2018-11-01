@@ -4,7 +4,6 @@
 #' @param g a \linkS4class{gtypes} object.
 #' @param by.strata logical. If \code{TRUE}, return a list of summary matrices 
 #'   for each stratum.
-#' @param ... arguments to be passed on to summary functions.
 #' 
 #' @return A matrix with rows for each locus and columns containing summaries of:
 #' \describe{
@@ -27,7 +26,7 @@
 #' 
 #' @export
 #' 
-summarizeLoci <- function(g, by.strata = FALSE, ...) {
+summarizeLoci <- function(g, by.strata = FALSE) {
   by.cols <- if(by.strata) c("stratum", "locus") else "locus"
   smry <- numGenotyped(g, by.strata) %>% 
     dplyr::left_join(numMissing(g, by.strata), by = by.cols) %>% 

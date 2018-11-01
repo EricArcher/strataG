@@ -28,7 +28,12 @@
 #'
 #' @export
 #' 
-baseFreqs <- function(x, bases = NULL, ignore = c("n", "x", "-", "."), simplify = TRUE) {
+baseFreqs <- function(
+  x, 
+  bases = NULL, 
+  ignore = c("n", "x", "-", "."), 
+  simplify = TRUE
+) {
   bases <- if(is.null(bases)) {
     rownames(iupac.mat)
   } else {
@@ -38,15 +43,21 @@ baseFreqs <- function(x, bases = NULL, ignore = c("n", "x", "-", "."), simplify 
   
   result <- apex::getSequences(as.multidna(x), simplify = FALSE) %>% 
     purrr::map(function(dna) {
-      dna <- as.character(as.matrix(dna))
-      site.freqs <- apply(dna, 2, function(site) {
+      dna.mat <- tolower(as.character(as.matrix(dna)))
+      site.freqs <- apply(dna.mat, 2, function(site) {
         site <- site[!site %in% ignore]
         table(factor(site, levels = bases))
       })
       colnames(site.freqs) <- 1:ncol(site.freqs)
-      base.freqs <- table(factor(as.vector(dna), levels = bases))
-      base.freqs <- base.freqs / sum(base.freqs)
-      list(site.freqs = site.freqs, base.freqs = base.freqs)
+      base.freqs <- table(factor(as.vector(dna.mat), levels = bases))
+      ind.freqs <- t(sapply(as.character(as.list(dna)), function(x) {
+        table(factor(tolower(x), levels = bases))
+      }))
+      list(
+        site.freqs = site.freqs, 
+        base.freqs = base.freqs, 
+        ind.freqs = ind.freqs
+      )
     })
   
   if(length(result) == 1 & simplify) result[[1]] else result
