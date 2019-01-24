@@ -23,33 +23,6 @@
 #' @export
 #' 
 fusFs <- function(x) {
-  fs.func <- function(h) {
-    if(is.null(h)) return(NA)
-    h$hap.seqs <- as.matrix(h$hap.seqs)
-    h$haps <- na.omit(h$haps)
-    n <- length(h$haps)
-    k0 <- length(unique(h$haps))
-    
-    pws.diff <- ape::dist.dna(
-      h$hap.seqs, 
-      model = "N", 
-      pairwise.deletion = TRUE, 
-      as.matrix = TRUE
-    )
-    pws.diff <- pws.diff[h$haps, h$haps]
-    theta.pi <- mean(pws.diff[lower.tri(pws.diff)])
-    # NaN produced for n > 172 from copula::Stirling1
-    Sk.theta.k <- sapply(
-      k0:n, 
-      function(k) abs(copula::Stirling1(n, k)) * (theta.pi ^ k)
-    )
-    # potential typo on Fu 1997 page 916 that implies 
-    #   prod(theta.pi - 0:(n + 1)). See Ewens 1972 Eqn 22.
-    Sn.theta.pi <- prod(theta.pi + 0:(n - 1)) 
-    s.prime <- sum(Sk.theta.k / Sn.theta.pi)
-    log(s.prime / (1 - s.prime))
-  }
-  
   x <- if(inherits(x, "gtypes")) {
     getSequences(x, as.haplotypes = FALSE, as.multidna = TRUE)
   } else {
@@ -60,6 +33,35 @@ fusFs <- function(x) {
     dna <- as.matrix(dna)
     rownames(dna) <- 1:nrow(dna)
     haps <- labelHaplotypes(dna)
-    fs.func(haps)
+    .fs.func(haps)
   })
+}
+
+#' @keywords internal
+#' 
+.fs.func <- function(h) {
+  if(is.null(h)) return(NA)
+  h$hap.seqs <- as.matrix(h$hap.seqs)
+  h$haps <- stats::na.omit(h$haps)
+  n <- length(h$haps)
+  k0 <- length(unique(h$haps))
+  
+  pws.diff <- ape::dist.dna(
+    h$hap.seqs, 
+    model = "N", 
+    pairwise.deletion = TRUE, 
+    as.matrix = TRUE
+  )
+  pws.diff <- pws.diff[h$haps, h$haps]
+  theta.pi <- mean(pws.diff[lower.tri(pws.diff)])
+  # NaN produced for n > 172 from copula::Stirling1
+  Sk.theta.k <- sapply(
+    k0:n, 
+    function(k) abs(copula::Stirling1(n, k)) * (theta.pi ^ k)
+  )
+  # potential typo on Fu 1997 page 916 that implies 
+  #   prod(theta.pi - 0:(n + 1)). See Ewens 1972 Eqn 22.
+  Sn.theta.pi <- prod(theta.pi + 0:(n - 1)) 
+  s.prime <- sum(Sk.theta.k / Sn.theta.pi)
+  log(s.prime / (1 - s.prime))
 }

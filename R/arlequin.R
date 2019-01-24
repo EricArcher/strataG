@@ -111,7 +111,7 @@ read.arlequin <- function(file) {
     "MICROSAT" = {
       ploidy <- unname(table(gen.data[, 2])[1])
       new.mat <- do.call(rbind, split(gen.data[, -(1:3)], gen.data[, 2]))
-      freqs <- na.omit(gen.data[, 1:3])
+      freqs <- stats::na.omit(gen.data[, 1:3])
       new.mat <- cbind(freqs, new.mat[freqs[, 2], ])
       new.mat <- do.call(rbind, lapply(1:nrow(new.mat), function(i) {
         x <- new.mat[rep(i, as.numeric(new.mat[i, 3])), , drop = FALSE]

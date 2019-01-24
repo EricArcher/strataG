@@ -36,8 +36,8 @@ stratify <- function(g, scheme = NULL, drop = TRUE) {
   
   scheme <- if(is.null(scheme)) {
     tibble::tibble(id = ids, .new = rep("Default", length(ids)))
-  } else if(!(is.vector(scheme) | is.factor(scheme))) {
-    stop("'scheme' must be a vector or a factor")
+  } else if(!(is.character(scheme) & is.vector(scheme))) {
+    stop("'scheme' must be a character vector")
   } else if(length(scheme) != 1) {
     stop("'scheme' must be one element long")
   } else if(!scheme %in% colnames(getSchemes(g))) {

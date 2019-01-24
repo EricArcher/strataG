@@ -35,12 +35,23 @@ setMethod("summary", "gtypes", function(object, ...) {
     .printSmryHeader()
   cat("\n")
   
+  .summaryStats <- function(x) {
+    apply(x, 2, function(z) {
+      c(
+        Min = min(z, na.rm = TRUE),
+        Median = stats::median(z, na.rm = TRUE),
+        Mean = mean(z, na.rm = TRUE),
+        Max = max(z, na.rm = TRUE),
+        NAs = sum(is.na(z))
+      )
+    })
+  }
   ind.smry <- summarizeInds(object) %>% 
     dplyr::select(-.data$id, -.data$stratum) %>% 
-    summary()
+    .summaryStats()
   loci.smry <- summarizeLoci(object) %>% 
     dplyr::select(-.data$locus) %>% 
-    summary()
+    .summaryStats()
   
   cbind(ind.smry, loci.smry) %>% 
     as.table() %>% 

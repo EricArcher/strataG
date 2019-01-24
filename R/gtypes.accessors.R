@@ -1,72 +1,66 @@
 #' @title \code{gtypes} Accessors
 #' @description Accessors for slots in \linkS4class{gtypes} objects.
-#' 
+#'
 #' @param x a \linkS4class{gtypes} object.
 #' @param by.strata logical - return results by strata?
-#' @param seqName the name (or number) of a set of sequences from the 
+#' @param seqName the name (or number) of a set of sequences from the
 #'   \code{@@sequences} slot to return.
-#' @param as.haplotypes return sequences as haplotypes? If \code{TRUE}, contents of 
-#'   \code{@@sequences} slot are returned. If \code{FALSE}, one sequence per 
+#' @param as.haplotypes return sequences as haplotypes? If \code{TRUE}, contents
+#'   of \code{@@sequences} slot are returned. If \code{FALSE}, one sequence per
 #'   individual is returned.
-#' @param as.multidna return sequences as a \linkS4class{multidna} object? If 
+#' @param as.multidna return sequences as a \linkS4class{multidna} object? If
 #'   \code{FALSE}, sequences are returned as a list.
-#' @param i,j,k subsetting slots for individuals (\code{i}), loci (\code{j}),
-#'   or strata (\code{k}). See Details for more information.
-#' @param quiet suppress warnings about unmatched requested individuals, loci, 
+#' @param i,j,k subsetting slots for individuals (\code{i}), loci (\code{j}), or
+#'   strata (\code{k}). See Details for more information.
+#' @param quiet suppress warnings about unmatched requested individuals, loci,
 #'   or strata?
-#' @param drop if \code{TRUE} the return object will have unused sequences removed.
+#' @param drop if \code{TRUE} the return object will have unused sequences
+#'   removed.
 #' @param ... other arguments passed from generics (ignored).
 #' @param value value being assigned by accessor.
 #' @param name name of the value going into the \code{other} list.
-#' 
-#' @details 
-#' Indexing a \code{gtypes} object with integers, characters, or logicals with 
-#'   the \code{[} operator follows the same rules as normal indexing in R. The 
-#'   order that individuals, loci, and strata are chosen in the order 
-#'   returned by \code{indNames}, \code{locNames}, and \code{strataNames} 
-#'   respectively. If unstratified samples are present, they can be selected as
-#'   a group either by including \code{NA} in the character or numeric vector of the 
-#'   \code{k} slot, or by providing a logical vector based on \code{is.na(strata(g))} 
-#'   to the \code{i} slot.
 #'
-#' @return
-#' \describe{
-#'   \item{nInd}{number of individuals}
-#'   \item{nLoc}{number of loci}
-#'   \item{nStrata}{number of strata}
-#'   \item{indNames}{vector of individual/sample names}
-#'   \item{locNames}{vector of locus names}
-#'   \item{strataNames}{vector of strata names for current scheme}
-#'   \item{ploidy}{number of alleles at each locus}
-#'   \item{other}{contents of \code{@@other} slot}
-#'   \item{strata}{return or modify the current stratification}
-#'   \item{schemes}{return or modify the current stratification schemes}
-#'   \item{alleleNames}{return a list of alleles at each locus}
-#'   \item{sequences}{return the \linkS4class{multidna} object in the 
-#'     \code{@@sequences} slot. See \code{\link[apex]{getSequences}} to 
-#'     extract individual genes or sequences from this object}
-#'   \item{description}{return the object's description}
-#' }
-#' 
+#' @details Indexing a \code{gtypes} object with integers, characters, or
+#' logicals with the \code{[} operator follows the same rules as normal indexing
+#' in R. The order that individuals, loci, and strata are chosen in the order
+#' returned by \code{indNames}, \code{locNames}, and \code{strataNames}
+#' respectively. If unstratified samples are present, they can be selected as a
+#' group either by including \code{NA} in the character or numeric vector of the
+#' \code{k} slot, or by providing a logical vector based on
+#' \code{is.na(strata(g))} to the \code{i} slot.
+#'
+#' @return \describe{ \item{nInd}{number of individuals} \item{nLoc}{number of
+#' loci} \item{nStrata}{number of strata} \item{indNames}{vector of
+#' individual/sample names} \item{locNames}{vector of locus names}
+#' \item{strataNames}{vector of strata names for current scheme}
+#' \item{ploidy}{number of alleles at each locus} \item{other}{contents of
+#' \code{@@other} slot} \item{strata}{return or modify the current
+#' stratification} \item{schemes}{return or modify the current stratification
+#' schemes} \item{alleleNames}{return a list of alleles at each locus}
+#' \item{sequences}{return the \linkS4class{multidna} object in the
+#' \code{@@sequences} slot. See \code{\link[apex]{getSequences}} to extract
+#' individual genes or sequences from this object} \item{description}{return the
+#' object's description} }
+#'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
-#' 
+#'
 #' @examples
 #' #--- create a diploid (microsatellite) gtypes object
 #' data(msats.g)
 #' msats.g <- stratify(msats.g, "fine")
-#' 
+#'
 #' getNumStrata(msats.g)
 #' getStrataNames(msats.g)
 #' getNumLoci(msats.g)
 #' getLociNames(msats.g)
-#' 
+#'
 #' # reassign all samples to two randomly chosen strata
 #' new.strata <- sample(c("A", "B"), getNumInd(msats.g), rep = TRUE)
 #' names(new.strata) <- getIndNames(msats.g)
 #' setStrata(msats.g) <- new.strata
 #' msats.g
-#' 
-#' 
+#'
+#'
 #' #--- a sequence example
 #' library(ape)
 #' data(woodmouse)
@@ -77,7 +71,7 @@
 #' names(new.strata) <- getIndNames(wood.g)
 #' setStrata(wood.g) <- new.strata
 #' wood.g
-#' 
+#'
 #' # get the multidna sequence object
 #' multi.seqs <- getSequences(wood.g, as.multidna = TRUE)
 #' class(multi.seqs) # "multidna"
@@ -85,28 +79,28 @@
 #' # get a list of DNAbin objects
 #' dnabin.list <- getSequences(wood.g)
 #' class(dnabin.list) # "list"
-#' 
+#'
 #' # get a DNAbin object of the first locus
 #' dnabin.1 <- getSequences(wood.g)[[1]]
 #' class(dnabin.1) # "DNAbin"
-#' 
+#'
 #' # getting and setting values in the `other` slot:
 #' getOther(dloop.g)
-#' 
+#'
 #' setOther(dloop.g, "timestamp") <- timestamp()
 #' setOther(dloop.g, "Author") <- "Hoban Washburne"
-#' 
+#'
 #' getOther(dloop.g)
 #' getOther(dloop.g, "timestamp")
-#' 
+#'
 #' setOther(dloop.g, "Author") <- NULL
 #' getOther(dloop.g)
-#' 
-#' 
+#'
+#'
 #' @name gtypes.accessors
 #' @aliases accessors
 #' @importFrom methods setMethod setGeneric
-#' 
+#'   
 NULL
 
 #' @rdname gtypes.accessors
@@ -457,11 +451,17 @@ setMethod(
   if(length(i) == 0) stop("no samples selected")
   if(length(j) == 0) stop("no loci selected")
   if(length(k) == 0) stop("no strata selected")
-  
-  x@data <- x@data %>% 
-    dplyr::filter(.data$id %in% i & .data$locus %in% j & .data$stratum %in% k) %>% 
+
+  x@data <- x@data %>%
+    dplyr::filter(
+      .data$id %in% i & 
+      .data$locus %in% j & 
+      .data$stratum %in% k
+    ) %>%
     data.table::as.data.table()
-  if(nrow(x@data) == 0) stop("the requested indices would form an empty gtypes object")
+  if(nrow(x@data) == 0) {
+    stop("the requested indices would form an empty gtypes object")
+  }
   
   # filter sequences
   if(!is.null(x@sequences)) {

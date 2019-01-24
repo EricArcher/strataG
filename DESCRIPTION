@@ -38,14 +38,14 @@ Imports:
     graphics,
     grid,
     gridExtra,
-    Hmisc,
-    magrittr,
+    Hmisc (>= 4.1),
+    magrittr (>= 1.5),
     methods,
     pegas (>= 0.11),
     phangorn (>= 2.4.0),
     RColorBrewer,
     Rcpp,
-    rlang,
+    rlang (>= 0.3.0.1),
     shiny,
     shinyFiles,
     stats,
@@ -131,8 +131,15 @@ Collate:
     clumpp.R
     fusFs.R
     tajimasD.R
+    popStructStat.R
+    popStructTest.R
+    RcppExports.R
+    gelato.R
+    phase.R
+    maverickRun.R
+    qaqc.R
 LazyData: TRUE
 VignetteBuilder: knitr
-# LinkingTo: Rcpp
+LinkingTo: Rcpp
 Encoding: UTF-8
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1

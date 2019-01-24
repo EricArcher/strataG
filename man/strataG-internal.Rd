@@ -5,7 +5,9 @@
 \alias{.getFileLabel}
 \alias{.expandLocusNames}
 \alias{.parseLocusNames}
+\alias{.getNumCores}
 \alias{.setupClusters}
+\alias{.strataFreq}
 \alias{.strataPairs}
 \alias{.removeIdsMissingAllLoci}
 \alias{.applyPerLocus}
@@ -21,7 +23,11 @@
 
 .parseLocusNames(locus.names, ploidy)
 
-.setupClusters(num.cores = NULL)
+.getNumCores(num.cores, max.cores = NULL)
+
+.setupClusters(num.cores = NULL, max.cores = NULL)
+
+.strataFreq(g)
 
 .strataPairs(g)
 
@@ -46,8 +52,11 @@
 
 \item{ploidy}{integer representing the ploidy of the data.}
 
-\item{num.cores}{number of cores for multithreading. If \code{NULL}, the number 
-used is set to the value of \code{detectCores() - 1}.}
+\item{num.cores}{number of cores for multithreading. 
+If \code{NULL}, the number used is set to the 
+value of \code{parallel::detectCores() - 1}.}
+
+\item{max.cores}{maximum number of cores to use.}
 
 \item{fun}{a function that takes one locus column at a time.}
 
@@ -71,6 +80,14 @@ two columns named something like 'ABCD.1' and 'ABCD.2', or
 'ABCD_A' and 'ABCD_B'.\cr}
 
 \item{ploidy}{integer representing the ploidy of the data.}
+
+\item{num.cores}{number of cores for multithreading. 
+If \code{NULL}, the number used is set to the 
+value of \code{parallel::detectCores() - 1}.}
+
+\item{max.cores}{maximum number of cores to use.}
+
+\item{g}{a \linkS4class{gtypes} object.}
 
 \item{g}{a \linkS4class{gtypes} object.}
 

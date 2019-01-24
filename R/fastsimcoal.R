@@ -263,7 +263,7 @@ fastsimcoal <- function(pop.info, locus.params, mig.rates = NULL,
   if(!quiet) cat("fastsimcoal: running\n")
   cores.spec <- if(!is.null(num.cores)) {
     num.cores <- max(1, num.cores)
-    num.cores <- min(num.cores, min(detectCores(), 12))
+    num.cores <- min(num.cores, min(parallel::detectCores(), 12))
     if(num.cores == 1) "" else paste(c("-c", "-B"), num.cores, collapse = " ")
   } else ""
   cmd.line <- paste(

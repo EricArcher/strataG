@@ -178,7 +178,7 @@ setMethod(
     }
     setLocusNames(sequences) <- colnames(gen.data)
     for(loc in colnames(gen.data)) {
-      haps <- na.omit(unique(as.character(gen.data[, loc])))
+      haps <- stats::na.omit(unique(as.character(gen.data[, loc])))
       seq.names <- apex::getSequenceNames(sequences)[[loc]]
       missing <- setdiff(haps, seq.names)
       if(length(missing) > 0) {
@@ -204,8 +204,8 @@ setMethod(
     dplyr::mutate(
       locus = as.character(.data$locus),
       allele = as.character(.data$allele)
-    ) %>% 
-    data.table::as.data.table()
+    )
+  data.table::setDT(gen.data)
   
   # create and return gtypes object
   g <- .Object

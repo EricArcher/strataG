@@ -82,18 +82,31 @@ NULL
 
 
 #' @rdname strataG-internal
-#' @param num.cores number of cores for multithreading. If \code{NULL}, the number 
-#'   used is set to the value of \code{detectCores() - 1}.
-#' @importFrom parallel detectCores makePSOCKcluster makeForkCluster
+#' @param num.cores number of cores for multithreading. 
+#'   If \code{NULL}, the number used is set to the 
+#'   value of \code{parallel::detectCores() - 1}.
+#' @param max.cores maximum number of cores to use.
 #' @keywords internal
 #' 
-.setupClusters <- function(num.cores = NULL) {
+.getNumCores <- function(num.cores, max.cores = NULL) {
+  if(is.null(max.cores)) max.cores <- parallel::detectCores() - 1
+  if(is.na(max.cores)) max.cores <- 1
+  if(max.cores < 1) max.cores <- 1
+  min(num.cores, max.cores)
+}
+
+
+#' @rdname strataG-internal
+#' @param num.cores number of cores for multithreading. 
+#'   If \code{NULL}, the number used is set to the 
+#'   value of \code{parallel::detectCores() - 1}.
+#' @param max.cores maximum number of cores to use.
+#' @keywords internal
+#' 
+.setupClusters <- function(num.cores = NULL, max.cores = NULL) {
   # setup clusters
-  max.cores <- parallel::detectCores()
-  if(is.null(num.cores)) num.cores <- max.cores - 1
-  if(is.na(num.cores)) num.cores <- 1
-  num.cores <- max(1, num.cores)
-  num.cores <- min(num.cores, max.cores - 1)
+  if(is.null(num.cores)) num.cores <- parallel::detectCores() - 1
+  num.cores <- .getNumCores(num.cores, max.cores)
   if(num.cores > 1) {
     cl.func <- ifelse(
       .Platform$OS.type == "windows", 
@@ -107,13 +120,19 @@ NULL
 
 #' @rdname strataG-internal
 #' @param g a \linkS4class{gtypes} object.
-#' @importFrom utils combn
+#' @keywords internal
+#' 
+.strataFreq <- function(g) table(getStrata(g), useNA = "no")
+
+
+#' @rdname strataG-internal
+#' @param g a \linkS4class{gtypes} object.
 #' @keywords internal
 #' 
 .strataPairs <- function(g) {
   st <- getStrataNames(g)
   if(length(st) < 2) return(NULL)
-  combn(st, 2) %>% 
+  utils::combn(st, 2) %>% 
     t() %>%  
     as.data.frame(stringsAsFactors = FALSE) %>% 
     stats::setNames(c("strata.1", "strata.2"))
@@ -219,6 +238,7 @@ NULL
   }
 }
 
+
 #' @rdname strataG-internal
 #' @param g a \linkS4class{gtypes} object.
 #' @keywords internal
@@ -230,3 +250,4 @@ NULL
     !is.null(getOther(g, "haps.unassigned"))
   ) labelHaplotypes(g) else g
 }
+
