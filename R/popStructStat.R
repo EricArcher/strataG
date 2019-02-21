@@ -98,7 +98,7 @@ NULL
   } else {
     cbind(strata.num, sapply(1:nrep, function(i) sample(strata.num)))
   }
-  input$strata <- strata[input$loci$id, , drop = FALSE]
+  input$strata <- strata[unique(input$loci$id), , drop = FALSE]
   
   input$ploidy <- getPloidy(g)
   input$keep.null = keep.null

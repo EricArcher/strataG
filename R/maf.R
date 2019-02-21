@@ -22,10 +22,22 @@ maf <- function(g, by.strata = FALSE) {
     maf <- min(x, na.rm = TRUE)
     if(maf == 1) 0 else maf
   }
-    
-  result <- alleleFreqs(g, by.strata = by.strata, type = "prop") %>% 
-    sapply(function(loc) {
-      if(by.strata) apply(loc, 2, .calcMAF) else .calcMAF(loc)
-    })
-  if(is.matrix(result)) t(result) else result
+  
+  if(by.strata) {
+    result <- g %>% 
+      alleleFreqs(by.strata = TRUE, type = "prop") %>% 
+      purrr::map(function(x) apply(x, 2, .calcMAF))
+    result <- do.call(rbind, result) %>% 
+      as.data.frame %>% 
+      tibble::rownames_to_column("locus") %>% 
+      tidyr::gather("stratum", "maf", -.data$locus) %>% 
+      dplyr::select(.data$stratum, .data$locus, .data$maf)
+  } else {
+    g %>% 
+      alleleFreqs(by.strata = FALSE, type = "prop") %>% 
+      purrr::map_dbl(.calcMAF) %>%  
+      utils::stack() %>% 
+      stats::setNames(c("maf", "locus")) %>% 
+      dplyr::select(.data$locus, .data$maf)
+  }
 }

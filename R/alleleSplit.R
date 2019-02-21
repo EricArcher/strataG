@@ -47,7 +47,7 @@ alleleSplit <- function(x, sep = NULL) {
   }
   locus.names <- paste(rep(locus.names, each = 2), c(1, 2), sep = ".")
   
-  x <- do.call(rbind, lapply(1:nrow(x), function(r) as.character(x[r, ])))
+  x <- do.call(cbind, lapply(1:ncol(x), function(col) as.character(x[, col])))
 
   split.alleles <- lapply(1:ncol(x), function(i) {
     if(!is.null(sep)) {

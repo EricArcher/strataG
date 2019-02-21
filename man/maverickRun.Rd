@@ -5,7 +5,8 @@
 \title{Run MavericK}
 \usage{
 maverickRun(g, params = NULL, label = "MavericK_files",
-  data_fname = "data.txt", param_fname = "parameters.txt")
+  data_fname = "data.txt", param_fname = "parameters.txt",
+  exec = "Maverick1.0.5")
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
@@ -22,6 +23,8 @@ MavericK documentation distributed with the program.}
 \item{data_fname}{file name of data input file.}
 
 \item{param_fname}{file name of parameters file.}
+
+\item{exec}{name of executable for MavericK.}
 }
 \description{
 Run MavericK clustering algorithm

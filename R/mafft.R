@@ -12,6 +12,9 @@
 #' @param num.cores number of cores to be used. Passed to MAFFT argument 
 #'   \code{--thread}.
 #' @param opts character string other options to provide to command line.
+#' @param simplify if \code{TRUE}, if \code{x} is a single sequence, 
+#'   a single \code{DNAbin} object is returned, otherwise, a list of alignments
+#'   is returned.
 #' 
 #' @note MAFFT is not included with \code{strataG} and must be downloaded 
 #'   separately. Additionally, it must be installed such that it can be run from 
@@ -37,10 +40,10 @@
 #' 
 mafft <- function(x, run.label = "align.mafft", delete.output = TRUE, 
                   op = 3, ep = 0.123, maxiterate = 0, quiet = FALSE, 
-                  num.cores = 1, opts = "--auto") {
-  write.fasta(x, file = run.label) %>% 
+                  num.cores = 1, opts = "--auto", simplify = TRUE) {
+  dna <- write.fasta(x, file = run.label) %>% 
     purrr::map(function(f) {
-      aligned.fasta <- paste("mafft aligned", f)
+      aligned.fasta <- paste0("mafft.aligned", "_", f)
       mafft.cmd <- paste(
         "mafft", 
         opts, 
@@ -58,4 +61,5 @@ mafft <- function(x, run.label = "align.mafft", delete.output = TRUE,
       if(delete.output) file.remove(aligned.fasta)
       aligned
     })
+  if(length(dna) == 1 & simplify) dna[[1]] else dna
 }

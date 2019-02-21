@@ -25,7 +25,11 @@
 #' @export
 #' 
 gtypes2loci <- function(x) {
+  if(!is.gtypes(x)) stop("'x' must be a gtypes object")
   as.data.frame(x, one.col = TRUE, sep = "/") %>% 
+    dplyr::filter(!is.na(.data$stratum)) %>% 
+    dplyr::mutate_all(function(x) ifelse(is.na(x), "0/0", x)) %>% 
+    dplyr::mutate_all(factor) %>% 
     tibble::column_to_rownames("id") %>% 
     as.data.frame() %>% 
     pegas::as.loci(allele.sep = "/", col.pop = 1)
@@ -35,7 +39,11 @@ gtypes2loci <- function(x) {
 #' @export
 #' 
 loci2gtypes <- function(x, description = NULL) {
-  mat <- alleleSplit(x[, attr(x, "locicol")])
+  if(!inherits(x, "loci")) stop("'x' must be a loci object")
+  mat <- as.data.frame(x) %>% 
+    dplyr::mutate_all(as.character) %>% 
+    dplyr::select(attr(x, "locicol")) %>% 
+    alleleSplit(sep = "/")
   cbind(
     id = rownames(x),
     pop = as.character(x$population),

@@ -102,7 +102,7 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
   has.ns <- apply(as.character(x), 1, function(bases) "n" %in% tolower(bases))
   if(sum(!has.ns) <= 1) {
     warning(
-      "There less than two sequences without ambiguities (N's). Can't assign haplotypes. NULL returned.",
+      "There are fewer than two sequences without ambiguities (N's). Can't assign haplotypes. NULL returned.",
       call. = FALSE, 
       immediate. = TRUE
     )

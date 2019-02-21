@@ -44,28 +44,29 @@ structurePlot <- function(
   
   # convert q.mat to sorted data.table
   prob.cols <- prob.col:ncol(q.mat)
-  qm <- as.data.frame(q.mat)
-  qm[[pop.col]] <- factor(
-    qm[[pop.col]], 
-    levels = sort(unique(qm[[pop.col]]), decreasing = horiz)
+  qm <- as.data.frame(q.mat)[, c(pop.col, prob.cols), drop = FALSE]
+  qm[, 1] <- factor(
+    qm[, 1], 
+    levels = sort(unique(qm[, 1]), decreasing = !horiz)
   )
-  sort.cols <- c(pop.col, if(sort.probs) rev(prob.cols) else NULL)
-  i <- do.call(order, qm[, sort.cols, drop = FALSE])
+  sort.cols <- c(1, if(sort.probs) 2:ncol(qm) else NULL)
+  i <- do.call(
+    order, 
+    c(as.list(qm[, sort.cols, drop = FALSE]), decreasing = TRUE)
+  )
   qm <- qm[i, ]
   qm$x <- 1:nrow(qm)
   
   # Get population frequencies, centers and dividing points
-  pop.freq <- table(qm[, pop.col])
-  levels(qm[, pop.col]) <- paste(
-    levels(qm[, pop.col]), "\n(n = ", pop.freq, ")", sep = ""
+  pop.freq <- table(qm[, 1])
+  levels(qm[, 1]) <- paste(
+    levels(qm[, 1]), "\n(n = ", pop.freq, ")", sep = ""
   )
-  pop.cntr <- tapply(qm$x, qm[, pop.col], mean)
-  pop.div <- tapply(qm$x, qm[, pop.col], min)[-1] - 0.5
+  pop.cntr <- tapply(qm$x, qm[, 1], mean)
+  pop.div <- rev(tapply(qm$x, qm[, 1], min))[-1] - 0.5
   
   # Create data.frame for plotting
-  df.cols <- colnames(qm)[c(pop.col, prob.cols)]
-  df.cols <- c("x", df.cols)
-  df <- melt(qm[, df.cols], id.vars = c(1, 2),
+  df <- melt(qm[, c("x", colnames(qm)[-ncol(qm)])], id.vars = c(1, 2),
              variable.name = "Group", value.name = "probability")
   colnames(df)[1:2] <- c("x", "population")
   df <- df[order(-as.numeric(df$Group), df$probability), ]
@@ -80,8 +81,14 @@ structurePlot <- function(
   g <- ggplot2::ggplot(df, ggplot2::aes_string("x", "probability")) +  
     switch(
       type,
-      area = ggplot2::geom_area(ggplot2::aes_string(fill = "Group"), stat = "identity"),
-      bar = ggplot2::geom_bar(ggplot2::aes_string(fill = "Group"), stat = "identity")
+      area = ggplot2::geom_area(
+        ggplot2::aes_string(fill = "Group"), 
+        stat = "identity"
+      ),
+      bar = ggplot2::geom_bar(
+        ggplot2::aes_string(fill = "Group"), 
+        stat = "identity"
+      )
     ) +
     ggplot2::ylab("Pr(Group Membership)") +
     ggplot2::theme(
@@ -90,10 +97,17 @@ structurePlot <- function(
       legend.title = ggplot2::element_blank()
     )
   if(label.pops) {
-    g <- g + ggplot2::geom_vline(xintercept = pop.div) +
-      ggplot2::scale_x_continuous(name = "", breaks = pop.cntr, labels = names(pop.cntr))
+    g <- g + 
+      ggplot2::geom_vline(xintercept = pop.div) +
+      ggplot2::scale_x_continuous(
+        name = "", 
+        breaks = pop.cntr, 
+        labels = names(pop.cntr)
+      )
   } else {
-    g <- g + ggplot2::xlab("") + ggplot2::theme(axis.text.x = ggplot2::element_blank())
+    g <- g + 
+      ggplot2::xlab("") + 
+      ggplot2::theme(axis.text.x = ggplot2::element_blank())
   }
   if(horiz) g <- g + ggplot2::coord_flip()
   if(!is.null(col)) g <- g + ggplot2::scale_fill_manual(values = col)
