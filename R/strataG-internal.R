@@ -1,28 +1,6 @@
-#' @title Internal Functions
-#' @description Functions intended to be used only by functions within 
-#'   the strataG package.
-#'   
-#' @details \describe{
-#'   \item{.getFileLabel}{}
-#'   \item{.parseLocusNames}{}
-#'   \item{.setupClusters}{}
-#'   \item{.strataPairs}{}
-#'   \item{.removeIdsMissingAllLoci}{}
-#'   \item{.applyPerLocus}{}
-#'   \item{.numericLoci}{}
-#'   \item{.combineLoci}{}
-#' }
-#'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
-#' 
-#' @name strataG-internal
-NULL
-
-
-#' @rdname strataG-internal
 #' @param g a \linkS4class{gtypes} object.
 #' @param label label for filename(s). Default is the gtypes description if present.
-#' @keywords internal
+#' @noRd
 #' 
 .getFileLabel <- function(g, label = NULL) {
   desc <- getDescription(g)
@@ -35,10 +13,9 @@ NULL
 }
   
 
-#' @rdname strataG-internal
 #' @param locus.names a vector of locus names.
 #' @param ploidy integer representing the ploidy of the data.
-#' @keywords internal
+#' @noRd
 #' 
 .expandLocusNames <- function(locus.names, ploidy) {
   if(ploidy == 1) return(locus.names)
@@ -46,13 +23,12 @@ NULL
 }
 
 
-#' @rdname strataG-internal
 #' @param locus.names a vector of column names, where each locus must be
 #'   named with the same roots. For example, diploid locus 'ABCD' would have
 #'   two columns named something like 'ABCD.1' and 'ABCD.2', or
 #'   'ABCD_A' and 'ABCD_B'.\cr
 #' @param ploidy integer representing the ploidy of the data.
-#' @keywords internal
+#' @noRd
 #' 
 .parseLocusNames <- function(locus.names, ploidy) {
   if(ploidy == 1) return(locus.names)
@@ -81,12 +57,11 @@ NULL
 }
 
 
-#' @rdname strataG-internal
 #' @param num.cores number of cores for multithreading. 
 #'   If \code{NULL}, the number used is set to the 
 #'   value of \code{parallel::detectCores() - 1}.
 #' @param max.cores maximum number of cores to use.
-#' @keywords internal
+#' @noRd
 #' 
 .getNumCores <- function(num.cores, max.cores = NULL) {
   if(is.null(max.cores)) max.cores <- parallel::detectCores() - 1
@@ -96,12 +71,11 @@ NULL
 }
 
 
-#' @rdname strataG-internal
 #' @param num.cores number of cores for multithreading. 
 #'   If \code{NULL}, the number used is set to the 
 #'   value of \code{parallel::detectCores() - 1}.
 #' @param max.cores maximum number of cores to use.
-#' @keywords internal
+#' @noRd
 #' 
 .setupClusters <- function(num.cores = NULL, max.cores = NULL) {
   # setup clusters
@@ -118,16 +92,14 @@ NULL
 }
 
 
-#' @rdname strataG-internal
 #' @param g a \linkS4class{gtypes} object.
-#' @keywords internal
+#' @noRd
 #' 
 .strataFreq <- function(g) table(getStrata(g), useNA = "no")
 
 
-#' @rdname strataG-internal
 #' @param g a \linkS4class{gtypes} object.
-#' @keywords internal
+#' @noRd
 #' 
 .strataPairs <- function(g) {
   st <- getStrataNames(g)
@@ -139,9 +111,8 @@ NULL
 }
 
 
-#' @rdname strataG-internal
 #' @param g a \linkS4class{gtypes} object.
-#' @keywords internal
+#' @noRd
 #' 
 .removeIdsMissingAllLoci <- function(g) {
   to.remove <- g@data %>% 
@@ -166,11 +137,10 @@ NULL
 }
 
 
-#' @rdname strataG-internal
 #' @param fun a function that takes one locus column at a time.
 #' @param g a \linkS4class{gtypes} object.
 #' @param by.strata logical - return results grouped by strata?
-#' @keywords internal
+#' @noRd
 #' 
 .applyPerLocus <- function(fun, g, by.strata = FALSE, ...) {
   result <- if(by.strata) {
@@ -186,10 +156,9 @@ NULL
 }
 
 
-#' @rdname strataG-internal
 #' @param g a \linkS4class{gtypes} object.
 #' @param min.val minimum value to start allele numbering with
-#' @keywords internal
+#' @noRd
 #' 
 .alleles2integer <- function(g, min.val = 0) {
   g@data %>% 
@@ -199,11 +168,10 @@ NULL
 }
 
 
-#' @rdname strataG-internal
 #' @param g a \linkS4class{gtypes} object.
 #' @param alleles2integer convert alleles to integers?
 #' @param na.val value to replace NAs with.
-#' @keywords internal
+#' @noRd
 #' 
 .stackedAlleles <- function(g, alleles2integer = FALSE, na.val = NULL, ...) {
   x <- if(alleles2integer) .alleles2integer(g, ...) else g@data
@@ -222,11 +190,10 @@ NULL
 }
 
 
-#' @rdname strataG-internal
 #' @param x a vector
 #' @param sep a character for separating
 #' @param sort a logical for whether to sort alleles
-#' @keywords internal
+#' @noRd
 #' 
 .combineLoci <- function(x, sep, sort) {
   x <- as.character(x)
@@ -239,9 +206,8 @@ NULL
 }
 
 
-#' @rdname strataG-internal
 #' @param g a \linkS4class{gtypes} object.
-#' @keywords internal
+#' @noRd
 #' 
 .checkHapsLabelled <- function(g) {
   if(
@@ -250,4 +216,3 @@ NULL
     !is.null(getOther(g, "haps.unassigned"))
   ) labelHaplotypes(g) else g
 }
-

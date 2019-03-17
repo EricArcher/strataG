@@ -37,7 +37,7 @@ sorted in genotypes or left in original order? (only takes affect if
 \item{...}{additional arguments to be passed to or from methods.}
 }
 \value{
-A \code{data.frame} with one row per sample.
+A \code{data.frame} or \code{matrix} with one row per sample.
 }
 \description{
 Create a formatted data.frame or matrix 

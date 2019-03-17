@@ -4,21 +4,27 @@
 \alias{numericSNPmat}
 \title{Create a numeric SNP matrix}
 \usage{
-numericSNPmat(g)
+numericSNPmat(g, ref.allele = NULL)
 }
 \arguments{
-\item{g}{a \linkS4class{gtypes} object.}
+\item{g}{a \linkS4class{gtypes} object. Must be diploid and have at least 
+one SNP with <= 2 alleles.}
+
+\item{ref.allele}{an optional vector of reference alleles for each SNP. 
+If provided, it must be as long as there are biallelic SNPs in \code{g}. 
+If named, the SNP names must match those of all biallelic SNPs 
+in \code{g}. If set to \code{NULL} (default) the major allele at each 
+SNP is used as the reference.}
 }
 \value{
-a data.frame with all biallelic loci recoded.
+a numeric matrix with all biallelic SNPs recoded to:  
+0 = homozygote for major or reference allele, 1 = heterozygote, 
+2 = homozygote for minor or alternate allele. Individual 
+ids are in the rownames of the matrix.
 }
 \description{
 Create a matrix of SNPs coded as 0, 1, 2, where 0 and 2 are 
   the two homozygotes and 1 is the heterozygote.
-}
-\note{
-\code{g} must be a diploid \code{gtypes} object and have at least one 
-  locus with one or two alleles.
 }
 \examples{
 data(bowhead.snps)

@@ -125,6 +125,7 @@ Collate:
     LDgenepop.R
     fastsimcoal.R
     fastsimcoal.input.R
+    sfs.R
     structure.R
     structurePlot.R
     evanno.R

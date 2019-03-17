@@ -16,7 +16,7 @@
 #'   \code{one.col = TRUE})
 #' @param ... additional arguments to be passed to or from methods.
 #'   
-#' @return A \code{data.frame} with one row per sample.
+#' @return A \code{data.frame} or \code{matrix} with one row per sample.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 

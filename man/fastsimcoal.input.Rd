@@ -2,46 +2,98 @@
 % Please edit documentation in R/fastsimcoal.input.R
 \name{fastsimcoal.input}
 \alias{fastsimcoal.input}
-\alias{fscPopInfo}
-\alias{fscLocusParams}
-\alias{fscHistEv}
+\alias{fscSettings}
+\alias{fscDeme}
+\alias{fscSettingsDemes}
+\alias{fscEvent}
+\alias{fscSettingsEvents}
+\alias{fscSettingsMigration}
+\alias{fscMarker_dna}
+\alias{fscMarker_microsat}
+\alias{fscMarker_snp}
+\alias{fscMarker_standard}
+\alias{fscMarker_freq}
+\alias{fscSettingsGenetics}
 \title{Input functions for fastsimcoal parameters}
 \usage{
-fscPopInfo(pop.size, sample.size, sample.times = 0, growth.rate = 0)
+fscDeme(deme.size, sample.size, sample.time = 0, inbreeding = 0,
+  growth = 0)
 
-fscLocusParams(locus.type = c("dna", "msat", "snp", "standard"),
-  sequence.length = NULL, num.loci = NULL, mut.rate = NULL,
-  transition.rate = 1/3, gsm.param = 0, range.constraint = 0,
-  recomb.rate = 0, chromosome = NULL, num.chrom = NULL, ploidy = 2)
+fscSettingsDemes(...)
 
-fscHistEv(num.gen = 0, source.deme = 0, sink.deme = 0,
-  prop.migrants = 1, new.sink.size = 1, new.sink.growth = 0,
-  new.mig.mat = 0)
+fscEvent(event.time = 0, source = 0, sink = 0, prop.migrants = 1,
+  new.size = 1, new.growth = 0, migr.mat = 0)
+
+fscSettingsEvents(...)
+
+fscSettingsMigration(...)
+
+fscMarker_dna(sequence.length, mut.rate, recomb.rate = 0,
+  transition.rate = 1/3, chromosome = 1)
+
+fscMarker_microsat(num.loci, mut.rate, recomb.rate = 0, gsm.param = 0,
+  range.constraint = 0, chromosome = 1)
+
+fscMarker_snp(sequence.length, mut.rate, recomb.rate = 0,
+  chromosome = 1)
+
+fscMarker_standard(num.loci, mut.rate, recomb.rate = 0, chromosome = 1)
+
+fscMarker_freq(mut.rate, output = TRUE)
+
+fscSettingsGenetics(..., ploidy = 1, num.chrom = NULL)
 }
 \arguments{
-\item{pop.size}{a vector giving size of each populaiton.}
+\item{deme.size}{the deme size.}
 
-\item{sample.size}{a vector giving the number of samples to take from each
-population.}
+\item{sample.size}{the number of samples to take.}
 
-\item{sample.times}{a vector giving the number of generations in the past
-at which samples are taken.}
+\item{sample.time}{the number of generations in the past at which samples 
+are taken.}
 
-\item{growth.rate}{a vector giving the growth rate of each population.}
+\item{inbreeding}{the inbreeding coefficient for the deme \code{[0:1]}.}
 
-\item{locus.type}{a character representation of what type of marker to
-simulate. Can be "dna", "msat", "snp", or "standard".}
+\item{growth}{the growth rate of the deme.}
 
-\item{sequence.length}{\code{dna}: number of DNA base pairs to use.}
+\item{...}{a set of comma-separated square migration matrices for 
+\code{fscSettingsMigration}, or marker specifications from a
+\code{fscMarker_} function for \code{fscSettingsGenetics}.}
 
-\item{num.loci}{\code{msat, snp}: number of loci to simulate.}
+\item{event.time}{the number of generations, t, before present at which the
+historical event happened.}
 
-\item{mut.rate}{\code{dna, msat}: per base pair or locus mutation rate.}
+\item{source}{the source deme (the first listed deme has index 0).}
+
+\item{sink}{the sink deme.}
+
+\item{prop.migrants}{the expected proportion of migrants to move from 
+the source to the sink deme.}
+
+\item{new.size}{the new size for the sink deme, relative to its size in 
+the previous (later in time) generation.}
+
+\item{new.growth}{the new growth rate for the sink deme.}
+
+\item{migr.mat}{the number of the new migration matrix to be used 
+further back in time. The matrices are those supplied to the 
+\code{fscSettingsMigration} function. The first matrix has index 0.}
+
+\item{sequence.length}{number of base pairs to use for each block.}
+
+\item{mut.rate}{per base pair or locus mutation rate.}
+
+\item{recomb.rate}{recombination rate between adjacent markers. No effect for 
+SNPs.}
 
 \item{transition.rate}{dna: fraction of substitutions that are transitions. 
 Set to 1 (all transitions) for SNPs.}
 
-\item{gsm.param}{\code{msat}: Value of the geometric parameter for a
+\item{chromosome}{number or character identifying which chromosome the marker
+is on.}
+
+\item{num.loci}{number of loci to simulate.}
+
+\item{gsm.param}{value of the geometric parameter for a
 Generalized Stepwise Mutation (GSM) model. This value represents the
 proportion of mutations that will change the allele size by more than
 one step. Values between 0 and 1 are required. A value of 0 is for a
@@ -50,58 +102,37 @@ strict Stepwise Mutation Model (SMM).}
 \item{range.constraint}{\code{msat}: Range constraint (number of different
 alleles allowed). A value of 0 means no range constraint.}
 
-\item{recomb.rate}{recombination rate between adjacent markers. No effect for 
-SNPs.}
+\item{output}{should the FREQ marker type be labelled for OUTPUT?}
 
-\item{chromosome}{number or character identifying which chromosome the marker
-is on.}
+\item{ploidy}{the desired ploidy of the final data. Ne and the number of 
+samples specified in \code{fscDeme} will be multiplied by this value as
+\code{fastsimcoal2} generates haploid data.}
 
-\item{num.chrom}{a value giving the number of chromosomes that the
-\code{locus.params} marker specifications should be copied for. If
-\code{NULL}, then chromosome assignment is taken from the \code{chromosome} 
-column. Any non-\code{NULL} integer will cause the value in \code{chromosome}.}
-
-\item{ploidy}{positive integer giving the ploidy of the marker type to 
-be simulated.}
-
-\item{num.gen}{Number of generations, t, before present at which the
-historical event happened.}
-
-\item{source.deme}{Source deme (the first listed deme has index 0)}
-
-\item{sink.deme}{Sink deme}
-
-\item{prop.migrants}{Expected proportion of migrants to move from source to
-sink.}
-
-\item{new.sink.size}{New size for the sink deme, relative to its size at
-generation t.}
-
-\item{new.sink.growth}{New growth rate for the sink deme.}
-
-\item{new.mig.mat}{Number of new migration matrix to be used further back in
-time. The matrices are provided in the \code{mig.rates} list argument in
-\code{\link{fastsimcoal}}. The first matrix has index 0 in the vector
-provided to this argument. See the fastsimcoal manual for more information.}
+\item{num.chrom}{the number of chromosomes to be simulated. If this is 
+specified and not the same as the number of linkage blocks specified by 
+the \code{fscMarker_} functions, then this many chromosomes with 
+duplicated structures will be simulated. If \code{NULL}, then
+the chromosome specification for each block will be used.}
 }
 \description{
-Functions to create \code{pop.info}, \code{locus.params}, and 
-  \code{hist.ev} input matrices for fastsimcoal function.
+Functions to specify deme parameters, historical events, 
+  migration matrices, and genetic data to simulate to write fastsimcoal 
+  parameter or template files.
 }
 \note{
-SNPs are simulated as a diploid DNA sequence with a single nucleotide,
-  with no recombination (each on its own "chromosome"). If \code{mut.rate} 
-  has more than one value then this many SNPs are simulated. Otherwise, 
-  \code{num.loci} independent SNPs are simulated.
+SNPs are simulated as a DNA sequence with a transiton rate of 1.
 }
 \references{
 Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time 
   coalescent simulator of genomic diversity under arbitrarily complex 
   evolutionary scenarios Bioinformatics 27: 1332-1334.\cr
+  Excoffier, L., Dupanloup, I., Huerta-Sánchez, E., Sousa, V.C., 
+  and M. Foll (2013) Robust demographic inference from genomic and SNP data. 
+  PLOS Genetics, 9(10):e1003905. \cr
   \url{http://cmpg.unibe.ch/software/fastsimcoal2/}
 }
 \seealso{
-\code{\link{fastsimcoal}}
+\code{\link{fscWrite}}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

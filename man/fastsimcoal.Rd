@@ -3,89 +3,116 @@
 \name{fastsimcoal}
 \alias{fastsimcoal}
 \alias{fscWrite}
+\alias{fscRun}
+\alias{fscReadArpFile}
 \alias{fscRead}
+\alias{fscReadVector}
+\alias{fscReadParamEst}
+\alias{fscExtractLoci}
+\alias{fscCleanup}
+\alias{fsc2gtypes}
 \title{Run fastsimcoal}
 \usage{
-fscWrite(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL,
-  label = NULL)
+fscWrite(demes, genetics, migration = NULL, events = NULL,
+  label = "strataG.fastsimcoal")
 
-fscRead(file, locus.params, label.haplotypes = TRUE)
+fscRun(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
+  all.sites = TRUE, infinite.alleles = FALSE, sfs.type = c("daf",
+  "maf"), num.ecm.loops = 20, num.cores = NULL, seed = NULL,
+  delete.files = FALSE, read.output = TRUE, exec = "fsc26")
 
-fastsimcoal(pop.info, locus.params, mig.rates = NULL, hist.ev = NULL,
-  label = NULL, quiet = TRUE, delete.files = TRUE, exec = "fsc252",
-  num.cores = NULL, label.haplotypes = TRUE)
+fscReadArpFile(file)
+
+fscRead(p)
+
+fscReadVector(file)
+
+fscReadParamEst(p)
+
+fscExtractLoci(p, type = "all", sep.chrom = FALSE, chrom = NULL)
+
+fscCleanup(p)
+
+fsc2gtypes(p, type = c("snp", "microsat", "standard", "dna"),
+  chrom = NULL, drop.mono = TRUE)
 }
 \arguments{
-\item{pop.info}{matrix of population sampling information created by the 
-\code{\link{fscPopInfo}} function.}
+\item{demes}{matrix of deme sampling information created by the 
+\code{\link{fscSettingsDemes}} function.}
 
-\item{locus.params}{data.frame specifying loci to simulate created by the 
-\code{\link{fscLocusParams}} function.}
+\item{genetics}{data.frame specifying loci to simulate created by the 
+\code{\link{fscSettingsGenetics}} function.}
 
-\item{mig.rates}{a matrix or list of matrices giving the migration rates 
-between pairs of populations.}
+\item{migration}{a list of matrices giving the migration rates 
+between pairs of demes created by the \code{\link{fscSettingsMigration}} 
+function.}
 
-\item{hist.ev}{matrix of historical events created by the 
-\code{\link{fscHistEv}} function.}
+\item{events}{matrix of historical events created by the 
+\code{\link{fscSettingsEvents}} function.}
 
 \item{label}{character string to label files with.}
 
-\item{file}{filename to write to.}
+\item{p}{list of fastsimcoal input parameters and output.}
 
-\item{label.haplotypes}{if DNA sequences are being simulated, should resulting
-sequences be stored as haplotypes (default = \code{TRUE}), or left as 
-individual sequences (\code{FALSE})?}
+\item{num.sims}{number of simulation replicates to run.}
 
-\item{quiet}{logical. Run quietly?}
+\item{dna.to.snp}{convert DNA sequences to numerical SNPs?}
+
+\item{max.snps}{maximum number of SNPs to retain.}
+
+\item{all.sites}{retain all sites?}
+
+\item{infinite.alleles}{use infinite alleles model?}
+
+\item{sfs.type}{type of site frequency spectrum to compute for each 
+population sample: `daf` = derived allele frequency (unfolded), 
+`maf` = minor allele frequency (folded).}
+
+\item{num.ecm.loops}{number of loops (ECM cycles) to be performed when 
+estimating parameters from SFS. Default is 20.}
+
+\item{num.cores}{number of cores to use.}
+
+\item{seed}{random number seed for simulation.}
 
 \item{delete.files}{logical. Delete files when done?}
 
+\item{read.output}{logical. Read output of simulation when done?}
+
 \item{exec}{name of fastsimcoal executable.}
 
-\item{num.cores}{number of cores to use.}
+\item{file}{filename to read from or write to.}
+
+\item{type}{type of marker to return.}
+
+\item{sep.chrom}{return a list with chromosomes separated?}
+
+\item{chrom}{numerical vector giving chromosomes to return. `NULL` 
+returns all chromosomes.}
+
+\item{drop.mono}{drop monomorphic sites before creating `gtypes` object?}
 }
 \description{
 Run a fastsimcoal simulation and load results into a 
   \linkS4class{gtypes} object.
 }
 \note{
-fastsimcoal is not included with \code{strataG} and must be downloaded 
+fastsimcoal is not included with `strataG` and must be downloaded 
   separately. Additionally, it must be installed such that it can be run from 
   the command line in the current working directory. See the vignette 
   for \code{external.programs} for installation instructions.
-}
-\examples{
-\dontrun{
-# Set fastsimcoal parameters
-# Population information: 3 populations with Ne = 10,000, drawing 100 samples from each.
-pop.info <- fscPopInfo(pop.size = rep(10000, 3), sample.size = rep(100, 3))
-
-# Migration rates among the 3 populations
-mig.rates <- matrix(c(0, 0.5, 0.005, 0.5, 0, 0.0005, 0.005, 0.0005, 0), ncol = 3)
-
-# Define historical events in which populations diverged 2000 generations in past
-hist.ev <- fscHistEv(
-  num.gen = c(2000, 2000), source.deme = c(2, 1),
-  sink.deme = c(1, 0), prop.migrants = 1
-)
-
-# Define 10 microsatellite loci, with random mutation rates
-msat.params <- fscLocusParams(
-  locus.type = "msat", num.loci = 1, 
-  mut.rate = runif(10, 1e-7, 1e-4)
-)
-
-# Run simulation and display locus summary
-sim.msats <- fastsimcoal(pop.info, msat.params, mig.rates, hist.ev)
-summarizeLoci(sim.msats)
-}
-
 }
 \references{
 Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time 
   coalescent simulator of genomic diversity under arbitrarily complex 
   evolutionary scenarios Bioinformatics 27: 1332-1334.\cr
+  Excoffier, L., Dupanloup, I., Huerta-Sánchez, E., Sousa, V.C., 
+  and M. Foll (2013) Robust demographic inference from genomic and SNP data. 
+  PLOS Genetics, 9(10):e1003905. \cr
   \url{http://cmpg.unibe.ch/software/fastsimcoal2/}
+}
+\seealso{
+\code{\link{fastsimcoal.input}}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

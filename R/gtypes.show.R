@@ -85,7 +85,6 @@ setMethod("show", "gtypes", function(object) {
   cat("<<<", x$description, ">>>\n")
   cat("\nContents: ")
   cat(ind.txt, loc.txt, strata.txt, sep = ", ")
-  cat("\n")
 }
 
 #' @rdname gtypes.show
