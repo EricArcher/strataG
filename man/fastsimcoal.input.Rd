@@ -59,7 +59,7 @@ are taken.}
 \code{fscSettingsMigration}, or marker specifications from a
 \code{fscMarker_} function for \code{fscSettingsGenetics}.}
 
-\item{event.time}{the number of generations, t, before present at which the
+\item{event.time}{the number of generations before present at which the
 historical event happened.}
 
 \item{source}{the source deme (the first listed deme has index 0).}

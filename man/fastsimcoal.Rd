@@ -35,7 +35,7 @@ fscRead(p, sim = 1)
 fscExtractLoci(p, sim = 1, gen.data = NULL, type = "all",
   sep.chrom = FALSE, chrom = NULL)
 
-fscCleanup(p)
+fscCleanup(label, save.est = FALSE)
 
 fsc2gtypes(p, sim = 1, gen.data = NULL, type = NULL, chrom = NULL,
   drop.mono = TRUE)
@@ -94,6 +94,8 @@ estimating parameters from SFS. Default is 20.}
 
 \item{chrom}{numerical vector giving chromosomes to return. `NULL` 
 returns all chromosomes.}
+
+\item{save.est}{do not delete .est parameter estimation files during cleanup?}
 
 \item{drop.mono}{drop monomorphic sites before creating `gtypes` object?}
 }

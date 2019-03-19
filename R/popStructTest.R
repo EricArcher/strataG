@@ -122,13 +122,16 @@ popStructTest <- function(g, nrep = 1000, stats = "all",
 
 #' @keywords internal
 #' 
-.checkStats <- function(stats) {
-  avail.stats <- c(
-    "chi2", "d", 
-    "fis", "fst", "fst.prime", 
-    "gst", "gst.prime", "gst.dbl.prime", 
-    "phist"
-  )
+.checkStats <- function(stats, ploidy) {
+  avail.stats <- if(ploidy == 1) {
+    c("chi2", "fst", "phist")
+  } else {
+    c(
+      "chi2", "d", 
+      "fis", "fst", "fst.prime", 
+      "gst", "gst.prime", "gst.dbl.prime"
+    )
+  }
   stats <- tolower(stats)
   stats <- if("all" %in% stats) {
     avail.stats 
@@ -136,7 +139,7 @@ popStructTest <- function(g, nrep = 1000, stats = "all",
     missing <- setdiff(stats, avail.stats)
     if(length(missing) > 0) {
       missing <- paste(missing, collapse = ", ")
-      stop(paste("the following stats could not be found:", missing))
+      stop(paste("the following stats are not available:", missing))
     }
     unique(stats)
   }
@@ -145,7 +148,7 @@ popStructTest <- function(g, nrep = 1000, stats = "all",
 }
 
 
-#' @keywords internal
+#' @noRd
 #' 
 .runStatFunc <- function(stat.name, input) {
   stat.func <- switch(
@@ -175,7 +178,7 @@ popStructTest <- function(g, nrep = 1000, stats = "all",
 overallTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE, 
                         quietly = FALSE, max.cores = NULL, ...) {
   # check requested stats
-  stats <- .checkStats(stats)
+  stats <- .checkStats(stats, getPloidy(g))
   
   # get number of cores
   num.cores <- .getNumCores(length(stats), max.cores)

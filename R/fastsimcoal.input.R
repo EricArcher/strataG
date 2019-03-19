@@ -25,7 +25,7 @@
 #'   are taken.
 #' @param inbreeding the inbreeding coefficient for the deme \code{[0:1]}.
 #' @param growth the growth rate of the deme.
-#' @param event.time the number of generations, t, before present at which the
+#' @param event.time the number of generations before present at which the
 #'   historical event happened.
 #' @param source the source deme (the first listed deme has index 0).
 #' @param sink the sink deme.

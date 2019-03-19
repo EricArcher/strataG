@@ -6,7 +6,7 @@
 #'   permutation test.
 #' @param keep.null logical. Keep the null distribution from the 
 #'   permutation test?
-#' @param prime.type type of G'st to calculate. Can be "nei" or "hedrick".
+#' @param prime.type type of G'st to calculate. Can be "hedrick" or "nei".
 #' @param model,gamma,pairwise.deletion parameters passed to 
 #'   \code{\link[ape]{dist.dna}}. Note that defaults for these arguments 
 #'   (in particular \code{model}) are the same as in \code{dist.dna}.
@@ -57,7 +57,7 @@ NULL
 
 #----- Supporting Functions -----
 
-#' @keywords internal
+#' @noRd
 #' 
 # create a list of formatted numeric loci and strata matrices for input to C
 #   population structure functions
@@ -106,7 +106,7 @@ NULL
   func.args <- as.list(match.call())
   
   input$prime.type <- if(is.null(func.args$prime.type)) {
-    0
+    1
   } else {
     switch(
       match.arg(func.args$prime.type, choices = c("nei", "hedrick")), 
@@ -148,7 +148,7 @@ NULL
 }
 
 
-#' @keywords internal
+#' @noRd
 #' 
 # create returned list from result vector
 .formatResult <- function(stat.name, result = NULL, keep.null = FALSE) {
@@ -172,7 +172,7 @@ NULL
 
 #----- Population Structure Functions -----
 
-#' @keywords internal
+#' @noRd
 #' 
 .statChi2 <- function(input) {
   if(is.null(input)) return(.formatResult("Chi2", NULL, input$keep.null))
@@ -190,7 +190,7 @@ statChi2 <- function(g, nrep = NULL, keep.null = FALSE, ...) {
 #-----
 
 
-#' @keywords internal
+#' @noRd
 #' 
 .statJostD <- function(input) {
   if(is.null(input)) return(.formatResult("D", NULL, input$keep.null))
@@ -209,7 +209,7 @@ statJostD <- function(g, nrep = NULL, keep.null = FALSE, ...) {
 #-----
 
 
-#' @keywords internal
+#' @noRd
 #' 
 .statFis <- function(input) {
   if(is.null(input)) return(.formatResult("Fis", NULL, input$keep.null))
@@ -228,7 +228,7 @@ statFis <- function(g, nrep = NULL, keep.null = FALSE, ...) {
 #-----
 
 
-#' @keywords internal
+#' @noRd
 #' 
 .statFst <- function(input) {
   if(is.null(input)) return(.formatResult("Fst", NULL, input$keep.null))
@@ -258,7 +258,7 @@ statFst <- function(g, nrep = NULL, keep.null = FALSE, ...) {
 #-----
 
 
-#' @keywords internal
+#' @noRd
 #' 
 .statFstPrime <- function(input) {
   if(is.null(input)) return(.formatResult("F'st", NULL, input$keep.null))
@@ -277,7 +277,7 @@ statFstPrime <- function(g, nrep = NULL, keep.null = FALSE, ...) {
 #-----
 
 
-#' @keywords internal
+#' @noRd
 #' 
 .statGst <- function(input) {
   if(is.null(input)) return(.formatResult("Gst", NULL, input$keep.null))
@@ -296,7 +296,7 @@ statGst <- function(g, nrep = NULL, keep.null = FALSE, ...) {
 #-----
 
 
-#' @keywords internal
+#' @noRd
 #' 
 .statGstPrime <- function(input) {
   if(is.null(input)) return(.formatResult("G'st", NULL, input$keep.null))
@@ -309,14 +309,14 @@ statGst <- function(g, nrep = NULL, keep.null = FALSE, ...) {
 #' @export
 #' 
 statGstPrime <- function(g, nrep = NULL, keep.null = FALSE,
-                         prime.type = c("nei", "hedrick"), ...) { 
+                         prime.type = c("hedrick", "nei"), ...) { 
   .statGstPrime(.formatCinput(g, nrep, keep.null, ...))
 }
 
 #-----
 
 
-#' @keywords internal
+#' @noRd
 #' 
 .statGstDblPrime <- function(input) {
   if(is.null(input)) return(.formatResult("G''st", NULL, input$keep.null))
@@ -335,7 +335,7 @@ statGstDblPrime <- function(g, nrep = NULL, keep.null = FALSE, ...) {
 #-----
 
 
-#' @keywords internal
+#' @noRd
 #' 
 .statPhist <- function(input)  {
   if(is.null(input)) return(.formatResult("PHIst", NULL, input$keep.null))

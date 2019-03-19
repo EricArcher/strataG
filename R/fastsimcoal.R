@@ -27,6 +27,7 @@
 #'   `maf` = minor allele frequency (folded).
 #' @param num.ecm.loops number of loops (ECM cycles) to be performed when 
 #'   estimating parameters from SFS. Default is 20.
+#' @param save.est do not delete .est parameter estimation files during cleanup?
 #' @param sim number of the simulation replicate to read.
 #' @param gen.data matrix of parsed genetic data read from .arp file with 
 #'   `fscParseGeneticData()`.
@@ -298,6 +299,7 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
     )
   }
   
+  Sys.sleep(1) # wait for .arp files to finish writing
   p$arp.files <- NULL
   arp.files <- dir(p$label, pattern = ".arp$", full.names = TRUE)
   if(length(arp.files) > 0) {
@@ -627,16 +629,47 @@ fscExtractLoci <- function(p, sim = 1, gen.data = NULL, type = "all",
 #' @rdname fastsimcoal
 #' @export
 #' 
-fscCleanup <- function(p) {
-  unlink(p$label, recursive = TRUE, force = TRUE)
-  if(file.exists(p$in.file)) file.remove(p$in.file)
-  if(!is.null(p$est.file)) if(file.exists(p$est.file)) file.remove(p$est.file)
-  if(file.exists("seed.txt")) file.remove("seed.txt")
-  invisible()
+fscCleanup <- function(label, save.est = FALSE) {
+  # remove label folder
+  unlink(label, recursive = TRUE, force = TRUE)
+  
+  files <- c(dir(pattern = paste0("^", label)), "seed.txt")
+  if(length(files) != 0) {
+    # don't remove R script files
+    r.files <- grep("[[:alnum:]]+\\.r$", files, ignore.case = TRUE, value = TRUE)
+    if(length(r.files) != 0) files <- setdiff(files, r.files)
+    if(save.est) { # leave .est files if they are to be saved
+      est.files <- grep("[[:alnum:]]+\\.est$", files, ignore.case = TRUE, value = TRUE)
+      if(length(est.files) != 0) files <- setdiff(files, est.files)
+    }
+    # remove only files, not other directories that start with label
+    files <- files[utils::file_test("-f", files)]
+    file.remove(files)
+    invisible(files)
+  } else invisible(NULL)
 }
 
 
 # ---- gtypes ----
+
+
+#' @noRd
+#' 
+.loadGtypes <- function(gen.mat, ploidy, sequences = NULL, description = NULL) {
+  # return new gtypes object
+  methods::new(
+    "gtypes", 
+    gen.data = gen.mat[, -(1:2)], 
+    ploidy = ploidy, 
+    ind.names = gen.mat[, 1],
+    strata = gen.mat[, 2], 
+    schemes = NULL, 
+    sequences = sequences, 
+    description = description, 
+    other = list()
+  )
+}
+
 
 #' @rdname fastsimcoal
 #' @export
@@ -699,7 +732,7 @@ fsc2gtypes <- function(p, sim = 1, gen.data = NULL, type = NULL, chrom = NULL,
     }))
     colnames(gen.data) <- c("id", "deme", loc.names)
     as.data.frame(gen.data, stringsAsFactors = FALSE) %>% 
-      df2gtypes(ploidy = ploidy, description = description)
+      .loadGtypes(ploidy = ploidy, description = description)
   } else { # create list of sequences
     dna.list <- sapply(gen.data, function(chrom.mat) {
       apply(
@@ -714,12 +747,7 @@ fsc2gtypes <- function(p, sim = 1, gen.data = NULL, type = NULL, chrom = NULL,
     }, simplify = FALSE, USE.NAMES = TRUE)
     gen.data <- gen.data[[1]][, c(1, 2, rep(1, length(dna.list))), drop = FALSE]
     colnames(gen.data)[3:ncol(gen.data)] <- names(dna.list)
-    df2gtypes(
-      gen.data, 
-      ploidy = 1, 
-      sequences = dna.list, 
-      description = description
-    ) %>% 
-      labelHaplotypes
+    .loadGtypes(gen.data, ploidy, dna.list, description) %>% 
+      labelHaplotypes()
   }
 }

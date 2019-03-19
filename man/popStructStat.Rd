@@ -26,8 +26,8 @@ statFstPrime(g, nrep = NULL, keep.null = FALSE, ...)
 
 statGst(g, nrep = NULL, keep.null = FALSE, ...)
 
-statGstPrime(g, nrep = NULL, keep.null = FALSE, prime.type = c("nei",
-  "hedrick"), ...)
+statGstPrime(g, nrep = NULL, keep.null = FALSE,
+  prime.type = c("hedrick", "nei"), ...)
 
 statGstDblPrime(g, nrep = NULL, keep.null = FALSE, ...)
 
@@ -47,7 +47,7 @@ permutation test?}
 
 \item{...}{optional arguments passed to or from other functions.}
 
-\item{prime.type}{type of G'st to calculate. Can be "nei" or "hedrick".}
+\item{prime.type}{type of G'st to calculate. Can be "hedrick" or "nei".}
 
 \item{model, gamma, pairwise.deletion}{parameters passed to 
 \code{\link[ape]{dist.dna}}. Note that defaults for these arguments 
