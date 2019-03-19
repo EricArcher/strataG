@@ -5,9 +5,10 @@
 \alias{fscWrite}
 \alias{fscRun}
 \alias{fscReadArpFile}
-\alias{fscRead}
+\alias{fscParseGeneticData}
 \alias{fscReadVector}
-\alias{fscReadParamEst}
+\alias{fscReadEstParams}
+\alias{fscRead}
 \alias{fscExtractLoci}
 \alias{fscCleanup}
 \alias{fsc2gtypes}
@@ -19,22 +20,25 @@ fscWrite(demes, genetics, migration = NULL, events = NULL,
 fscRun(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
   all.sites = TRUE, infinite.alleles = FALSE, sfs.type = c("daf",
   "maf"), num.ecm.loops = 20, num.cores = NULL, seed = NULL,
-  delete.files = FALSE, read.output = TRUE, exec = "fsc26")
+  exec = "fsc26")
 
 fscReadArpFile(file)
 
-fscRead(p)
+fscParseGeneticData(p, sim = 1)
 
 fscReadVector(file)
 
-fscReadParamEst(p)
+fscReadEstParams(p)
 
-fscExtractLoci(p, type = "all", sep.chrom = FALSE, chrom = NULL)
+fscRead(p, sim = 1)
+
+fscExtractLoci(p, sim = 1, gen.data = NULL, type = "all",
+  sep.chrom = FALSE, chrom = NULL)
 
 fscCleanup(p)
 
-fsc2gtypes(p, type = c("snp", "microsat", "standard", "dna"),
-  chrom = NULL, drop.mono = TRUE)
+fsc2gtypes(p, sim = 1, gen.data = NULL, type = NULL, chrom = NULL,
+  drop.mono = TRUE)
 }
 \arguments{
 \item{demes}{matrix of deme sampling information created by the 
@@ -75,13 +79,14 @@ estimating parameters from SFS. Default is 20.}
 
 \item{seed}{random number seed for simulation.}
 
-\item{delete.files}{logical. Delete files when done?}
-
-\item{read.output}{logical. Read output of simulation when done?}
-
 \item{exec}{name of fastsimcoal executable.}
 
 \item{file}{filename to read from or write to.}
+
+\item{sim}{number of the simulation replicate to read.}
+
+\item{gen.data}{matrix of parsed genetic data read from .arp file with 
+`fscParseGeneticData()`.}
 
 \item{type}{type of marker to return.}
 

@@ -162,9 +162,9 @@ setMethod(
     generic.locus.names <- paste0("Locus", "_", nums)
     colnames(gen.data) <- .expandLocusNames(generic.locus.names, ploidy)
   } 
-  locus.names.lookup <- dplyr::tibble(
-    locus = colnames(gen.data),
-    .new = rep(.parseLocusNames(colnames(gen.data), ploidy), each = ploidy)
+  locus.names.lookup <- stats::setNames(
+    rep(.parseLocusNames(colnames(gen.data), ploidy), each = ploidy),
+    colnames(gen.data)
   )
   
   # check sequences
@@ -197,14 +197,14 @@ setMethod(
     gen.data
   ) %>% 
     as.data.frame(stringsAsFactors = FALSE) %>% 
-    tidyr::gather("locus", "allele", -.data$id, -.data$stratum) %>% 
-    dplyr::left_join(locus.names.lookup, by = "locus") %>% 
-    dplyr::select(.data$id, .data$stratum, .data$.new, .data$allele) %>% 
-    dplyr::rename(locus = .data$.new) %>% 
-    dplyr::mutate(
-      locus = as.character(.data$locus),
-      allele = as.character(.data$allele)
+    reshape2::melt(
+      id.vars = c("id", "stratum"), 
+      variable.name = "locus", 
+      value.name = "allele"
     )
+  gen.data$locus <- locus.names.lookup[as.character(gen.data$locus)]
+  
+  
   data.table::setDT(gen.data)
   
   # create and return gtypes object

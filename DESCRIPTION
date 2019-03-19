@@ -45,10 +45,13 @@ Imports:
     phangorn (>= 2.4.0),
     RColorBrewer,
     Rcpp,
+    readr,
+    reshape2,
     rlang (>= 0.3.0.1),
     shiny,
     shinyFiles,
     stats,
+    stringi,
     survival (>= 2.40.1),
     swfscMisc,
     utils

@@ -13,8 +13,6 @@
 #'   \code{\link{fscSettingsEvents}} function.
 #' @param label character string to label files with.
 #' @param seed random number seed for simulation.
-#' @param delete.files logical. Delete files when done?
-#' @param read.output logical. Read output of simulation when done?
 #' @param exec name of fastsimcoal executable.
 #' @param num.cores number of cores to use.
 #' @param file filename to read from or write to.
@@ -29,6 +27,9 @@
 #'   `maf` = minor allele frequency (folded).
 #' @param num.ecm.loops number of loops (ECM cycles) to be performed when 
 #'   estimating parameters from SFS. Default is 20.
+#' @param sim number of the simulation replicate to read.
+#' @param gen.data matrix of parsed genetic data read from .arp file with 
+#'   `fscParseGeneticData()`.
 #' @param type type of marker to return.
 #' @param sep.chrom return a list with chromosomes separated?
 #' @param chrom numerical vector giving chromosomes to return. `NULL` 
@@ -238,8 +239,7 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
 fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL, 
                    all.sites = TRUE, infinite.alleles = FALSE, 
                    sfs.type = c("daf", "maf"), num.ecm.loops = 20,
-                   num.cores = NULL, seed = NULL, delete.files = FALSE, 
-                   read.output = TRUE, exec = "fsc26") {
+                   num.cores = NULL, seed = NULL, exec = "fsc26") {
   
   if(file.exists(p$label)) unlink(p$label, recursive = TRUE, force = TRUE) 
   
@@ -273,44 +273,45 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
   args <- c(args, cores.spec)
   args <- paste(args, collapse = " ")
   
+  p$run.params <- list(
+    num.sims = num.sims, dna.to.snp = dna.to.snp, max.snps = max.snps, 
+    all.sites = all.sites, infinite.alleles = infinite.alleles, 
+    sfs.type = sfs.type, num.ecm.loops = num.ecm.loops,
+    num.cores = num.cores, seed = seed, exec = exec
+  )
+  p$args <- args
   p$log.file <- paste0(p$label, ".log")
   if(file.exists(p$log.file)) file.remove(p$log.file)
-  cat("fastsimcoal running...\n")
-  err <- system2(exec, args, stdout = p$log.file)
+  cat(format(Sys.time()), "running fastsimcoal...\n")
+  err <- system2(exec, p$args, stdout = p$log.file)
   # err <- if(.Platform$OS.type == "unix") {
   #   system2(exec, args, stdout = p$log.file)
   # } else {
   #   shell(paste(exec, args), intern = F)
   # }
-  if(err == 0) {
-    p$args <- args
-  } else {
+  if(err != 0) {
     stop(
+      format(Sys.time()), 
       "fastsimcoal exited with error ", err, "\n",
       "The command was:\n",
-      exec, args
+      exec, p$args
     )
   }
   
   p$arp.files <- NULL
   arp.files <- dir(p$label, pattern = ".arp$", full.names = TRUE)
   if(length(arp.files) > 0) {
+    arp.files <- arp.files[order(nchar(arp.files), arp.files)]
     p$arp.files <- stats::setNames(
       arp.files, 
       paste0("rep", 1:length(arp.files))
     )
+    cat(format(Sys.time()), "creating locus map for .arp files...\n")
+    p <- .fscMapArpLocusInfo(p)
   }
   
-  if(read.output) {
-    if(!p$is.tpl & !is.null(p$arp.files)) {
-      p <- fscRead(p)
-    } else if(p$is.tpl) {
-      p <- fscReadParamEst(p)
-    }
-  }
-  if(delete.files) fscCleanup(p)
   options(opt)
-  
+  cat(format(Sys.time()), "run complete\n")
   invisible(p)
 }
 
@@ -318,31 +319,43 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
 # ---- Reading ----
 
 #' @noRd
+.zeroPad <- function(x) {
+  formatC(x, digits = floor(log10(max(x))), flag = "0", mode = "integer") 
+}
+
+#' @noRd
 .fscMapArpLocusInfo <- function(p) {
   # expand genetic info in input parameters to matrix
   locus.info <- do.call(rbind, p$genetics)
   if(!attr(p$genetics, "chrom.diff")) {
-    locus.info <- do.call(
-      rbind, 
-      lapply(1:attr(p$genetics, "num.chrom"), function(i) {
-        cbind(chromosome = i, locus.info)
-      })
+    num.blocks <- nrow(locus.info)
+    num.chrom <- attr(p$genetics, "num.chrom")
+    locus.info <- replicate(num.chrom, locus.info, simplify = FALSE)
+    locus.info <- do.call(rbind, locus.info)
+    locus.info <- cbind(
+      chromosome = rep(1:num.chrom, each = num.blocks),
+      locus.info
     )
   }
   
   # create list to associate rows in locus info to columns read from .arp file
-  mat.col <- lapply(1:nrow(locus.info), function(i) NA)
-  mat.col[[1]] <- 3
-  for(i in 2:nrow(locus.info)) {
-    # repeat column number for consecutive DNA entries
-    if(locus.info$fsc.type[i] == "DNA" & locus.info$fsc.type[i - 1] == "DNA") {
-      mat.col[[i]] <- mat.col[[i - 1]]
-    } else {
-      next.col <- max(mat.col[[i - 1]]) + 1
-      mat.col[[i]] <- if(locus.info$fsc.type[i] == "DNA") { # DNA takes 1 column
-        next.col
-      } else { # MICROSAT and STANDARD take num.markers columns
-        next.col:(next.col + locus.info$num.markers[i] - 1)
+  .extractMatCol <- function(i, next.col, locus.info) {
+    if(locus.info$fsc.type[i] == "DNA") { # DNA takes 1 column
+      next.col
+    } else { # MICROSAT and STANDARD take num.markers columns
+      next.col:(next.col + locus.info$num.markers[i] - 1)
+    }
+  }
+  mat.col <- vector("list", nrow(locus.info)) 
+  mat.col[[1]] <- .extractMatCol(1, 3, locus.info)
+  if(nrow(locus.info) > 1) {
+    for(i in 2:nrow(locus.info)) {
+      # repeat column number for consecutive DNA entries
+      if(locus.info$fsc.type[i] == "DNA" & locus.info$fsc.type[i - 1] == "DNA") {
+        mat.col[[i]] <- mat.col[[i - 1]]
+      } else {
+        next.col <- max(mat.col[[i - 1]]) + 1
+        mat.col[[i]] <- .extractMatCol(i, next.col, locus.info)
       }
     }
   }
@@ -355,8 +368,8 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
     dplyr::ungroup() %>% 
     dplyr::mutate(
       name = paste0(
-        "C", swfscMisc::zero.pad(.data$chromosome),
-        "_B", swfscMisc::zero.pad(.data$block), 
+        "C", .zeroPad(.data$chromosome),
+        "_B", .zeroPad(.data$block), 
         "_", .data$actual.type
       ),
       dna.col = NA
@@ -371,7 +384,7 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
   }
   
   # identify start and stop characters for each DNA block within its column
-  locus.info %>% 
+  p$locus.info <- locus.info %>% 
     dplyr::group_by(.data$dna.col) %>% 
     dplyr::mutate(
       dna.end = ifelse(
@@ -385,7 +398,11 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
         NA
       )
     ) %>% 
-    dplyr::ungroup()
+    dplyr::ungroup() %>% 
+    dplyr::select(.data$name, .data$chromosome, .data$block, dplyr::everything()) %>% 
+    as.data.frame(stringsAsFactors = FALSE)
+  
+  invisible(p)
 }
 
 
@@ -394,7 +411,7 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
 #' 
 fscReadArpFile <- function(file) {
   # read .arp file
-  f <- readLines(file)
+  f <- readr::read_lines(file)
   
   # get start and end points of data blocks
   start <- grep("SampleData=", f) + 1
@@ -413,57 +430,72 @@ fscReadArpFile <- function(file) {
 }
 
 
+#' @noRd
+#' 
+.fscParseLocusRows <- compiler::cmpfun(function(locus.info, data.mat, .zeroPad) {
+  # for each row in locus.info, create matrix of loci in that block
+  # return list of block matrices
+  locus.rows <- vector("list", nrow(locus.info))
+  for(i in 1:nrow(locus.info)) {
+    cols <- data.mat[, locus.info$mat.col[[i]]]
+    # extract DNA sequence from string in column
+    if(locus.info$fsc.type[i] == "DNA") {
+      cols <- stringi::stri_sub(
+        cols, 
+        locus.info$dna.start[i], 
+        locus.info$dna.end[i]
+      )
+      if(locus.info$actual.type[i] == "SNP") {
+        cols <- do.call(rbind, strsplit(cols, ""))
+      }
+    }
+    cols <- cbind(cols)
+    # give suffixes to block names with more than one locus
+    colnames(cols) <- if(ncol(cols) == 1) {
+      locus.info$name[i] 
+    } else {
+      paste0(locus.info$name[i], "_L", .zeroPad(1:ncol(cols)))
+    }
+    locus.rows[[i]] <- cols
+  }
+  locus.rows
+})
+
+
 #' @rdname fastsimcoal
 #' @export
 #' 
-fscRead <- function(p) {
-  locus.info <- .fscMapArpLocusInfo(p)
+fscParseGeneticData <- function(p, sim = 1) {
+  if(any(p$locus.info$fsc.type == "DNA") & !p$run.params$all.sites) {
+    stop(
+      "Can't read .arp output if DNA sequences are present and fastsimcoal has not been run with `all.sites = TRUE`\n"
+    )
+  }
+  if(!is.numeric(sim) | length(sim) > 1) stop("`sim` must be a single number")
   
-  # loop through each .arp file
-  p$genetic.data <- sapply(p$arp.files, function(file) {
-    data.mat <- fscReadArpFile(file)
-    
-    # reform genetic data to map linkage blocks to each column
-    gen.data <- lapply(1:nrow(locus.info), function(i) {
-      cols <- data.mat[, locus.info$mat.col[[i]]]
-      # extract DNA sequence from string in column
-      if(locus.info$fsc.type[i] == "DNA") {
-        cols <- substr(cols, locus.info$dna.start[i], locus.info$dna.end[i])
-        if(locus.info$actual.type[i] == "SNP") {
-          cols <- do.call(rbind, strsplit(cols, ""))
-        }
-      }
-      cols <- cbind(cols)
-      # give suffixes to block names with more than one locus
-      colnames(cols) <- if(ncol(cols) == 1) {
-        locus.info$name[i] 
-      } else {
-        paste0(locus.info$name[i], "_L", swfscMisc::zero.pad(1:ncol(cols)))
-      }
-      cols
-    })
-    
-    # create map of column numbers in gen.data for each row of locus.info
-    last.col <- 2
-    locus.cols <- list()
-    for(mat in gen.data) {
-      col.nums <- (last.col + 1):(last.col + ncol(mat))
-      locus.cols <- c(locus.cols, list(col.nums))
-      last.col <- max(col.nums)
-    }
-    names(locus.cols) <- locus.info$name
+  file <- p$arp.files[sim]
+  cat(format(Sys.time()), "reading", file, "\n")
+  data.mat <- fscReadArpFile(file)
   
-    gen.data <- cbind(data.mat[, 1:2], do.call(cbind, gen.data))
-    attr(gen.data, "locus.cols") <- locus.cols
-    gen.data
-  }, simplify = FALSE, USE.NAMES = TRUE)
+  # parse data matrix based on entries in locus.info data.frame
+  cat(format(Sys.time()), "parsing locus data...\n")
+  gen.data <- .fscParseLocusRows(p$locus.info, data.mat, .zeroPad)
   
-  p$locus.info <- locus.info %>% 
-    dplyr::select(.data$name, .data$chromosome, .data$block, dplyr::everything()) %>% 
-    dplyr::select(-.data$mat.col, -.data$dna.col, -.data$dna.end, -.data$dna.start) %>% 
-    as.data.frame(stringsAsFactors = FALSE)
+  # create map of column numbers in gen.data for each row of locus.info
+  last.col <- 2
+  locus.cols <- vector("list", nrow(p$locus.info))
+  names(locus.cols) <- p$locus.info$name
+  for(i in 1:length(gen.data)) {
+    locus.cols[[i]] <- (last.col + 1):(last.col + ncol(gen.data[[i]]))
+    last.col <- max(locus.cols[[i]])
+  }
   
-  invisible(p)
+  gen.data <- do.call(cbind, gen.data)
+  gen.data <- cbind(data.mat[, 1:2], gen.data)  
+  attr(gen.data, "locus.cols") <- locus.cols
+  attr(gen.data, "file") <- file
+  
+  invisible(gen.data)
 }
 
 
@@ -482,7 +514,7 @@ fscReadVector <- function(file) {
 #' @rdname fastsimcoal
 #' @export
 #' 
-fscReadParamEst <- function(p) {
+fscReadEstParams <- function(p) {
   sfs.file <- dir(
     p$label, 
     pattern = paste0("^", p$label, "_[[:alnum:]]+.txt$"),
@@ -502,7 +534,7 @@ fscReadParamEst <- function(p) {
     stop("Can't file all output files (*.txt, *.brent_lhoods, *.bestlhoods)")
   }
   
-  brent.file <- readLines(brent.file) 
+  brent.file <- readr::read_lines(brent.file) 
   brent.file <- brent.file[grep("^Param|^[[:digit:]]", brent.file)]
   brent.file <- strsplit(brent.file, "\t")
   brent <- as.data.frame(do.call(rbind, lapply(brent.file[-1], as.numeric)))
@@ -514,22 +546,37 @@ fscReadParamEst <- function(p) {
     sapply(sfs.file, fscReadVector, simplify = FALSE)
   }
   
-  p$est.params <- list(
-    ml.params = fscReadVector(best.file),
-    brent.lhoods = brent,
-    sfs = sfs.vec
+  invisible(
+    list(
+      ml.params = fscReadVector(best.file),
+      brent.lhoods = brent,
+      sfs = sfs.vec
+    )
   )
-  
-  invisible(p)
 }
+
 
 #' @rdname fastsimcoal
 #' @export
 #' 
-fscExtractLoci <- function(p, type = "all", sep.chrom = FALSE, chrom = NULL) {
-  if(is.null(p$locus.info) | is.null(p$genetic.data)) {
-    p <- fscRead(p)
-  }
+fscRead <- function(p, sim = 1) {
+  if(p$is.tpl) fscReadEstParams(p) else fscParseGeneticData(p, sim)
+}
+
+
+
+#' @rdname fastsimcoal
+#' @export
+#' 
+fscExtractLoci <- function(p, sim = 1, gen.data = NULL, type = "all", 
+                           sep.chrom = FALSE, chrom = NULL) {
+  if(is.null(gen.data)) {
+    if(p$is.tpl) {
+      stop("Can't extract loci because 'p' specifies a parameter estimation model.")
+    }
+    gen.data <- fscRead(p, sim)
+  } 
+  file <- attr(gen.data, "file")
   
   # filter locus info for specified chromosomes
   locus.info <- p$locus.info
@@ -551,28 +598,29 @@ fscExtractLoci <- function(p, type = "all", sep.chrom = FALSE, chrom = NULL) {
   # filter locus info for specified marker types
   locus.info <- locus.info[grep(paste(type, collapse = "|"), locus.info$name), ]
   
-  .extractLocCols <- function(loc.names, gen.mat) {
-    loc.cols <- unlist(attr(gen.mat, "locus.cols")[loc.names]) 
-    gen.mat[, c(1:2, loc.cols), drop = FALSE]
+  .extractLocCols <- function(loc.names, mat) {
+    loc.cols <- unlist(attr(mat, "locus.cols")[loc.names]) 
+    mat[, c(1:2, loc.cols), drop = FALSE]
   }
   
   # extract columns for selected chromosomes and marker types
-  sapply(p$genetic.data, function(gen.mat) {
-    if(sep.chrom) { # extract for each chromosome
-      locus.info$chrom.label <- regmatches(
-        locus.info$chromosome,
-        regexpr("^C[[:alnum:]]+", locus.info$chromosome)
-      )
-      tapply( 
-        locus.info$name, 
-        locus.info$chrom.label,
-        .extractLocCols,
-        gen.mat = gen.mat
-      )
-    } else { # extract selected loci from data frame
-      .extractLocCols(locus.info$name, gen.mat)
-    }
-  }, simplify = FALSE, USE.NAMES = TRUE)
+  gen.data <- if(sep.chrom) { # extract for each chromosome
+    locus.info$chrom.label <- regmatches(
+      locus.info$name,
+      regexpr("^C[[:alnum:]]+", locus.info$name)
+    )
+    tapply( 
+      locus.info$name, 
+      locus.info$chrom.label,
+      .extractLocCols,
+      mat = gen.data
+    )
+  } else { # extract selected loci from data frame
+    .extractLocCols(locus.info$name, gen.data)
+  }
+  
+  attr(gen.data, "file") <- file
+  gen.data
 }
 
 
@@ -593,76 +641,85 @@ fscCleanup <- function(p) {
 #' @rdname fastsimcoal
 #' @export
 #' 
-fsc2gtypes <- function(p, type = c("snp", "microsat", "standard", "dna"),
-                       chrom = NULL, drop.mono = TRUE) {
+fsc2gtypes <- function(p, sim = 1, gen.data = NULL, type = NULL, chrom = NULL, 
+                       drop.mono = TRUE) {
   # check arguments
-  type <- match.arg(type)
+  p.types <- tolower(unique(p$locus.info$actual.type))
+  type <- if(is.null(type)) {
+    if(length(p.types) == 1) p.types else {
+      stop(
+        "fastsimcoal output must have a single locus type.",
+        paste("Select one of the following types:", paste(p.types, collapse = ", "))
+      )
+    }
+  } else {
+    if(length(type) > 1 | !is.character(type)) {
+      stop("`type` must be a single character string.")
+    } else if(!type %in% p.types) {
+      stop(
+        "`type` was not one of the available locus types:",
+        paste(p.types, collapse = ", ")
+      )
+    }
+  }
+  
   ploidy <- attr(p$genetics, "ploidy")
   if(ploidy == 1 & type != "dna") {
     stop("Can't create a haploid `gtypes` object for `type` other than 'dna'.")
   }
   sep.chrom <- ifelse(type == "dna" & ploidy == 1, TRUE, FALSE)
   
-  # extract requested data
-  gen.data <- fscExtractLoci(p, type, sep.chrom, chrom)
+  # extract requested data if necessary
+  if(is.null(gen.data)) {
+    gen.data <- fscExtractLoci(p, sim, gen.data, type, sep.chrom, chrom)
+  }
+  description <- attr(gen.data, "file")
+  
+  # remove monomorphic loci
   if(drop.mono & ploidy > 1) {
-    for(i in 1:length(gen.data)) {
-      not.mono <- apply(gen.data[[i]][, -(1:2), drop = FALSE], 2, function(loc) {
-        length(unique(loc)) > 1
-      })
-      gen.data[[i]] <- gen.data[[i]][, c(1:2, which(not.mono) + 2), drop = FALSE]
+    not.mono <- apply(gen.data[, -(1:2), drop = FALSE], 2, function(loc) {
+      dplyr::n_distinct(loc) > 1
+    })
+    gen.data <- gen.data[, c(1:2, which(not.mono) + 2), drop = FALSE]
+    if(ncol(gen.data) <= 2) {
+      warning("All loci are monomorphic. NULL returned.")
+      return(NULL)
     }
   }
-      
-  # create list of gtypes for each replicate
-  fsc.g <- purrr::imap(gen.data, function(rep.mat, rep.num) {
-    if(ncol(rep.mat) <= 2) return(NULL) 
-    description <- paste(p$label, rep.num, sep = ".")
-    if(ploidy > 1) { # compile non-haploid genotypes
-      rep.mat %>% 
-        dplyr::as_tibble() %>% 
-        dplyr::mutate(ind = rep(1:(dplyr::n() / ploidy), each = ploidy)) %>% 
-        tidyr::gather("locus", "allele", -.data$ind, -.data$id, -.data$deme) %>% 
-        dplyr::group_by(.data$deme, .data$ind, .data$locus) %>% 
-        dplyr::mutate(
-          allele.num = 1:dplyr::n(),
-          id = paste(.data$id, collapse = "|")
-        ) %>% 
-        dplyr::ungroup() %>% 
-        dplyr::mutate(
-          locus = paste(.data$locus, .data$allele.num, sep = ".")
-        ) %>% 
-        dplyr::select(-.data$allele.num, -.data$ind) %>% 
-        tidyr::spread(.data$locus, .data$allele) %>% 
-        df2gtypes(ploidy = ploidy, description = description)
-    } else { # create list of sequences
-      dna.list <- sapply(rep.mat, function(chrom.mat) {
-        apply(
-          as.matrix(chrom.mat[, -(1:2)]),
-          1,
-          paste,
-          collapse = ""
-        ) %>% 
-          strsplit(split = "") %>% 
-          stats::setNames(chrom.mat[, "id"]) %>% 
-          ape::as.DNAbin
-      }, simplify = FALSE, USE.NAMES = TRUE)
-      rep.mat <- rep.mat[[1]][, c(1, 2, rep(1, length(dna.list)))]
-      colnames(rep.mat)[3:ncol(rep.mat)] <- names(dna.list)
-      df2gtypes(
-        rep.mat, 
-        ploidy = 1, 
-        sequences = dna.list, 
-        description = description
+  
+  # create gtypes object
+  cat(format(Sys.time()), "loading gtypes object...\n")
+  if(ploidy > 1) { # compile non-haploid genotypes
+    loc.names <- colnames(gen.data)[-(1:2)]
+    loc.names <- paste(rep(loc.names, each = ploidy), 1:ploidy, sep = ".")
+    gen.data <- t(sapply(seq(1, nrow(gen.data), by = ploidy), function(i) {
+      rows <- i:(i + ploidy - 1)
+      id <- paste(gen.data[rows, "id"], collapse = "|")
+      c(id, gen.data[i, "deme"], as.vector(gen.data[rows, -(1:2)]))
+    }))
+    colnames(gen.data) <- c("id", "deme", loc.names)
+    as.data.frame(gen.data, stringsAsFactors = FALSE) %>% 
+      df2gtypes(ploidy = ploidy, description = description)
+  } else { # create list of sequences
+    dna.list <- sapply(gen.data, function(chrom.mat) {
+      apply(
+        as.matrix(chrom.mat[, -(1:2)]),
+        1,
+        paste,
+        collapse = ""
       ) %>% 
-        labelHaplotypes
-    }
-  })
-  
-  some.null <- any(sapply(fsc.g, is.null))
-  if(some.null) {
-    warning("Some replicates had no specified loci - gtypes for those are NULL.")
+        strsplit(split = "") %>% 
+        stats::setNames(chrom.mat[, "id"]) %>% 
+        ape::as.DNAbin()
+    }, simplify = FALSE, USE.NAMES = TRUE)
+    gen.data <- gen.data[[1]][, c(1, 2, rep(1, length(dna.list))), drop = FALSE]
+    colnames(gen.data)[3:ncol(gen.data)] <- names(dna.list)
+    df2gtypes(
+      gen.data, 
+      ploidy = 1, 
+      sequences = dna.list, 
+      description = description
+    ) %>% 
+      labelHaplotypes
   }
-  
-  fsc.g
 }

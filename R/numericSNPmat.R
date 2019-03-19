@@ -67,8 +67,8 @@ numericSNPmat <- function(g, ref.allele = NULL) {
   g.mat <- as.matrix(g, strata = FALSE, sep = "_<>_", one.col = TRUE)
   
   # count number of alleles for each individual that are not the reference
-  mat <- sapply(colnames(g.mat[, -1]), function(loc) {
-    loc.vec <- strsplit(g.mat[, loc], split = "_<>_")
+  mat <- sapply(colnames(g.mat[, -1, drop = FALSE]), function(loc) {
+    loc.vec <- strsplit(g.mat[, loc, drop = FALSE], split = "_<>_")
     sapply(loc.vec, function(x) sum(x != ref.allele[loc]))
   })
   rownames(mat) <- g.mat[, 1]

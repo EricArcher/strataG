@@ -53,11 +53,14 @@ setMethod(
            strata = TRUE, sort.alleles = TRUE, ...) {
     
     # create data.frame of one column per locus
-    df <- x@data %>% 
-      dplyr::group_by(.data$stratum, .data$id, .data$locus) %>% 
-      dplyr::summarize(genotype = .combineLoci(.data$allele, sep, sort.alleles)) %>% 
-      tidyr::spread(.data$locus, .data$genotype) %>% 
-      dplyr::ungroup()
+    df <- reshape2::dcast(
+      x@data,
+      id + stratum ~ locus,
+      fun = .combineLoci,
+      sep = sep,
+      sort = sort.alleles,
+      value.var = "allele"
+    )
     
     if(getPloidy(x) == 1) one.col = TRUE
     # if loci are to be split into separate columns, use alleleSplit
