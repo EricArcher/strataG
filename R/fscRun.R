@@ -6,7 +6,6 @@
 #' @param seed random number seed for simulation.
 #' @param exec name of fastsimcoal executable.
 #' @param num.cores number of cores to use.
-#' @param file filename to read from or write to.
 #' @param p list of fastsimcoal input parameters and output.
 #' @param num.sims number of simulation replicates to run.
 #' @param dna.to.snp convert DNA sequences to numerical SNPs?
@@ -35,7 +34,7 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \code{\link{fastsimcoal.input}}
+#' @seealso \code{\link{fsc.input}}
 #' 
 #' @name fscRun
 #' @export
@@ -139,7 +138,7 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
 
   # associate rows in locus info to columns in .arp file (if all.sites = TRUE)
   position <- cumsum(locus.info$num.markers)
-  prev.type <- lag(locus.info$fsc.type)
+  prev.type <- dplyr::lag(locus.info$fsc.type)
   new.col <- as.numeric(!(locus.info$fsc.type == "DNA" & prev.type == "DNA"))
   new.col <- new.col * ifelse(
     locus.info$fsc.type == "DNA", 1, locus.info$num.markers
@@ -154,8 +153,8 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
     dplyr::group_by(.data$chromosome) %>% 
     dplyr::mutate( # by chromosome information
       block = 1:dplyr::n(),
-      chrom.pos.end = cumsum(num.markers),
-      chrom.pos.start = chrom.pos.end - num.markers + 1
+      chrom.pos.end = cumsum(.data$num.markers),
+      chrom.pos.start = .data$chrom.pos.end - .data$num.markers + 1
     ) %>% 
     dplyr::ungroup() %>% 
     dplyr::mutate(

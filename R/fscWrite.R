@@ -12,7 +12,6 @@
 #' @param events matrix of historical events created by the 
 #'   \code{\link{fscSettingsEvents}} function.
 #' @param label character string to label files with.
-#' @param p list of fastsimcoal input parameters and output.
 #' 
 #' @note fastsimcoal is not included with `strataG` and must be downloaded 
 #'   separately. Additionally, it must be installed such that it can be run from 
@@ -29,7 +28,7 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \code{\link{fastsimcoal.input}}
+#' @seealso \code{\link{fsc.input}}
 #' 
 #' @name fscWrite
 #' @export
@@ -251,7 +250,7 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
   if(file.exists(p$files$est.file) & interactive()) {
     prompt <- paste0(
       "The estimation file, '", 
-      fname, 
+      p$files$est.file, 
       "' already exists. Overwrite? (Y/n) "
     )
     if(readline(prompt) != "Y") return(p)

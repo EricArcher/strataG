@@ -34,8 +34,6 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \code{\link{fastsimcoal}}
-#' 
 #' @examples 
 #' data(bowhead.snps)
 #' snps <- df2gtypes(bowhead.snps, ploidy = 2)

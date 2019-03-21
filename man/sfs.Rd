@@ -62,9 +62,6 @@ Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time
   PLOS Genetics, 9(10):e1003905. \cr
   \url{http://cmpg.unibe.ch/software/fastsimcoal2/}
 }
-\seealso{
-\code{\link{fastsimcoal}}
-}
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }

@@ -1,37 +1,11 @@
 #' @title Load fastsimcoal output to gtypes
 #' @description Create a gtypes object from the result of a fastsimcoal run.
 #'
-#' @param demes matrix of deme sampling information created by the 
-#'   \code{\link{fscSettingsDemes}} function.
-#' @param genetics data.frame specifying loci to simulate created by the 
-#'   \code{\link{fscSettingsGenetics}} function.
-#' @param migration a list of matrices giving the migration rates 
-#'   between pairs of demes created by the \code{\link{fscSettingsMigration}} 
-#'   function.
-#' @param events matrix of historical events created by the 
-#'   \code{\link{fscSettingsEvents}} function.
-#' @param label character string to label files with.
-#' @param seed random number seed for simulation.
-#' @param exec name of fastsimcoal executable.
-#' @param num.cores number of cores to use.
-#' @param file filename to read from or write to.
 #' @param p list of fastsimcoal input parameters and output.
-#' @param num.sims number of simulation replicates to run.
-#' @param dna.to.snp convert DNA sequences to numerical SNPs?
-#' @param max.snps maximum number of SNPs to retain.
-#' @param all.sites retain all sites?
-#' @param infinite.sites use infinite alleles model?
-#' @param sfs.type type of site frequency spectrum to compute for each 
-#'   population sample: `daf` = derived allele frequency (unfolded), 
-#'   `maf` = minor allele frequency (folded).
-#' @param num.ecm.loops number of loops (ECM cycles) to be performed when 
-#'   estimating parameters from SFS. Default is 20.
-#' @param save.est do not delete .est parameter estimation files during cleanup?
 #' @param sim number of the simulation replicate to read.
 #' @param gen.data matrix of parsed genetic data read from .arp file with 
 #'   `fscParseGeneticData()`.
 #' @param type type of marker to return.
-#' @param sep.chrom return a list with chromosomes separated?
 #' @param chrom numerical vector giving chromosomes to return. `NULL` 
 #'   returns all chromosomes.
 #' @param drop.mono drop monomorphic sites before creating `gtypes` object?
@@ -55,15 +29,16 @@
 #' 
 #' @export
 #' 
-fsc2gtypes <- function(p, sim = 1, gen.data = NULL, type = NULL, chrom = NULL, 
+fsc2gtypes <- function(p, sim = 1, type = NULL, gen.data = NULL,  chrom = NULL, 
                        drop.mono = TRUE) {
   # check arguments
   p.types <- tolower(unique(p$locus.info$actual.type))
-  type <- if(is.null(type)) {
-    if(length(p.types) == 1) p.types else {
+  if(is.null(type)) {
+    if(length(p.types) == 1) {
+      type <- p.types 
+    } else {
       stop(
-        "fastsimcoal output must have a single locus type.",
-        paste("Select one of the following types:", paste(p.types, collapse = ", "))
+        "Select one of the following types:", paste(p.types, collapse = ", ")
       )
     }
   } else {
@@ -77,7 +52,7 @@ fsc2gtypes <- function(p, sim = 1, gen.data = NULL, type = NULL, chrom = NULL,
     }
   }
   
-  ploidy <- attr(p$genetics, "ploidy")
+  ploidy <- attr(p$settings$genetics, "ploidy")
   if(ploidy == 1 & type != "dna") {
     stop("Can't create a haploid `gtypes` object for `type` other than 'dna'.")
   }
@@ -85,7 +60,7 @@ fsc2gtypes <- function(p, sim = 1, gen.data = NULL, type = NULL, chrom = NULL,
   
   # extract requested data if necessary
   if(is.null(gen.data)) {
-    gen.data <- fscExtractLoci(p, sim, gen.data, type, sep.chrom, chrom)
+    gen.data <- fscExtractLoci(p, sim, type, gen.data, sep.chrom, chrom)
   }
   description <- attr(gen.data, "file")
   

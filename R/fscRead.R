@@ -11,7 +11,6 @@
 #' @param sep.chrom return a list with chromosomes separated?
 #' @param chrom numerical vector giving chromosomes to return. `NULL` 
 #'   returns all chromosomes.
-#' @param drop.mono drop monomorphic sites before creating `gtypes` object?
 #' 
 #' @note fastsimcoal is not included with `strataG` and must be downloaded 
 #'   separately. Additionally, it must be installed such that it can be run from 
@@ -28,7 +27,7 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \code{\link{fastsimcoal.input}}
+#' @seealso \code{\link{fsc.input}}
 #' 
 #' @name fscRead
 #' @export
@@ -227,10 +226,10 @@ fscReadArpFile <- function(file) {
       fsc.type = locus.info[.data$loc.info.row, "fsc.type"]
     ) 
   
-  prev.type <- lag(poly.pos$fsc.type)
-  new.col <- as.numeric(!(poly.pos$fsc.type == "DNA" & prev.type == "DNA"))
-  new.col[1] <- 1
-  poly.pos$mat.col <- cumsum(new.col) + 2
+  prev.type <- dplyr::lag(poly.pos$fsc.type)
+  same.col <- as.numeric(!(poly.pos$fsc.type == "DNA" & prev.type == "DNA"))
+  same.col[1] <- 1
+  poly.pos$mat.col <- cumsum(same.col) + 2
   
   poly.pos <- poly.pos %>% 
     dplyr::group_by(.data$mat.col) %>% 
@@ -272,6 +271,7 @@ fscReadArpFile <- function(file) {
   gen.data <- cbind(arp.data$data.mat[, 1:2], gen.data)  
   attr(gen.data, "locus.cols") <- locus.cols
   attr(gen.data, "poly.pos") <- do.call(rbind, poly.pos)
+  rownames(attr(gen.data, "poly.pos")) <- NULL
   gen.data
 }
 
@@ -279,7 +279,7 @@ fscReadArpFile <- function(file) {
 #' @rdname fscRead
 #' @export
 #' 
-fscExtractLoci <- function(p, sim = 1, gen.data = NULL, type = "all", 
+fscExtractLoci <- function(p, sim = 1, type = "all", gen.data = NULL,  
                            sep.chrom = FALSE, chrom = NULL) {
   if(is.null(gen.data)) {
     if(p$is.tpl) {
