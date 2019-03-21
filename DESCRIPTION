@@ -126,8 +126,11 @@ Collate:
     hweTest.R
     jackHWE.R
     LDgenepop.R
-    fastsimcoal.R
-    fastsimcoal.input.R
+    fsc.input.R
+    fscWrite.R
+    fscRun.R
+    fscRead.R
+    fsc2gtypes.R
     sfs.R
     structure.R
     structurePlot.R

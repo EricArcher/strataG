@@ -216,3 +216,11 @@
     !is.null(getOther(g, "haps.unassigned"))
   ) labelHaplotypes(g) else g
 }
+
+
+#' @noRd
+#' 
+.zeroPad <- function(x, y = NULL) {
+  if(is.null(y)) y <- x
+  formatC(x, digits = floor(log10(max(y))), flag = "0", mode = "integer") 
+}
