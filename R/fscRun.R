@@ -83,7 +83,9 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
     num.cores = num.cores, seed = seed, exec = exec,
     args = args
   )
-  p$files$log.file <- paste0(p$label, ".log")
+  p$files$log.file <- file.path(p$label, paste0(p$label, ".log"))
+  
+  if(!dir.exists(p$label)) dir.create(p$label)
   if(file.exists(p$files$log.file)) file.remove(p$files$log.file)
   cat(format(Sys.time()), "running fastsimcoal...\n")
   err <- system2(exec, p$run.params$args, stdout = p$files$log.file)
@@ -137,13 +139,12 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
   }
 
   # associate rows in locus info to columns in .arp file (if all.sites = TRUE)
-  position <- cumsum(locus.info$num.markers)
   prev.type <- dplyr::lag(locus.info$fsc.type)
   new.col <- as.numeric(!(locus.info$fsc.type == "DNA" & prev.type == "DNA"))
   new.col <- new.col * ifelse(
     locus.info$fsc.type == "DNA", 1, locus.info$num.markers
   )
-  new.col[1] <- 1
+  if(locus.info$fsc.type[1] == "DNA") new.col[1] <- 1
   mat.col.end <- cumsum(new.col) + 2
   mat.col.start <- mat.col.end - ifelse(
     locus.info$fsc.type == "DNA", 0, locus.info$num.markers - 1

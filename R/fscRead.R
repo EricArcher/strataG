@@ -100,14 +100,15 @@ fscRead <- function(p, sim = 1) {
   
   file <- p$files$arp.files[sim]
   cat(format(Sys.time()), "reading", file, "\n")
-  arp.data <- fscReadArpFile(file)
+  data.mat <- fscReadArpFile(file)
+  if(is.null(data.mat)) return(NULL)
   
   # parse data matrix with locus.info mapping
   cat(format(Sys.time()), "parsing locus data...\n")
-  gen.data <- if(is.null(arp.data$poly.pos)) {
-    .fscParseAllSites(p$locus.info, arp.data$data.mat)
+  gen.data <- if(is.null(attr(data.mat, "poly.pos"))) {
+    .fscParseAllSites(p$locus.info, data.mat)
   } else {
-    .fscParsePolySites(p$locus.info, arp.data)
+    .fscParsePolySites(p$locus.info, data.mat)
   }
   attr(gen.data, "file") <- file
   
@@ -124,17 +125,20 @@ fscReadArpFile <- function(file) {
   
   # get information on polymorphic sites
   chrom.lines <- grep("polymorphic positions on", f)
-  num.poly <- f[chrom.lines]
-  num.poly <- as.numeric(regmatches(num.poly, regexpr("[[:digit:]]+", num.poly)))
-  
-  chrom.poly <- which(num.poly > 0)
-  
-  poly.pos <- if(length(chrom.poly) > 0) {
-    poly.pos <- f[chrom.lines[chrom.poly] + 1]
-    poly.pos <- regmatches(poly.pos, gregexpr("[[:digit:]]+", poly.pos))
-    do.call(rbind, lapply(1:length(poly.pos), function(i) {
-      cbind(chromosome = chrom.poly[i], position = as.numeric(poly.pos[[i]]))
-    }))
+  poly.pos <- if(length(chrom.lines) != 0) {
+    num.poly <- f[chrom.lines]
+    num.poly <- regmatches(num.poly, regexpr("[[:digit:]]+", num.poly))
+    chrom.poly <- which(as.numeric(num.poly) > 0)
+    if(length(chrom.poly) > 0) {
+      poly.pos <- f[chrom.lines[chrom.poly] + 1]
+      poly.pos <- regmatches(poly.pos, gregexpr("[[:digit:]]+", poly.pos))
+      do.call(rbind, lapply(1:length(poly.pos), function(i) {
+        cbind(chromosome = chrom.poly[i], position = as.numeric(poly.pos[[i]]))
+      }))
+    } else {
+      warning("No polymorphic sites found. NULL returned.", call. = FALSE)
+      return(NULL)
+    }
   } else NULL
   
   # get start and end points of data blocks
@@ -153,7 +157,8 @@ fscReadArpFile <- function(file) {
     data.mat
   } else  NULL
   
-  list(poly.pos = poly.pos, data.mat = data.mat)
+  attr(data.mat, "poly.pos") <- poly.pos
+  data.mat
 }
 
 
@@ -206,8 +211,8 @@ fscReadArpFile <- function(file) {
 
 #' @noRd
 #' 
-.fscParsePolySites <- function(locus.info, arp.data) {
-  poly.pos <- arp.data$poly.pos
+.fscParsePolySites <- function(locus.info, data.mat) {
+  poly.pos <- attr(data.mat, "poly.pos")
   
   loc.info.row <- apply(poly.pos, 1, function(x) {
     chr.rows <- which(locus.info$chromosome == x["chromosome"])
@@ -241,7 +246,7 @@ fscReadArpFile <- function(file) {
   gen.data <- vector("list", length(poly.pos))
   for(i in 1:length(poly.pos)) {
     name.df <- poly.pos[[i]]
-    cols <- arp.data$data.mat[, sort(unique(name.df$mat.col))]
+    cols <- data.mat[, sort(unique(name.df$mat.col))]
     marker.type <- unique(name.df$actual.type)
     if(marker.type %in% c("DNA", "SNP")) {
       n <- nrow(name.df)
@@ -268,7 +273,7 @@ fscReadArpFile <- function(file) {
   }
   
   gen.data <- do.call(cbind, gen.data)
-  gen.data <- cbind(arp.data$data.mat[, 1:2], gen.data)  
+  gen.data <- cbind(data.mat[, 1:2], gen.data)  
   attr(gen.data, "locus.cols") <- locus.cols
   attr(gen.data, "poly.pos") <- do.call(rbind, poly.pos)
   rownames(attr(gen.data, "poly.pos")) <- NULL
@@ -288,6 +293,7 @@ fscExtractLoci <- function(p, sim = 1, type = "all", gen.data = NULL,
     gen.data <- fscRead(p, sim)
   } 
   file <- attr(gen.data, "file")
+  poly.pos <- attr(gen.data, "poly.pos")
   
   # filter locus info for specified chromosomes
   locus.info <- p$locus.info
@@ -330,6 +336,10 @@ fscExtractLoci <- function(p, sim = 1, type = "all", gen.data = NULL,
     .extractLocCols(locus.info$name, gen.data)
   }
   
+  if(!is.null(poly.pos)) {
+    attr(gen.data, "poly.pos") <- poly.pos %>% 
+      dplyr::filter(.data$name %in% colnames(gen.data))
+  }
   attr(gen.data, "file") <- file
   gen.data
 }
