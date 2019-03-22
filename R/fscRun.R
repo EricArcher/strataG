@@ -10,8 +10,12 @@
 #' @param num.sims number of simulation replicates to run.
 #' @param dna.to.snp convert DNA sequences to numerical SNPs?
 #' @param max.snps maximum number of SNPs to retain.
-#' @param all.sites retain all sites?
-#' @param infinite.sites use infinite alleles model?
+#' @param all.sites retain all sites? If \code{FALSE}, only polymorphic DNA 
+#'   sites will be returned. This includes SNP blocks as they are simulated as 
+#'   DNA sequences.
+#' @param inf.sites use infinite sites model? If \code{TRUE}, all mutations are 
+#'   retained in the output, thus the number of sites for SNPs or DNA sequences 
+#'   will potentially be greater than what was requested.
 #' @param sfs.type type of site frequency spectrum to compute for each 
 #'   population sample: `daf` = derived allele frequency (unfolded), 
 #'   `maf` = minor allele frequency (folded).
@@ -40,7 +44,7 @@
 #' @export
 #' 
 fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL, 
-                   all.sites = TRUE, infinite.sites = FALSE, 
+                   all.sites = TRUE, inf.sites = FALSE, 
                    sfs.type = c("daf", "maf"), num.ecm.loops = 20,
                    num.cores = NULL, seed = NULL, exec = "fsc26") {
   
@@ -69,7 +73,7 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
     args, "--dnatosnp", ifelse(is.null(max.snps), 0, max.snps)
   )
   if(all.sites) args <- c(args, "--allsites")
-  if(infinite.sites) args <- c(args, "--inf")
+  if(inf.sites) args <- c(args, "--inf")
   if(p$is.tpl) args <- c(args, sfs.type)
   if(p$is.tpl) args <- c(args, "--maxlhood")
   if(p$is.tpl) args <- c(args, "--numloops", num.ecm.loops)
@@ -78,7 +82,7 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
   
   p$run.params <- list(
     num.sims = num.sims, dna.to.snp = dna.to.snp, max.snps = max.snps, 
-    all.sites = all.sites, infinite.sites = infinite.sites, 
+    all.sites = all.sites, inf.sites = inf.sites, 
     sfs.type = sfs.type, num.ecm.loops = num.ecm.loops,
     num.cores = num.cores, seed = seed, exec = exec,
     args = args
@@ -191,7 +195,7 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
     as.data.frame(stringsAsFactors = FALSE)
   
   if(
-    p$run.params$infinite.sites & 
+    p$run.params$inf.sites & 
     p$run.params$all.sites & 
     any(p$locus.info$fsc.type == "DNA")
   ) {

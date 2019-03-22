@@ -6,8 +6,8 @@
 \title{Run fastsimcoal}
 \usage{
 fscRun(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
-  all.sites = TRUE, infinite.sites = FALSE, sfs.type = c("daf",
-  "maf"), num.ecm.loops = 20, num.cores = NULL, seed = NULL,
+  all.sites = TRUE, inf.sites = FALSE, sfs.type = c("daf", "maf"),
+  num.ecm.loops = 20, num.cores = NULL, seed = NULL,
   exec = "fsc26")
 
 fscCleanup(label, save.est = FALSE)
@@ -21,9 +21,13 @@ fscCleanup(label, save.est = FALSE)
 
 \item{max.snps}{maximum number of SNPs to retain.}
 
-\item{all.sites}{retain all sites?}
+\item{all.sites}{retain all sites? If \code{FALSE}, only polymorphic DNA 
+sites will be returned. This includes SNP blocks as they are simulated as 
+DNA sequences.}
 
-\item{infinite.sites}{use infinite alleles model?}
+\item{inf.sites}{use infinite sites model? If \code{TRUE}, all mutations are 
+retained in the output, thus the number of sites for SNPs or DNA sequences 
+will potentially be greater than what was requested.}
 
 \item{sfs.type}{type of site frequency spectrum to compute for each 
 population sample: `daf` = derived allele frequency (unfolded), 
