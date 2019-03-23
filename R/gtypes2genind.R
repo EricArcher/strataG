@@ -34,18 +34,14 @@ gtypes2genind <- function(x, type = c("codom", "PA")) {
     tibble::column_to_rownames("id") %>% 
     as.data.frame()
   colnames(df) <- gsub("[.]", "_", colnames(df))
-  st <- getSchemes(x) %>% 
-    tibble::column_to_rownames("id") %>% 
-    as.data.frame()
   
   adegenet::df2genind(
     X = df,
     sep = "/", 
-    pop = getStrata(x)[rownames(df)],
+    pop =  getStrata(x)[rownames(df)],
     NA.char = NA,
     ploidy = getPloidy(x),
-    type = match.arg(type),
-    strata = st[rownames(df), , drop = TRUE]
+    type = match.arg(type)
   )
 }
 

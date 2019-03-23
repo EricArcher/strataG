@@ -62,6 +62,7 @@ fsc2gtypes <- function(p, sim = 1, type = NULL, gen.data = NULL,  chrom = NULL,
   if(is.null(gen.data)) {
     gen.data <- fscExtractLoci(p, sim, type, gen.data, sep.chrom, chrom)
   }
+  if(is.null(gen.data)) return(NULL)
   description <- attr(gen.data, "file")
   
   # remove monomorphic loci
