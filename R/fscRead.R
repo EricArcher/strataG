@@ -21,6 +21,7 @@
 #'   1 (heterozygote), or 2 (minor allele homozygote). If this is `TRUE` and 
 #'   `marker = "snp"` and the data is diploid, genotypes will be returned with 
 #'   one column per locus.
+#' @param label character string giving the folder with simulation output.
 #' 
 #' @note fastsimcoal is not included with `strataG` and must be downloaded 
 #'   separately. Additionally, it must be installed such that it can be run from 
@@ -47,7 +48,9 @@ fscRead <- function(p, sim = 1,
                     chrom = NULL, sep.chrom = FALSE, drop.mono = TRUE, 
                     as.genotypes = TRUE, one.col = TRUE, sep = "/", 
                     coded.snps = FALSE) {
-  if(p$is.tpl) .fscParseEstParams(p) else {
+  if(p$is.tpl) {
+    fscReadEstParams(p$label) 
+  } else {
     hap.data <- .fscParseGeneticData(p, sim)
     if(is.null(hap.data)) return(NULL)
     file <- attr(hap.data, "file")
@@ -67,9 +70,10 @@ fscRead <- function(p, sim = 1,
 
 # ---- Estimated Parameters ----
 
-#' @noRd
+#' @rdname fscRead
+#' @export
 #' 
-.fscParseEstParams <- function(p) {
+fscReadEstParams <- function(label) {
   .fscReadVector <- function(file) {    
     f <- scan(file, what = "character", sep = "\n", quiet = TRUE)
     stats::setNames(
@@ -79,22 +83,22 @@ fscRead <- function(p, sim = 1,
   }
   
   sfs.file <- dir(
-    p$label, 
-    pattern = paste0("^", p$label, "_[[:alnum:]]+.txt$"),
+    label, 
+    pattern = paste0("^", label, "_[[:alnum:]]+.txt$"),
     full.names = TRUE
   )  
   brent.file <- dir(
-    p$label, 
-    pattern = paste0("^", p$label, ".brent_lhoods$"),
+    label, 
+    pattern = paste0("^", label, ".brent_lhoods$"),
     full.names = TRUE
   )
   best.file <- dir(
-    p$label, 
-    pattern = paste0("^", p$label, ".bestlhoods$"),
+    label, 
+    pattern = paste0("^", label, ".bestlhoods$"),
     full.names = TRUE
   )
   if(length(sfs.file) == 0 | length(brent.file) == 0 | length(best.file) == 0) {
-    stop("Can't file all output files (*.txt, *.brent_lhoods, *.bestlhoods)")
+    stop("Can't find all output files (*.txt, *.brent_lhoods, *.bestlhoods)")
   }
   
   brent.file <- readr::read_lines(brent.file) 

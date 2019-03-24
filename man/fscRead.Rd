@@ -2,6 +2,7 @@
 % Please edit documentation in R/fscRead.R
 \name{fscRead}
 \alias{fscRead}
+\alias{fscReadEstParams}
 \alias{fscReadArpFile}
 \title{Read fastsimcoal output}
 \usage{
@@ -9,6 +10,8 @@ fscRead(p, sim = 1, marker = c("all", "snp", "microsat", "dna",
   "standard"), chrom = NULL, sep.chrom = FALSE, drop.mono = TRUE,
   as.genotypes = TRUE, one.col = TRUE, sep = "/",
   coded.snps = FALSE)
+
+fscReadEstParams(label)
 
 fscReadArpFile(file)
 }
@@ -40,6 +43,8 @@ for each locus}
 1 (heterozygote), or 2 (minor allele homozygote). If this is `TRUE` and 
 `marker = "snp"` and the data is diploid, genotypes will be returned with 
 one column per locus.}
+
+\item{label}{character string giving the folder with simulation output.}
 
 \item{file}{filename to read.}
 }
