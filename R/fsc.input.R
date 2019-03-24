@@ -77,12 +77,6 @@ NULL
 #' 
 fscDeme <- function(deme.size, sample.size, sample.time = 0, 
                     inbreeding = 0, growth = 0) {
-  if(!(is.na(sample.size) | is.na(deme.size))) {
-    if(sample.size > deme.size) {
-      stop("`sample.size` can't be greater than `deme.size`.")
-    }
-  }
-  
   deme <- c(
     deme.size = deme.size, sample.size = sample.size, sample.time = sample.time, 
     inbreeding = inbreeding, growth = growth
