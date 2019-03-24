@@ -94,13 +94,14 @@ fscDeme <- function(deme.size, sample.size, sample.time = 0,
 #' @rdname fsc.input
 #' @export
 #' 
-fscSettingsDemes <- function(...) {
+fscSettingsDemes <- function(..., ploidy = 2) {
   demes <- list(...)
   for(x in demes) if(!inherits(x, "fscDeme")) {
     stop("All demes must be produced by `fscDeme()`.")
   }
   demes <- do.call(rbind, demes)
   class(demes) <- c("fscSettingsDemes", class(demes))
+  attr(demes, "ploidy") <- ploidy
   demes
 }
 
@@ -261,7 +262,7 @@ fscMarker_freq <- function(mut.rate, output = TRUE) {
 #' @rdname fsc.input
 #' @export
 #' 
-fscSettingsGenetics <- function(..., ploidy = 1, num.chrom = NULL) {
+fscSettingsGenetics <- function(..., num.chrom = NULL) {
   if(!is.null(num.chrom)) {
     if(!is.numeric(num.chrom)) stop("`num.chrom` must be numeric.")
     if(num.chrom < 1) stop("`num.chrom` can't be < 1.")
@@ -277,10 +278,6 @@ fscSettingsGenetics <- function(..., ploidy = 1, num.chrom = NULL) {
     if(x$fsc.type == "FREQ" & length(markers) > 1) {
       stop("Marker type FREQ can't be specified with other markers.")
     }
-    if(x$fsc.type == "FREQ" & ploidy != 1) {
-      warning("With FREQ type, `ploidy` is set to 1.")
-      ploidy <- 1
-    }
   }
   
   # identify chromosome structure
@@ -291,7 +288,6 @@ fscSettingsGenetics <- function(..., ploidy = 1, num.chrom = NULL) {
   } else chrom <- list(chrom[, -1])
   chrom.same <- num.chrom == 1 | (num.chrom > 1 & length(chrom) == 1)
   
-  attr(chrom, "ploidy") <- ploidy
   attr(chrom, "num.chrom") <- num.chrom
   attr(chrom, "chrom.diff") <- !chrom.same
   class(chrom) <- c("fscSettingsGenetics", class(chrom))

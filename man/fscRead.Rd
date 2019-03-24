@@ -3,32 +3,45 @@
 \name{fscRead}
 \alias{fscRead}
 \alias{fscReadArpFile}
-\alias{fscExtractLoci}
 \title{Read fastsimcoal output}
 \usage{
-fscRead(p, sim = 1)
+fscRead(p, sim = 1, marker = c("all", "snp", "microsat", "dna",
+  "standard"), chrom = NULL, sep.chrom = FALSE, drop.mono = TRUE,
+  as.genotypes = TRUE, one.col = TRUE, sep = "/",
+  coded.snps = FALSE)
 
 fscReadArpFile(file)
-
-fscExtractLoci(p, sim = 1, type = "all", gen.data = NULL,
-  sep.chrom = FALSE, chrom = NULL)
 }
 \arguments{
 \item{p}{list of fastsimcoal input parameters.}
 
 \item{sim}{number of the simulation replicate to read.}
 
-\item{file}{filename to read.}
-
-\item{type}{type of marker to return.}
-
-\item{gen.data}{matrix of parsed genetic data read from .arp file with 
-`fscParseGeneticData()`.}
-
-\item{sep.chrom}{return a list with chromosomes separated?}
+\item{marker}{type of marker to return.}
 
 \item{chrom}{numerical vector giving chromosomes to return. `NULL` 
 returns all chromosomes.}
+
+\item{sep.chrom}{return a list with chromosomes separated?}
+
+\item{drop.mono}{return only polymorphic loci?}
+
+\item{as.genotypes}{return data as genotypes? If `FALSE`, original haploid 
+data is returned. If `TRUE`, individuals are created by combining 
+sequential haplotypes based on the ploidy used to run the simulation}
+
+\item{one.col}{return genotypes with one column per locus? If `FALSE`, 
+alleles are split into separate columns and designated as ".1", ".2", etc. 
+for each locus}
+
+\item{sep}{character to use to separate alleles if `one.col = TRUE`.}
+
+\item{coded.snps}{return diploid SNPs coded as 0 (major allele homozygote), 
+1 (heterozygote), or 2 (minor allele homozygote). If this is `TRUE` and 
+`marker = "snp"` and the data is diploid, genotypes will be returned with 
+one column per locus.}
+
+\item{file}{filename to read.}
 }
 \description{
 Read arlequin formatted output or parameter estimation files 

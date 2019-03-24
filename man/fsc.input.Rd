@@ -19,7 +19,7 @@
 fscDeme(deme.size, sample.size, sample.time = 0, inbreeding = 0,
   growth = 0)
 
-fscSettingsDemes(...)
+fscSettingsDemes(..., ploidy = 2)
 
 fscEvent(event.time = 0, source = 0, sink = 0, prop.migrants = 1,
   new.size = 1, new.growth = 0, migr.mat = 0)
@@ -41,7 +41,7 @@ fscMarker_standard(num.loci, mut.rate, recomb.rate = 0, chromosome = 1)
 
 fscMarker_freq(mut.rate, output = TRUE)
 
-fscSettingsGenetics(..., ploidy = 1, num.chrom = NULL)
+fscSettingsGenetics(..., num.chrom = NULL)
 }
 \arguments{
 \item{deme.size}{the deme size.}
@@ -58,6 +58,10 @@ are taken.}
 \item{...}{a set of comma-separated square migration matrices for 
 \code{fscSettingsMigration}, or marker specifications from a
 \code{fscMarker_} function for \code{fscSettingsGenetics}.}
+
+\item{ploidy}{the desired ploidy of the final data. Ne and the number of 
+samples specified in \code{fscDeme} will be multiplied by this value as
+\code{fastsimcoal2} generates haploid data.}
 
 \item{event.time}{the number of generations before present at which the
 historical event happened.}
@@ -103,10 +107,6 @@ strict Stepwise Mutation Model (SMM).}
 alleles allowed). A value of 0 means no range constraint.}
 
 \item{output}{should the FREQ marker type be labelled for OUTPUT?}
-
-\item{ploidy}{the desired ploidy of the final data. Ne and the number of 
-samples specified in \code{fscDeme} will be multiplied by this value as
-\code{fastsimcoal2} generates haploid data.}
 
 \item{num.chrom}{the number of chromosomes to be simulated. If this is 
 specified and not the same as the number of linkage blocks specified by 

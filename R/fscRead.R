@@ -5,12 +5,22 @@
 #' @param p list of fastsimcoal input parameters.
 #' @param sim number of the simulation replicate to read.
 #' @param file filename to read.
-#' @param gen.data matrix of parsed genetic data read from .arp file with 
-#'   `fscParseGeneticData()`.
-#' @param type type of marker to return.
-#' @param sep.chrom return a list with chromosomes separated?
+#' @param marker type of marker to return.
 #' @param chrom numerical vector giving chromosomes to return. `NULL` 
 #'   returns all chromosomes.
+#' @param sep.chrom return a list with chromosomes separated?
+#' @param drop.mono return only polymorphic loci?
+#' @param as.genotypes return data as genotypes? If `FALSE`, original haploid 
+#'   data is returned. If `TRUE`, individuals are created by combining 
+#'   sequential haplotypes based on the ploidy used to run the simulation 
+#' @param one.col return genotypes with one column per locus? If `FALSE`, 
+#'   alleles are split into separate columns and designated as ".1", ".2", etc. 
+#'   for each locus
+#' @param sep character to use to separate alleles if `one.col = TRUE`.
+#' @param coded.snps return diploid SNPs coded as 0 (major allele homozygote), 
+#'   1 (heterozygote), or 2 (minor allele homozygote). If this is `TRUE` and 
+#'   `marker = "snp"` and the data is diploid, genotypes will be returned with 
+#'   one column per locus.
 #' 
 #' @note fastsimcoal is not included with `strataG` and must be downloaded 
 #'   separately. Additionally, it must be installed such that it can be run from 
@@ -32,8 +42,26 @@
 #' @name fscRead
 #' @export
 #' 
-fscRead <- function(p, sim = 1) {
-  if(p$is.tpl) .fscParseEstParams(p) else .fscParseGeneticData(p, sim)
+fscRead <- function(p, sim = 1,
+                    marker = c("all", "snp", "microsat", "dna", "standard"),
+                    chrom = NULL, sep.chrom = FALSE, drop.mono = TRUE, 
+                    as.genotypes = TRUE, one.col = TRUE, sep = "/", 
+                    coded.snps = FALSE) {
+  if(p$is.tpl) .fscParseEstParams(p) else {
+    hap.data <- .fscParseGeneticData(p, sim)
+    if(is.null(hap.data)) return(NULL)
+    file <- attr(hap.data, "file")
+    hap.data <- .fscSelectLoci(
+      hap.data, p$locus.info, marker, chrom, sep.chrom, drop.mono
+    )
+    ploidy <- attr(p$settings$demes, "ploidy")
+    data.mat <- if(as.genotypes & ploidy > 1) {
+      .fscFormatGenotypes(hap.data, ploidy, one.col, sep, coded.snps)
+    } else as.data.frame(hap.data, stringsAsFactors = FALSE)
+    attr(data.mat, "poly.pos") <- attr(hap.data, "poly.pos")
+    attr(data.mat, "file") <- file
+    data.mat
+  }
 }
 
 
@@ -104,7 +132,7 @@ fscRead <- function(p, sim = 1) {
   if(is.null(data.mat)) return(NULL)
   
   # parse data matrix with locus.info mapping
-  cat(format(Sys.time()), "parsing locus data...\n")
+  cat(format(Sys.time()), "parsing genetic data...\n")
   gen.data <- if(is.null(attr(data.mat, "poly.pos"))) {
     .fscParseAllSites(p$locus.info, data.mat)
   } else {
@@ -281,22 +309,13 @@ fscReadArpFile <- function(file) {
 }
 
 
-#' @rdname fscRead
-#' @export
+#' @noRd
 #' 
-fscExtractLoci <- function(p, sim = 1, type = "all", gen.data = NULL,  
-                           sep.chrom = FALSE, chrom = NULL) {
-  if(is.null(gen.data)) {
-    if(p$is.tpl) {
-      stop("Can't extract loci because 'p' specifies a parameter estimation model.")
-    }
-    gen.data <- fscRead(p, sim)
-  } 
-  file <- attr(gen.data, "file")
-  poly.pos <- attr(gen.data, "poly.pos")
+.fscSelectLoci <- function(hap.data, locus.info, marker, chrom, sep.chrom, 
+                           drop.mono) {
+  poly.pos <- attr(hap.data, "poly.pos")
   
   # filter locus info for specified chromosomes
-  locus.info <- p$locus.info
   if(!is.null(chrom)) {
     if(!is.numeric(chrom)) stop("'chrom' must be a numeric vector")
     if(max(chrom) > max(locus.info$chromosome)) {
@@ -305,23 +324,26 @@ fscExtractLoci <- function(p, sim = 1, type = "all", gen.data = NULL,
     locus.info <- locus.info[locus.info$chromosome %in% chrom, ]
   }
   
-  # check marker type
-  type <- toupper(type)
-  if(!all(type %in% c("DNA", "SNP", "MICROSAT", "STANDARD", "ALL"))) {
-    stop("`type` can only contain 'dna', 'snp', 'microsat', 'standard', 'all'.")
+  # check that requested marker type is available
+  marker <- toupper(marker)
+  if(!all(marker %in% c("DNA", "SNP", "MICROSAT", "STANDARD", "ALL"))) {
+    stop("`marker` can only contain 'dna', 'snp', 'microsat', 'standard', 'all'.")
   }
-  if("ALL" %in% type) type <- unique(locus.info$actual.type)
+  if("ALL" %in% marker) marker <- unique(locus.info$actual.type)
   
-  # filter locus info for specified marker types
-  locus.info <- locus.info[grep(paste(type, collapse = "|"), locus.info$name), ]
+  # filter locus info for requested marker types
+  i <- grep(paste(marker, collapse = "|"), locus.info$name)
+  if(length(i) == 0) {
+    stop("No loci available for selected marker types on selected chromosomes.")
+  }
+  locus.info <- locus.info[i, , drop = FALSE]
   
+  # extract columns for selected chromosomes and marker types
   .extractLocCols <- function(loc.names, mat) {
     loc.cols <- unlist(attr(mat, "locus.cols")[loc.names]) 
     mat[, c(1:2, loc.cols), drop = FALSE]
   }
-  
-  # extract columns for selected chromosomes and marker types
-  gen.data <- if(sep.chrom) { # extract for each chromosome
+  hap.data <- if(sep.chrom) { # extract for each chromosome and return list
     locus.info$chrom.label <- regmatches(
       locus.info$name,
       regexpr("^C[[:alnum:]]+", locus.info$name)
@@ -330,16 +352,64 @@ fscExtractLoci <- function(p, sim = 1, type = "all", gen.data = NULL,
       locus.info$name, 
       locus.info$chrom.label,
       .extractLocCols,
-      mat = gen.data
+      mat = hap.data
     )
   } else { # extract selected loci from data frame
-    .extractLocCols(locus.info$name, gen.data)
+    .extractLocCols(locus.info$name, hap.data)
   }
   
   if(!is.null(poly.pos)) {
-    attr(gen.data, "poly.pos") <- poly.pos %>% 
-      dplyr::filter(.data$name %in% colnames(gen.data))
+    poly.pos <- poly.pos[poly.pos$name %in% colnames(hap.data), , drop = FALSE]
+    attr(hap.data, "poly.pos") <- poly.pos
   }
-  attr(gen.data, "file") <- file
-  gen.data
+  hap.data
+}
+
+
+#' @noRd
+#' 
+.fscFormatGenotypes <- function(hap.data, ploidy, one.col, sep, coded.snps) {  
+  if(coded.snps) { # check that coded SNPs can be returned
+    num.snp.cols <- grepl("_SNP", colnames(hap.data)) # all loci must be SNPs
+    if(!sum(num.snp.cols) == ncol(hap.data) - 2) {
+      stop("Select `marker = \"snp\"` to return coded SNPs.")
+    }
+    if(ploidy != 2) stop("Can't code SNPs in non-diploid data.")
+  }
+  
+  # vector of numeric ids to group alleles for individuals
+  gen.id <- rep(1:(nrow(hap.data) / ploidy), each = ploidy)
+  
+  if(one.col | coded.snps) {
+    # matrix of id and deme for each individual
+    id.mat <- do.call(rbind, tapply(1:nrow(hap.data), gen.id, function(i) {
+      c(
+        id = paste(hap.data[i, "id"], collapse = sep), 
+        deme = hap.data[i, "deme"][1]
+      )
+    })) %>% 
+      as.data.frame(stringsAsFactors = FALSE)
+    # matrix of genotypes with one column per locus
+    gen.mat <- apply(hap.data[, -(1:2), drop = FALSE], 2, function(loc) {
+      if(coded.snps) {
+        minor.allele <- names(which.min(table(loc)))
+        tapply(loc, gen.id, function(x) sum(x == minor.allele))
+      } else {
+        tapply(loc, gen.id, paste, collapse = sep)
+      }
+    })
+    cbind(id.mat, gen.mat, stringsAsFactors = FALSE)
+  } else {
+    # matrix of ids, demes, and genotypes with ploidy columns per locus
+    gen.mat <- do.call(rbind, tapply(1:nrow(hap.data), gen.id, function(i) {
+      id <- paste(hap.data[i, "id"], collapse = sep)
+      c(id = id, deme = hap.data[i, "deme"][1], as.vector(hap.data[i, -(1:2)]))
+    }))
+    colnames(gen.mat)[-(1:2)] <- paste(
+      rep(colnames(hap.data)[-(1:2)], each = ploidy), 
+      1:ploidy, 
+      sep = "."
+    )
+    as.data.frame(gen.mat, stringsAsFactors = FALSE)
+  }
 }
