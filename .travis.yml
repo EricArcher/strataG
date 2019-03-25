@@ -19,7 +19,7 @@ r_packages:
 addons:
   apt:
     packages:
-      - libgsl0-dev
+      - libgsl2
       - libudunits2-dev
 
 before_install:
