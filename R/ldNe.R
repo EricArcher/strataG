@@ -45,8 +45,11 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95,
                  drop.missing = FALSE, num.cores = NULL) {
   if(getPloidy(g) != 2) stop("'g' must have diploid data")
   
-  mat <- numericSNPmat(g)
-  st <- getStrata(g)[rownames(mat)]
+  mat <- as.data.frame(g, coded.snps = TRUE) %>% 
+    tibble::column_to_rownames("id") 
+  st <- mat$stratum
+  mat$stratum <- NULL
+  mat <- as.matrix(mat)
   
   # remove loci if below maf threshold for any stratum
   if(maf.threshold > 0 & by.strata) {

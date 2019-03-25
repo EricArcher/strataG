@@ -2,20 +2,16 @@
 % Please edit documentation in R/sfs.R
 \name{sfs}
 \alias{sfs}
-\alias{fscWriteSFS}
 \title{Site Frequency Spectrum}
 \usage{
 sfs(g, ref.allele = NULL, joint = FALSE, strata = NULL,
   simplify = TRUE, na.action = c("fail", "filter", "resample"))
-
-fscWriteSFS(g, ref.allele = NULL, joint = FALSE, strata = NULL,
-  na.action = c("fail", "filter", "resample"), label = NULL)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
 \item{ref.allele}{an optional vector of reference alleles for each SNP. 
-See \code{\link{numericSNPmat}} for more information.}
+See \code{\link{as.data.frame.gtypes}} for more information.}
 
 \item{joint}{a logical specifying whether or not to compute joint (2D) 
 SFS.}
@@ -32,35 +28,15 @@ If \code{"fail"}, an error is thrown if any genotypes are missing. If
 \code{"resample"}, the minimum number of genotyped individuals across 
 all SNPs is first determined, then this number of non-missing genotypes 
 are randomly selected for each SNP to calculate the SFS.}
-
-\item{label}{character string to label files with.}
 }
 \value{
-For `sfs()` either a named vector of the 1D site frequency 
+Either a named vector of the 1D site frequency 
   spectrum if \code{joint = FALSE}, or a list of matrices of the 2D
   site frequency spectra for pairs of strata if \code{joint = TRUE}.
-  For `fscWriteSFS()`, the names of files written.
 }
 \description{
 Calculate the SFS from a \linkS4class{gtypes} object for 
   all individuals or pairs of strata.
-}
-\examples{
-data(bowhead.snps)
-snps <- df2gtypes(bowhead.snps, ploidy = 2)
-
-snp.sfs <- sfs(snps, na.action = "resample")
-snp.sfs[1:10]
-
-}
-\references{
-Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time 
-  coalescent simulator of genomic diversity under arbitrarily complex 
-  evolutionary scenarios Bioinformatics 27: 1332-1334.\cr
-  Excoffier, L., Dupanloup, I., Huerta-Sánchez, E., Sousa, V.C., 
-  and M. Foll (2013) Robust demographic inference from genomic and SNP data. 
-  PLOS Genetics, 9(10):e1003905. \cr
-  \url{http://cmpg.unibe.ch/software/fastsimcoal2/}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

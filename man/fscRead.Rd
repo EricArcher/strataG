@@ -8,7 +8,7 @@
 \usage{
 fscRead(p, sim = 1, marker = c("all", "snp", "microsat", "dna",
   "standard"), chrom = NULL, sep.chrom = FALSE, drop.mono = TRUE,
-  as.genotypes = TRUE, one.col = TRUE, sep = "/",
+  as.genotypes = TRUE, one.col = FALSE, sep = "/",
   coded.snps = FALSE)
 
 fscReadEstParams(label)
@@ -35,7 +35,7 @@ sequential haplotypes based on the ploidy used to run the simulation}
 
 \item{one.col}{return genotypes with one column per locus? If `FALSE`, 
 alleles are split into separate columns and designated as ".1", ".2", etc. 
-for each locus}
+for each locus.}
 
 \item{sep}{character to use to separate alleles if `one.col = TRUE`.}
 

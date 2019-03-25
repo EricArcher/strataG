@@ -9,12 +9,12 @@
 #' @export
 #' 
 write.nexus.snapp <- function(g, file = "snapp.data.nex") {
-  result <- numericSNPmat(g)
+  result <- as.data.frame(g, coded.snps = TRUE)
+  strata <- gsub("[ _]", ".", result$stratum)
+  id <- gsub("[ _]", ".", result$id)
+  result$id <- result$stratum <- NULL
   
-  result[is.na(result)] <- "?"
-  result <- lapply(1:nrow(result), function(i) result[i, ])
-  strata <- gsub("[ _]", ".", getStrata(g))
-  id <- gsub("[ _]", ".", getIndNames(g))
+  result <- lapply(1:nrow(result), function(i) result[i, -(1:2)])
   names(result) <- paste(strata, id, sep = "_")
   
   ape::write.nexus.data(result, file = file)

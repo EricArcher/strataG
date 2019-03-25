@@ -341,3 +341,54 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
   
   invisible(p)
 }
+
+
+#' #' @rdname fscWrite
+#' #' @export
+#' #' 
+#' fscWriteSFS <- function(g, ref.allele = NULL, joint = FALSE, strata = NULL, 
+#'                         na.action = c("fail", "filter", "resample"),
+#'                         label = NULL) {
+#'   sfs <- sfs(g, ref.allele, joint, strata, simplify = FALSE, na.action = na.action)
+#'   if(is.null(label)) label <- getDescription(g)
+#'   label <- make.names(label)
+#'   fname <- if(!joint) {
+#'     file <- paste0(
+#'       label, 
+#'       "_", 
+#'       ifelse(is.null(ref.allele), "MAF", "DAF"), 
+#'       "pop0.obs",
+#'       collapse = ""
+#'     )
+#'     write(" 1 observations", file)
+#'     write(paste0("d0_", names(sfs), collapse = "\t"), file, append = T)
+#'     write(paste0(sfs, collapse = "\t"), file, append = T)
+#'     file
+#'   } else {
+#'     pws <- combn(0:(getNumStrata(g) - 1), 2)
+#'     sapply(1:length(sfs), function(p) {
+#'       mat <- t(sfs[[p]])
+#'       rownames(mat) <- paste0("d", pws[2, p], "_", rownames(mat))
+#'       colnames(mat) <- paste0("d", pws[1, p], "_", colnames(mat))
+#'       file <- paste0(
+#'         label, 
+#'         "_joint", 
+#'         ifelse(is.null(ref.allele), "MAF", "DAF"), 
+#'         "pop", pws[2, p], "_", pws[1, p],
+#'         ".obs", 
+#'         collapse = ""
+#'       )
+#'       write(" 1 observations", file)
+#'       write(paste0(colnames(mat), collapse = "\t"), file, append = T)
+#'       for(i in 1:nrow(mat)) {
+#'         row.i <- paste0(mat[i, ], collapse = "\t")
+#'         write(
+#'           paste(rownames(mat)[i], row.i, collapse = "\t"), 
+#'           file, append = TRUE
+#'         )
+#'       }
+#'       file
+#'     })
+#'   }
+#'   invisible(fname)
+#' }

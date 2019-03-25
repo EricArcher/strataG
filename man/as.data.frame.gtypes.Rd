@@ -11,7 +11,8 @@
 \title{Convert \code{gtypes} to data.frame or matrix}
 \usage{
 \S4method{as.data.frame}{gtypes}(x, one.col = FALSE, sep = "/",
-  ids = TRUE, strata = TRUE, sort.alleles = TRUE, ...)
+  ids = TRUE, strata = TRUE, sort.alleles = TRUE,
+  coded.snps = FALSE, ref.allele = NULL, ...)
 
 \S4method{as.matrix}{gtypes}(x, one.col = FALSE, sep = "/",
   ids = TRUE, strata = TRUE, sort.alleles = TRUE, ...)
@@ -33,6 +34,17 @@ locus.}
 \item{sort.alleles}{logical. for non-haploid objects, should alleles be
 sorted in genotypes or left in original order? (only takes affect if
 \code{one.col = TRUE})}
+
+\item{coded.snps}{return diploid SNPs coded as 0 (reference allele homozygote), 
+1 (heterozygote), or 2 (alternate allele homozygote). If this is `TRUE`,  
+the data is diploid, and all loci are biallelic, a data frame of 
+coded genotypes will be returned with one column per locus.}
+
+\item{ref.allele}{an optional vector of reference alleles for each SNP. 
+Only used if `coded.snps = TRUE`. If provided, it must be at least as long 
+as there are biallelic SNPs in \code{g}. If named, the names must 
+match those of all loci in \code{g}. If set to `NULL` (default) the 
+major allele at each SNP is used as the reference.}
 
 \item{...}{additional arguments to be passed to or from methods.}
 }

@@ -114,7 +114,6 @@ Collate:
     simGammaHaps.R
     mostDistantSequences.R
     mostRepresentativeSequences.R
-    numericSNPmat.R
     write.nexus.snapp.R
     mega.R
     mRatio.R
