@@ -15,7 +15,7 @@
 #'   sequential haplotypes based on the ploidy used to run the simulation 
 #' @param one.col return genotypes with one column per locus? If `FALSE`, 
 #'   alleles are split into separate columns and designated as ".1", ".2", etc. 
-#'   for each locus
+#'   for each locus.
 #' @param sep character to use to separate alleles if `one.col = TRUE`.
 #' @param coded.snps return diploid SNPs coded as 0 (major allele homozygote), 
 #'   1 (heterozygote), or 2 (minor allele homozygote). If this is `TRUE` and 
@@ -46,7 +46,7 @@
 fscRead <- function(p, sim = 1,
                     marker = c("all", "snp", "microsat", "dna", "standard"),
                     chrom = NULL, sep.chrom = FALSE, drop.mono = TRUE, 
-                    as.genotypes = TRUE, one.col = TRUE, sep = "/", 
+                    as.genotypes = TRUE, one.col = FALSE, sep = "/", 
                     coded.snps = FALSE) {
   if(p$is.tpl) {
     fscReadEstParams(p$label) 
