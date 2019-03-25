@@ -15,14 +15,12 @@ before_install:
 r_packages: 
   - knitr
   - rmarkdown
-  
-r_github_packages: 
-  - thibautjombart/apex
 
 addons:
   apt:
     packages:
-      - libgsl0-dev
+      - libgsl0
+      - libudunits2-dev
 
 before_install:
   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
