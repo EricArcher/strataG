@@ -2,10 +2,13 @@
 % Please edit documentation in R/fscWrite.R
 \name{fscWrite}
 \alias{fscWrite}
+\alias{fscWriteSFS}
 \title{Run fastsimcoal}
 \usage{
 fscWrite(demes, genetics, migration = NULL, events = NULL,
   label = "strataG.fastsimcoal")
+
+fscWriteSFS(x, label, type = c("MAF", "DAF"))
 }
 \arguments{
 \item{demes}{matrix of deme sampling information created by the 
@@ -22,6 +25,11 @@ function.}
 \code{\link{fscSettingsEvents}} function.}
 
 \item{label}{character string to label files with.}
+
+\item{x}{a vector containing the 1D site frequency spectrum (SFS) or 
+list containing one or more 2D joint SFS.}
+
+\item{type}{type of SFS being written: `MAF` = folded, `DAF` = unfolded.}
 }
 \description{
 Run a fastsimcoal simulation and load results into a 

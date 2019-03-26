@@ -39,7 +39,7 @@ fscMarker_snp(sequence.length, mut.rate, recomb.rate = 0,
 
 fscMarker_standard(num.loci, mut.rate, recomb.rate = 0, chromosome = 1)
 
-fscMarker_freq(mut.rate, output = TRUE)
+fscMarker_freq(mut.rate, output = FALSE)
 
 fscSettingsGenetics(..., num.chrom = NULL)
 }

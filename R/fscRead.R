@@ -45,85 +45,30 @@
 #' 
 fscRead <- function(p, sim = 1,
                     marker = c("all", "snp", "microsat", "dna", "standard"),
-                    chrom = NULL, sep.chrom = FALSE, drop.mono = TRUE, 
+                    chrom = NULL, sep.chrom = FALSE, drop.mono = FALSE, 
                     as.genotypes = TRUE, one.col = FALSE, sep = "/", 
                     coded.snps = FALSE) {
-  if(p$is.tpl) {
-    fscReadEstParams(p$label) 
-  } else {
-    hap.data <- .fscParseGeneticData(p, sim)
-    if(is.null(hap.data)) return(NULL)
-    file <- attr(hap.data, "file")
-    hap.data <- .fscSelectLoci(
-      hap.data, p$locus.info, marker, chrom, sep.chrom, drop.mono
-    )
-    ploidy <- attr(p$settings$demes, "ploidy")
-    data.mat <- if(as.genotypes & ploidy > 1) {
-      .fscFormatGenotypes(hap.data, ploidy, one.col, sep, coded.snps)
-    } else as.data.frame(hap.data, stringsAsFactors = FALSE)
-    attr(data.mat, "poly.pos") <- attr(hap.data, "poly.pos")
-    attr(data.mat, "file") <- file
-    data.mat
+  if(is.null(p$files$arp.files)) stop("No .arp files in `p`.")
+  hap.data <- .fscParseGeneticData(p, sim)
+  if(is.null(hap.data)) return(NULL)
+  file <- attr(hap.data, "file")
+  hap.data <- .fscSelectLoci(hap.data, p$locus.info, marker, chrom, sep.chrom)
+  # drop monomorphic sites if requested
+  if(drop.mono & is.null(attr(hap.data, "poly.pos"))) {
+    is.poly <- apply(hap.data[, -(1:2)], 2, function(x) {
+      dplyr::n_distinct(x) > 1
+    })
+    hap.data <- hap.data[, c(1:2, which(is.poly) + 2)]
   }
+  ploidy <- attr(p$settings$demes, "ploidy")
+  data.mat <- if(as.genotypes & ploidy > 1) {
+    .fscFormatGenotypes(hap.data, ploidy, one.col, sep, coded.snps)
+  } else as.data.frame(hap.data, stringsAsFactors = FALSE)
+  attr(data.mat, "poly.pos") <- attr(hap.data, "poly.pos")
+  attr(data.mat, "file") <- file
+  data.mat
 }
 
-
-# ---- Estimated Parameters ----
-
-#' @rdname fscRead
-#' @export
-#' 
-fscReadEstParams <- function(label) {
-  .fscReadVector <- function(file) {    
-    f <- scan(file, what = "character", sep = "\n", quiet = TRUE)
-    stats::setNames(
-      as.numeric(do.call(c, strsplit(f[2], "\t"))),
-      do.call(c, strsplit(f[1], "\t"))
-    )
-  }
-  
-  sfs.file <- dir(
-    label, 
-    pattern = paste0("^", label, "_[[:alnum:]]+.txt$"),
-    full.names = TRUE
-  )  
-  brent.file <- dir(
-    label, 
-    pattern = paste0("^", label, ".brent_lhoods$"),
-    full.names = TRUE
-  )
-  best.file <- dir(
-    label, 
-    pattern = paste0("^", label, ".bestlhoods$"),
-    full.names = TRUE
-  )
-  if(length(sfs.file) == 0 | length(brent.file) == 0 | length(best.file) == 0) {
-    stop("Can't find all output files (*.txt, *.brent_lhoods, *.bestlhoods)")
-  }
-  
-  brent.file <- readr::read_lines(brent.file) 
-  brent.file <- brent.file[grep("^Param|^[[:digit:]]", brent.file)]
-  brent.file <- strsplit(brent.file, "\t")
-  brent <- as.data.frame(do.call(rbind, lapply(brent.file[-1], as.numeric)))
-  colnames(brent) <- brent.file[[1]][1:ncol(brent)]
-  
-  sfs.vec <- if(length(sfs.file) == 1) {
-    .fscReadVector(sfs.file)
-  } else {
-    sapply(sfs.file, .fscReadVector, simplify = FALSE)
-  }
-  
-  invisible(
-    list(
-      ml.params = .fscReadVector(best.file),
-      brent.lhoods = brent,
-      sfs = sfs.vec
-    )
-  )
-}
-
-
-# ---- Simulated Data ----
 
 #' @noRd
 #' 
@@ -152,6 +97,7 @@ fscReadEstParams <- function(label) {
 #' @export
 #' 
 fscReadArpFile <- function(file) {
+  if(!file.exists(file)) stop(file, " does not exist.")
   # read .arp file
   f <- readr::read_lines(file)
   
@@ -315,9 +261,9 @@ fscReadArpFile <- function(file) {
 
 #' @noRd
 #' 
-.fscSelectLoci <- function(hap.data, locus.info, marker, chrom, sep.chrom, 
-                           drop.mono) {
+.fscSelectLoci <- function(hap.data, locus.info, marker, chrom, sep.chrom) {
   poly.pos <- attr(hap.data, "poly.pos")
+  
   
   # filter locus info for specified chromosomes
   if(!is.null(chrom)) {
@@ -396,8 +342,8 @@ fscReadArpFile <- function(file) {
     # matrix of genotypes with one column per locus
     gen.mat <- apply(hap.data[, -(1:2), drop = FALSE], 2, function(loc) {
       if(coded.snps) {
-        minor.allele <- names(which.min(table(loc)))
-        tapply(loc, gen.id, function(x) sum(x == minor.allele))
+        major.allele <- names(which.max(table(loc)))
+        tapply(loc, gen.id, function(x) sum(x != major.allele))
       } else {
         tapply(loc, gen.id, paste, collapse = sep)
       }
@@ -416,4 +362,155 @@ fscReadArpFile <- function(file) {
     )
     as.data.frame(gen.mat, stringsAsFactors = FALSE)
   }
+}
+
+
+# ---- Estimated Parameters ----
+
+#' @rdname fscRead
+#' @export
+#' 
+fscReadParamEst <- function(p) {
+  out <- list(
+    ml.params = .fscReadEstLhoods(p$label), 
+    brent.lhoods = .fscReadEstBrent(p$label),
+    sfs = .fscReadEstSFS(p$label)
+  )
+  if(all(sapply(out, is.null))) {
+    stop("No parameter estimation files found.")
+  }
+  invisible(out)
+}
+
+
+#' @noRd
+#' 
+.fscReadEstSFS <- function(label) {
+  fnames <- dir(label, pattern = "_[[:alnum:]]+.txt$", full.names = T)
+  if(length(fnames) == 0) return(NULL)
+  if(length(fnames) == 1) {
+    .fscReadVector(fnames)
+  } else {
+    sapply(fnames, .fscReadVector, simplify = FALSE)
+  }
+}
+
+
+#' @noRd
+#' 
+.fscReadEstLhoods <- function(label) {
+  fname <- dir(label, pattern = ".bestlhoods$", full.names = T)
+  if(length(fname) == 0) return(NULL)
+  .fscReadVector(fname)
+}
+
+
+#' @noRd
+#' 
+.fscReadEstBrent <- function(label) {
+  fname <- dir(label, pattern = ".brent_lhoods$", full.names = T)
+  if(length(fname) == 0) return(NULL)
+  f <- readr::read_lines(fname) 
+  f <- f[grep("^Param|^[[:digit:]]", f)]
+  f <- strsplit(f, "\t")
+  x <- as.data.frame(do.call(rbind, lapply(f[-1], as.numeric)))
+  colnames(x) <- f[[1]][1:ncol(x)]
+  x
+}
+
+
+#' @noRd
+#' 
+.fscReadVector <- function(fname) {    
+  f <- readr::read_lines(fname)
+  stats::setNames(
+    as.numeric(do.call(c, strsplit(f[2], "\t"))),
+    do.call(c, strsplit(f[1], "\t"))
+  )
+}
+
+
+# ---- SFS Output ----
+
+#' @rdname fscRead
+#' @export
+#' 
+fscReadSFSOutput <- function(p) {
+  out <- list(
+    sfs.1d = fscReadSFS1d(p$label),
+    sfs.2d = fscReadSFS2d(p$label),
+    polym.sites = .fscReadSFSPolymSites(p$label),
+    lhood.obs = .fscReadSFSLhood(p$label)
+  )
+  if(all(sapply(out, is.null))) {
+    stop("No parameter estimation files found.")
+  }
+  invisible(out)
+}
+
+
+#' @noRd
+#' 
+.fscReadSFS1d <- function(label) {
+  files <- dir(
+    label, 
+    pattern = "_[MDAF]{3}pop[[:alnum:]_]+.obs$", 
+    full.names = TRUE
+  )
+  if(length(files) == 0) return(NULL)
+  
+  sapply(files, function(fname) {
+    mat <- utils::read.table(fname, header = TRUE, sep = "\t", skip = 1)
+    mat <- mat[, -ncol(mat)]
+    data.frame(rep.id = 1:nrow(mat), mat)
+  }, simplify = FALSE)
+}
+
+
+#' @noRd
+#' 
+.fscReadSFS2d <- function(label) {
+  files <- dir(
+    label, 
+    pattern = "_joint[[:alnum:]_]+.obs$", 
+    full.names = TRUE
+  )
+  if(length(files) == 0) return(NULL)
+  
+  sapply(files, function(fname) {
+    f <- readr::read_lines(fname)[-1]
+    cols <- do.call(c, strsplit(f[1], "\t"))[-1]
+    mat <- do.call(rbind, strsplit(f[-1], "\t"))
+    row.id <- mat[, 1]
+    mat <- apply(mat[, -1], 2, as.numeric)
+    colnames(mat) <- cols
+    rep.num <- diff(c(grep("_0", row.id), length(row.id) + 1))
+    rep.id <- rep(1:length(rep.num), times = rep.num)
+    data.frame(
+      rep.id = rep.id, row.id = row.id, mat,
+      stringsAsFactors = FALSE
+    )
+  }, simplify = FALSE)
+}
+
+
+#' @noRd
+#' 
+.fscReadSFSPolymSites <- function(label) {
+  fname <- dir(label, pattern = "_numPolymSites.obs$", full.names = TRUE)
+  if(length(fname) == 0) return(NULL)
+  f <- readr::read_lines(fname)
+  f <- do.call(rbind, strsplit(f[seq(2, length(f), 2)], "\t"))
+  f <- apply(f, 2, as.numeric)
+  colnames(f) <- c("n.sim", "n.polym", "n.gt2.alleles", "n.fix.anc", "n.no.anc")
+  f
+}
+
+
+#' @noRd
+#' 
+.fscReadSFSLhood <- function(label) {
+  fname <- dir(label, pattern = ".lhoodObs$", full.names = TRUE)
+  if(length(fname) == 0) return(NULL)
+  .fscReadVector(fname)
 }

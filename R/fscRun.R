@@ -16,11 +16,26 @@
 #' @param inf.sites use infinite sites model? If \code{TRUE}, all mutations are 
 #'   retained in the output, thus the number of sites for SNPs or DNA sequences 
 #'   will potentially be greater than what was requested.
+#' @param no.arl.output do not output arlequin files.
+#' @param trees output NEXUS formatted coalescent trees for all replicates?
 #' @param sfs.type type of site frequency spectrum to compute for each 
 #'   population sample: `daf` = derived allele frequency (unfolded), 
 #'   `maf` = minor allele frequency (folded).
-#' @param num.ecm.loops number of loops (ECM cycles) to be performed when 
+#' @param jobs output one simulated or bootstrapped SFS per file in a 
+#'   separate directory?
+#' @param nonpar.boot number of bootstraps to perform on polymorphic sites to
+#'   extract SFS.
+#' @param maxlhood Perform parameter estimation by maximum composite 
+#'   likelihood from the SFS?
+#' @param num.loops number of loops (ECM cycles) to be performed when 
 #'   estimating parameters from SFS. Default is 20.
+#' @param min.num.loops number of loops (ECM cycles) for which the 
+#'   likelihood is computed on both monomorphic and polymorphic sites. Default 
+#'   is 20.
+#' @param brent Tolerance level for Brent optimization.   
+#'   Smaller value imply more precise estimations, but require more 
+#'   computation time. Default = 0.01. Value is restricted between 
+#'   1e-5 and 1e-1.
 #' @param save.est do not delete .est parameter estimation files during cleanup?
 #' 
 #' @note fastsimcoal is not included with `strataG` and must be downloaded 
@@ -45,8 +60,13 @@
 #' 
 fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL, 
                    all.sites = TRUE, inf.sites = FALSE, 
-                   sfs.type = c("daf", "maf"), num.ecm.loops = 20,
+                   sfs.type = c("maf", "daf"), jobs = FALSE, nonpar.boot = NULL, 
+                   no.arl.output = FALSE, maxlhood = FALSE, num.loops = 20, 
+                   min.num.loops = 20, brent = 0.01, trees = FALSE,
                    num.cores = NULL, seed = NULL, exec = "fsc26") {
+  
+  run.params <- as.list(environment())
+  run.params$p <- NULL
   
   if(file.exists(p$label)) unlink(p$label, recursive = TRUE, force = TRUE) 
   
@@ -61,7 +81,6 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
   } else ""
   
   if(!is.null(max.snps)) dna.to.snp <- TRUE
-  sfs.type <- switch(match.arg(sfs.type), daf = "--dsfs", maf = "--msfs")
   
   args <- c(
     ifelse(p$is.tpl, "--tplfile", "--ifile"), p$files$in.file,
@@ -69,24 +88,30 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
   )
   if(p$is.tpl) args <- c(args, "-e", p$files$est.file)
   if(!is.null(seed)) args <- c(args, "--seed ", seed)
-  if(dna.to.snp) args <- c(
-    args, "--dnatosnp", ifelse(is.null(max.snps), 0, max.snps)
-  )
+  if(trees) args <- c(args, "--tree")
+  if(dna.to.snp) {
+    args <- c(args, "--dnatosnp", ifelse(is.null(max.snps), 0, max.snps))
+    args <- c(args, switch(match.arg(sfs.type), maf = "--msfs", daf = "--dsfs"))
+  }
+  if(jobs) args <- c(args, "--jobs")
+  if(!is.null(nonpar.boot)) c(args, "--nonparboot", nonpar.boot)
   if(all.sites) args <- c(args, "--allsites")
   if(inf.sites) args <- c(args, "--inf")
-  if(p$is.tpl) args <- c(args, sfs.type)
-  if(p$is.tpl) args <- c(args, "--maxlhood")
-  if(p$is.tpl) args <- c(args, "--numloops", num.ecm.loops)
+  if(no.arl.output) args <- c(args, "--noarloutput")
+  if(p$is.tpl) {
+    args <- c(args, "--maxlhood")
+    args <- c(args, "--numloops", num.loops)
+    args <- c(args, "--minnumloops", min.num.loops)
+    args <- c(
+      args, 
+      "--brentol", 
+      ifelse(brent > 1e-1, 1e-1, ifelse(brent < 1e-5, 1e-5, brent))
+    )
+  }
   args <- c(args, cores.spec)
-  args <- paste(args, collapse = " ")
+  p$run.params <- run.params
+  p$run.params$args <- paste(args, collapse = " ")
   
-  p$run.params <- list(
-    num.sims = num.sims, dna.to.snp = dna.to.snp, max.snps = max.snps, 
-    all.sites = all.sites, inf.sites = inf.sites, 
-    sfs.type = sfs.type, num.ecm.loops = num.ecm.loops,
-    num.cores = num.cores, seed = seed, exec = exec,
-    args = args
-  )
   p$files$log.file <- file.path(p$label, paste0(p$label, ".log"))
   
   if(!dir.exists(p$label)) dir.create(p$label)
@@ -237,7 +262,7 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
 #' @rdname fscRun
 #' @export
 #' 
-fscCleanup <- function(label, save.est = FALSE) {
+fscCleanup <- function(label, save.est = TRUE) {
   # remove label folder
   unlink(label, recursive = TRUE, force = TRUE)
   

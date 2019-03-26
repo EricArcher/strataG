@@ -237,7 +237,7 @@ fscMarker_standard <- function(num.loci, mut.rate, recomb.rate = 0,
 #' @rdname fsc.input
 #' @export
 #'
-fscMarker_freq <- function(mut.rate, output = TRUE) {  
+fscMarker_freq <- function(mut.rate, output = FALSE) {  
   loc <- data.frame(
     chrom = 1,
     actual.type = "FREQ",

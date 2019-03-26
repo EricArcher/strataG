@@ -4,30 +4,15 @@
 \alias{sfs}
 \title{Site Frequency Spectrum}
 \usage{
-sfs(g, ref.allele = NULL, joint = FALSE, strata = NULL,
-  simplify = TRUE, na.action = c("fail", "filter", "resample"))
+sfs(x, joint = FALSE)
 }
 \arguments{
-\item{g}{a \linkS4class{gtypes} object.}
+\item{x}{a data frame of SNP genotypes where the first two columns are id and
+strata designations and SNPs start on the third column. SNP genotypes are
+coded as integers where 0 and 2 are the major and minor homozygotes and 1
+is the heterozygote.}
 
-\item{ref.allele}{an optional vector of reference alleles for each SNP. 
-See \code{\link{as.data.frame.gtypes}} for more information.}
-
-\item{joint}{a logical specifying whether or not to compute joint (2D) 
-SFS.}
-
-\item{strata}{a vector of strata to use to compute joint SFS. 
-If `NULL` (default), then all pairs of strata in `g` are used.}
-
-\item{simplify}{a logical specifying whether to return a matrix if only 
-a single joint SFS is computed (one pair of strata).}
-
-\item{na.action}{action to take if genotypes are missing for some samples. 
-If \code{"fail"}, an error is thrown if any genotypes are missing. If 
-\code{"filter"}, SNPs with missing genotypes are removed. If 
-\code{"resample"}, the minimum number of genotyped individuals across 
-all SNPs is first determined, then this number of non-missing genotypes 
-are randomly selected for each SNP to calculate the SFS.}
+\item{joint}{return the joint SFS if more than 1 strata is available?}
 }
 \value{
 Either a named vector of the 1D site frequency 
@@ -35,8 +20,7 @@ Either a named vector of the 1D site frequency
   site frequency spectra for pairs of strata if \code{joint = TRUE}.
 }
 \description{
-Calculate the SFS from a \linkS4class{gtypes} object for 
-  all individuals or pairs of strata.
+Calculate the SFS from a data frame of SNP genotypes
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

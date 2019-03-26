@@ -6,11 +6,13 @@
 \title{Run fastsimcoal}
 \usage{
 fscRun(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
-  all.sites = TRUE, inf.sites = FALSE, sfs.type = c("daf", "maf"),
-  num.ecm.loops = 20, num.cores = NULL, seed = NULL,
+  all.sites = TRUE, inf.sites = FALSE, sfs.type = c("maf", "daf"),
+  jobs = FALSE, nonpar.boot = NULL, no.arl.output = FALSE,
+  maxlhood = FALSE, num.loops = 20, min.num.loops = 20,
+  brent = 0.01, trees = FALSE, num.cores = NULL, seed = NULL,
   exec = "fsc26")
 
-fscCleanup(label, save.est = FALSE)
+fscCleanup(label, save.est = TRUE)
 }
 \arguments{
 \item{p}{list of fastsimcoal input parameters and output.}
@@ -33,8 +35,30 @@ will potentially be greater than what was requested.}
 population sample: `daf` = derived allele frequency (unfolded), 
 `maf` = minor allele frequency (folded).}
 
-\item{num.ecm.loops}{number of loops (ECM cycles) to be performed when 
+\item{jobs}{output one simulated or bootstrapped SFS per file in a 
+separate directory?}
+
+\item{nonpar.boot}{number of bootstraps to perform on polymorphic sites to
+extract SFS.}
+
+\item{no.arl.output}{do not output arlequin files.}
+
+\item{maxlhood}{Perform parameter estimation by maximum composite 
+likelihood from the SFS?}
+
+\item{num.loops}{number of loops (ECM cycles) to be performed when 
 estimating parameters from SFS. Default is 20.}
+
+\item{min.num.loops}{number of loops (ECM cycles) for which the 
+likelihood is computed on both monomorphic and polymorphic sites. Default 
+is 20.}
+
+\item{brent}{Tolerance level for Brent optimization.
+Smaller value imply more precise estimations, but require more 
+computation time. Default = 0.01. Value is restricted between 
+1e-5 and 1e-1.}
+
+\item{trees}{output NEXUS formatted coalescent trees for all replicates?}
 
 \item{num.cores}{number of cores to use.}
 

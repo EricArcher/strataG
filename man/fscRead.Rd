@@ -2,18 +2,21 @@
 % Please edit documentation in R/fscRead.R
 \name{fscRead}
 \alias{fscRead}
-\alias{fscReadEstParams}
 \alias{fscReadArpFile}
+\alias{fscReadParamEst}
+\alias{fscReadSFSOutput}
 \title{Read fastsimcoal output}
 \usage{
 fscRead(p, sim = 1, marker = c("all", "snp", "microsat", "dna",
-  "standard"), chrom = NULL, sep.chrom = FALSE, drop.mono = TRUE,
+  "standard"), chrom = NULL, sep.chrom = FALSE, drop.mono = FALSE,
   as.genotypes = TRUE, one.col = FALSE, sep = "/",
   coded.snps = FALSE)
 
-fscReadEstParams(label)
-
 fscReadArpFile(file)
+
+fscReadParamEst(p)
+
+fscReadSFSOutput(p)
 }
 \arguments{
 \item{p}{list of fastsimcoal input parameters.}
@@ -44,9 +47,9 @@ for each locus.}
 `marker = "snp"` and the data is diploid, genotypes will be returned with 
 one column per locus.}
 
-\item{label}{character string giving the folder with simulation output.}
-
 \item{file}{filename to read.}
+
+\item{label}{character string giving the folder with simulation output.}
 }
 \description{
 Read arlequin formatted output or parameter estimation files 
