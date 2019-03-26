@@ -39,7 +39,7 @@ fscMarker_snp(sequence.length, mut.rate, recomb.rate = 0,
 
 fscMarker_standard(num.loci, mut.rate, recomb.rate = 0, chromosome = 1)
 
-fscMarker_freq(mut.rate, output = FALSE)
+fscMarker_freq(mut.rate, output = TRUE)
 
 fscSettingsGenetics(..., num.chrom = NULL)
 }
@@ -106,7 +106,8 @@ strict Stepwise Mutation Model (SMM).}
 \item{range.constraint}{\code{msat}: Range constraint (number of different
 alleles allowed). A value of 0 means no range constraint.}
 
-\item{output}{should the FREQ marker type be labelled for OUTPUT?}
+\item{output}{for parameter estimation, should the expected site
+frequency spectrum of the estimated parameters be output?}
 
 \item{num.chrom}{the number of chromosomes to be simulated. If this is 
 specified and not the same as the number of linkage blocks specified by 
@@ -121,6 +122,8 @@ Functions to specify deme parameters, historical events,
 }
 \note{
 SNPs are simulated as a DNA sequence with a transiton rate of 1.
+  `fscMarker_freq()` can only be used by itself and in parameter estimation 
+  models.
 }
 \references{
 Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time 

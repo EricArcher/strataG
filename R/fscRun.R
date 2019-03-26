@@ -25,18 +25,17 @@
 #'   separate directory?
 #' @param nonpar.boot number of bootstraps to perform on polymorphic sites to
 #'   extract SFS.
-#' @param maxlhood Perform parameter estimation by maximum composite 
-#'   likelihood from the SFS?
 #' @param num.loops number of loops (ECM cycles) to be performed when 
 #'   estimating parameters from SFS. Default is 20.
 #' @param min.num.loops number of loops (ECM cycles) for which the 
 #'   likelihood is computed on both monomorphic and polymorphic sites. Default 
 #'   is 20.
-#' @param brent Tolerance level for Brent optimization.   
+#' @param brentol Tolerance level for Brent optimization.   
 #'   Smaller value imply more precise estimations, but require more 
 #'   computation time. Default = 0.01. Value is restricted between 
 #'   1e-5 and 1e-1.
-#' @param save.est do not delete .est parameter estimation files during cleanup?
+#' @param save.ext a character vector of extensions to save for `fscCleanup()`. 
+#'   Set to an empty string to delete all files associated with `label`.
 #' 
 #' @note fastsimcoal is not included with `strataG` and must be downloaded 
 #'   separately. Additionally, it must be installed such that it can be run from 
@@ -61,17 +60,25 @@
 fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL, 
                    all.sites = TRUE, inf.sites = FALSE, 
                    sfs.type = c("maf", "daf"), jobs = FALSE, nonpar.boot = NULL, 
-                   no.arl.output = FALSE, maxlhood = FALSE, num.loops = 20, 
-                   min.num.loops = 20, brent = 0.01, trees = FALSE,
+                   no.arl.output = FALSE, num.loops = 20, 
+                   min.num.loops = 20, brentol = NULL, trees = FALSE,
                    num.cores = NULL, seed = NULL, exec = "fsc26") {
   
   run.params <- as.list(environment())
   run.params$p <- NULL
   
   if(file.exists(p$label)) unlink(p$label, recursive = TRUE, force = TRUE) 
+  dir.create(p$label) # create folder so log can be written
+  p$files$log.file <- file.path(p$label, paste0(p$label, ".log"))
   
   opt <- options(scipen = 999)
   
+  if(!is.null(max.snps) | jobs) dna.to.snp <- TRUE
+  if(!is.null(brentol)) {
+    if(brentol < 1e-5) brentol <- 1e-5
+    if(brentol > 1e-1) brentol <- 1e-1
+  }
+    
   cores.spec <- if(!is.null(num.cores)) {
     num.cores <- max(1, num.cores)
     num.cores <- min(num.cores, min(parallel::detectCores(), 12))
@@ -79,9 +86,8 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
       paste(c("--cores", "--numBatches"), num.cores, collapse = " ")
     }
   } else ""
-  
-  if(!is.null(max.snps)) dna.to.snp <- TRUE
-  
+
+  # set up argument vector
   args <- c(
     ifelse(p$is.tpl, "--tplfile", "--ifile"), p$files$in.file,
     "--numsims", num.sims
@@ -89,7 +95,7 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
   if(p$is.tpl) args <- c(args, "-e", p$files$est.file)
   if(!is.null(seed)) args <- c(args, "--seed ", seed)
   if(trees) args <- c(args, "--tree")
-  if(dna.to.snp) {
+  if(dna.to.snp | p$is.tpl) {
     args <- c(args, "--dnatosnp", ifelse(is.null(max.snps), 0, max.snps))
     args <- c(args, switch(match.arg(sfs.type), maf = "--msfs", daf = "--dsfs"))
   }
@@ -102,20 +108,12 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
     args <- c(args, "--maxlhood")
     args <- c(args, "--numloops", num.loops)
     args <- c(args, "--minnumloops", min.num.loops)
-    args <- c(
-      args, 
-      "--brentol", 
-      ifelse(brent > 1e-1, 1e-1, ifelse(brent < 1e-5, 1e-5, brent))
-    )
+    args <- c(args, ifelse(!is.null(brentol), "--brentol", ""))
   }
   args <- c(args, cores.spec)
   p$run.params <- run.params
   p$run.params$args <- paste(args, collapse = " ")
   
-  p$files$log.file <- file.path(p$label, paste0(p$label, ".log"))
-  
-  if(!dir.exists(p$label)) dir.create(p$label)
-  if(file.exists(p$files$log.file)) file.remove(p$files$log.file)
   cat(format(Sys.time()), "running fastsimcoal...\n")
   err <- system2(exec, p$run.params$args, stdout = p$files$log.file)
   # err <- if(.Platform$OS.type == "unix") {
@@ -132,21 +130,27 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
     )
   }
   
-  Sys.sleep(1) # wait for .arp files to finish writing
-  p$files$arp.files <- NULL
-  arp.files <- dir(p$label, pattern = ".arp$", full.names = TRUE)
-  if(length(arp.files) > 0) {
+  # get .arp filenames and map loci
+  arp.files <- NULL
+  if(!no.arl.output & !p$is.tpl) {
+    while(is.null(arp.files)) {  
+      Sys.sleep(1)
+      arp.files <- dir(p$label, pattern = ".arp$", full.names = TRUE)
+      if(length(arp.files) == 0) {
+        cat(format(Sys.time()), "waiting for .arp files to finish writing...\n")
+        arp.files <- NULL
+      }
+    }
     arp.files <- arp.files[order(nchar(arp.files), arp.files)]
     p$files$arp.files <- stats::setNames(
-      arp.files, 
-      paste0("rep", 1:length(arp.files))
+      arp.files, paste0("rep", 1:length(arp.files))
     )
     cat(format(Sys.time()), "creating locus map for .arp files...\n")
     p <- .fscMapArpLocusInfo(p)
   }
-  
-  options(opt)
+
   cat(format(Sys.time()), "run complete\n")
+  options(opt)
   invisible(p)
 }
 
@@ -262,19 +266,22 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
 #' @rdname fscRun
 #' @export
 #' 
-fscCleanup <- function(label, save.est = TRUE) {
+fscCleanup <- function(label, save.ext = c("est", "obs")) {
   # remove label folder
   unlink(label, recursive = TRUE, force = TRUE)
   
   files <- c(dir(pattern = paste0("^", label)), "seed.txt")
   if(length(files) != 0) {
     # don't remove R script files
-    r.files <- grep("[[:alnum:]]+\\.r$", files, ignore.case = TRUE, value = TRUE)
-    if(length(r.files) != 0) files <- setdiff(files, r.files)
-    if(save.est) { # leave .est files if they are to be saved
-      est.files <- grep("[[:alnum:]]+\\.est$", files, ignore.case = TRUE, value = TRUE)
-      if(length(est.files) != 0) files <- setdiff(files, est.files)
-    }
+    r.files <- grep(".r$", files, ignore.case = TRUE, value = TRUE)
+    files <- setdiff(files, r.files)
+    # leave extensions that are to be saved
+    if(is.null(save.ext)) save.ext = ""
+    if(length(save.ext) != 0) { 
+      pattern <- paste(".", save.ext, "$", collapse = "|")
+      to.save <- grep(pattern, files, ignore.case = TRUE, value = TRUE)
+      files <- setdiff(files, to.save)
+    } 
     # remove only files, not other directories that start with label
     files <- files[utils::file_test("-f", files)]
     file.remove(files)

@@ -8,11 +8,10 @@
 fscRun(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
   all.sites = TRUE, inf.sites = FALSE, sfs.type = c("maf", "daf"),
   jobs = FALSE, nonpar.boot = NULL, no.arl.output = FALSE,
-  maxlhood = FALSE, num.loops = 20, min.num.loops = 20,
-  brent = 0.01, trees = FALSE, num.cores = NULL, seed = NULL,
-  exec = "fsc26")
+  num.loops = 20, min.num.loops = 20, brentol = NULL,
+  trees = FALSE, num.cores = NULL, seed = NULL, exec = "fsc26")
 
-fscCleanup(label, save.est = TRUE)
+fscCleanup(label, save.ext = c("est", "obs"))
 }
 \arguments{
 \item{p}{list of fastsimcoal input parameters and output.}
@@ -43,9 +42,6 @@ extract SFS.}
 
 \item{no.arl.output}{do not output arlequin files.}
 
-\item{maxlhood}{Perform parameter estimation by maximum composite 
-likelihood from the SFS?}
-
 \item{num.loops}{number of loops (ECM cycles) to be performed when 
 estimating parameters from SFS. Default is 20.}
 
@@ -53,7 +49,7 @@ estimating parameters from SFS. Default is 20.}
 likelihood is computed on both monomorphic and polymorphic sites. Default 
 is 20.}
 
-\item{brent}{Tolerance level for Brent optimization.
+\item{brentol}{Tolerance level for Brent optimization.
 Smaller value imply more precise estimations, but require more 
 computation time. Default = 0.01. Value is restricted between 
 1e-5 and 1e-1.}
@@ -68,7 +64,8 @@ computation time. Default = 0.01. Value is restricted between
 
 \item{label}{character string to label files with.}
 
-\item{save.est}{do not delete .est parameter estimation files during cleanup?}
+\item{save.ext}{a character vector of extensions to save for `fscCleanup()`. 
+Set to an empty string to delete all files associated with `label`.}
 }
 \description{
 Run a fastsimcoal simulation and load results into a 

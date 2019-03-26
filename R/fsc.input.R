@@ -45,12 +45,15 @@
 #'   the \code{fscMarker_} functions, then this many chromosomes with 
 #'   duplicated structures will be simulated. If \code{NULL}, then
 #'   the chromosome specification for each block will be used. 
-#' @param output should the FREQ marker type be labelled for OUTPUT?
+#' @param output for parameter estimation, should the expected site
+#'   frequency spectrum of the estimated parameters be output?
 #' @param ... a set of comma-separated square migration matrices for 
 #'   \code{fscSettingsMigration}, or marker specifications from a
 #'   \code{fscMarker_} function for \code{fscSettingsGenetics}.
 #'  
 #' @note SNPs are simulated as a DNA sequence with a transiton rate of 1.
+#'   `fscMarker_freq()` can only be used by itself and in parameter estimation 
+#'   models.
 #'   
 #' @references Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time 
 #'   coalescent simulator of genomic diversity under arbitrarily complex 
@@ -93,7 +96,14 @@ fscSettingsDemes <- function(..., ploidy = 2) {
   for(x in demes) if(!inherits(x, "fscDeme")) {
     stop("All demes must be produced by `fscDeme()`.")
   }
-  demes <- do.call(rbind, demes)
+  
+  demes <- as.data.frame(do.call(rbind, demes))
+  demes$deme.size <- as.integer(demes$deme.size)
+  demes$sample.size <- as.integer(demes$sample.size)
+  demes$sample.time <- as.integer(demes$sample.time)
+  demes$inbreeding <- as.numeric(demes$inbreeding)
+  demes$growth <- as.numeric(demes$growth)
+  
   class(demes) <- c("fscSettingsDemes", class(demes))
   attr(demes, "ploidy") <- ploidy
   demes
@@ -128,6 +138,16 @@ fscSettingsEvents <- function(...) {
   if(all(!is.na(events[, 1]))) {
     events <- events[order(events[, 1]), , drop = FALSE]
   }
+  
+  events <- as.data.frame(events)
+  events$event.time <- as.integer(events$event.time)
+  events$source <- as.integer(events$source)
+  events$sink <- as.integer(events$sink)
+  events$prop.migrants <- as.numeric(events$prop.migrants)
+  events$new.size <- as.numeric(events$new.size)
+  events$new.growth <- as.numeric(events$new.growth)
+  events$migr.mat <- as.integer(events$migr.mat)
+  
   class(events) <- c("fscSettingsEvents", class(events))
   events
 }
@@ -237,7 +257,7 @@ fscMarker_standard <- function(num.loci, mut.rate, recomb.rate = 0,
 #' @rdname fsc.input
 #' @export
 #'
-fscMarker_freq <- function(mut.rate, output = FALSE) {  
+fscMarker_freq <- function(mut.rate, output = TRUE) {  
   loc <- data.frame(
     chrom = 1,
     actual.type = "FREQ",
@@ -267,15 +287,25 @@ fscSettingsGenetics <- function(..., num.chrom = NULL) {
   # check supplied markers
   for(x in markers) {
     if(!inherits(x, "fscMarker")) {
-      stop("Marker definitions must be produced by a `fscMarker_xxx()` function.")
+      stop("Marker definitions must be produced by `fscMarker_xxx()` functions.")
     }
     if(x$fsc.type == "FREQ" & length(markers) > 1) {
       stop("Marker type FREQ can't be specified with other markers.")
     }
   }
   
-  # identify chromosome structure
   chrom <- do.call(rbind, markers)
+  chrom$num.markers <- as.integer(chrom$num.markers) 
+  chrom$recomb.rate <- as.numeric(chrom$recomb.rate)
+  chrom$mut.rate <- as.numeric(chrom$mut.rate)
+  chrom$param.5 <- if(chrom$fsc.type[1] == "FREQ") { 
+    chrom$param.5
+  } else {
+    as.numeric(chrom$param.5)
+  }
+  chrom$param.6 <- as.integer(chrom$param.6)
+  
+  # identify chromosome structure
   if(is.null(num.chrom)) {
     chrom <- lapply(split(chrom, chrom$chrom), function(x) x[, -1])
     num.chrom <- length(chrom)

@@ -8,7 +8,7 @@
 fscWrite(demes, genetics, migration = NULL, events = NULL,
   label = "strataG.fastsimcoal")
 
-fscWriteSFS(x, label, type = c("MAF", "DAF"))
+fscWriteSFS(x, label, type = c("maf", "daf"))
 }
 \arguments{
 \item{demes}{matrix of deme sampling information created by the 

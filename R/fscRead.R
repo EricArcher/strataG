@@ -4,7 +4,6 @@
 #'   
 #' @param p list of fastsimcoal input parameters.
 #' @param sim number of the simulation replicate to read.
-#' @param file filename to read.
 #' @param marker type of marker to return.
 #' @param chrom numerical vector giving chromosomes to return. `NULL` 
 #'   returns all chromosomes.
@@ -21,7 +20,6 @@
 #'   1 (heterozygote), or 2 (minor allele homozygote). If this is `TRUE` and 
 #'   `marker = "snp"` and the data is diploid, genotypes will be returned with 
 #'   one column per locus.
-#' @param label character string giving the folder with simulation output.
 #' 
 #' @note fastsimcoal is not included with `strataG` and must be downloaded 
 #'   separately. Additionally, it must be installed such that it can be run from 
@@ -43,11 +41,11 @@
 #' @name fscRead
 #' @export
 #' 
-fscRead <- function(p, sim = 1,
-                    marker = c("all", "snp", "microsat", "dna", "standard"),
-                    chrom = NULL, sep.chrom = FALSE, drop.mono = FALSE, 
-                    as.genotypes = TRUE, one.col = FALSE, sep = "/", 
-                    coded.snps = FALSE) {
+fscReadArp <- function(p, sim = 1,
+                       marker = c("all", "snp", "microsat", "dna", "standard"),
+                       chrom = NULL, sep.chrom = FALSE, drop.mono = FALSE, 
+                       as.genotypes = TRUE, one.col = FALSE, sep = "/", 
+                       coded.snps = FALSE) {
   if(is.null(p$files$arp.files)) stop("No .arp files in `p`.")
   hap.data <- .fscParseGeneticData(p, sim)
   if(is.null(hap.data)) return(NULL)
@@ -77,7 +75,7 @@ fscRead <- function(p, sim = 1,
   
   file <- p$files$arp.files[sim]
   cat(format(Sys.time()), "reading", file, "\n")
-  data.mat <- fscReadArpFile(file)
+  data.mat <- .fscParseArpFile(file)
   if(is.null(data.mat)) return(NULL)
   
   # parse data matrix with locus.info mapping
@@ -93,10 +91,9 @@ fscRead <- function(p, sim = 1,
 }
 
 
-#' @rdname fscRead
-#' @export
+#' @noRd
 #' 
-fscReadArpFile <- function(file) {
+.fscParseArpFile <- function(file) {
   if(!file.exists(file)) stop(file, " does not exist.")
   # read .arp file
   f <- readr::read_lines(file)
@@ -372,14 +369,12 @@ fscReadArpFile <- function(file) {
 #' 
 fscReadParamEst <- function(p) {
   out <- list(
-    ml.params = .fscReadEstLhoods(p$label), 
-    brent.lhoods = .fscReadEstBrent(p$label),
+    max.lhoods = .fscReadMaxLhoods(p$label), 
+    ecm.lhoods = .fscReadLhoods(p$label),
     sfs = .fscReadEstSFS(p$label)
   )
-  if(all(sapply(out, is.null))) {
-    stop("No parameter estimation files found.")
-  }
-  invisible(out)
+  if(all(sapply(out, is.null))) stop("No parameter estimation files found.")
+  out
 }
 
 
@@ -398,7 +393,7 @@ fscReadParamEst <- function(p) {
 
 #' @noRd
 #' 
-.fscReadEstLhoods <- function(label) {
+.fscReadMaxLhoods <- function(label) {
   fname <- dir(label, pattern = ".bestlhoods$", full.names = T)
   if(length(fname) == 0) return(NULL)
   .fscReadVector(fname)
@@ -407,7 +402,7 @@ fscReadParamEst <- function(p) {
 
 #' @noRd
 #' 
-.fscReadEstBrent <- function(label) {
+.fscReadLhoods <- function(label) {
   fname <- dir(label, pattern = ".brent_lhoods$", full.names = T)
   if(length(fname) == 0) return(NULL)
   f <- readr::read_lines(fname) 
@@ -437,15 +432,13 @@ fscReadParamEst <- function(p) {
 #' 
 fscReadSFSOutput <- function(p) {
   out <- list(
-    sfs.1d = fscReadSFS1d(p$label),
-    sfs.2d = fscReadSFS2d(p$label),
+    sfs.1d = .fscReadSFS1d(p$label),
+    sfs.2d = .fscReadSFS2d(p$label),
     polym.sites = .fscReadSFSPolymSites(p$label),
     lhood.obs = .fscReadSFSLhood(p$label)
   )
-  if(all(sapply(out, is.null))) {
-    stop("No parameter estimation files found.")
-  }
-  invisible(out)
+  if(all(sapply(out, is.null))) stop("No SFS output files found.")
+  out
 }
 
 
@@ -461,7 +454,7 @@ fscReadSFSOutput <- function(p) {
   
   sapply(files, function(fname) {
     mat <- utils::read.table(fname, header = TRUE, sep = "\t", skip = 1)
-    mat <- mat[, -ncol(mat)]
+    mat <- mat[, -ncol(mat), drop = FALSE]
     data.frame(rep.id = 1:nrow(mat), mat)
   }, simplify = FALSE)
 }
@@ -501,7 +494,7 @@ fscReadSFSOutput <- function(p) {
   if(length(fname) == 0) return(NULL)
   f <- readr::read_lines(fname)
   f <- do.call(rbind, strsplit(f[seq(2, length(f), 2)], "\t"))
-  f <- apply(f, 2, as.numeric)
+  f <- as.data.frame(rbind(apply(f, 2, as.numeric)))
   colnames(f) <- c("n.sim", "n.polym", "n.gt2.alleles", "n.fix.anc", "n.no.anc")
   f
 }
