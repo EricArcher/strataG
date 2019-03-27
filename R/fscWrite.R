@@ -195,7 +195,7 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
   #   haploid number of genes
   ploidy <- attr(p$settings$demes, "ploidy")
   demes <- p$settings$demes
-  i <- c("deme.size", "sample.size", "growth")
+  i <- c("deme.size", "sample.size")
   demes[, i] <- demes[, i] * ploidy
   p$formatted.settings$demes <- .nameParams(.mat2char(demes))
   

@@ -50,7 +50,7 @@ fscReadArp <- function(p, sim = 1,
   hap.data <- .fscParseGeneticData(p, sim)
   if(is.null(hap.data)) return(NULL)
   file <- attr(hap.data, "file")
-  hap.data <- .fscSelectLoci(hap.data, p$locus.info, marker, chrom, sep.chrom)
+  hap.data <- .fscSelectLoci(hap.data, p$locus.info, marker, chrom)
   # drop monomorphic sites if requested
   if(drop.mono & is.null(attr(hap.data, "poly.pos"))) {
     is.poly <- apply(hap.data[, -(1:2)], 2, function(x) {
@@ -60,7 +60,7 @@ fscReadArp <- function(p, sim = 1,
   }
   ploidy <- attr(p$settings$demes, "ploidy")
   data.mat <- if(as.genotypes & ploidy > 1) {
-    .fscFormatGenotypes(hap.data, ploidy, one.col, sep, coded.snps)
+    .fscFormatGenotypes(hap.data, sep.chrom, ploidy, one.col, sep, coded.snps)
   } else as.data.frame(hap.data, stringsAsFactors = FALSE)
   attr(data.mat, "poly.pos") <- attr(hap.data, "poly.pos")
   attr(data.mat, "file") <- file
@@ -258,9 +258,8 @@ fscReadArp <- function(p, sim = 1,
 
 #' @noRd
 #' 
-.fscSelectLoci <- function(hap.data, locus.info, marker, chrom, sep.chrom) {
+.fscSelectLoci <- function(hap.data, locus.info, marker, chrom) {
   poly.pos <- attr(hap.data, "poly.pos")
-  
   
   # filter locus info for specified chromosomes
   if(!is.null(chrom)) {
@@ -286,24 +285,8 @@ fscReadArp <- function(p, sim = 1,
   locus.info <- locus.info[i, , drop = FALSE]
   
   # extract columns for selected chromosomes and marker types
-  .extractLocCols <- function(loc.names, mat) {
-    loc.cols <- unlist(attr(mat, "locus.cols")[loc.names]) 
-    mat[, c(1:2, loc.cols), drop = FALSE]
-  }
-  hap.data <- if(sep.chrom) { # extract for each chromosome and return list
-    locus.info$chrom.label <- regmatches(
-      locus.info$name,
-      regexpr("^C[[:alnum:]]+", locus.info$name)
-    )
-    tapply( 
-      locus.info$name, 
-      locus.info$chrom.label,
-      .extractLocCols,
-      mat = hap.data
-    )
-  } else { # extract selected loci from data frame
-    .extractLocCols(locus.info$name, hap.data)
-  }
+  loc.cols <- unlist(attr(hap.data, "locus.cols")[locus.info$name]) 
+  hap.data <- hap.data[, c(1:2, loc.cols), drop = FALSE]
   
   if(!is.null(poly.pos)) {
     poly.pos <- poly.pos[poly.pos$name %in% colnames(hap.data), , drop = FALSE]
@@ -315,7 +298,8 @@ fscReadArp <- function(p, sim = 1,
 
 #' @noRd
 #' 
-.fscFormatGenotypes <- function(hap.data, ploidy, one.col, sep, coded.snps) {  
+.fscFormatGenotypes <- function(hap.data, sep.chrom, ploidy, one.col, sep, 
+                                coded.snps) {  
   if(coded.snps) { # check that coded SNPs can be returned
     num.snp.cols <- grepl("_SNP", colnames(hap.data)) # all loci must be SNPs
     if(!sum(num.snp.cols) == ncol(hap.data) - 2) {
@@ -327,7 +311,7 @@ fscReadArp <- function(p, sim = 1,
   # vector of numeric ids to group alleles for individuals
   gen.id <- rep(1:(nrow(hap.data) / ploidy), each = ploidy)
   
-  if(one.col | coded.snps) {
+  gen.df <- if(one.col | coded.snps) {
     # matrix of id and deme for each individual
     id.mat <- do.call(rbind, tapply(1:nrow(hap.data), gen.id, function(i) {
       c(
@@ -359,6 +343,17 @@ fscReadArp <- function(p, sim = 1,
     )
     as.data.frame(gen.mat, stringsAsFactors = FALSE)
   }
+  
+  if(sep.chrom) {
+    chroms <- unique(regmatches(
+      colnames(gen.df),
+      regexpr("^C[[:digit:]]+", colnames(gen.df))
+    ))
+    sapply(chroms, function(x) {
+      chr <- grep(x, colnames(gen.df), value = T)
+      gen.df[, c(1:2, which(colnames(gen.df) %in% chr))]
+    }, simplify = FALSE)
+  } else gen.df
 }
 
 
