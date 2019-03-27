@@ -35,7 +35,7 @@ sfs <- function(x, joint = FALSE) {
       sfs <- matrix(0, nrow = nrow, ncol = ncol)
       dimnames(sfs) <- stats::setNames(list(0:(nrow - 1), 0:(ncol - 1)), pair)
       for(r in 1:nrow(freqs)) sfs[freqs[r, 1], freqs[r, 2]] <- freqs[r, 3]
-      sfs
+      t(sfs)
     }, simplify = FALSE)
   }
 }
