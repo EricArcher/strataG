@@ -4,7 +4,7 @@
 \alias{sfs}
 \title{Site Frequency Spectrum}
 \usage{
-sfs(x, joint = FALSE)
+sfs(x, joint = FALSE, ambig.maf = TRUE, fsc.dimnames = FALSE)
 }
 \arguments{
 \item{x}{a data frame of SNP genotypes where the first two columns are id and
@@ -13,6 +13,15 @@ coded as integers where 0 and 2 are the major and minor homozygotes and 1
 is the heterozygote.}
 
 \item{joint}{return the joint SFS if more than 1 strata is available?}
+
+\item{ambig.maf}{treat the MAF designation as potentially ambiguous? If
+`TRUE`, then loci with a global MAF = 0.5 will contribute 0.5 to the 
+SFS rather than 1. If `FALSE`, then the MAF is assumed to be unambiguous
+for all loci regardless of the observed frequency.}
+
+\item{fsc.dimnames}{format matrix dimnames for fastsimcoal2? If `TRUE`, then
+row and column names will be prefixed with the deme number (e.g., "d0_") 
+that they represent.}
 }
 \value{
 Either a named vector of the 1D site frequency 
