@@ -427,8 +427,10 @@ fscReadParamEst <- function(p) {
 #' 
 fscReadSFSOutput <- function(p) {
   out <- list(
-    sfs.1d = .fscReadSFS1d(p$label),
-    sfs.2d = .fscReadSFS2d(p$label),
+    sfs = list(
+      marginal = .fscReadSFS1d(p$label),
+      joint = .fscReadSFS2d(p$label)
+    ),
     polym.sites = .fscReadSFSPolymSites(p$label),
     lhood.obs = .fscReadSFSLhood(p$label)
   )

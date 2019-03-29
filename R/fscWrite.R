@@ -11,10 +11,10 @@
 #'   function.
 #' @param events matrix of historical events created by the 
 #'   \code{\link{fscSettingsEvents}} function.
-#' @param label character string to label files with.
-#' @param x a vector containing the 1D site frequency spectrum (SFS) or 
-#'   list containing one or more 2D joint SFS.
-#' @param type type of SFS being written: `MAF` = folded, `DAF` = unfolded.
+#' @param label character string used to label output files for the simulation.
+#' @param x a matrix or data.frame containing a list of the marginal and 
+#'   joint SFS. Can be the output of the \code{$sfs} element from \code{\link{fscReadSFSOutput}} 
+#'   or the output of \code{\link{sfs}} with \code{fsc.dimnames = TRUE}.
 #' 
 #' @note fastsimcoal is not included with `strataG` and must be downloaded 
 #'   separately. Additionally, it must be installed such that it can be run from 
@@ -360,36 +360,41 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
 
 #' @rdname fscWrite
 #' @export
-#'
-fscWriteSFS <- function(x, label, type = c("maf", "daf")) {
-  type <- toupper(match.arg(type))
-  if(is.matrix(x) | is.data.frame(x)) {
-    f <- paste0(label, "_", type, "pop0.obs")
-    write("1 observations", f)
-    write(paste0("d0_", names(x), collapse = "\t"), f, append = T)
-    write(paste0(x, collapse = "\t"), f, append = T)
-    f
-  } else {
-    avail.demes <- lapply(x, function(mat) names(dimnames(mat))) %>% 
-      unlist() %>% 
-      unique() %>% 
-      sort()
-    sapply(x, function(mat) {
-      d <- match(names(dimnames(mat)), avail.demes) - 1
-      mat <- t(mat)
-      rownames(mat) <- paste0("d", d[2], "_", rownames(mat))
-      colnames(mat) <- paste0("d", d[1], "_", colnames(mat))
-      f <- paste0(
-        label, "_joint", type, "pop", d[1], "_", d[2], ".obs",
-        collapse = ""
-      )
-      write("1 observations", f)
-      write(paste0(colnames(mat), collapse = "\t"), f, append = T)
-      for(i in 1:nrow(mat)) {
-        row.i <- paste0(mat[i, ], collapse = "\t")
-        write(paste(rownames(mat)[i], row.i, collapse = "\t"), f, append = TRUE)
+#' 
+fscWriteSFS <- function(x, label) {
+  .writeMat <- function(mat, f) {    
+    mat <- cbind(mat)
+    writeLines("1 observation", f)
+    writeLines(paste(colnames(mat), collapse = " "), f)
+    for(i in 1:nrow(mat)) {
+      writeLines(paste(c(rownames(mat)[i], mat[i, ]), collapse = " "), f)
+    }
+  }
+  
+  for(d in 1:length(x$marginal)) {
+    f <- file(paste0(label, "_MAFpop", d - 1, ".obs"), open = "wt")
+    xd <- x$marginal[[d]]
+    .writeMat(xd, f)
+    close(f)
+  }
+  
+  if(!is.null(x$joint)) {
+    for(j in 1:length(x$joint)) {
+      xj <- x$joint[[j]]
+      if("row.id" %in% colnames(xj)) {
+        rownames(xj) <- xj$row.id
+        xj <- as.matrix(xj[, -(1:2)])
       }
-      f
-    })
+      row.d <- regmatches(rownames(xj), regexpr("d[[:digit:]]+", rownames(xj)))
+      row.d <- unique(gsub("d", "", row.d))
+      col.d <- regmatches(colnames(xj), regexpr("d[[:digit:]]+", colnames(xj)))
+      col.d <- unique(gsub("d", "", col.d))
+      if(length(row.d) > 1) stop("More than one deme specified in rows.")
+      if(length(col.d) > 1) stop("More than one deme specified in columns.")
+      fname <- paste0(label, "_jointMAFpop", row.d, "_", col.d, ".obs")
+      f <- file(fname, open = "wt")
+      .writeMat(xj, f)
+      close(f)
+    }
   }
 }

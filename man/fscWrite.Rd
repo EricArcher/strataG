@@ -8,7 +8,7 @@
 fscWrite(demes, genetics, migration = NULL, events = NULL,
   label = "strataG.fastsimcoal")
 
-fscWriteSFS(x, label, type = c("maf", "daf"))
+fscWriteSFS(x, label)
 }
 \arguments{
 \item{demes}{matrix of deme sampling information created by the 
@@ -24,12 +24,11 @@ function.}
 \item{events}{matrix of historical events created by the 
 \code{\link{fscSettingsEvents}} function.}
 
-\item{label}{character string to label files with.}
+\item{label}{character string used to label output files for the simulation.}
 
-\item{x}{a vector containing the 1D site frequency spectrum (SFS) or 
-list containing one or more 2D joint SFS.}
-
-\item{type}{type of SFS being written: `MAF` = folded, `DAF` = unfolded.}
+\item{x}{a matrix or data.frame containing a list of the marginal and 
+joint SFS. Can be the output of the \code{$sfs} element from \code{\link{fscReadSFSOutput}} 
+or the output of \code{\link{sfs}} with \code{fsc.dimnames = TRUE}.}
 }
 \description{
 Run a fastsimcoal simulation and load results into a 

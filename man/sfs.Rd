@@ -4,7 +4,8 @@
 \alias{sfs}
 \title{Site Frequency Spectrum}
 \usage{
-sfs(x, joint = FALSE, ambig.maf = TRUE, fsc.dimnames = FALSE)
+sfs(x, strata.col = 2, locus.col = 3, fsc.dimnames = TRUE,
+  sort.strata = TRUE)
 }
 \arguments{
 \item{x}{a data frame of SNP genotypes where the first two columns are id and
@@ -12,21 +13,22 @@ strata designations and SNPs start on the third column. SNP genotypes are
 coded as integers where 0 and 2 are the major and minor homozygotes and 1
 is the heterozygote.}
 
-\item{joint}{return the joint SFS if more than 1 strata is available?}
+\item{strata.col}{column number that strata designations are in.}
 
-\item{ambig.maf}{treat the MAF designation as potentially ambiguous? If
-`TRUE`, then loci with a global MAF = 0.5 will contribute 0.5 to the 
-SFS rather than 1. If `FALSE`, then the MAF is assumed to be unambiguous
-for all loci regardless of the observed frequency.}
+\item{locus.col}{column number that loci start in. All columns after this are
+assumed to be loci.}
 
-\item{fsc.dimnames}{format matrix dimnames for fastsimcoal2? If `TRUE`, then
-row and column names will be prefixed with the deme number (e.g., "d0_") 
-that they represent.}
+\item{fsc.dimnames}{format matrix dimnames for fastsimcoal2? If \code{TRUE},
+then row and column names will be prefixed with the deme number (e.g.,
+"d0_") that they represent.}
+
+\item{sort.strata}{if \code{joint = TRUE}, are strata to be sorted
+alphabetically? If \code{FALSE} then strata are taken in the order found in
+\code{strata.col}.}
 }
 \value{
-Either a named vector of the 1D site frequency 
-  spectrum if \code{joint = FALSE}, or a list of matrices of the 2D
-  site frequency spectra for pairs of strata if \code{joint = TRUE}.
+A list of the marginal (1D) and joint (2D) site frequency spectra. 
+  If only one stratum is present, then \code{$marginal} will be  \code{NULL}.
 }
 \description{
 Calculate the SFS from a data frame of SNP genotypes

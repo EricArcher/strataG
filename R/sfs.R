@@ -5,63 +5,89 @@
 #'   strata designations and SNPs start on the third column. SNP genotypes are
 #'   coded as integers where 0 and 2 are the major and minor homozygotes and 1
 #'   is the heterozygote.
-#' @param joint return the joint SFS if more than 1 strata is available?
-#' @param ambig.maf treat the MAF designation as potentially ambiguous? If
-#'   `TRUE`, then loci with a global MAF = 0.5 will contribute 0.5 to the 
-#'   SFS rather than 1. If `FALSE`, then the MAF is assumed to be unambiguous
-#'   for all loci regardless of the observed frequency.
-#' @param fsc.dimnames format matrix dimnames for fastsimcoal2? If `TRUE`, then
-#'   row and column names will be prefixed with the deme number (e.g., "d0_") 
-#'   that they represent.
+#' @param fsc.dimnames format matrix dimnames for fastsimcoal2? If \code{TRUE},
+#'   then row and column names will be prefixed with the deme number (e.g.,
+#'   "d0_") that they represent.
+#' @param strata.col column number that strata designations are in.
+#' @param locus.col column number that loci start in. All columns after this are
+#'   assumed to be loci.
+#' @param sort.strata if \code{joint = TRUE}, are strata to be sorted
+#'   alphabetically? If \code{FALSE} then strata are taken in the order found in
+#'   \code{strata.col}.
 #'    
-#' @return Either a named vector of the 1D site frequency 
-#'   spectrum if \code{joint = FALSE}, or a list of matrices of the 2D
-#'   site frequency spectra for pairs of strata if \code{joint = TRUE}.
+#' @return A list of the marginal (1D) and joint (2D) site frequency spectra. 
+#'   If only one stratum is present, then \code{$marginal} will be  \code{NULL}.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @export
 #' 
-sfs <- function(x, joint = FALSE, ambig.maf = TRUE, fsc.dimnames = FALSE) {
+sfs <- function(x, strata.col = 2, locus.col = 3, fsc.dimnames = TRUE, 
+                sort.strata = TRUE) {
   if(!is.data.frame(x)) stop("'x' must be a data frame.")
-  st <- x[, 2]
-  x <- x[, -(1:2), drop = FALSE]
-  global.count <- colSums(x)
-  wt <- if(ambig.maf) ifelse(global.count == nrow(x), 0.5, 1) else NULL
-  if(!joint | dplyr::n_distinct(st) == 1) {
-    loc.freq <- if(ambig.maf) {
-      tapply(wt, global.count, sum)
-    } else {
-      table(global.count)
-    }
-    sfs.1d <- stats::setNames(vector("numeric", nrow(x) + 1), 0:nrow(x))
-    sfs.1d[names(loc.freq)] <- loc.freq
-    if(fsc.dimnames) names(sfs.1d) <- paste0("d0_", names(sfs.1d))
-    sfs.1d
-  } else {
-    counts <- lapply(split(x, st), colSums)
-    n <- table(st)
-    combn(unique(st), 2, function(pair) {
-      i <- pair[1]
-      j <- pair[2]
-      freqs <- if(ambig.maf) {
-        tapply(wt, list(counts[[i]], counts[[j]]), sum) %>% 
-          as.data.frame() %>% 
-          tibble::rownames_to_column("freq1") %>% 
-          tidyr::gather("freq2", "count", -.data$freq1) %>% 
-          dplyr::mutate(count = ifelse(is.na(.data$count), 0, .data$count))
+  if(strata.col >= locus.col) stop("'strata.col' can't be >= 'locus.col'.")
+  
+  st <- x[, strata.col]
+  st.n <- table(st)    
+  st.order <- unique(st)
+  if(sort.strata) st.order 
+  st.order <- st.order[order(nchar(st.order), st.order)]
+  
+  x <- x[, locus.col:ncol(x), drop = FALSE]
+  st.x <- split(x, st)
+  st.count <- sapply(st.x, colSums, simplify = FALSE)
+  is.ambig <- colSums(x) == nrow(x)
+  
+  marginal <- sapply(st.order, function(k) {
+    sfs.vec <- vector("numeric", length = (st.n[k] * 2) + 1)
+    for(loc in 1:length(st.count[[k]])) {
+      i1 <- st.count[[k]][loc] + 1
+      if(is.ambig[loc]) {
+        i2 <- length(sfs.vec) - i1 + 1
+        sfs.vec[i1] <- sfs.vec[i1] + 0.5
+        if(i1 != i2) sfs.vec[i2] <- sfs.vec[i2] + 0.5
       } else {
-        as.data.frame(table(counts[[i]], counts[[j]]), stringsAsFactors = FALSE)
+        sfs.vec[i1] <- sfs.vec[i1] + 1
       }
-      nrow <- (2 * n[i]) + 1
-      ncol <- (2 * n[j]) + 1
-      sfs.2d <- matrix(0, nrow = nrow, ncol = ncol)
-      dimnames(sfs.2d) <- stats::setNames(list(0:(nrow - 1), 0:(ncol - 1)), pair)
-      for(r in 1:nrow(freqs)) sfs.2d[freqs[r, 1], freqs[r, 2]] <- freqs[r, 3]
-      
-      
-      
-      t(sfs.2d)
+    }
+    names(sfs.vec) <- 0:(length(sfs.vec) - 1)
+    if(fsc.dimnames) {
+      names(sfs.vec) <- paste0("d", match(k, st.order) - 1, "_", names(sfs.vec))
+    }
+    sfs.vec
+  }, simplify = FALSE)
+  
+  joint <- if(length(st.order) == 1) NULL else {
+    combn(st.order, 2, function(pair) {
+      k1 <- pair[1]
+      k2 <- pair[2]
+      count1 <- st.count[[k1]]
+      count2 <- st.count[[k2]]
+      sfs.mat <- matrix(0, nrow = (2 * st.n[k1]) + 1, ncol = (2 * st.n[k2]) + 1)
+      for(loc in 1:length(count1)) {
+        i1 <- count1[loc] + 1
+        j1 <- count2[loc] + 1
+        if(is.ambig[loc]) {
+          i2 <- nrow(sfs.mat) - i1 + 1
+          j2 <- ncol(sfs.mat) - j1 + 1
+          sfs.mat[i1, j1] <- sfs.mat[i1, j1] + 0.5
+          sfs.mat[i2, j2] <- sfs.mat[i2, j2] + 0.5
+        } else {
+         sfs.mat[i1, j1] <- sfs.mat[i1, j1] + 1
+        }
+      }
+      rownames(sfs.mat) <- 0:(nrow(sfs.mat) - 1)
+      colnames(sfs.mat) <- 0:(ncol(sfs.mat) - 1)
+      if(fsc.dimnames) {
+        row.deme <- paste0("d",  match(k1, st.order) - 1, "_")
+        col.deme <- paste0("d",  match(k2, st.order) - 1, "_")
+        rownames(sfs.mat) <- paste0(row.deme, rownames(sfs.mat))
+        colnames(sfs.mat) <- paste0(col.deme, colnames(sfs.mat))
+      }
+      names(dimnames(sfs.mat)) <- pair
+      t(sfs.mat)
     }, simplify = FALSE)
   }
+  
+  list(marginal = marginal, joint = joint)
 }
