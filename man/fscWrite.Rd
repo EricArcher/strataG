@@ -26,16 +26,25 @@ function.}
 
 \item{label}{character string used to label output files for the simulation.}
 
-\item{x}{a matrix or data.frame containing a list of the marginal and 
-joint SFS. Can be the output of the \code{$sfs} element from \code{\link{fscReadSFSOutput}} 
-or the output of \code{\link{sfs}} with \code{fsc.dimnames = TRUE}.}
+\item{x}{a list of marginal and (optionally) joint site frequency spectra 
+data frames. These can be the output of the \code{$sfs} element from 
+\code{\link{fscReadSFSOutput}} or the output of \code{\link{sfs}} 
+run with \code{fsc.dimnames = TRUE}.}
+}
+\value{
+\describe{
+ \item{fscWrite}{Writes input files for \code{fastsimcoal2} and returns a
+   list of input parameters, input file, and input filenames. This list is 
+   the primary input to \code{\link{fscRun}}.} 
+ \item{fscWriteSFS}{Writes a set of \code{fastsimcoal2} formatted SFS files.}
+ }
 }
 \description{
 Run a fastsimcoal simulation and load results into a 
   \linkS4class{gtypes} object.
 }
 \note{
-fastsimcoal is not included with `strataG` and must be downloaded 
+\code{fastsimcoal2} is not included with `strataG` and must be downloaded 
   separately. Additionally, it must be installed such that it can be run from 
   the command line in the current working directory. See the vignette 
   for \code{external.programs} for installation instructions.

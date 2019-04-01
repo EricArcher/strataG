@@ -20,7 +20,20 @@
 #'   1 (heterozygote), or 2 (minor allele homozygote). If this is `TRUE` and 
 #'   `marker = "snp"` and the data is diploid, genotypes will be returned with 
 #'   one column per locus.
-#' 
+#'   
+#' @return 
+#' \describe{
+#'  \item{fscReadArp}{Reads and parses Arlequin-formatted .arp output files 
+#'    created by \code{fastsimcoal2}. Returns a data frame of genotypes, with 
+#'    individuals created by combining haplotypes based on the stored value of
+#'    ploidy specified when the simulation was run.}
+#'  \item{fscReadParamEst}{Reads and parses files output from a 
+#'    \code{fastsimcoal2} run conducted for parameter estimation. Returns a list 
+#'    of data frames and vectors containing the data from each file.}
+#'  \item{fscReadSFSOutput}{Reads site frequency spectra generated from 
+#'    \code{fastsimcoal2}. Returns a list of the marginal and joint SFS.}
+#'  }
+#'  
 #' @note fastsimcoal is not included with `strataG` and must be downloaded 
 #'   separately. Additionally, it must be installed such that it can be run from 
 #'   the command line in the current working directory. See the vignette 
@@ -36,7 +49,8 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \code{\link{fsc.input}}
+#' @seealso \code{\link{fsc.input}}, \code{\link{fscWrite}}, 
+#'  \code{\link{fscRun}}
 #' 
 #' @name fscRead
 #' @export

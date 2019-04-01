@@ -1,11 +1,7 @@
 #' @title Run fastsimcoal
 #' @description Run a fastsimcoal simulation and load results into a 
-#'   \linkS4class{gtypes} object.
+#'   \linkS4class{gtypes} object. 
 #'
-#' @param label character string to label files with.
-#' @param seed random number seed for simulation.
-#' @param exec name of fastsimcoal executable.
-#' @param num.cores number of cores to use.
 #' @param p list of fastsimcoal input parameters and output.
 #' @param num.sims number of simulation replicates to run.
 #' @param dna.to.snp convert DNA sequences to numerical SNPs?
@@ -16,8 +12,6 @@
 #' @param inf.sites use infinite sites model? If \code{TRUE}, all mutations are 
 #'   retained in the output, thus the number of sites for SNPs or DNA sequences 
 #'   will potentially be greater than what was requested.
-#' @param no.arl.output do not output arlequin files.
-#' @param trees output NEXUS formatted coalescent trees for all replicates?
 #' @param sfs.type type of site frequency spectrum to compute for each 
 #'   population sample: `daf` = derived allele frequency (unfolded), 
 #'   `maf` = minor allele frequency (folded).
@@ -25,6 +19,7 @@
 #'   separate directory?
 #' @param nonpar.boot number of bootstraps to perform on polymorphic sites to
 #'   extract SFS.
+#' @param no.arl.output do not output arlequin files.
 #' @param num.loops number of loops (ECM cycles) to be performed when 
 #'   estimating parameters from SFS. Default is 20.
 #' @param min.num.loops number of loops (ECM cycles) for which the 
@@ -34,8 +29,22 @@
 #'   Smaller value imply more precise estimations, but require more 
 #'   computation time. Default = 0.01. Value is restricted between 
 #'   1e-5 and 1e-1.
+#' @param trees output NEXUS formatted coalescent trees for all replicates?
+#' @param num.cores number of cores to use.
+#' @param seed random number seed for simulation.
+#' @param exec name of fastsimcoal executable.
+#' @param label character string of file run labels prefixes.
 #' @param save.ext a character vector of extensions to save for `fscCleanup()`. 
 #'   Set to an empty string to delete all files associated with `label`.
+#' 
+#' @return 
+#' \describe{
+#'  \item{fscRun}{Runs the \code{fastsimcoal2} simulation and returns a
+#'    list containing run parameters and a data frame used by 
+#'    \code{\link{fscRead}} to parse the genotypes generated (if requested).}
+#'  \item{fscCleanup}{Deletes all files associated with the simulation 
+#'    identified by \code{label}.}
+#'  }
 #' 
 #' @note fastsimcoal is not included with `strataG` and must be downloaded 
 #'   separately. Additionally, it must be installed such that it can be run from 
@@ -52,7 +61,8 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \code{\link{fsc.input}}
+#' @seealso \code{\link{fsc.input}}, \code{\link{fscWrite}}, 
+#'  \code{\link{fscRead}}
 #' 
 #' @name fscRun
 #' @export

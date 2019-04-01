@@ -65,7 +65,8 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \code{\link{fscWrite}}
+#' @seealso \code{\link{fscWrite}}, \code{\link{fscRun}}, 
+#'  \code{\link{fscRead}}
 #' 
 #' @name fsc.input
 #' @aliases fscSettings

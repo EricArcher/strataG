@@ -5,7 +5,7 @@
 \title{Site Frequency Spectrum}
 \usage{
 sfs(x, strata.col = 2, locus.col = 3, fsc.dimnames = TRUE,
-  sort.strata = TRUE)
+  sort.strata = TRUE, na.action = c("fail", "filter"))
 }
 \arguments{
 \item{x}{a data frame of SNP genotypes where the first two columns are id and
@@ -25,6 +25,10 @@ then row and column names will be prefixed with the deme number (e.g.,
 \item{sort.strata}{if \code{joint = TRUE}, are strata to be sorted
 alphabetically? If \code{FALSE} then strata are taken in the order found in
 \code{strata.col}.}
+
+\item{na.action}{action to take if genotypes are missing for some samples. 
+If \code{"fail"}, an error is thrown if any genotypes are missing. If 
+\code{"filter"}, SNPs with missing genotypes are removed.}
 }
 \value{
 A list of the marginal (1D) and joint (2D) site frequency spectra. 

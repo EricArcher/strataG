@@ -14,6 +14,9 @@
 #' @param sort.strata if \code{joint = TRUE}, are strata to be sorted
 #'   alphabetically? If \code{FALSE} then strata are taken in the order found in
 #'   \code{strata.col}.
+#' @param na.action action to take if genotypes are missing for some samples. 
+#'   If \code{"fail"}, an error is thrown if any genotypes are missing. If 
+#'   \code{"filter"}, SNPs with missing genotypes are removed.
 #'    
 #' @return A list of the marginal (1D) and joint (2D) site frequency spectra. 
 #'   If only one stratum is present, then \code{$marginal} will be  \code{NULL}.
@@ -23,17 +26,33 @@
 #' @export
 #' 
 sfs <- function(x, strata.col = 2, locus.col = 3, fsc.dimnames = TRUE, 
-                sort.strata = TRUE) {
+                sort.strata = TRUE, na.action = c("fail", "filter")) {
   if(!is.data.frame(x)) stop("'x' must be a data frame.")
   if(strata.col >= locus.col) stop("'strata.col' can't be >= 'locus.col'.")
   
   st <- x[, strata.col]
   st.n <- table(st)    
   st.order <- unique(st)
-  if(sort.strata) st.order 
-  st.order <- st.order[order(nchar(st.order), st.order)]
+  if(sort.strata) st.order <- st.order[order(nchar(st.order), st.order)]
   
   x <- x[, locus.col:ncol(x), drop = FALSE]
+  has.missing <- sapply(x, function(loc) any(is.na(loc)))
+  if(any(has.missing)) {
+    if(match.arg(na.action) == "fail") {
+      stop("'x' has missing data. Can't compute SFS with na.action = 'fail'.")
+    } 
+    to.keep <- apply(x, 2, function(loc) all(!is.na(loc)))
+    if(sum(to.keep) == 0) {
+      stop("Can't compute SFS because all loci have missing data.")
+    } 
+    warning(
+      ncol(x) - sum(to.keep), " loci had missing data. ",
+      "Retained ", sum(to.keep), " loci.", 
+      call. = FALSE
+    )
+    x <- x[, to.keep]
+  }
+  
   st.x <- split(x, st)
   st.count <- sapply(st.x, colSums, simplify = FALSE)
   is.ambig <- colSums(x) == nrow(x)

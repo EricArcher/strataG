@@ -62,10 +62,19 @@ computation time. Default = 0.01. Value is restricted between
 
 \item{exec}{name of fastsimcoal executable.}
 
-\item{label}{character string to label files with.}
+\item{label}{character string of file run labels prefixes.}
 
 \item{save.ext}{a character vector of extensions to save for `fscCleanup()`. 
 Set to an empty string to delete all files associated with `label`.}
+}
+\value{
+\describe{
+ \item{fscRun}{Runs the \code{fastsimcoal2} simulation and returns a
+   list containing run parameters and a data frame used by 
+   \code{\link{fscRead}} to parse the genotypes generated (if requested).}
+ \item{fscCleanup}{Deletes all files associated with the simulation 
+   identified by \code{label}.}
+ }
 }
 \description{
 Run a fastsimcoal simulation and load results into a 
@@ -87,7 +96,8 @@ Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time
   \url{http://cmpg.unibe.ch/software/fastsimcoal2/}
 }
 \seealso{
-\code{\link{fsc.input}}
+\code{\link{fsc.input}}, \code{\link{fscWrite}}, 
+ \code{\link{fscRead}}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

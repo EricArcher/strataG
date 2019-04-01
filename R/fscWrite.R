@@ -12,11 +12,20 @@
 #' @param events matrix of historical events created by the 
 #'   \code{\link{fscSettingsEvents}} function.
 #' @param label character string used to label output files for the simulation.
-#' @param x a matrix or data.frame containing a list of the marginal and 
-#'   joint SFS. Can be the output of the \code{$sfs} element from \code{\link{fscReadSFSOutput}} 
-#'   or the output of \code{\link{sfs}} with \code{fsc.dimnames = TRUE}.
+#' @param x a list of marginal and (optionally) joint site frequency spectra 
+#'   data frames. These can be the output of the \code{$sfs} element from 
+#'   \code{\link{fscReadSFSOutput}} or the output of \code{\link{sfs}} 
+#'   run with \code{fsc.dimnames = TRUE}.
 #' 
-#' @note fastsimcoal is not included with `strataG` and must be downloaded 
+#' @return 
+#' \describe{
+#'  \item{fscWrite}{Writes input files for \code{fastsimcoal2} and returns a
+#'    list of input parameters, input file, and input filenames. This list is 
+#'    the primary input to \code{\link{fscRun}}.} 
+#'  \item{fscWriteSFS}{Writes a set of \code{fastsimcoal2} formatted SFS files.}
+#'  }
+#' 
+#' @note \code{fastsimcoal2} is not included with `strataG` and must be downloaded 
 #'   separately. Additionally, it must be installed such that it can be run from 
 #'   the command line in the current working directory. See the vignette 
 #'   for \code{external.programs} for installation instructions.
@@ -31,7 +40,8 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \code{\link{fsc.input}}
+#' @seealso \code{\link{fsc.input}}, \code{\link{fscRun}}, 
+#'  \code{\link{fscRead}}
 #' 
 #' @name fscWrite
 #' @export
@@ -264,7 +274,7 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
 #' @noRd
 #' 
 .fscWriteEst <- function(p) {
-  p$files$est.file <- paste0(p$label, ".est")
+  p$files$est.file <- paste0(p$label, "_toedit.est")
   
   if(file.exists(p$files$est.file) & interactive()) {
     prompt <- paste0(
@@ -317,8 +327,6 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
   colnames(est.df) <- c("int", "param")
   est.df$param <- as.character(est.df$param)
   
-  writeLines("**** written by strataG::fscWrite() ****", f)
-  writeLines("**** edit by hand and delete these 2 lines ****", f)
   writeLines("// Priors and rules file", f)
   writeLines("// *********************", f)
   writeLines("", f)
