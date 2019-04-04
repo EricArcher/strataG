@@ -179,7 +179,8 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
       chromosome = rep(1:num.chrom, each = num.blocks),
       locus.info
     )
-  }
+  } else colnames(locus.info)[1] <- "chromosome"
+    
 
   # associate rows in locus info to columns in .arp file (if all.sites = TRUE)
   prev.type <- dplyr::lag(locus.info$fsc.type)

@@ -161,11 +161,12 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
   chrom.diff <- as.numeric(attributes(pfs$genetics)["chrom.diff"])
   writeLines(paste(num.chrom, chrom.diff, collapse = " "), f)
   for(block in pfs$genetics) {
+    start <- if("chrom" %in% colnames(block)) 3 else 2
     writeLines("//Per chromosome: Number of linkage blocks", f)
     writeLines(as.character(nrow(block)), f)
     writeLines("//Per block: data type, num loci, rec. rate and mut rate + optional parameters", f)
     for(i in 1:nrow(block)) {
-      writeLines(paste(as.character(block[i, -1]), collapse = " "), f)
+      writeLines(paste(as.character(block[i, start:ncol(block)]), collapse = " "), f)
     }
   }
   

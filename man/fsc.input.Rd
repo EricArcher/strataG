@@ -135,7 +135,8 @@ Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time
   \url{http://cmpg.unibe.ch/software/fastsimcoal2/}
 }
 \seealso{
-\code{\link{fscWrite}}
+\code{\link{fscWrite}}, \code{\link{fscRun}}, 
+ \code{\link{fscRead}}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

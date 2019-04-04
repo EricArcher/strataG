@@ -308,7 +308,7 @@ fscSettingsGenetics <- function(..., num.chrom = NULL) {
   
   # identify chromosome structure
   if(is.null(num.chrom)) {
-    chrom <- lapply(split(chrom, chrom$chrom), function(x) x[, -1])
+    chrom <- split(chrom, chrom$chrom)
     num.chrom <- length(chrom)
   } else chrom <- list(chrom[, -1])
   chrom.same <- num.chrom == 1 | (num.chrom > 1 & length(chrom) == 1)
