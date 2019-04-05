@@ -371,18 +371,23 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
 #' @export
 #' 
 fscWriteSFS <- function(x, label) {
-  .writeMat <- function(mat, f) {    
+  .writeMat <- function(mat, f) {   
     mat <- cbind(mat)
     writeLines("1 observation", f)
     writeLines(paste(colnames(mat), collapse = " "), f)
     for(i in 1:nrow(mat)) {
-      writeLines(paste(c(rownames(mat)[i], mat[i, ]), collapse = " "), f)
+      if(is.null(rownames(mat))) {
+        writeLines(paste(mat[i, ], collapse = " "), f)
+      } else {
+        writeLines(paste(c(rownames(mat)[i], mat[i, ]), collapse = " "), f)
+      }
     }
   }
   
   for(d in 1:length(x$marginal)) {
     f <- file(paste0(label, "_MAFpop", d - 1, ".obs"), open = "wt")
-    xd <- x$marginal[[d]]
+    xd <- rbind(x$marginal[[d]])
+    rownames(xd) <- NULL
     .writeMat(xd, f)
     close(f)
   }
