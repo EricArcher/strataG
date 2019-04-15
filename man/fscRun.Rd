@@ -5,13 +5,13 @@
 \alias{fscCleanup}
 \title{Run fastsimcoal}
 \usage{
-fscRun(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
-  all.sites = TRUE, inf.sites = FALSE, sfs.type = c("maf", "daf"),
-  jobs = FALSE, nonpar.boot = NULL, no.arl.output = FALSE,
-  num.loops = 20, min.num.loops = 20, brentol = NULL,
-  trees = FALSE, num.cores = NULL, seed = NULL, exec = "fsc26")
+fscRun(p, num.sims = 1, dna.to.snp = FALSE, max.snps = 0,
+  sfs.type = c("maf", "daf"), nonpar.boot = NULL, all.sites = TRUE,
+  inf.sites = FALSE, no.arl.output = FALSE, num.loops = 20,
+  min.num.loops = 20, brentol = 0.01, trees = FALSE,
+  num.cores = NULL, seed = NULL, quiet = TRUE, exec = "fsc26")
 
-fscCleanup(label, save.ext = c("est", "obs"))
+fscCleanup(label)
 }
 \arguments{
 \item{p}{list of fastsimcoal input parameters and output.}
@@ -22,6 +22,13 @@ fscCleanup(label, save.ext = c("est", "obs"))
 
 \item{max.snps}{maximum number of SNPs to retain.}
 
+\item{sfs.type}{type of site frequency spectrum to compute for each 
+population sample: `daf` = derived allele frequency (unfolded), 
+`maf` = minor allele frequency (folded).}
+
+\item{nonpar.boot}{number of bootstraps to perform on polymorphic sites to
+extract SFS.}
+
 \item{all.sites}{retain all sites? If \code{FALSE}, only polymorphic DNA 
 sites will be returned. This includes SNP blocks as they are simulated as 
 DNA sequences.}
@@ -29,16 +36,6 @@ DNA sequences.}
 \item{inf.sites}{use infinite sites model? If \code{TRUE}, all mutations are 
 retained in the output, thus the number of sites for SNPs or DNA sequences 
 will potentially be greater than what was requested.}
-
-\item{sfs.type}{type of site frequency spectrum to compute for each 
-population sample: `daf` = derived allele frequency (unfolded), 
-`maf` = minor allele frequency (folded).}
-
-\item{jobs}{output one simulated or bootstrapped SFS per file in a 
-separate directory?}
-
-\item{nonpar.boot}{number of bootstraps to perform on polymorphic sites to
-extract SFS.}
 
 \item{no.arl.output}{do not output arlequin files.}
 
@@ -60,18 +57,18 @@ computation time. Default = 0.01. Value is restricted between
 
 \item{seed}{random number seed for simulation.}
 
+\item{quiet}{logical indicating if fastsimcoal2 should be run in quiet mode.}
+
 \item{exec}{name of fastsimcoal executable.}
 
 \item{label}{character string of file run labels prefixes.}
-
-\item{save.ext}{a character vector of extensions to save for `fscCleanup()`. 
-Set to an empty string to delete all files associated with `label`.}
 }
 \value{
 \describe{
  \item{fscRun}{Runs the \code{fastsimcoal2} simulation and returns a
    list containing run parameters and a data frame used by 
-   \code{\link{fscRead}} to parse the genotypes generated (if requested).}
+   \code{\link{fscRead}} to parse the genotypes generated (if 
+   Arlequin-formatted output was requested).}
  \item{fscCleanup}{Deletes all files associated with the simulation 
    identified by \code{label}.}
  }
@@ -81,10 +78,44 @@ Run a fastsimcoal simulation and load results into a
   \linkS4class{gtypes} object.
 }
 \note{
-fastsimcoal is not included with `strataG` and must be downloaded 
-  separately. Additionally, it must be installed such that it can be run from 
-  the command line in the current working directory. See the vignette 
-  for \code{external.programs} for installation instructions.
+\code{fastsimcoal2} is not included with `strataG` and must be
+  downloaded separately. Additionally, it must be installed such that it can
+  be run from the command line in the current working directory. See the
+  \code{"fastsimcoal2"} vignette for more details on installation and the
+  interface.
+}
+\examples{
+\dontrun{
+#' # three demes with optional names
+demes <- fscSettingsDemes(
+  Large = fscDeme(10000, 10), 
+  Small = fscDeme(2500, 10),
+  Medium = fscDeme(5000, 3, 1500)
+)
+
+# four historic events
+events <- fscSettingsEvents(
+  fscEvent(event.time = 2000, source = 1, sink = 2, prop.migrants = 0.05),
+  fscEvent(2980, 1, 1, 0, 0.04),
+  fscEvent(3000, 1, 0),
+  fscEvent(15000, 0, 2, new.size = 3)
+ )
+ 
+# four genetic blocks of different types on three chromosomes.  
+genetics <- fscSettingsGenetics(
+  fscBlock_snp(10, 1e-6, chromosome = 1),
+  fscBlock_dna(10, 1e-5, chromosome = 1),
+  fscBlock_microsat(3, 1e-4, chromosome = 2),
+  fscBlock_standard(5, 1e-3, chromosome = 3)
+)
+
+params <- fscWrite(demes = demes, events = events, genetics = genetics)
+
+# runs 100 replicates, converting all DNA sequences to 0/1 SNPs
+# will also output the MAF site frequency spectra (SFS) for all SNP loci.
+params <- fscRun(params, num.sim = 100, dna.to.snp = TRUE, num.cores = 3)
+}
+
 }
 \references{
 Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time 

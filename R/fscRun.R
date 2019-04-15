@@ -15,8 +15,6 @@
 #' @param sfs.type type of site frequency spectrum to compute for each 
 #'   population sample: `daf` = derived allele frequency (unfolded), 
 #'   `maf` = minor allele frequency (folded).
-#' @param jobs output one simulated or bootstrapped SFS per file in a 
-#'   separate directory?
 #' @param nonpar.boot number of bootstraps to perform on polymorphic sites to
 #'   extract SFS.
 #' @param no.arl.output do not output arlequin files.
@@ -32,24 +30,25 @@
 #' @param trees output NEXUS formatted coalescent trees for all replicates?
 #' @param num.cores number of cores to use.
 #' @param seed random number seed for simulation.
+#' @param quiet logical indicating if fastsimcoal2 should be run in quiet mode.
 #' @param exec name of fastsimcoal executable.
 #' @param label character string of file run labels prefixes.
-#' @param save.ext a character vector of extensions to save for `fscCleanup()`. 
-#'   Set to an empty string to delete all files associated with `label`.
 #' 
 #' @return 
 #' \describe{
 #'  \item{fscRun}{Runs the \code{fastsimcoal2} simulation and returns a
 #'    list containing run parameters and a data frame used by 
-#'    \code{\link{fscRead}} to parse the genotypes generated (if requested).}
+#'    \code{\link{fscRead}} to parse the genotypes generated (if 
+#'    Arlequin-formatted output was requested).}
 #'  \item{fscCleanup}{Deletes all files associated with the simulation 
 #'    identified by \code{label}.}
 #'  }
 #' 
-#' @note fastsimcoal is not included with `strataG` and must be downloaded 
-#'   separately. Additionally, it must be installed such that it can be run from 
-#'   the command line in the current working directory. See the vignette 
-#'   for \code{external.programs} for installation instructions.
+#' @note \code{fastsimcoal2} is not included with `strataG` and must be
+#'   downloaded separately. Additionally, it must be installed such that it can
+#'   be run from the command line in the current working directory. See the
+#'   \code{"fastsimcoal2"} vignette for more details on installation and the
+#'   interface.
 #' 
 #' @references Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time 
 #'   coalescent simulator of genomic diversity under arbitrarily complex 
@@ -63,32 +62,66 @@
 #' 
 #' @seealso \code{\link{fsc.input}}, \code{\link{fscWrite}}, 
 #'  \code{\link{fscRead}}
+#'  
+#' @examples \dontrun{
+#' #' # three demes with optional names
+#' demes <- fscSettingsDemes(
+#'   Large = fscDeme(10000, 10), 
+#'   Small = fscDeme(2500, 10),
+#'   Medium = fscDeme(5000, 3, 1500)
+#' )
+#' 
+#' # four historic events
+#' events <- fscSettingsEvents(
+#'   fscEvent(event.time = 2000, source = 1, sink = 2, prop.migrants = 0.05),
+#'   fscEvent(2980, 1, 1, 0, 0.04),
+#'   fscEvent(3000, 1, 0),
+#'   fscEvent(15000, 0, 2, new.size = 3)
+#'  )
+#'  
+#' # four genetic blocks of different types on three chromosomes.  
+#' genetics <- fscSettingsGenetics(
+#'   fscBlock_snp(10, 1e-6, chromosome = 1),
+#'   fscBlock_dna(10, 1e-5, chromosome = 1),
+#'   fscBlock_microsat(3, 1e-4, chromosome = 2),
+#'   fscBlock_standard(5, 1e-3, chromosome = 3)
+#' )
+#' 
+#' params <- fscWrite(demes = demes, events = events, genetics = genetics)
+#' 
+#' # runs 100 replicates, converting all DNA sequences to 0/1 SNPs
+#' # will also output the MAF site frequency spectra (SFS) for all SNP loci.
+#' params <- fscRun(params, num.sim = 100, dna.to.snp = TRUE, num.cores = 3)
+#' }
 #' 
 #' @name fscRun
 #' @export
 #' 
-fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL, 
+fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = 0, 
+                   sfs.type = c("maf", "daf"), nonpar.boot = NULL, 
                    all.sites = TRUE, inf.sites = FALSE, 
-                   sfs.type = c("maf", "daf"), jobs = FALSE, nonpar.boot = NULL, 
                    no.arl.output = FALSE, num.loops = 20, 
-                   min.num.loops = 20, brentol = NULL, trees = FALSE,
-                   num.cores = NULL, seed = NULL, exec = "fsc26") {
+                   min.num.loops = 20, brentol = 0.01, trees = FALSE,
+                   num.cores = NULL, seed = NULL, quiet = TRUE, 
+                   exec = "fsc26") {
   
   run.params <- as.list(environment())
   run.params$p <- NULL
   
-  if(file.exists(p$label)) unlink(p$label, recursive = TRUE, force = TRUE) 
-  dir.create(p$label) # create folder so log can be written
-  p$files$log.file <- file.path(p$label, paste0(p$label, ".log"))
+  is.tpl <- !is.null(p$sim.params)
+  is.est <- is.tpl & !is.null(p$files$est)
+  is.def <- is.tpl & !is.null(p$files$def)
+  
+  if(!any(p$settings$genetics$fsc.type == "DNA") & dna.to.snp) {
+    warning(
+      "'dna.to.snp' set to 'FALSE' because 'fscBlock_dna()' or 'fscBlock_snp()' not used.",
+      call. = FALSE
+    )
+    dna.to.snp <- FALSE
+  }
   
   opt <- options(scipen = 999)
   
-  if(!is.null(max.snps) | jobs) dna.to.snp <- TRUE
-  if(!is.null(brentol)) {
-    if(brentol < 1e-5) brentol <- 1e-5
-    if(brentol > 1e-1) brentol <- 1e-1
-  }
-    
   cores.spec <- if(!is.null(num.cores)) {
     num.cores <- max(1, num.cores)
     num.cores <- min(num.cores, min(parallel::detectCores(), 12))
@@ -97,52 +130,54 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
     }
   } else ""
 
-  # set up argument vector
-  args <- c(
-    ifelse(p$is.tpl, "--tplfile", "--ifile"), p$files$in.file,
-    "--numsims", num.sims
-  )
-  if(p$is.tpl) args <- c(args, "-e", p$files$est.file)
-  if(!is.null(seed)) args <- c(args, "--seed ", seed)
-  if(trees) args <- c(args, "--tree")
-  if(dna.to.snp | p$is.tpl) {
-    args <- c(args, "--dnatosnp", ifelse(is.null(max.snps), 0, max.snps))
-    args <- c(args, switch(match.arg(sfs.type), maf = "--msfs", daf = "--dsfs"))
+  args <- c(ifelse(is.tpl, "--tplfile", "--ifile"), p$files$input)
+  args <- c(args, "--numsims", num.sims)
+  if(is.def) {
+    args <- c(args, "-f", p$files$def)
+  } else if(is.est) {
+    args <- c(args, "-e", p$files$est)
   }
-  if(jobs) args <- c(args, "--jobs")
-  if(!is.null(nonpar.boot)) c(args, "--nonparboot", nonpar.boot)
+  if(!is.null(seed)) args <- c(args, "--seed", seed)
+  if(trees) args <- c(args, "--tree")
+  if(dna.to.snp | is.est) {
+    args <- c(args, "--dnatosnp", max.snps)
+    if(!is.def) {
+      args <- c(args, switch(match.arg(sfs.type), maf = "--msfs", daf = "--dsfs"))
+      args <- c(args, "--jobs")
+      if(!is.null(nonpar.boot)) c(args, "--nonparboot", nonpar.boot)
+    }
+  }
   if(all.sites) args <- c(args, "--allsites")
   if(inf.sites) args <- c(args, "--inf")
   if(no.arl.output) args <- c(args, "--noarloutput")
-  if(p$is.tpl) {
+  if(is.est) { 
+    if(brentol < 1e-5) brentol <- 1e-5
+    if(brentol > 1e-1) brentol <- 1e-1
     args <- c(args, "--maxlhood")
     args <- c(args, "--numloops", num.loops)
     args <- c(args, "--minnumloops", min.num.loops)
-    args <- c(args, ifelse(!is.null(brentol), "--brentol", ""))
+    args <- c(args, "--brentol", brentol)
   }
   args <- c(args, cores.spec)
+  if(quiet) args <- c(args, "--quiet")
+  
   p$run.params <- run.params
   p$run.params$args <- paste(args, collapse = " ")
+  p$files$log <- paste0(p$label, ".log")
   
-  cat(format(Sys.time()), "running fastsimcoal...\n")
-  err <- system2(exec, p$run.params$args, stdout = p$files$log.file)
-  # err <- if(.Platform$OS.type == "unix") {
-  #   system2(exec, args, stdout = p$log.file)
-  # } else {
-  #   shell(paste(exec, args), intern = F)
-  # }
+  unlink(p$label, recursive = TRUE, force = TRUE)
+  cat(format(Sys.time()), "running fastsimcoal2...\n")
+  err <- system2(exec, p$run.params$args, stdout = p$files$log)
   if(err != 0) {
     stop(
-      format(Sys.time()), 
-      "fastsimcoal exited with error ", err, "\n",
-      "The command was:\n",
-      exec, p$args
+      format(Sys.time()), " fastsimcoal exited with error ", err, "\n",
+      "The command was:\n", exec, " ", p$run.params$args
     )
   }
   
   # get .arp filenames and map loci
-  arp.files <- NULL
-  if(!no.arl.output & !p$is.tpl) {
+  if(!no.arl.output & is.null(p$files$est)) {
+    arp.files <- NULL
     while(is.null(arp.files)) {  
       Sys.sleep(1)
       arp.files <- dir(p$label, pattern = ".arp$", full.names = TRUE)
@@ -151,11 +186,6 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
         arp.files <- NULL
       }
     }
-    arp.files <- arp.files[order(nchar(arp.files), arp.files)]
-    p$files$arp.files <- stats::setNames(
-      arp.files, paste0("rep", 1:length(arp.files))
-    )
-    cat(format(Sys.time()), "creating locus map for .arp files...\n")
     p <- .fscMapArpLocusInfo(p)
   }
 
@@ -169,18 +199,13 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
 #' 
 .fscMapArpLocusInfo <- function(p) {
   # expand genetic info in input parameters to matrix
-  locus.info <- do.call(rbind, p$settings$genetics)
+  locus.info <- p$settings$genetics
   if(!attr(p$settings$genetics, "chrom.diff")) {
-    num.blocks <- nrow(locus.info)
     num.chrom <- attr(p$settings$genetics, "num.chrom")
-    locus.info <- replicate(num.chrom, locus.info, simplify = FALSE)
-    locus.info <- do.call(rbind, locus.info)
-    locus.info <- cbind(
-      chromosome = rep(1:num.chrom, each = num.blocks),
-      locus.info
-    )
-  } else colnames(locus.info)[1] <- "chromosome"
-    
+    num.blocks <- 1:nrow(locus.info)
+    locus.info <- locus.info[rep(1:nrow(locus.info), num.chrom), ]
+    locus.info$chromosome <- rep(1:num.chrom, each = num.blocks)
+  }
 
   # associate rows in locus info to columns in .arp file (if all.sites = TRUE)
   prev.type <- dplyr::lag(locus.info$fsc.type)
@@ -277,25 +302,18 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = NULL,
 #' @rdname fscRun
 #' @export
 #' 
-fscCleanup <- function(label, save.ext = c("est", "obs")) {
+fscCleanup <- function(label) {
   # remove label folder
   unlink(label, recursive = TRUE, force = TRUE)
-  
-  files <- c(dir(pattern = paste0("^", label)), "seed.txt")
+  if(file.exists("seed.txt")) file.remove("seed.txt")
+  files <- dir(pattern = paste0("^", label))
   if(length(files) != 0) {
     # don't remove R script files
-    r.files <- grep(".r$", files, ignore.case = TRUE, value = TRUE)
+    r.files <- grep("\\.[rR]$", files, value = TRUE)
     files <- setdiff(files, r.files)
-    # leave extensions that are to be saved
-    if(is.null(save.ext)) save.ext = ""
-    if(length(save.ext) != 0) { 
-      pattern <- paste(".", save.ext, "$", collapse = "|")
-      to.save <- grep(pattern, files, ignore.case = TRUE, value = TRUE)
-      files <- setdiff(files, to.save)
-    } 
     # remove only files, not other directories that start with label
     files <- files[utils::file_test("-f", files)]
     file.remove(files)
-    invisible(files)
-  } else invisible(NULL)
+  }
+  invisible(NULL)
 }
