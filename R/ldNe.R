@@ -158,23 +158,30 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95,
     # calculate r-squared among pairs of loci
     # use matrix algebra if no missing data
     loc.missing <- which(apply(mat.st, 2, function(x) any(is.na(x))))
-    rsq.list <- if(length(loc.missing) > 0 & !drop.missing) {
-      rsq <- .calcRsqMissing(mat.st)
-      list(rsq = rsq["rsq", ], S = rsq["S", ], N = ncol(rsq))
-    } else {
-      if(ncol(mat.st) - length(loc.missing) < 2) {
-        warning(
-          "Can't compute ldNe in", paste0("'", unique(st[i]), "'."),
-          "because fewer than 2 loci are missing genotypes",
-          "and `drop.missing = FALSE`. NULL returned.", call. = FALSE
-        )
-        return(NULL)
-      } else if(length(loc.missing) > 0) {
-        mat.st <- mat.st[, -loc.missing, drop = FALSE]
-      }
+    rsq.list <-  if(length(loc.missing) == 0) {
       rsq <- .calcRsq(mat.st)
       N <- (ncol(mat.st) * (ncol(mat.st) - 1)) / 2
       list(rsq = rsq, S = nrow(mat.st), N = N)
+    } else if(drop.missing) {
+      mat.st <- mat.st[, -loc.missing, drop = FALSE]
+      if(ncol(mat.st) >= 2) {
+        rsq <- .calcRsqMissing(mat.st)
+        list(rsq = rsq["rsq", ], S = rsq["S", ], N = ncol(rsq))
+      } else {
+        warning(
+          "Can't compute ldNe in '", unique(st[i]), "' ",
+          "because fewer than 2 loci are missing genotypes. NULL returned.", 
+          call. = FALSE
+        )
+        return(NULL)
+      }
+    } else {
+      warning(
+        "Can't compute ldNe in '", unique(st[i]), "' ",
+        "because loci are missing genotypes and 'drop.missing = FALSE'. ",
+        "NULL returned.", call. = FALSE
+      )
+      return(NULL)
     }
     
     S <- rsq.list$S
