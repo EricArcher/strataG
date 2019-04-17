@@ -202,7 +202,7 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = 0,
   locus.info <- p$settings$genetics
   if(!attr(p$settings$genetics, "chrom.diff")) {
     num.chrom <- attr(p$settings$genetics, "num.chrom")
-    num.blocks <- 1:nrow(locus.info)
+    num.blocks <- nrow(locus.info)
     locus.info <- locus.info[rep(1:nrow(locus.info), num.chrom), ]
     locus.info$chromosome <- rep(1:num.chrom, each = num.blocks)
   }
