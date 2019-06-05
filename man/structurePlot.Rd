@@ -6,7 +6,8 @@
 \usage{
 structurePlot(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
   label.pops = TRUE, col = NULL, horiz = TRUE, type = NULL,
-  legend.position = c("top", "left", "right", "bottom", "none"))
+  legend.position = c("top", "left", "right", "bottom", "none"),
+  plot = TRUE)
 }
 \arguments{
 \item{q.mat}{matrix or data.frame of assignment probabilities.}
@@ -34,6 +35,8 @@ there are <= 100 samples.}
 
 \item{legend.position}{the position of the legend (\code{"top", "left", 
 "right", "bottom"}, or two-element numeric vector).}
+
+\item{plot}{display plot?}
 }
 \value{
 invisibly, the ggplot object

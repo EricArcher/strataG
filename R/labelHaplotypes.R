@@ -98,9 +98,12 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
     return(NULL)
   }
   
-  # find sequences without Ns
-  has.ns <- apply(as.character(x), 1, function(bases) "n" %in% tolower(bases))
-  if(sum(!has.ns) <= 1) {
+  # find sequences without ambiguities  
+  good.bases <- c("a", "c", "g", "t", "-")
+  has.amb <- apply(as.character(x), 1, function(bases) {
+    !all(tolower(bases) %in% good.bases)
+  })
+  if(sum(!has.amb) <= 1) {
     warning(
       "There are fewer than two sequences without ambiguities (N's). Can't assign haplotypes. NULL returned.",
       call. = FALSE, 
@@ -110,10 +113,10 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
   }
   
   # get pairwise distances and set all non-0 distances to 1
-  x.no.ns <- x[!has.ns, , drop = FALSE]
-  hap.dist <- ape::dist.dna(x.no.ns, model = "N", pairwise.deletion = TRUE)
+  x.no.amb <- x[!has.amb, , drop = FALSE]
+  hap.dist <- ape::dist.dna(x.no.amb, model = "N", pairwise.deletion = TRUE)
   if(use.indels) {
-    hap.dist <- hap.dist + ape::dist.dna(x.no.ns, model = "indelblock")
+    hap.dist <- hap.dist + ape::dist.dna(x.no.amb, model = "indelblock")
   }
   hap.dist <- as.matrix(hap.dist)
   hap.dist[hap.dist > 0] <- 1
@@ -149,18 +152,18 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
     as.character()
   
   # get distance of all sequences with n's to other sequences (possible matching sequences)
-  x.has.ns <- as.character(x)[has.ns, , drop = FALSE]
-  unk.dist <- sapply(rownames(x.has.ns), function(i) {
-    # get sites with n's in this sequence
-    n.sites <- which(tolower(x.has.ns[i, ]) == "n")
-    if(length(n.sites) == 0) return(NULL)
-    # create matrix of sites that n's are at and remove sequences with n's
-    possible.sites <- unique(hap.seqs[, n.sites, drop = FALSE])
+  x.has.amb <- as.character(x)[has.amb, , drop = FALSE]
+  unk.dist <- sapply(rownames(x.has.amb), function(i) {
+    # get ambiguity sites in this sequence
+    amb.sites <- which(!tolower(x.has.amb[i, ]) %in% good.bases)
+    if(length(amb.sites) == 0) return(NULL)
+    # create matrix of ambiguity sites and remove sequences with ambiguities
+    possible.sites <- unique(hap.seqs[, amb.sites, drop = FALSE])
     # create sequences to test
     if(nrow(possible.sites) == 0) return(NULL)
     test.seqs <- do.call(rbind, lapply(1:nrow(possible.sites), function(j) {
-      seq.j <- x.has.ns[i, ]
-      seq.j[n.sites] <- possible.sites[j, ]
+      seq.j <- x.has.amb[i, ]
+      seq.j[amb.sites] <- possible.sites[j, ]
       seq.j
     }))
     test.names <- paste("test.seq.", 1:nrow(test.seqs), sep = "")
@@ -182,6 +185,7 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
     hap.dist[test.names, !colnames(hap.dist) %in% test.names, drop = FALSE]
   }, simplify = FALSE, USE.NAMES = TRUE)
   
+  min.dist <- NULL
   hap.assign <- if(length(unk.dist) > 0) {
     # get minimum distance of unknowns to other sequences
     min.dist <- do.call(rbind, sapply(

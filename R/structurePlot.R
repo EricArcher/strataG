@@ -19,6 +19,7 @@
 #'   there are <= 100 samples.
 #' @param legend.position the position of the legend (\code{"top", "left", 
 #'   "right", "bottom"}, or two-element numeric vector).
+#' @param plot display plot?
 #' 
 #' @return invisibly, the ggplot object
 #' 
@@ -37,7 +38,8 @@ structurePlot <- function(
   col = NULL, 
   horiz = TRUE, 
   type = NULL,
-  legend.position = c("top", "left", "right", "bottom", "none")
+  legend.position = c("top", "left", "right", "bottom", "none"),
+  plot = TRUE
 ) {
   
   legend.position <- match.arg(legend.position)
@@ -91,10 +93,13 @@ structurePlot <- function(
       )
     ) +
     ggplot2::ylab("Pr(Group Membership)") +
+    ggplot2::scale_y_continuous(expand = c(0, 0)) +
     ggplot2::theme(
       axis.ticks.x = ggplot2::element_blank(),
       legend.position = legend.position,
-      legend.title = ggplot2::element_blank()
+      legend.title = ggplot2::element_blank(),
+      panel.grid = ggplot2::element_blank(),
+      panel.background = ggplot2::element_blank()
     )
   if(label.pops) {
     g <- g + 
@@ -102,16 +107,18 @@ structurePlot <- function(
       ggplot2::scale_x_continuous(
         name = "", 
         breaks = pop.cntr, 
-        labels = names(pop.cntr)
+        labels = names(pop.cntr),
+        expand = c(0, 0)
       )
   } else {
     g <- g + 
       ggplot2::xlab("") + 
+      ggplot2::scale_x_continuous(expand = c(0, 0)) +
       ggplot2::theme(axis.text.x = ggplot2::element_blank())
   }
   if(horiz) g <- g + ggplot2::coord_flip()
   if(!is.null(col)) g <- g + ggplot2::scale_fill_manual(values = col)
   
-  print(g)
+  if(plot) print(g)
   invisible(g)
 }
