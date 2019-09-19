@@ -13,6 +13,6 @@ landscape2gtypes <- function(Rland) {
   gen.data <- Rland$individuals[, -(1:rmetasim::landscape.democol())]
   loc.names <- paste0("Locus", 1:length(pl))
   colnames(gen.data) <- paste(rep(loc.names, each = pl[1]), 1:pl[1], sep = ".")
-  gen.data <- cbind(id = Rland$individuals[, 4], strata = strata, gen.data)
-  df2gtypes(gen.data, ploidy = pl[1])
+  cbind(id = Rland$individuals[, 4], strata = strata, gen.data) %>% 
+    df2gtypes(ploidy = pl[1])
 }

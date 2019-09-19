@@ -181,7 +181,7 @@ fscReadArp <- function(p, sim = c(1, 1),
   end <- which(f == "}") - 2
   pos <- cbind(start, end)
   
-  data.mat <- if(any((end - start) > 1)) {
+  data.mat <- if(any((end - start) > 0)) {
     # extract matrix for each data block
     data.mat <- do.call(rbind, lapply(1:nrow(pos), function(i, pos) {
       f.line <- f[pos[i, 1]:pos[i, 2]]
@@ -190,7 +190,7 @@ fscReadArp <- function(p, sim = c(1, 1),
     }, pos = pos))
     colnames(data.mat) <- c("id", "deme", paste0("col", 3:ncol(data.mat)))
     data.mat
-  } else  NULL
+  } else NULL
   
   attr(data.mat, "poly.pos") <- poly.pos
   data.mat

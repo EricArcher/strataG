@@ -319,7 +319,10 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
   
   opt <- options(scipen = 10)
   
-  p$files$input <- paste0(p$label, ifelse(!is.null(p$sim.params), ".tpl", ".par"))
+  p$files$input <- paste0(
+    p$label, 
+    ifelse(!is.null(p$sim.params), ".tpl", ".par")
+  )
   f <- file(p$files$input, open = "wt")
   writeLines("//Number of population samples (demes)", f)
   writeLines(as.character(n.demes), f)
@@ -450,7 +453,9 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
       col.d <- unique(gsub("d", "", col.d))
       if(length(row.d) > 1) stop("More than one deme specified in rows.")
       if(length(col.d) > 1) stop("More than one deme specified in columns.")
-      fname <- paste0(p$label, "_joint", sfs.type, "pop", row.d, "_", col.d, ".obs")
+      fname <- paste0(
+        p$label, "_joint", sfs.type, "pop", row.d, "_", col.d, ".obs"
+      )
       .writeMat(x, fname)
       fname
     })

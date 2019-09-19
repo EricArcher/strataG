@@ -114,7 +114,8 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = 0,
   
   if(!any(p$settings$genetics$fsc.type == "DNA") & dna.to.snp) {
     warning(
-      "'dna.to.snp' set to 'FALSE' because 'fscBlock_dna()' or 'fscBlock_snp()' not used.",
+      "'dna.to.snp' set to 'FALSE' because 'fscBlock_dna()' or ",
+      "'fscBlock_snp()' not used.",
       call. = FALSE
     )
     dna.to.snp <- FALSE
@@ -142,7 +143,9 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = 0,
   if(dna.to.snp | is.est) {
     args <- c(args, "--dnatosnp", max.snps)
     if(!is.def) {
-      args <- c(args, switch(match.arg(sfs.type), maf = "--msfs", daf = "--dsfs"))
+      args <- c(
+        args, switch(match.arg(sfs.type), maf = "--msfs", daf = "--dsfs")
+      )
       args <- c(args, "--jobs")
       if(!is.null(nonpar.boot)) c(args, "--nonparboot", nonpar.boot)
     }
@@ -268,30 +271,33 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = 0,
     max.block <- max(p$locus.info$block)
     p$locus.info <- do.call(
       rbind, 
-      lapply(split(p$locus.info, p$locus.info$mat.col.start), function(data.col) {
-        if(unique(data.col$fsc.type) != "DNA") return(data.col)
-        data.col %>% 
-          dplyr::slice(1) %>% 
-          dplyr::mutate(
-            name = paste0(
-              "C", .zeroPad(min(data.col$chromosome), max.chrom), 
-              "B", .zeroPad(min(data.col$block), max.block),
-              "C", .zeroPad(max(data.col$chromosome), max.chrom),
-              "B", .zeroPad(max(data.col$block), max.block), "_",
-              .data$actual.type, collapse = ""
-            ),
-            chromosome = NA,
-            block = NA,
-            num.markers = sum(data.col$num.markers),
-            recomb.rate = mean(data.col$recomb.rate),
-            mut.rate = mean(data.col$mut.rate),
-            param.5 = mean(data.col$param.5),
-            chrom.pos.start = NA,
-            chrom.pos.end = NA,
-            dna.start = NA,
-            dna.end = NA
-          )
-      })
+      lapply(
+        split(p$locus.info, p$locus.info$mat.col.start), 
+        function(data.col) {
+          if(unique(data.col$fsc.type) != "DNA") return(data.col)
+          data.col %>% 
+            dplyr::slice(1) %>% 
+            dplyr::mutate(
+              name = paste0(
+                "C", .zeroPad(min(data.col$chromosome), max.chrom), 
+                "B", .zeroPad(min(data.col$block), max.block),
+                "C", .zeroPad(max(data.col$chromosome), max.chrom),
+                "B", .zeroPad(max(data.col$block), max.block), "_",
+                .data$actual.type, collapse = ""
+              ),
+              chromosome = NA,
+              block = NA,
+              num.markers = sum(data.col$num.markers),
+              recomb.rate = mean(data.col$recomb.rate),
+              mut.rate = mean(data.col$mut.rate),
+              param.5 = mean(data.col$param.5),
+              chrom.pos.start = NA,
+              chrom.pos.end = NA,
+              dna.start = NA,
+              dna.end = NA
+            )
+        }
+      )
     )
   }
   
