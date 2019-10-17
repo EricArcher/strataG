@@ -39,7 +39,7 @@ baseFreqs <- function(
   } else {
     tolower(as.character(bases))
   }
-  ignore <- tolower(ignore)
+  ignore <- setdiff(tolower(ignore), bases)
   
   result <- apex::getSequences(as.multidna(x), simplify = FALSE) %>% 
     purrr::map(function(dna) {

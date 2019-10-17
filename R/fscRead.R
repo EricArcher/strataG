@@ -105,7 +105,7 @@ fscReadArp <- function(p, sim = c(1, 1),
                        chrom = NULL, sep.chrom = FALSE, drop.mono = FALSE, 
                        as.genotypes = TRUE, one.col = FALSE, sep = "/", 
                        coded.snps = FALSE) {
-  if(length(sim) == 1) sim <- c(sim, 1)
+  if(length(sim) == 1) sim <- c(1, sim)
   if(length(sim) != 2) stop("'sim' must be a two-element numeric vector.")
   arp <- file.path(p$label, paste0(p$label, "_", sim[1], "_", sim[2], ".arp"))
   if(!file.exists(arp)) stop("Can't find .arp file, '", arp, "'.")
@@ -192,7 +192,7 @@ fscReadArp <- function(p, sim = c(1, 1),
     data.mat
   } else NULL
   
-  attr(data.mat, "poly.pos") <- poly.pos
+  if(!is.null(data.mat)) attr(data.mat, "poly.pos") <- poly.pos
   data.mat
 }
 
