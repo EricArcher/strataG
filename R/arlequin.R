@@ -39,7 +39,7 @@ read.arlequin <- function(file) {
   title <- gsub("[[:punct:]]+", "", getValues("Title", arp))
   data.type <- gsub("[[:punct:]]+", "", getValues("DataType", arp))
   
-  if(!toupper(data.type) %in% c("FREQUNENCY", "DNA", "MICROSAT")) {
+  if(!toupper(data.type) %in% c("FREQUENCY", "DNA", "MICROSAT")) {
     stop("DataType must be of FREQUENCY, DNA, or MICROSAT")
   }
   

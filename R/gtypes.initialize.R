@@ -204,8 +204,7 @@ setMethod(
     )
   gen.data$locus <- locus.names.lookup[as.character(gen.data$locus)]
   
-  
-  data.table::setDT(gen.data)
+  data.table::setDT(gen.data, key = c("id", "stratum", "locus"))
   
   # create and return gtypes object
   g <- .Object
