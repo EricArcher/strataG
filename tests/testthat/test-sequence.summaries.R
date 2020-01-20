@@ -44,7 +44,7 @@ test_that("variable sites are computed correctly", {
   
   vs <- variableSites(dloop.g)
   
-  expect_equal(ncol(vs$site.freqs), 41)
+  expect_equal(ncol(vs$site.freqs), 43)
   expect_true("20" %in% colnames(vs$site.freqs))
   expect_equal(vs$site.freqs["a", "20"], 2)
   expect_equal(vs$site.freqs["g", "20"], 31)

@@ -4,10 +4,18 @@
 \alias{structurePlot}
 \title{Plot STRUCTURE Results}
 \usage{
-structurePlot(q.mat, pop.col = 3, prob.col = 4, sort.probs = TRUE,
-  label.pops = TRUE, col = NULL, horiz = TRUE, type = NULL,
+structurePlot(
+  q.mat,
+  pop.col = 3,
+  prob.col = 4,
+  sort.probs = TRUE,
+  label.pops = TRUE,
+  col = NULL,
+  horiz = TRUE,
+  type = NULL,
   legend.position = c("top", "left", "right", "bottom", "none"),
-  plot = TRUE)
+  plot = TRUE
+)
 }
 \arguments{
 \item{q.mat}{matrix or data.frame of assignment probabilities.}

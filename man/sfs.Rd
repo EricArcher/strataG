@@ -4,8 +4,14 @@
 \alias{sfs}
 \title{Site Frequency Spectrum}
 \usage{
-sfs(x, strata.col = 2, locus.col = 3, fsc.dimnames = TRUE,
-  sort.strata = TRUE, na.action = c("fail", "filter"))
+sfs(
+  x,
+  strata.col = 2,
+  locus.col = 3,
+  fsc.dimnames = TRUE,
+  sort.strata = TRUE,
+  na.action = c("fail", "filter")
+)
 }
 \arguments{
 \item{x}{a data frame of SNP genotypes where the first two columns are id and

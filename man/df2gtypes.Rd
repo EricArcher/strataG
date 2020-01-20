@@ -4,9 +4,17 @@
 \alias{df2gtypes}
 \title{Convert a data.frame to gtypes}
 \usage{
-df2gtypes(x, ploidy, id.col = 1, strata.col = 2, loc.col = 3,
-  sequences = NULL, schemes = NULL, description = NULL,
-  other = NULL)
+df2gtypes(
+  x,
+  ploidy,
+  id.col = 1,
+  strata.col = 2,
+  loc.col = 3,
+  sequences = NULL,
+  schemes = NULL,
+  description = NULL,
+  other = NULL
+)
 }
 \arguments{
 \item{x}{a matrix or data.frame of genetic data.}

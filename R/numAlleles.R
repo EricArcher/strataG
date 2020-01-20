@@ -17,8 +17,6 @@
 #' 
 numAlleles <- function(g, by.strata = FALSE) {
   g <- .checkHapsLabelled(g)
-  .countAlleles <- function(x) dplyr::n_distinct(x, na.rm = TRUE)
-  .applyPerLocus(.countAlleles, g, by.strata = by.strata) %>%
-    dplyr::rename(num.alleles = .data$value) %>% 
-    as.data.frame()
+  cols <- if(by.strata) c("locus", "stratum") else "locus"
+  as.data.frame(g@data[, list(num.alleles = dplyr::n_distinct(allele, na.rm = TRUE)), by = cols])
 }

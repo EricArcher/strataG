@@ -7,8 +7,7 @@
 \alias{.alleleFreqFormat}
 \title{Hardy-Weinberg Equlibrium Jackknife}
 \usage{
-jackHWE(g, exclude.num = 1, min.hwe.samples = 5,
-  show.progress = TRUE, ...)
+jackHWE(g, exclude.num = 1, min.hwe.samples = 5, show.progress = TRUE, ...)
 
 jackInfluential(jack.result, alpha = 0.05)
 
@@ -31,15 +30,11 @@ jackInfluential(jack.result, alpha = 0.05)
 
 \item{alpha}{critical value to determine if exclusion is "influential".}
 
-\item{x}{result from a call to \code{jackInfluential}.}
-
-\item{main}{main title for influential sample plots from 
-\code{plot.jack.influential}.}
-
 \item{x}{a matrix or data.frame where first column is sample id and 
 second colum is locus name.}
 
-\item{g}{a \linkS4class{gtypes} object.}
+\item{main}{main title for influential sample plots from 
+\code{plot.jack.influential}.}
 }
 \value{
 \code{jackHWE} returns a list with:

@@ -4,8 +4,14 @@
 \alias{sequence2gtypes}
 \title{Convert Sequences To \code{gtypes}}
 \usage{
-sequence2gtypes(x, strata = NULL, seq.names = NULL, schemes = NULL,
-  description = NULL, other = NULL)
+sequence2gtypes(
+  x,
+  strata = NULL,
+  seq.names = NULL,
+  schemes = NULL,
+  description = NULL,
+  other = NULL
+)
 }
 \arguments{
 \item{x}{DNA sequences as a character matrix, a \code{\link{DNAbin}} object, 

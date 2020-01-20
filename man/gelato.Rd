@@ -5,8 +5,7 @@
 \alias{gelatoPlot}
 \title{GELATo - Group ExcLusion and Assignment Test}
 \usage{
-gelato(g, unknown.strata, nrep = 1000, min.sample.size = 5,
-  num.cores = NULL)
+gelato(g, unknown.strata, nrep = 1000, min.sample.size = 5, num.cores = NULL)
 
 gelatoPlot(gelato.result, unknown = NULL, main = NULL)
 }

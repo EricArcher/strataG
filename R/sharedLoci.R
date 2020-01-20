@@ -8,8 +8,6 @@
 #' @param smry a character vector determining type of summary for 
 #'   \code{sharedAlleles}. "which" returns the names of the alleles shared. 
 #'   "num" returns the number of alleles shared.
-#' @param num.cores number of CPU cores to use. Defaults to the number reported 
-#'  by \code{\link[parallel]{detectCores}} - 1.
 #' 
 #' @return data.frame summary of pairwise shared loci.
 #'   
@@ -32,72 +30,62 @@ NULL
 #' @rdname sharedLoci
 #' @export
 #' 
-propSharedLoci <- function(g, type = c("strata", "ids"), num.cores = NULL) {
+propSharedLoci <- function(g, type = c("strata", "ids")) {
   g <- .checkHapsLabelled(g)
   
   type <- match.arg(type)
-  if(type == "strata" & getNumStrata(g) == 1) {
-    stop("'type' cannot be 'strata' if only one stratum is present.")
+  
+  .formatResult <- function(type.pairs, prop.shared) {
+    as.data.frame(type.pairs, stringsAsFactors = FALSE) %>% 
+      stats::setNames(paste(type, 1:2, sep = ".")) %>% 
+      dplyr::mutate(
+        num.loci.genotyped = rowSums(!is.na(prop.shared)),
+        num.loci.shared = rowSums(prop.shared == 1, na.rm = TRUE),
+        prop.loci.shared = .data$num.loci.shared / .data$num.loci.genotyped
+      ) %>% 
+      cbind(prop.shared) %>% 
+      as.data.frame()
   }
-  type.pairs <- if(type == "strata") {
-    as.matrix(.strataPairs(g))
+  
+  smry <- if(type == "ids") {
+    if(getNumInd(g) == 1) stop("'g' must have at least two individuals")
+    af <- table(g@data[, c("id", "locus", "allele")])
+    id.pairs <- t(utils::combn(dimnames(af)[[1]], 2))
+    
+    prop.shared <- t(sapply(1:nrow(id.pairs), function(i) {
+      x <- af[id.pairs[i, ], , ]
+      is.shared <- x[1, ,] > 0 & x[2, , ] > 0
+      prop <- (rowSums(is.shared * x[1, , ]) + rowSums(is.shared * x[2, , ]))
+      not.genotyped <- apply(apply(x, c(1, 2), sum), 2, function(z) any(z == 0))
+      prop[not.genotyped] <- NA
+      prop
+    })) / (2 * getPloidy(g))
+    
+    .formatResult(id.pairs, prop.shared)
   } else {
-    id.vec <- getIndNames(g)
-    if(length(id.vec) < 2) stop("'g' must have at least two individuals")
-    t(utils::combn(id.vec, 2))
+    if(getNumStrata(g) == 1) {
+      stop("'type' cannot be 'strata' if only one stratum is present.")
+    }
+    na <- numAlleles(g)
+    na <- stats::setNames(na$num.alleles, na$locus)
+    af <- table(g@data[, c("stratum", "locus", "allele")])
+    strata.freq <- .strataFreq(g)
+    strata.pairs <- t(combn(dimnames(af)[[1]], 2))
+    
+    prop.shared <- t(sapply(1:nrow(strata.pairs), function(i) {
+      is.shared <- af[strata.pairs[i, 1], ,] > 0 & af[strata.pairs[i, 2], , ] > 0
+      prop <- rowSums(is.shared) / na
+      not.genotyped <- apply(
+        apply(af[strata.pairs[i, ], , ], c(1, 2), sum), 
+        2, 
+        function(z) any(z == 0)
+      )
+      prop[not.genotyped] <- NA
+      prop
+    }))
+    
+    .formatResult(strata.pairs, prop.shared)
   }
-  
-  cl <- .setupClusters(num.cores)
-  
-  propFunc <- if(type == "strata") {
-    function(f, type.pair, ...) {
-      mean(apply(f[, type.pair], 1, function(x) all(x > 0)))
-    }
-  } else {
-    function(i, type.pairs, g) {
-      prop.shared <- .propSharedIds(type.pairs[i, ], g)
-      stats::setNames(prop.shared$prop.shared, prop.shared$locus)
-    }
-  }
-  
-  shared <- tryCatch({
-    pair.i <- 1:nrow(type.pairs)
-    if(type == "strata") { 
-      freqs <- alleleFreqs(g, by.strata = TRUE)
-      lapply(pair.i, function(i) {
-        prop.shared.loci <- if(!is.null(cl)) {
-          parallel::parLapply(cl, freqs, propFunc, type.pair = type.pairs[i, ])
-        } else {
-          lapply(freqs, propFunc, type.pair = type.pairs[i, ])
-        }
-        stats::setNames(unlist(prop.shared.loci), names(freqs))
-      })
-    } else {
-      cat("Comparing", nrow(type.pairs), "pairs of individuals...\n")
-      if(!is.null(cl)) {
-        parallel::parLapply(cl, pair.i, propFunc, type.pairs = type.pairs, g = g)
-      } else {
-        lapply(pair.i, propFunc, type.pairs = type.pairs, g = g)
-      }
-    }
-  }, finally = if(!is.null(cl)) parallel::stopCluster(cl))
-  shared <- do.call(rbind, shared)
-  
-  shared.summary <- do.call(rbind, lapply(1:nrow(shared), function(i) {  
-    num.same <- sum(stats::na.omit(shared[i, ]) == 1) 
-    num.not.missing <- sum(!is.na(shared[i, ]))
-    prop.same <- num.same / num.not.missing
-    c(
-      num.loci.shared = num.same, 
-      num.loci.genotyped = num.not.missing, 
-      prop.loci.shared = prop.same
-    )
-  }))
-  
-  smry <- type.pairs %>% 
-    as.data.frame(stringsAsFactors = FALSE) %>% 
-    stats::setNames(paste(type, 1:2, sep = ".")) %>% 
-    cbind(shared.summary, shared)
   
   unassigned <- getOther(g, "haps.unassigned")
   if(!is.null(unassigned)) attr(smry, "gtypes") <- g
@@ -140,30 +128,4 @@ sharedAlleles <- function(g, smry = c("num", "which")) {
   if(!is.null(unassigned)) attr(shared, "gtypes") <- g
   
   shared
-}
-
-
-#' @rdname sharedLoci
-#' @param ids character vector of two sample ids to compare.
-#' @param g a \code{gtypes} object
-#' @keywords internal
-#' 
-.propSharedIds <- function(ids, g) {
-  g@data %>% 
-    dplyr::group_by(.data$locus) %>% 
-    dplyr::do({
-      gt1 <- dplyr::filter(.data, .data$id == ids[1]) %>% 
-        dplyr::pull(.data$allele)
-      gt2 <- dplyr::filter(.data, .data$id == ids[2]) %>% 
-        dplyr::pull(.data$allele)
-      if(any(is.na(c(gt1, gt2)))) {
-        data.frame(prop.shared = NA)
-      } else {
-        data.frame(
-          prop.shared = sum(gt1 %in% gt2, gt2 %in% gt1) / (2 * getPloidy(g))
-        )
-      }
-    }) %>% 
-    dplyr::ungroup() %>% 
-    as.data.frame()
 }

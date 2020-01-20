@@ -5,8 +5,7 @@
 \alias{dA}
 \title{Nucleotide Divergence}
 \usage{
-nucleotideDivergence(g, probs = c(0, 0.025, 0.5, 0.975, 1),
-  model = "raw", ...)
+nucleotideDivergence(g, probs = c(0, 0.025, 0.5, 0.975, 1), model = "raw", ...)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}

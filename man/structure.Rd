@@ -7,14 +7,35 @@
 \alias{structureRead}
 \title{STRUCTURE}
 \usage{
-structureRun(g, k.range = NULL, num.k.rep = 1, label = NULL,
-  delete.files = TRUE, exec = "structure", ...)
+structureRun(
+  g,
+  k.range = NULL,
+  num.k.rep = 1,
+  label = NULL,
+  delete.files = TRUE,
+  exec = "structure",
+  ...
+)
 
-structureWrite(g, label = NULL, maxpops = getNumStrata(g),
-  burnin = 1000, numreps = 1000, noadmix = TRUE, freqscorr = FALSE,
-  randomize = TRUE, seed = 0, pop.prior = NULL, locpriorinit = 1,
-  maxlocprior = 20, gensback = 2, migrprior = 0.05,
-  pfrompopflagonly = TRUE, popflag = NULL, ...)
+structureWrite(
+  g,
+  label = NULL,
+  maxpops = getNumStrata(g),
+  burnin = 1000,
+  numreps = 1000,
+  noadmix = TRUE,
+  freqscorr = FALSE,
+  randomize = TRUE,
+  seed = 0,
+  pop.prior = NULL,
+  locpriorinit = 1,
+  maxlocprior = 20,
+  gensback = 2,
+  migrprior = 0.05,
+  pfrompopflagonly = TRUE,
+  popflag = NULL,
+  ...
+)
 
 structureRead(file, pops = NULL)
 }

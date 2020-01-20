@@ -4,8 +4,15 @@
 \alias{fscWrite}
 \title{Write fastsimcoal2 input files}
 \usage{
-fscWrite(demes, genetics, migration = NULL, events = NULL,
-  est = NULL, def = NULL, label = "strataG.fsc")
+fscWrite(
+  demes,
+  genetics,
+  migration = NULL,
+  events = NULL,
+  est = NULL,
+  def = NULL,
+  label = "strataG.fsc"
+)
 }
 \arguments{
 \item{demes}{matrix of deme sampling information created by the 

@@ -31,29 +31,16 @@ alleleFreqs <- function(g, by.strata = FALSE, type = c("freq", "prop")) {
   g <- .checkHapsLabelled(g)
   
   af <- if(by.strata) {
-    purrr::map(
-      split(g@data, g@data$locus),
-      function(x) table(x$allele, x$stratum)
-    )
+    lapply(split(g@data, g@data$locus), function(x) table(x$allele, x$stratum))
   } else {
-    purrr::map(
-      split(g@data, g@data$locus),
-      function(x) table(x$allele)
-    )
+    lapply(split(g@data, g@data$locus), function(x) table(x$allele))
   }
   
-  af <- if(match.arg(type) == "prop") {
-    purrr::map(
-      af,
-      function(x) {
-        if(length(dim(x)) == 1) {
-          prop.table(x)
-        } else {
-          prop.table(x, length(dim(x)))
-        }
-      }
-    )
-  } else af
+  if(match.arg(type) == "prop") {
+    af <- lapply(af, function(x) {
+      if(length(dim(x)) == 1) x / sum(x) else t(t(x) / colSums(x))
+    })
+  }
   
   unassigned <- getOther(g, "haps.unassigned")
   if(!is.null(unassigned)) attr(af, "gtypes") <- g

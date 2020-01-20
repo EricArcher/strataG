@@ -4,8 +4,14 @@
 \alias{LDgenepop}
 \title{Linkage Disequlibrium}
 \usage{
-LDgenepop(g, dememorization = 10000, batches = 100,
-  iterations = 5000, delete.files = TRUE, label = NULL)
+LDgenepop(
+  g,
+  dememorization = 10000,
+  batches = 100,
+  iterations = 5000,
+  delete.files = TRUE,
+  label = NULL
+)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}

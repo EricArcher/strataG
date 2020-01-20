@@ -28,12 +28,8 @@
 #'
 #' @export
 #' 
-baseFreqs <- function(
-  x, 
-  bases = NULL, 
-  ignore = c("n", "x", "-", "."), 
-  simplify = TRUE
-) {
+baseFreqs <- function(x, bases = NULL, ignore = c("n", "x", "-", "."), 
+                      simplify = TRUE) {
   bases <- if(is.null(bases)) {
     rownames(iupac.mat)
   } else {

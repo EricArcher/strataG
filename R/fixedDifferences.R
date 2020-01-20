@@ -27,10 +27,11 @@ fixedDifferences <- function(g, count.indels = TRUE,
                              consec.indels.as.one = TRUE, 
                              bases = c("a", "c", "g", "t", "-")) {  
   # get fixed sites for each strata
-  strata.gtypes <- strataSplit(g, remove.sequences = TRUE)
-  fixed.sites <- sapply(strata.gtypes, function(strata) {
-    fixedSites(strata, bases)
-  }, simplify = FALSE)
+  fixed.sites <- sapply(
+    strataSplit(g, remove.sequences = TRUE),
+    fixedSites, bases = bases, 
+    simplify = FALSE
+  )
   
   # for each pair of strata, return matrix of sites with fixed differences
   # fixed differences are sites which aren't variable in a strata and 

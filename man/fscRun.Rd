@@ -5,11 +5,25 @@
 \alias{fscCleanup}
 \title{Run fastsimcoal}
 \usage{
-fscRun(p, num.sims = 1, dna.to.snp = FALSE, max.snps = 0,
-  sfs.type = c("maf", "daf"), nonpar.boot = NULL, all.sites = TRUE,
-  inf.sites = FALSE, no.arl.output = FALSE, num.loops = 20,
-  min.num.loops = 20, brentol = 0.01, trees = FALSE,
-  num.cores = NULL, seed = NULL, quiet = TRUE, exec = "fsc26")
+fscRun(
+  p,
+  num.sims = 1,
+  dna.to.snp = FALSE,
+  max.snps = 0,
+  sfs.type = c("maf", "daf"),
+  nonpar.boot = NULL,
+  all.sites = TRUE,
+  inf.sites = FALSE,
+  no.arl.output = FALSE,
+  num.loops = 20,
+  min.num.loops = 20,
+  brentol = 0.01,
+  trees = FALSE,
+  num.cores = NULL,
+  seed = NULL,
+  quiet = TRUE,
+  exec = "fsc26"
+)
 
 fscCleanup(label)
 }

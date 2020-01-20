@@ -4,9 +4,14 @@
 \alias{maverickRun}
 \title{Run MavericK}
 \usage{
-maverickRun(g, params = NULL, label = "MavericK_files",
-  data_fname = "data.txt", param_fname = "parameters.txt",
-  exec = "Maverick1.0.5")
+maverickRun(
+  g,
+  params = NULL,
+  label = "MavericK_files",
+  data_fname = "data.txt",
+  param_fname = "parameters.txt",
+  exec = "Maverick1.0.5"
+)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}

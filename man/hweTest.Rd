@@ -6,9 +6,17 @@
 \alias{HWE}
 \title{Hardy-Weinberg Equilibrium}
 \usage{
-hweTest(g, use.genepop = FALSE, which = c("Proba", "excess",
-  "deficit"), enumeration = FALSE, dememorization = 10000,
-  batches = 20, num.rep = 5000, delete.files = TRUE, label = NULL)
+hweTest(
+  g,
+  use.genepop = FALSE,
+  which = c("Proba", "excess", "deficit"),
+  enumeration = FALSE,
+  dememorization = 10000,
+  batches = 20,
+  num.rep = 5000,
+  delete.files = TRUE,
+  label = NULL
+)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}

@@ -4,8 +4,7 @@
 \alias{baseFreqs}
 \title{Base Frequencies}
 \usage{
-baseFreqs(x, bases = NULL, ignore = c("n", "x", "-", "."),
-  simplify = TRUE)
+baseFreqs(x, bases = NULL, ignore = c("n", "x", "-", "."), simplify = TRUE)
 }
 \arguments{
 \item{x}{a \linkS4class{gtypes} object with aligned sequences or a list of

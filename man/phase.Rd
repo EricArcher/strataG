@@ -9,17 +9,34 @@
 \alias{phaseFilter}
 \title{PHASE}
 \usage{
-phase(g, loci, positions = NULL, type = NULL, num.iter = 1e+05,
-  thinning = 100, burnin = 1e+05, model = "new", ran.seed = NULL,
-  final.run.factor = NULL, save.posterior = FALSE,
-  in.file = "phase_in", out.file = "phase_out", delete.files = TRUE)
+phase(
+  g,
+  loci,
+  positions = NULL,
+  type = NULL,
+  num.iter = 1e+05,
+  thinning = 100,
+  burnin = 1e+05,
+  model = "new",
+  ran.seed = NULL,
+  final.run.factor = NULL,
+  save.posterior = FALSE,
+  in.file = "phase_in",
+  out.file = "phase_out",
+  delete.files = TRUE
+)
 
 phaseReadSample(out.file, type)
 
 phaseReadPair(out.file)
 
-phaseWrite(g, loci, positions = NULL, type = rep("S", length(loci)),
-  in.file = "phase_in")
+phaseWrite(
+  g,
+  loci,
+  positions = NULL,
+  type = rep("S", length(loci)),
+  in.file = "phase_in"
+)
 
 phasePosterior(ph.res, keep.missing = TRUE)
 

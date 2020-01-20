@@ -119,3 +119,5 @@ NULL
 #'   Endangered Species Research 19, 129-147.
 #' @keywords datasets
 NULL
+
+globalVariables(c("id", "locus", "stratum", "allele"))

@@ -25,8 +25,9 @@
 #' 
 variableSites <- function(x, bases = c("a", "c", "g", "t", "-"), simplify = TRUE) {
   bases <- tolower(bases)
-  result <- apex::getSequences(as.multidna(x), simplify = FALSE) %>% 
-    purrr::map(function(dna) {
+  result <- sapply(
+    apex::getSequences(as.multidna(x), simplify = FALSE),
+    function(dna) {
       dna <- as.matrix(dna)
       site.freqs <- baseFreqs(dna, bases)$site.freqs
       var.site <- apply(site.freqs, 2, function(site) sum(site > 0) > 1)
@@ -41,7 +42,9 @@ variableSites <- function(x, bases = c("a", "c", "g", "t", "-"), simplify = TRUE
         sites = as.matrix(ape::as.DNAbin(var.seqs)), 
         site.freqs = site.freqs
       )
-    })
+    },
+    simplify = FALSE
+  )
   
   if(length(result) == 1 & simplify) result[[1]] else result
 }

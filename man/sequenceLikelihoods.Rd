@@ -4,8 +4,15 @@
 \alias{sequenceLikelihoods}
 \title{Sequence Likelihoods}
 \usage{
-sequenceLikelihoods(x, model = "N", pairwise.deletion = FALSE,
-  n = NULL, plot = TRUE, simplify = TRUE, ...)
+sequenceLikelihoods(
+  x,
+  model = "N",
+  pairwise.deletion = FALSE,
+  n = NULL,
+  plot = TRUE,
+  simplify = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{a \code{\link[ape]{DNAbin}} object.}

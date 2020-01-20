@@ -6,15 +6,37 @@
 \alias{pairwiseTest}
 \title{Population Differentiation Tests}
 \usage{
-popStructTest(g, nrep = 1000, stats = "all", type = c("both",
-  "overall", "pairwise"), keep.null = FALSE, quietly = FALSE,
-  max.cores = NULL, write.output = FALSE, ...)
+popStructTest(
+  g,
+  nrep = 1000,
+  stats = "all",
+  type = c("both", "overall", "pairwise"),
+  keep.null = FALSE,
+  quietly = FALSE,
+  max.cores = NULL,
+  write.output = FALSE,
+  ...
+)
 
-overallTest(g, nrep = 1000, stats = "all", keep.null = FALSE,
-  quietly = FALSE, max.cores = NULL, ...)
+overallTest(
+  g,
+  nrep = 1000,
+  stats = "all",
+  keep.null = FALSE,
+  quietly = FALSE,
+  max.cores = NULL,
+  ...
+)
 
-pairwiseTest(g, nrep = 1000, stats = "all", keep.null = FALSE,
-  quietly = FALSE, max.cores = NULL, ...)
+pairwiseTest(
+  g,
+  nrep = 1000,
+  stats = "all",
+  keep.null = FALSE,
+  quietly = FALSE,
+  max.cores = NULL,
+  ...
+)
 }
 \arguments{
 \item{g}{a \code{\link{gtypes}} object.}

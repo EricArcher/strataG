@@ -7,10 +7,18 @@
 \alias{fscReadSFS}
 \title{Read fastsimcoal output}
 \usage{
-fscReadArp(p, sim = c(1, 1), marker = c("all", "snp", "microsat",
-  "dna", "standard"), chrom = NULL, sep.chrom = FALSE,
-  drop.mono = FALSE, as.genotypes = TRUE, one.col = FALSE,
-  sep = "/", coded.snps = FALSE)
+fscReadArp(
+  p,
+  sim = c(1, 1),
+  marker = c("all", "snp", "microsat", "dna", "standard"),
+  chrom = NULL,
+  sep.chrom = FALSE,
+  drop.mono = FALSE,
+  as.genotypes = TRUE,
+  one.col = FALSE,
+  sep = "/",
+  coded.snps = FALSE
+)
 
 fscReadParamEst(p)
 

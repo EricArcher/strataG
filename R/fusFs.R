@@ -7,7 +7,8 @@
 #'   
 #' @note Currently, this function is limited to calculating Fs for fewer than
 #'   approximately 172 sequences due to numerical overflow issues. \code{NaN}
-#'   will be returned for larger data sets.
+#'   will be returned for larger data sets. Statistical significance (p-values)
+#'   of Fs must be calculated with case-specific simulations.
 #' 
 #' @references Fu, Y-X. 1997. Statistical tests of neutrality of mutations 
 #'   against population growth, hitchiking and background selection. 

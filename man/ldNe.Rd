@@ -4,8 +4,14 @@
 \alias{ldNe}
 \title{ldNe}
 \usage{
-ldNe(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95,
-  drop.missing = FALSE, num.cores = NULL)
+ldNe(
+  g,
+  maf.threshold = 0,
+  by.strata = FALSE,
+  ci = 0.95,
+  drop.missing = FALSE,
+  num.cores = NULL
+)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}

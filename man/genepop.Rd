@@ -5,9 +5,18 @@
 \alias{genepopWrite}
 \title{Run GENEPOP}
 \usage{
-genepop(g, output.ext = "", show.output = F, label = "genepop.run",
-  dem = 10000, batches = 100, iter = 5000, other.settings = "",
-  input.fname = "loc_data.txt", exec = "Genepop")
+genepop(
+  g,
+  output.ext = "",
+  show.output = F,
+  label = "genepop.run",
+  dem = 10000,
+  batches = 100,
+  iter = 5000,
+  other.settings = "",
+  input.fname = "loc_data.txt",
+  exec = "Genepop"
+)
 
 genepopWrite(g, label = NULL)
 }

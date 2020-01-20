@@ -19,11 +19,10 @@
 #' @export
 #' 
 numMissing <- function(g, by.strata = FALSE, prop = FALSE) {
-  .countNAs <- function(x, prop) {
-    if(prop) mean(is.na(x)) else sum(is.na(x))
+  cols <- if(by.strata) c("locus", "stratum") else "locus"
+  if(prop) {
+    as.data.frame(g@data[, list(num.missing = mean(is.na(allele)) / getPloidy(g)), by = cols])
+  } else {
+    as.data.frame(g@data[, list(num.missing = sum(is.na(allele)) / getPloidy(g)), by = cols])
   }
-  .applyPerLocus(.countNAs, g, by.strata = by.strata, prop = prop) %>% 
-    dplyr::rename(num.missing = .data$value) %>% 
-    dplyr::mutate(num.missing = .data$num.missing / getPloidy(g)) %>% 
-    as.data.frame()
 }

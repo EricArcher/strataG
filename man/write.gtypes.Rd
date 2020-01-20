@@ -4,8 +4,15 @@
 \alias{write.gtypes}
 \title{Write \code{gtypes}}
 \usage{
-write.gtypes(g, label = NULL, folder = NULL, by.strata = TRUE,
-  as.frequency = FALSE, freq.type = c("freq", "prop"), ...)
+write.gtypes(
+  g,
+  label = NULL,
+  folder = NULL,
+  by.strata = TRUE,
+  as.frequency = FALSE,
+  freq.type = c("freq", "prop"),
+  ...
+)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}

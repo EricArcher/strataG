@@ -23,8 +23,9 @@
 #' 
 fixedSites <- function(x, bases = c("a", "c", "g", "t", "-"), simplify = TRUE) {
   bases <- tolower(bases)
-  result <- apex::getSequences(as.multidna(x), simplify = FALSE) %>% 
-    purrr::map(function(dna) {
+  result <- sapply(
+    apex::getSequences(as.multidna(x), simplify = FALSE), 
+    function(dna) {
       dna <- as.character(as.matrix(dna))
       is.fixed <- apply(dna, 2, function(site) {
         site <- site[site %in% bases]
@@ -36,7 +37,9 @@ fixedSites <- function(x, bases = c("a", "c", "g", "t", "-"), simplify = TRUE) {
         unique(bps[bps %in% bases])[1]
       })
       stats::setNames(fixed.bp, sites)
-    })
+    },
+    simplify = FALSE
+  )
   
   if(length(result) == 1 & simplify) result[[1]] else result
 }

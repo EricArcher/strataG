@@ -3,6 +3,7 @@
 #'
 #' @param g a \linkS4class{gtypes} object.
 #' @param by.strata logical - return results grouped by strata?
+#' @param prop logical determining whether to return proportion missing.
 #'
 #' @return vector of number of alleles per locus.
 #'
@@ -15,28 +16,11 @@
 #'
 #' @export
 #' 
-numGenotyped <- function(g, by.strata = FALSE) {
-  df <- numMissing(g, by.strata = by.strata) 
-  df <- if(by.strata) {
-    df %>% 
-      dplyr::left_join(
-        g@data %>% 
-          dplyr::group_by(.data$stratum, .data$locus) %>% 
-          dplyr::summarize(num.ind = dplyr::n_distinct(.data$id)),
-        by = c("stratum", "locus")
-      ) 
+numGenotyped <- function(g, by.strata = FALSE, prop = FALSE) {
+  cols <- if(by.strata) c("locus", "stratum") else "locus"
+  if(prop) {
+    as.data.frame(g@data[, list(num.genotyped = mean(!is.na(allele)) / getPloidy(g)), by = cols])
   } else {
-    df %>% 
-      dplyr::left_join(
-        g@data %>% 
-          dplyr::group_by(.data$locus) %>% 
-          dplyr::summarize(num.ind = dplyr::n_distinct(.data$id)),
-        by = c("locus")
-      )
+    as.data.frame(g@data[, list(num.genotyped = sum(!is.na(allele)) / getPloidy(g)), by = cols])
   }
-  df %>% 
-    dplyr::mutate(num.genotyped = .data$num.ind - .data$num.missing) %>% 
-    dplyr::select(-.data$num.missing, -.data$num.ind) %>% 
-    dplyr::ungroup() %>% 
-    as.data.frame()
 }

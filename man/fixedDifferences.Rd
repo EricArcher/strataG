@@ -4,8 +4,12 @@
 \alias{fixedDifferences}
 \title{Fixed Differences}
 \usage{
-fixedDifferences(g, count.indels = TRUE, consec.indels.as.one = TRUE,
-  bases = c("a", "c", "g", "t", "-"))
+fixedDifferences(
+  g,
+  count.indels = TRUE,
+  consec.indels.as.one = TRUE,
+  bases = c("a", "c", "g", "t", "-")
+)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}

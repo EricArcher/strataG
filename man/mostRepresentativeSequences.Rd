@@ -4,8 +4,14 @@
 \alias{mostRepresentativeSequences}
 \title{Representative Sequences}
 \usage{
-mostRepresentativeSequences(x, num.seqs = NULL, model = "raw",
-  pairwise.deletion = TRUE, as.haplotypes = TRUE, simplify = TRUE)
+mostRepresentativeSequences(
+  x,
+  num.seqs = NULL,
+  model = "raw",
+  pairwise.deletion = TRUE,
+  as.haplotypes = TRUE,
+  simplify = TRUE
+)
 }
 \arguments{
 \item{x}{a \code{\link[ape]{DNAbin}} object.}

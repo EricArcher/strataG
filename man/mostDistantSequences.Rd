@@ -4,8 +4,13 @@
 \alias{mostDistantSequences}
 \title{Most Distant Sequences}
 \usage{
-mostDistantSequences(x, num.seqs = NULL, model = "raw",
-  pairwise.deletion = TRUE, simplify = TRUE)
+mostDistantSequences(
+  x,
+  num.seqs = NULL,
+  model = "raw",
+  pairwise.deletion = TRUE,
+  simplify = TRUE
+)
 }
 \arguments{
 \item{x}{a set of sequences or a \linkS4class{gtypes} object with sequences.}

@@ -26,13 +26,25 @@ statFstPrime(g, nrep = NULL, keep.null = FALSE, ...)
 
 statGst(g, nrep = NULL, keep.null = FALSE, ...)
 
-statGstPrime(g, nrep = NULL, keep.null = FALSE,
-  prime.type = c("hedrick", "nei"), ...)
+statGstPrime(
+  g,
+  nrep = NULL,
+  keep.null = FALSE,
+  prime.type = c("hedrick", "nei"),
+  ...
+)
 
 statGstDblPrime(g, nrep = NULL, keep.null = FALSE, ...)
 
-statPhist(g, nrep = NULL, keep.null = FALSE, model = "K80",
-  gamma = FALSE, pairwise.deletion = TRUE, ...)
+statPhist(
+  g,
+  nrep = NULL,
+  keep.null = FALSE,
+  model = "K80",
+  gamma = FALSE,
+  pairwise.deletion = TRUE,
+  ...
+)
 
 Hstats(g)
 }

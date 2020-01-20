@@ -10,8 +10,14 @@
 \usage{
 read.mega(file)
 
-write.mega(g, file = NULL, label = NULL, line.width = 60,
-  locus = 1, as.haplotypes = TRUE)
+write.mega(
+  g,
+  file = NULL,
+  label = NULL,
+  line.width = 60,
+  locus = 1,
+  as.haplotypes = TRUE
+)
 }
 \arguments{
 \item{file}{a MEGA-formatted file of sequences.}

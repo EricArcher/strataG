@@ -4,9 +4,18 @@
 \alias{mafft}
 \title{MAFFT Alignment}
 \usage{
-mafft(x, run.label = "align.mafft", delete.output = TRUE, op = 3,
-  ep = 0.123, maxiterate = 0, quiet = FALSE, num.cores = 1,
-  opts = "--auto", simplify = TRUE)
+mafft(
+  x,
+  run.label = "align.mafft",
+  delete.output = TRUE,
+  op = 3,
+  ep = 0.123,
+  maxiterate = 0,
+  quiet = FALSE,
+  num.cores = 1,
+  opts = "--auto",
+  simplify = TRUE
+)
 }
 \arguments{
 \item{x}{a list or a matrix of DNA sequences 

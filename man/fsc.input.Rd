@@ -19,26 +19,42 @@
 \alias{fscSettingsDef}
 \title{Input functions for fastsimcoal parameters}
 \usage{
-fscDeme(deme.size, sample.size, sample.time = 0, inbreeding = 0,
-  growth = 0)
+fscDeme(deme.size, sample.size, sample.time = 0, inbreeding = 0, growth = 0)
 
 fscSettingsDemes(..., ploidy = 2)
 
-fscEvent(event.time = 0, source = 0, sink = 0, prop.migrants = 1,
-  new.size = 1, new.growth = 0, migr.mat = 0)
+fscEvent(
+  event.time = 0,
+  source = 0,
+  sink = 0,
+  prop.migrants = 1,
+  new.size = 1,
+  new.growth = 0,
+  migr.mat = 0
+)
 
 fscSettingsEvents(...)
 
 fscSettingsMigration(...)
 
-fscBlock_dna(sequence.length, mut.rate, recomb.rate = 0,
-  transition.rate = 1/3, chromosome = 1)
+fscBlock_dna(
+  sequence.length,
+  mut.rate,
+  recomb.rate = 0,
+  transition.rate = 1/3,
+  chromosome = 1
+)
 
-fscBlock_microsat(num.loci, mut.rate, recomb.rate = 0, gsm.param = 0,
-  range.constraint = 0, chromosome = 1)
+fscBlock_microsat(
+  num.loci,
+  mut.rate,
+  recomb.rate = 0,
+  gsm.param = 0,
+  range.constraint = 0,
+  chromosome = 1
+)
 
-fscBlock_snp(sequence.length, mut.rate, recomb.rate = 0,
-  chromosome = 1)
+fscBlock_snp(sequence.length, mut.rate, recomb.rate = 0, chromosome = 1)
 
 fscBlock_standard(num.loci, mut.rate, recomb.rate = 0, chromosome = 1)
 
@@ -46,9 +62,17 @@ fscBlock_freq(mut.rate, outexp = TRUE)
 
 fscSettingsGenetics(..., num.chrom = NULL)
 
-fscEstParam(name, is.int = TRUE, distr = c("unif", "logunif"),
-  min = NA, max = NA, value = NA, output = TRUE, bounded = FALSE,
-  reference = FALSE)
+fscEstParam(
+  name,
+  is.int = TRUE,
+  distr = c("unif", "logunif"),
+  min = NA,
+  max = NA,
+  value = NA,
+  output = TRUE,
+  bounded = FALSE,
+  reference = FALSE
+)
 
 fscSettingsEst(..., obs.sfs, rules = NULL, sfs.type = c("maf", "daf"))
 

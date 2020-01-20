@@ -4,14 +4,11 @@
 \alias{sharedLoci}
 \alias{propSharedLoci}
 \alias{sharedAlleles}
-\alias{.propSharedIds}
 \title{Shared Loci}
 \usage{
-propSharedLoci(g, type = c("strata", "ids"), num.cores = NULL)
+propSharedLoci(g, type = c("strata", "ids"))
 
 sharedAlleles(g, smry = c("num", "which"))
-
-.propSharedIds(ids, g)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
@@ -19,16 +16,9 @@ sharedAlleles(g, smry = c("num", "which"))
 \item{type}{a character vector determining type of pairwise comparsion. Can 
 be "strata" for strata or "ids" for individuals.}
 
-\item{num.cores}{number of CPU cores to use. Defaults to the number reported 
-by \code{\link[parallel]{detectCores}} - 1.}
-
 \item{smry}{a character vector determining type of summary for 
 \code{sharedAlleles}. "which" returns the names of the alleles shared. 
 "num" returns the number of alleles shared.}
-
-\item{ids}{character vector of two sample ids to compare.}
-
-\item{g}{a \code{gtypes} object}
 }
 \value{
 data.frame summary of pairwise shared loci.
@@ -51,4 +41,3 @@ propSharedLoci(msats.g, num.cores = 2)
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
-\keyword{internal}
