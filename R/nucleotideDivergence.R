@@ -32,7 +32,7 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1),
   if(getPloidy(g) > 1) stop("'g' must be haploid")
   if(is.null(g@sequences)) stop("'g' must have sequences")
   
-  pair.dist.smry <- function(haps, d, probs) {
+  .pair.dist.smry <- function(haps, d, probs) {
     pws.dist <- apply(haps, 2, function(h) {
       if(any(is.na(h))) return(NA)
       d[h[1], h[2]]
@@ -42,7 +42,7 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1),
     c(mean = mean(pws.dist, na.rm = TRUE), dist.quant)
   }
   
-  expand.smry.cols <- function(df) {
+  .expand.smry.cols <- function(df) {
     dplyr::bind_cols(
       df, 
       as.data.frame(do.call(rbind, df$smry))
@@ -52,12 +52,13 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1),
   }
   
   g <- g[, , getStrataNames(g)]
-  hap.dist <- purrr::map(
+  hap.dist <- sapply(
     getSequences(g), 
     ape::dist.dna, 
     model = model, 
     as.matrix = TRUE, 
-    ...
+    ...,
+    simplify = FALSE
   )
   
   within <- g@data %>% 
@@ -65,9 +66,9 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1),
     dplyr::do(smry = {
       haps <- combn(.data$allele, 2)
       loc <- unique(.data$locus)
-      pair.dist.smry(haps, hap.dist[[loc]], probs)
+      .pair.dist.smry(haps, hap.dist[[loc]], probs)
     }) 
-  within <- expand.smry.cols(within)
+  within <- .expand.smry.cols(within)
       
   st.pairs <- .strataPairs(g)
   st.pairs <- do.call(rbind, lapply(getLociNames(g), function(loc) {
@@ -87,7 +88,7 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1),
           dplyr::filter(.data$stratum == st.2) %>% 
           dplyr::pull(.data$allele)
         haps <- t(expand.grid(h1, h2))
-        smry <- pair.dist.smry(haps, hap.dist[[loc]], probs)
+        smry <- .pair.dist.smry(haps, hap.dist[[loc]], probs)
         wthn.sum <- within %>%
           dplyr::filter(.data$locus == loc & .data$stratum %in% c(st.1, st.2)) %>%
           dplyr::summarize(sum = sum(.data$mean, na.rm = TRUE)) %>%
@@ -95,7 +96,7 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1),
         dA <- unname(smry["mean"] - (wthn.sum / 2))
         c(dA = dA, smry)
       })
-    expand.smry.cols(result)
+    .expand.smry.cols(result)
   }
   
   list(within = within, between = between)

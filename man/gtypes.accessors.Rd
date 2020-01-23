@@ -162,8 +162,8 @@ Accessors for slots in \linkS4class{gtypes} objects.
 \details{
 Indexing a \code{gtypes} object with integers, characters, or
 logicals with the \code{[} operator follows the same rules as normal indexing
-in R. The order that individuals, loci, and strata are chosen in the order
-returned by \code{indNames}, \code{locNames}, and \code{strataNames}
+in R. The order that individuals, loci, and strata are chosen is the order
+returned by \code{getIndNames}, \code{getLocNames}, and \code{getStrataNames}
 respectively. If unstratified samples are present, they can be selected as a
 group either by including \code{NA} in the character or numeric vector of the
 \code{k} slot, or by providing a logical vector based on

@@ -47,9 +47,7 @@ write.gtypes <- function(g, label = NULL, folder = NULL, by.strata = TRUE,
       }, simplify = FALSE) %>% 
       stats::setNames(paste(label, names(.data)))
   } else {
-    x <- list(as.matrix(g, ...))
-    names(x) <- label
-    x
+    stats::setNames(list(as.matrix(g, ...)), label)
   }
   
   out.files <- NULL

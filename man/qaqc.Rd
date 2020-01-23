@@ -4,19 +4,23 @@
 \alias{qaqc}
 \title{Quality Assurance/Quality Control}
 \usage{
-qaqc(g, label = NULL, ...)
+qaqc(g, write.files = FALSE, label = NULL, ...)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
+
+\item{write.files}{logical determining whether to write .csv files of 
+summaries}
 
 \item{label}{optional label for output folder and prefix for files.}
 
 \item{...}{optional arguments to pass on to summary functions.}
 }
 \value{
-Files are written for by-sample and by-locus summaries, and duplicate 
-  genotypes if any are found. If sequences are present, files are written 
-  identifying low frequency substitutions and sequence likelihoods.\cr
+If \code{write.files = TRUE}, files are written for by-sample and 
+  by-locus summaries, and duplicate genotypes if any are found. If 
+  sequences are present, files are written identifying low frequency 
+  substitutions and sequence likelihoods.\cr
   The return value is a list with the following elements:
   
 \describe{

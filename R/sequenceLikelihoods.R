@@ -36,8 +36,9 @@
 #' 
 sequenceLikelihoods <- function(x, model = "N", pairwise.deletion = FALSE, 
                                 n = NULL, plot = TRUE, simplify = TRUE, ...) {
-  result <- apex::getSequences(as.multidna(x), simplify = FALSE) %>% 
-    purrr::map(function(dna) {
+  result <- sapply(
+    apex::getSequences(as.multidna(x), simplify = FALSE),
+    function(dna) {
       # calculate distance between sequences
       seq.dist <- ape::dist.dna(
         dna, 
@@ -56,7 +57,7 @@ sequenceLikelihoods <- function(x, model = "N", pairwise.deletion = FALSE,
       scale <- (dist.sd ^ 2) / dist.mean
       shape <- (dist.mean / dist.sd) ^ 2
       
-      do.call(rbind, purrr::map(rownames(seq.dist), function(i) {
+      do.call(rbind, sapply(rownames(seq.dist), function(i) {
         this.dist <- seq.dist[i, ]
         this.dist <- this.dist[names(this.dist) != i]
         mean.dist <- mean(this.dist, na.rm = TRUE)
@@ -65,7 +66,7 @@ sequenceLikelihoods <- function(x, model = "N", pairwise.deletion = FALSE,
           log() %>% 
           sum(na.rm = TRUE)
         c(mean.dist = mean.dist, neg.log.lik = -ll)
-      })) %>% 
+      }, simplify = FALSE)) %>% 
         tibble::as.tibble() %>% 
         dplyr::mutate(
           id = rownames(seq.dist),
@@ -77,7 +78,9 @@ sequenceLikelihoods <- function(x, model = "N", pairwise.deletion = FALSE,
           .data$id, .data$mean.dist, .data$neg.log.lik, .data$delta.log.lik
         ) %>% 
         as.data.frame()
-    })
+    },
+    simplify = FALSE
+  )
   
   if(plot) {
     for(locus in names(result)) {

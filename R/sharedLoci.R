@@ -52,6 +52,7 @@ propSharedLoci <- function(g, type = c("strata", "ids")) {
     af <- table(g@data[, c("id", "locus", "allele")])
     id.pairs <- t(utils::combn(dimnames(af)[[1]], 2))
     
+    # proportion of alleles at each locus present in both individuals
     prop.shared <- t(sapply(1:nrow(id.pairs), function(i) {
       x <- af[id.pairs[i, ], , ]
       is.shared <- x[1, ,] > 0 & x[2, , ] > 0
@@ -72,6 +73,7 @@ propSharedLoci <- function(g, type = c("strata", "ids")) {
     strata.freq <- .strataFreq(g)
     strata.pairs <- t(combn(dimnames(af)[[1]], 2))
     
+    # proportion of alleles at each locus present in both strata
     prop.shared <- t(sapply(1:nrow(strata.pairs), function(i) {
       is.shared <- af[strata.pairs[i, 1], ,] > 0 & af[strata.pairs[i, 2], , ] > 0
       prop <- rowSums(is.shared) / na

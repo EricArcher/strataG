@@ -66,7 +66,8 @@
 #' @param sfs.type type of SFS to write. Can be \code{maf} or \code{daf}.
 #' @param mat numeric matrix or data frame with values of parameters to use in
 #'   place of parameter names in simulation.
-#' @param ... a set of comma-separated values for settings. See Notes for more information.
+#' @param ... a set of comma-separated values for settings. See 
+#'   Notes for more information.
 #'
 #' @note All settings must be passed to \code{\link{fscWrite}} using one
 #'   of the \code{fscSettingsXXX} functions. Most of these functions in turn

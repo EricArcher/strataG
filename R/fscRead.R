@@ -107,7 +107,7 @@ fscReadArp <- function(p, sim = c(1, 1),
                        coded.snps = FALSE) {
   if(length(sim) == 1) sim <- c(1, sim)
   if(length(sim) != 2) stop("'sim' must be a two-element numeric vector.")
-  arp <- file.path(p$label, paste0(p$label, "_", sim[1], "_", sim[2], ".arp"))
+  arp <- file.path(p$folder, p$label, paste0(p$label, "_", sim[1], "_", sim[2], ".arp"))
   if(!file.exists(arp)) stop("Can't find .arp file, '", arp, "'.")
   
   hap.data <- .fscParseGeneticData(p, arp)
@@ -437,7 +437,8 @@ fscReadParamEst <- function(p) {
 #' 
 .fscReadEstSFS <- function(p) {
   marginal.pattern <- "_[MD]AFpop[[:digit:]]+.txt$" 
-  marginal.fnames <- dir(p$label, pattern = marginal.pattern, full.names = T)
+  folder <- file.path(p$folder, p$label)
+  marginal.fnames <- dir(folder, pattern = marginal.pattern, full.names = T)
   marginal.sfs <- if(length(marginal.fnames) == 0) NULL else {
     sapply(marginal.fnames, function(fname) {
       mat <- utils::read.table(fname, header = TRUE, sep = "\t")
@@ -447,7 +448,8 @@ fscReadParamEst <- function(p) {
   }
   
   joint.pattern <- "_joint[MD]AFpop[[:digit:]]+_[[:digit:]]+.txt$"
-  joint.fnames <- dir(p$label, pattern = joint.pattern, full.names = T)
+  folder <- file.path(p$folder, p$label)
+  joint.fnames <- dir(folder, pattern = joint.pattern, full.names = T)
   joint.sfs <- if(length(joint.fnames) == 0) NULL else {
     sapply(joint.fnames, function(fname) {
       mat <- utils::read.table(fname, header = TRUE, sep = "\t", row.names = 1)
@@ -471,7 +473,8 @@ fscReadParamEst <- function(p) {
 #' @noRd
 #' 
 .fscReadLhoods <- function(p) {
-  fname <- dir(p$label, pattern = ".brent_lhoods$", full.names = T)
+  folder <- file.path(p$folder, p$label)
+  fname <- dir(folder, pattern = ".brent_lhoods$", full.names = T)
   if(length(fname) == 0) return(NULL)
   f <- readr::read_lines(fname) 
   f <- f[grep("^Param|^[[:digit:]]", f)]
@@ -500,7 +503,8 @@ fscReadParamEst <- function(p) {
 #' 
 fscReadSFS <- function(p, sim = 1) {
   dir.name <- paste0(p$label, "_", sim)
-  sfs.dir <- dir(p$label, pattern = dir.name, full.names = TRUE)
+  folder <- file.path(p$folder, p$label)
+  sfs.dir <- dir(folder, pattern = dir.name, full.names = TRUE)
   if(length(sfs.dir) == 0) {
     stop("Can't find '", dir.name, "' in '", p$label, "' .")
   }

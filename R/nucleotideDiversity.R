@@ -26,15 +26,18 @@ nucleotideDiversity <- function(x, bases = c("a", "c", "g", "t"), simplify = TRU
   } else {
     as.multidna(x)
   }
-  x <- apex::getSequences(x, simplify = FALSE)
   
-  result <- purrr::map(x, function(dna) {  
-    site.div <- dna %>% 
-      as.matrix() %>% 
-      as.character() %>% 
-      apply(2, function(b) swfscMisc::diversity(b[b %in% bases]))
-    stats::setNames(site.div, 1:length(site.div))
-  })
+  result <- sapply(
+    apex::getSequences(x, simplify = FALSE), 
+    function(dna) {  
+      site.div <- dna %>% 
+        as.matrix() %>% 
+        as.character() %>% 
+        apply(2, function(b) swfscMisc::diversity(b[b %in% bases]))
+      stats::setNames(site.div, 1:length(site.div))
+    },
+    simplify = FALSE
+  )
   
   if(length(result) == 1 & simplify) result[[1]] else result
 }

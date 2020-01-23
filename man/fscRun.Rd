@@ -25,7 +25,7 @@ fscRun(
   exec = "fsc26"
 )
 
-fscCleanup(label)
+fscCleanup(label, folder = ".")
 }
 \arguments{
 \item{p}{list of fastsimcoal input parameters and output.}
@@ -76,6 +76,9 @@ computation time. Default = 0.01. Value is restricted between
 \item{exec}{name of fastsimcoal executable.}
 
 \item{label}{character string of file run labels prefixes.}
+
+\item{folder}{character string giving the root working folder where
+input files and output resides}
 }
 \value{
 \describe{

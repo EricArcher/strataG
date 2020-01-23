@@ -11,7 +11,8 @@ fscWrite(
   events = NULL,
   est = NULL,
   def = NULL,
-  label = "strataG.fsc"
+  label = "strataG.fsc",
+  use.wd = TRUE
 )
 }
 \arguments{
@@ -35,6 +36,11 @@ the \code{\link{fscSettingsEst}} function.}
 by the \code{\link{fscSettingsDef}} function.}
 
 \item{label}{character string used to label output files for the simulation.}
+
+\item{use.wd}{use current working directory for input and output? If 
+\code{FALSE} then a temporary directory in the session temporary directory. 
+Note that this directory is deleted when the R session closed. See 
+\code{\link{tempdir}} for more information.}
 }
 \value{
 Writes input files for \code{fastsimcoal2} and returns a list of

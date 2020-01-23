@@ -37,8 +37,9 @@ baseFreqs <- function(x, bases = NULL, ignore = c("n", "x", "-", "."),
   }
   ignore <- setdiff(tolower(ignore), bases)
   
-  result <- apex::getSequences(as.multidna(x), simplify = FALSE) %>% 
-    purrr::map(function(dna) {
+  result <- sapply(
+    apex::getSequences(as.multidna(x), simplify = FALSE),
+    function(dna) {
       dna.mat <- tolower(as.character(as.matrix(dna)))
       site.freqs <- apply(dna.mat, 2, function(site) {
         site <- site[!site %in% ignore]
@@ -54,7 +55,9 @@ baseFreqs <- function(x, bases = NULL, ignore = c("n", "x", "-", "."),
         base.freqs = base.freqs, 
         ind.freqs = ind.freqs
       )
-    })
+    },
+    simplify = FALSE
+  )
   
   if(length(result) == 1 & simplify) result[[1]] else result
 }

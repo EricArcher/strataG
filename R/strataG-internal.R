@@ -175,12 +175,7 @@
 #' 
 .stackedAlleles <- function(g, alleles2integer = FALSE, na.val = NULL, ...) {
   x <- if(alleles2integer) .alleles2integer(g, ...) else g@data
-  if(!is.null(na.val)) {
-    x <- x %>% 
-      dplyr::mutate(
-        allele = ifelse(is.na(.data$allele), na.val, .data$allele)
-      )
-  }
+  if(!is.null(na.val)) x$allele[is.na(x$allele)] <- na.val
   x %>% 
     dplyr::arrange(.data$id, .data$locus) %>% 
     dplyr::mutate(a = rep(1:getPloidy(g), dplyr::n() / getPloidy(g))) %>% 

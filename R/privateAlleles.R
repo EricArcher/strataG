@@ -18,18 +18,20 @@
 #' @export
 #' 
 privateAlleles <- function(g) {
-  . <- NULL # To pass CRAN check
-  g <- .checkHapsLabelled(g)
-  
-  alleleFreqs(g, TRUE) %>% 
-    purrr::map(function(f) {
-      f[f > 0] <- 1
-      apply(f, 1, function(x) {
-        if(sum(x > 0) == 1) x else rep(0, length(x))
-      }) %>% 
-        rbind() %>% 
-        rowSums() %>% 
-        stats::setNames(dimnames(f)[[2]])
-    }) %>% 
-    do.call(rbind, .)
+  do.call(
+    rbind,
+    sapply(
+      alleleFreqs(.checkHapsLabelled(g), by.strata = TRUE), 
+      function(f) {
+        f[f > 0] <- 1
+        apply(f, 1, function(x) {
+          if(sum(x > 0) == 1) x else rep(0, length(x))
+        }) %>% 
+          rbind() %>% 
+          rowSums() %>% 
+          stats::setNames(dimnames(f)[[2]])
+      },
+      simplify = FALSE
+    )
+  )
 }

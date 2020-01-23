@@ -21,7 +21,7 @@
 propUniqueAlleles <- function(g, by.strata = FALSE) { 
   g <- .checkHapsLabelled(g)
   
-  df <- if(by.strata) {
+  if(by.strata) {
     g@data %>% 
       dplyr::group_by(.data$stratum, .data$locus, .data$allele) %>% 
       dplyr::summarize(n = dplyr::n_distinct(.data$id)) %>% 
@@ -39,8 +39,7 @@ propUniqueAlleles <- function(g, by.strata = FALSE) {
       dplyr::summarize(num.unique = sum(.data$n == 1)) %>% 
       dplyr::ungroup() %>% 
       dplyr::left_join(numGenotyped(g, by.strata), by = c("locus"))
-  } 
-  df %>% 
+  } %>% 
     dplyr::mutate(prop.unique.alleles = .data$num.unique / .data$num.genotyped) %>% 
     dplyr::select(-.data$num.unique, -.data$num.genotyped) %>% 
     as.data.frame()

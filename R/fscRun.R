@@ -170,7 +170,11 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = 0,
   
   unlink(p$label, recursive = TRUE, force = TRUE)
   cat(format(Sys.time()), "running fastsimcoal2...\n")
-  err <- system2(exec, p$run.params$args, stdout = p$files$log)
+  wd <- getwd()
+  err <- tryCatch({
+    setwd(p$folder)
+    system2(exec, p$run.params$args, stdout = p$files$log)
+  }, finally = setwd(wd))
   if(err != 0) {
     stop(
       format(Sys.time()), " fastsimcoal exited with error ", err, "\n",
@@ -183,7 +187,8 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = 0,
     arp.files <- NULL
     while(is.null(arp.files)) {  
       Sys.sleep(1)
-      arp.files <- dir(p$label, pattern = ".arp$", full.names = TRUE)
+      folder <- file.path(p$folder, p$label)
+      arp.files <- dir(folder, pattern = ".arp$", full.names = TRUE)
       if(length(arp.files) == 0) {
         cat(format(Sys.time()), "waiting for .arp files to finish writing...\n")
         arp.files <- NULL
@@ -306,20 +311,26 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = 0,
 
 
 #' @rdname fscRun
+#' @param folder character string giving the root working folder where
+#'   input files and output resides
 #' @export
 #' 
-fscCleanup <- function(label) {
+fscCleanup <- function(label, folder = ".") {
   # remove label folder
-  unlink(label, recursive = TRUE, force = TRUE)
-  if(file.exists("seed.txt")) file.remove("seed.txt")
-  files <- dir(pattern = paste0("^", label))
-  if(length(files) != 0) {
-    # don't remove R script files
-    r.files <- grep("\\.[rR]$", files, value = TRUE)
-    files <- setdiff(files, r.files)
-    # remove only files, not other directories that start with label
-    files <- files[utils::file_test("-f", files)]
-    file.remove(files)
-  }
+  wd <- getwd()
+  tryCatch({
+    setwd(folder)
+    unlink(label, recursive = TRUE, force = TRUE)
+    if(file.exists("seed.txt")) file.remove("seed.txt")
+    files <- dir(pattern = paste0("^", label))
+    if(length(files) != 0) {
+      # don't remove R script files
+      r.files <- grep("\\.[rR]$", files, value = TRUE)
+      files <- setdiff(files, r.files)
+      # remove only files, not other directories that start with label
+      files <- files[utils::file_test("-f", files)]
+      file.remove(files)
+    }
+  }, finally = setwd(wd))
   invisible(NULL)
 }

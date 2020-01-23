@@ -18,9 +18,17 @@
 #' 
 numGenotyped <- function(g, by.strata = FALSE, prop = FALSE) {
   cols <- if(by.strata) c("locus", "stratum") else "locus"
-  if(prop) {
-    as.data.frame(g@data[, list(num.genotyped = mean(!is.na(allele)) / getPloidy(g)), by = cols])
-  } else {
-    as.data.frame(g@data[, list(num.genotyped = sum(!is.na(allele)) / getPloidy(g)), by = cols])
-  }
+  as.data.frame(
+    if(prop) {
+      g@data[, 
+             list(num.genotyped = mean(!is.na(allele)) / getPloidy(g)), 
+             by = cols
+             ]
+    } else {
+      g@data[, 
+             list(num.genotyped = sum(!is.na(allele)) / getPloidy(g)), 
+             by = cols
+             ]
+    }
+  )
 }

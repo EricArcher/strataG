@@ -34,61 +34,64 @@ mostDistantSequences <- function(
   } else {
     as.multidna(x)
   }
-  x <- apex::getSequences(x, simplify = FALSE)
   
-  result <- purrr::map(x, function(dna) {
-    # calculate distance between sequences
-    seq.dist <- ape::dist.dna(
-      dna, 
-      model = model, 
-      pairwise.deletion = pairwise.deletion, 
-      as.matrix = TRUE
-    )
-    
-    # initialize with furthest sequence
-    opt <- options(warn = -1)
-    seq.cmd <- stats::cmdscale(seq.dist, k = length(dna) - 1)
-    options(opt)
-    range.mean <- apply(seq.cmd, 2, function(p) {
-      p %>% 
-        range(na.rm = TRUE) %>% 
-        mean()
-    })
-    dist.to.centroid <- (t(seq.cmd) - range.mean) %>% 
-      t() %>% 
-      apply(1, function(p) {
-        sqrt(sum(p ^ 2, na.rm = TRUE))
-      }) %>% 
-      sort(decreasing = TRUE)
-    
-    num.seqs <- if(is.null(num.seqs)) {
-      length(dna) 
-    } else {
-      min(num.seqs, length(dna))
-    }
-    ids <- rep(as.character(NA), length = num.seqs)
-    ids[1] <- names(dist.to.centroid)[1]
-    if(num.seqs == 1) return(ids)
-    
-    for(i in 2:length(ids)) {      
-      current.ids <- ids[1:(i - 1)]
-      # add sequence with greatest mean distance and variance to current set
-      ids[i] <- setdiff(rownames(seq.dist), current.ids) %>% 
-        purrr::map(function(id) {
-          dist.to.current <- seq.dist[id, current.ids]
-          tibble::tibble(
-            id = id,
-            mean = mean(dist.to.current, na.rm = TRUE),
-            var = stats::var(dist.to.current, na.rm = TRUE)
-          )
+  result <- sapply(
+    apex::getSequences(x, simplify = FALSE),
+    function(dna) {
+      # calculate distance between sequences
+      seq.dist <- ape::dist.dna(
+        dna, 
+        model = model, 
+        pairwise.deletion = pairwise.deletion, 
+        as.matrix = TRUE
+      )
+      
+      # initialize with furthest sequence
+      opt <- options(warn = -1)
+      seq.cmd <- stats::cmdscale(seq.dist, k = length(dna) - 1)
+      options(opt)
+      range.mean <- apply(seq.cmd, 2, function(p) {
+        p %>% 
+          range(na.rm = TRUE) %>% 
+          mean()
+      })
+      dist.to.centroid <- (t(seq.cmd) - range.mean) %>% 
+        t() %>% 
+        apply(1, function(p) {
+          sqrt(sum(p ^ 2, na.rm = TRUE))
         }) %>% 
-        dplyr::bind_rows() %>% 
-        dplyr::arrange(dplyr::desc(.data$mean), dplyr::desc(.data$var)) %>% 
-        dplyr::slice(1) %>% 
-        dplyr::pull(.data$id)
-    }
-    ids
-  })
+        sort(decreasing = TRUE)
+      
+      num.seqs <- if(is.null(num.seqs)) {
+        length(dna) 
+      } else {
+        min(num.seqs, length(dna))
+      }
+      ids <- rep(as.character(NA), length = num.seqs)
+      ids[1] <- names(dist.to.centroid)[1]
+      if(num.seqs == 1) return(ids)
+      
+      for(i in 2:length(ids)) {      
+        current.ids <- ids[1:(i - 1)]
+        # add sequence with greatest mean distance and variance to current set
+        ids[i] <- setdiff(rownames(seq.dist), current.ids) %>% 
+          purrr::map(function(id) {
+            dist.to.current <- seq.dist[id, current.ids]
+            tibble::tibble(
+              id = id,
+              mean = mean(dist.to.current, na.rm = TRUE),
+              var = stats::var(dist.to.current, na.rm = TRUE)
+            )
+          }) %>% 
+          dplyr::bind_rows() %>% 
+          dplyr::arrange(dplyr::desc(.data$mean), dplyr::desc(.data$var)) %>% 
+          dplyr::slice(1) %>% 
+          dplyr::pull(.data$id)
+      }
+      ids
+    },
+    simplify = FALSE
+  )
   
   if(length(result) == 1 & simplify) result[[1]] else result
 }

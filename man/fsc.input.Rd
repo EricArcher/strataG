@@ -90,7 +90,8 @@ taken.}
 
 \item{growth}{the growth rate of the deme.}
 
-\item{...}{a set of comma-separated values for settings. See Notes for more information.}
+\item{...}{a set of comma-separated values for settings. See 
+Notes for more information.}
 
 \item{ploidy}{the desired ploidy of the final data. \code{deme.size} and 
 \code{sample.size} will be multiplied by this value in the parameter or 

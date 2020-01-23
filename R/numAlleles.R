@@ -18,5 +18,10 @@
 numAlleles <- function(g, by.strata = FALSE) {
   g <- .checkHapsLabelled(g)
   cols <- if(by.strata) c("locus", "stratum") else "locus"
-  as.data.frame(g@data[, list(num.alleles = dplyr::n_distinct(allele, na.rm = TRUE)), by = cols])
+  as.data.frame(
+    g@data[, 
+           list(num.alleles = dplyr::n_distinct(allele, na.rm = TRUE)), 
+           by = cols
+          ]
+  )
 }

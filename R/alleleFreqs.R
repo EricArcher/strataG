@@ -30,12 +30,14 @@
 alleleFreqs <- function(g, by.strata = FALSE, type = c("freq", "prop")) {
   g <- .checkHapsLabelled(g)
   
+  # create list of allele frequencies for each locus
   af <- if(by.strata) {
     lapply(split(g@data, g@data$locus), function(x) table(x$allele, x$stratum))
   } else {
     lapply(split(g@data, g@data$locus), function(x) table(x$allele))
   }
   
+  # if proportions requested divide frequencies by sum of frequencies (in each stratum)
   if(match.arg(type) == "prop") {
     af <- lapply(af, function(x) {
       if(length(dim(x)) == 1) x / sum(x) else t(t(x) / colSums(x))

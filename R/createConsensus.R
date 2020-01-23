@@ -21,11 +21,14 @@
 #' @export
 #' 
 createConsensus <- function(x, ignore.gaps = FALSE, simplify = TRUE) { 
-  result <- apex::getSequences(as.multidna(x), simplify = FALSE) %>% 
-    purrr::map(function(dna) {
+  result <- sapply(
+    apex::getSequences(as.multidna(x), simplify = FALSE), 
+    function(dna) {
       dna <- as.character(as.matrix(dna))
       apply(dna, 2, iupacCode, ignore.gaps = ignore.gaps)
-    })
+    },
+    simplify = FALSE
+  )
   
   if(length(result) == 1 & simplify) result[[1]] else result
 }

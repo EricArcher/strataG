@@ -26,13 +26,12 @@
 #' @export
 #' 
 setMethod("summary", "gtypes", function(object, ...) { 
-  header <- list(
+  .printSmryHeader(list(
     description = getDescription(object),
     num.ind = getNumInd(object), 
     num.loc = getNumLoci(object), 
     num.strata = getNumStrata(object)
-  ) %>% 
-    .printSmryHeader()
+  )) 
   cat("\n")
   
   .summaryStats <- function(x) {
@@ -46,14 +45,13 @@ setMethod("summary", "gtypes", function(object, ...) {
       )
     })
   }
-  ind.smry <- summarizeInds(object) %>% 
-    dplyr::select(-.data$id, -.data$stratum) %>% 
-    .summaryStats()
-  loci.smry <- summarizeLoci(object) %>% 
-    dplyr::select(-.data$locus) %>% 
-    .summaryStats()
   
-  cbind(ind.smry, loci.smry) %>% 
-    as.table() %>% 
-    print()
+  print(cbind(
+    summarizeInds(object) %>% 
+      dplyr::select(-.data$id, -.data$stratum) %>% 
+      .summaryStats(),
+    summarizeLoci(object) %>% 
+      dplyr::select(-.data$locus) %>% 
+      .summaryStats()
+  ))
 })

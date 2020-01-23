@@ -22,8 +22,8 @@
 #'
 #' @details Indexing a \code{gtypes} object with integers, characters, or
 #' logicals with the \code{[} operator follows the same rules as normal indexing
-#' in R. The order that individuals, loci, and strata are chosen in the order
-#' returned by \code{indNames}, \code{locNames}, and \code{strataNames}
+#' in R. The order that individuals, loci, and strata are chosen is the order
+#' returned by \code{getIndNames}, \code{getLocNames}, and \code{getStrataNames}
 #' respectively. If unstratified samples are present, they can be selected as a
 #' group either by including \code{NA} in the character or numeric vector of the
 #' \code{k} slot, or by providing a logical vector based on
@@ -448,17 +448,12 @@ setMethod(
     intersect(k, st)
   } else st[k]
 
+  # subset data
   if(length(i) == 0) stop("no samples selected")
   if(length(j) == 0) stop("no loci selected")
   if(length(k) == 0) stop("no strata selected")
 
-  x@data <- x@data %>%
-    dplyr::filter(
-      .data$id %in% i & 
-      .data$locus %in% j & 
-      .data$stratum %in% k
-    ) %>%
-    data.table::as.data.table()
+  x@data <- x@data[id %in% i & locus %in% j & stratum %in% k]
   if(nrow(x@data) == 0) {
     stop("the requested indices would form an empty gtypes object")
   }

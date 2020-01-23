@@ -15,6 +15,10 @@
 #' @param def matrix of parameter values to substitute into the model generated 
 #' by the \code{\link{fscSettingsDef}} function.
 #' @param label character string used to label output files for the simulation.
+#' @param use.wd use current working directory for input and output? If 
+#'   \code{FALSE} then a temporary directory in the session temporary directory. 
+#'   Note that this directory is deleted when the R session closed. See 
+#'   \code{\link{tempdir}} for more information.
 #' 
 #' @note
 #' 
@@ -71,11 +75,13 @@
 #' @export
 #' 
 fscWrite <- function(demes, genetics, migration = NULL, events = NULL, 
-                     est = NULL, def = NULL, label = "strataG.fsc") {
+                     est = NULL, def = NULL, label = "strataG.fsc",
+                     use.wd = TRUE) {
 
   # ---- Create parameter and settings list
   p <- list(
     label = make.names(label), 
+    folder = if(use.wd) "." else tempdir(),
     files = list(),
     settings = list(
       demes = demes, migration = migration, events = events,
@@ -323,7 +329,7 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
     p$label, 
     ifelse(!is.null(p$sim.params), ".tpl", ".par")
   )
-  f <- file(p$files$input, open = "wt")
+  f <- file(file.path(p$folder, p$files$input), open = "wt")
   writeLines("//Number of population samples (demes)", f)
   writeLines(as.character(n.demes), f)
   
@@ -391,7 +397,7 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
   cmplx.df <- cmplx.df[, c("is.int", "name", "output", "bounded", "reference")]
   
   p$files$est <- paste0(p$label, ".est")
-  f <- file(p$files$est, open = "wt")
+  f <- file(file.path(p$folder, p$files$est), open = "wt")
   writeLines("// Priors and rules file", f)
   writeLines("// *********************", f)
   writeLines("", f)
@@ -444,7 +450,7 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
     x <- rbind(sfs)
     rownames(x) <- NULL
     p$file$sfs <- paste0(p$label, "_", sfs.type, "pop0.obs")
-    .writeMat(x, p$file$sfs)
+    .writeMat(x, file.path(p$folder, p$file$sfs))
   } else {
     p$file$sfs <- sapply(sfs, function(x) {
       row.d <- regmatches(rownames(x), regexpr("d[[:digit:]]+", rownames(x)))
