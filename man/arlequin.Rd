@@ -2,30 +2,78 @@
 % Please edit documentation in R/arlequin.R
 \name{arlequin}
 \alias{arlequin}
+\alias{arlequinRead}
+\alias{arp2gtypes}
+\alias{arlequinWrite}
 \alias{read.arlequin}
 \alias{write.arlequin}
 \title{Read and Write Arlequin Files}
 \usage{
+arlequinRead(file)
+
+arp2gtypes(arp, avoid.dups = FALSE)
+
+arlequinWrite(g, label = NULL, locus = 1)
+
 read.arlequin(file)
 
-write.arlequin(g, label = NULL, locus = 1)
+write.arlequin(file, label = NULL, locus = 1)
 }
 \arguments{
-\item{file}{filename of an input arlequin project (.arp) file.
-\code{read.arlequin} can only read files with DataType of FREQUENCY, DNA, 
-or MICROSAT.}
+\item{file}{filename of an input arlequin project (.arp) file. See
+\code{Notes} for details on how .arp files are parsed.}
+
+\item{arp}{a list of arlequin profile information and data as returned from 
+\code{arlequinRead}.}
+
+\item{avoid.dups}{logical. Should sample identifiers be combined with 
+strata names to avoid duplicate identifiers between strata? If set to 
+\code{FALSE}, ids will be left unchanged, but an error will be thrown
+when the \code{gtypes} object is created if duplicated ids are found.}
 
 \item{g}{a \linkS4class{gtypes} object.}
 
 \item{label}{label for Arlequin project filename (.arp). If \code{NULL}, the 
-gtypes description is used if present.}
+gtypes description is used.}
 
 \item{locus}{numeric or character designation of which locus to write for 
 haploid data.}
 }
+\value{
+\describe{
+ \item{arlequinRead}{a list containing:
+   \tabular{ll}{
+     \code{file} \tab name and full path of .arp file that was read.\cr
+     \code{profile.info} \tab list containing parameters in 
+       \code{[[Profile]]} section of .arp file. All parameters are provided.
+       Parameters unset in .arp file are set to default values.\cr
+     \code{data.info} \tab list containing data from \code{[[Data]]} section 
+       of .arp file. Can contain elements for \code{haplotype.definition} 
+       (a data.frame), \code{distance.matrix} (a matrix), \code{sample.data} 
+       (a data.frame), or \code{genetic.structure} (a list).\cr
+   }}
+ \item{arp2gtypes}{a \linkS4class{gtypes} object.}
+ \item{arlequinWrite}{the filename of the .arp file that was written.}
+}
+}
 \description{
-Read an Arlequin-formatted project input file into a 
-  \code{gtypes} object, or write an input file from a \code{gtypes} object.
+Read an Arlequin-formatted project input file (.arp). Convert 
+  .arp data into \code{gtypes} object. Write an input file from a 
+  \code{gtypes} object.
+}
+\details{
+\tabular{ll}{
+  \code{arlequinRead} \tab parses a .arp file.\cr
+  \code{arp2gtypes} \tab converts list from parsed .arp file to gtypes.\cr
+  \code{arlequinWrite} \tab writes gtypes to .arp file.\cr
+}
+}
+\note{
+\code{arp2gtypes()} will not create a \code{gtypes} object for 
+  Arlequin projects with relative frequency data (\code{DataType=FREQUENCY}
+  and \code{FREQUENCY=REL}). If \code{DataType=DNA} and
+  \code{GenotypicData=0}, sequences for each haplotype or individual are 
+  assumed to be from a single locus.\cr
 }
 \references{
 Excoffier, L.G. Laval, and S. Schneider (2005) 
