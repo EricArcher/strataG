@@ -75,6 +75,22 @@ Read an Arlequin-formatted project input file (.arp). Convert
   \code{GenotypicData=0}, sequences for each haplotype or individual are 
   assumed to be from a single locus.\cr
 }
+\examples{
+# write test microsat data .arp file
+f <- arlequinWrite(msats.g)
+
+# read .arp file and show structure
+msats.arp <- arlequinRead(f)
+print(str(msats.arp))
+
+# convert parsed data to gtypes object
+msats.arp.g <- arp2gtypes(msats.arp)
+msats.arp.g
+
+# compare to original
+msats.g
+
+}
 \references{
 Excoffier, L.G. Laval, and S. Schneider (2005) 
   Arlequin ver. 3.0: An integrated software package for population genetics 

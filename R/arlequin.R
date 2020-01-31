@@ -133,8 +133,6 @@ arlequinRead <- function(file) {
   dist.mat.i <- which(arp == "[[DistanceMatrix]]")
   if(length(dist.mat.i) == 1) {
     data.info$distance.matrix$name <- .getValues("MatrixName", arp)
-    # mat.size <- as.numeric(.getValues("MatrixSize", arp))
-    # data.info$distance.matrix$size <- mat.size
     matrix.data <- .getExtern("MatrixData", arp, folder = dirname(file))
     matrix.data <- if(is.null(matrix.data)) {
       .extractDataBlock(.getLine("MatrixData", arp), arp)
@@ -158,7 +156,6 @@ arlequinRead <- function(file) {
   samples.i <- which(arp == "[[Samples]]")
   if(length(samples.i) == 1) {
     sample.name <- .getValues("SampleName", arp)
-    #sample.size <- as.numeric(.getValues("SampleSize", arp))
     sample.data <- lapply(.getLine("SampleData", arp), function(i) {
       sample.data.i <- .extractDataBlock(i, arp)
       # replace missing data with NA
@@ -199,7 +196,6 @@ arlequinRead <- function(file) {
   structure.i <- which(arp == "[[Structure]]")
   if(length(structure.i) == 1) {
     data.info$genetic.structure$name <- .getValues("StructureName", arp)
-    # nb.groups = as.numeric(.getValues("NbGroups", arp))
     data.info$genetic.structure$groups <- lapply(
       .getLine("Group", arp), 
       function(i) gsub("\"", "", unlist(.extractDataBlock(i, arp)))

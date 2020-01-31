@@ -107,6 +107,7 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = 0,
   
   run.params <- as.list(environment())
   run.params$p <- NULL
+  run.params$sfs.type <- match.arg(sfs.type)
   
   is.tpl <- !is.null(p$sim.params)
   is.est <- is.tpl & !is.null(p$files$est)

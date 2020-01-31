@@ -153,10 +153,17 @@ fscReadArp <- function(p, sim = c(1, 1),
 
 #' @noRd
 #' 
-.fscParseArpFile <- function(file) {
+.fscParseArpFile <- function(fname) {
   # read .arp file
-  cat(format(Sys.time()), "reading", file, "\n")
-  f <- readr::read_lines(file)
+  cat(format(Sys.time()), "reading", fname, "\n")
+  f <- scan(
+    fname, 
+    what = "character", 
+    sep = "\n", 
+    quiet = TRUE
+  )
+  f <- stringi::stri_trim_both(f)
+  f <- f[f != ""]
   
   # get information on polymorphic sites
   chrom.lines <- grep("polymorphic positions on", f)
@@ -177,17 +184,20 @@ fscReadArp <- function(p, sim = c(1, 1),
   } else NULL
   
   # get start and end points of data blocks
-  start <- grep("SampleData=", f) + 1
-  end <- which(f == "}") - 2
-  pos <- cbind(start, end)
+  start <- grep("SampleData=", f)
+  end <- which(f == "}")
+  end <- sapply(start, function(x) end[which.max(end > x)])
+  pos <- cbind(start = start + 1, end = end - 1)
   
-  data.mat <- if(any((end - start) > 0)) {
+  data.mat <- if(any((pos[, "end"] - pos[, "start"]) > 0)) {
     # extract matrix for each data block
-    data.mat <- do.call(rbind, lapply(1:nrow(pos), function(i, pos) {
-      f.line <- f[pos[i, 1]:pos[i, 2]]
+    data.mat <- do.call(rbind, lapply(1:nrow(pos), function(i) {
+      f.line <- f[pos[i, "start"]:pos[i, "end"]]
+      # make matrix and remove remove frequency column
       result <- do.call(rbind, strsplit(f.line, "[[:space:]]+"))[, -2]
+      # return id, deme number (i), and data columns
       cbind(result[, 1], rep(i, nrow(result)), result[, -1])
-    }, pos = pos))
+    }))
     colnames(data.mat) <- c("id", "deme", paste0("col", 3:ncol(data.mat)))
     data.mat
   } else NULL
@@ -476,7 +486,13 @@ fscReadParamEst <- function(p) {
   folder <- file.path(p$folder, p$label)
   fname <- dir(folder, pattern = ".brent_lhoods$", full.names = T)
   if(length(fname) == 0) return(NULL)
-  f <- readr::read_lines(fname) 
+  f <- scan(
+    fname, 
+    what = "character", 
+    sep = "\n", 
+    quiet = TRUE, 
+    blank.lines.skip = FALSE
+  )
   f <- f[grep("^Param|^[[:digit:]]", f)]
   f <- strsplit(f, "\t")
   x <- as.data.frame(do.call(rbind, lapply(f[-1], as.numeric)))
@@ -488,7 +504,13 @@ fscReadParamEst <- function(p) {
 #' @noRd
 #' 
 .fscReadVector <- function(fname) {    
-  f <- readr::read_lines(fname)
+  f <- scan(
+    fname, 
+    what = "character", 
+    sep = "\n", 
+    quiet = TRUE, 
+    blank.lines.skip = FALSE
+  )
   stats::setNames(
     as.numeric(do.call(c, strsplit(f[2], "\t"))),
     do.call(c, strsplit(f[1], "\t"))
@@ -550,7 +572,14 @@ fscReadSFS <- function(p, sim = 1) {
 .fscReadSFSPolymSites <- function(sfs.dir) {
   fname <- dir(sfs.dir, pattern = "_numPolymSites.obs$", full.names = TRUE)
   if(length(fname) == 0) return(NULL)
-  f <- readr::read_lines(fname, skip = 1)
+  f <- scan(
+    fname, 
+    what = "character", 
+    sep = "\n", 
+    skip = 1,
+    quiet = TRUE, 
+    blank.lines.skip = FALSE
+  )
   stats::setNames(
     as.numeric(unlist(strsplit(f, "\t"))),
     c("num.sim", "num.polym", "num.gt2.alleles", "num.fix.anc", "num.no.anc")

@@ -146,14 +146,15 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95,
     
     # keep only polymorphic loci
     polymorph <- apply(mat.st, 2, function(x) length(unique(x)) > 1)
-    if(length(polymorph) < 2) {
+    if(sum(polymorph) < 2) {
       warning(
         "Fewer than two loci are polymorphic in", 
-        paste0("'", unique(st[i]), "'."), "NULL returned.", call. = FALSE
+        " '", unique(st[i]), "'. NULL returned.", 
+        call. = FALSE
       )
       return(NULL)
     }
-    mat.st <- mat.st[, polymorph]
+    mat.st <- mat.st[, polymorph, drop = FALSE]
     
     # calculate r-squared among pairs of loci
     # use matrix algebra if no missing data
@@ -237,6 +238,7 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95,
   })
   
   ne.smry <- ne.smry[!sapply(ne.smry, is.null)]
+  if(length(ne.smry) == 0) return(NULL)
   do.call(rbind, ne.smry) %>% 
     as.data.frame() %>% 
     tibble::rownames_to_column("stratum") %>% 
