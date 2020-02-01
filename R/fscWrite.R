@@ -76,7 +76,7 @@
 #' 
 fscWrite <- function(demes, genetics, migration = NULL, events = NULL, 
                      est = NULL, def = NULL, label = "strataG.fsc",
-                     use.wd = TRUE) {
+                     use.wd = FALSE) {
 
   # ---- Create parameter and settings list
   p <- list(
