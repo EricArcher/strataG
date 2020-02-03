@@ -9,7 +9,7 @@ alleleFreqs(g, by.strata = FALSE, type = c("freq", "prop"))
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
-\item{by.strata}{logical - return results by strata?}
+\item{by.strata}{logical determining if results should be returned by strata?}
 
 \item{type}{return counts (\code{"freq"}) or proportions (\code{"prop"})}
 }

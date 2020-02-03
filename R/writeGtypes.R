@@ -24,16 +24,16 @@
 #' @examples \dontrun{
 #' # Write microsatellites with one column per locus
 #' data(msats.g)
-#' write.gtypes(msats.g, one.col = TRUE)
+#' writeGtypes(msats.g, one.col = TRUE)
 #' 
 #' # Write control region data as frequency tables
 #' data(dloop.g)
-#' write.gtypes(dloop.g, as.frequency = TRUE)
+#' writeGtypes(dloop.g, as.frequency = TRUE)
 #' }
 #' 
 #' @export
 #' 
-write.gtypes <- function(g, label = NULL, folder = NULL, by.strata = TRUE,
+writeGtypes <- function(g, label = NULL, folder = NULL, by.strata = TRUE,
                          as.frequency = FALSE, freq.type = c("freq", "prop"), ...) {
   label <- .getFileLabel(g, label)
   

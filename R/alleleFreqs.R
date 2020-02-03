@@ -2,7 +2,7 @@
 #' @description Calculate allele frequencies or proportions for each locus.
 #'
 #' @param g a \linkS4class{gtypes} object.
-#' @param by.strata logical - return results by strata?
+#' @param by.strata logical determining if results should be returned by strata?
 #' @param type return counts (\code{"freq"}) or proportions (\code{"prop"})
 #'
 #' @return A list of allele frequencies for each locus. Each element is a

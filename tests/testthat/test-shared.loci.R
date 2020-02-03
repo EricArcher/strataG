@@ -13,3 +13,13 @@ test_that("shared alleles are properly computed", {
   expect_equal(nchar(sa.wch[1, "D11t"]), 13)
   expect_equal(nchar(sa.wch[3, "Ttr34"]), 38)
 })
+
+test_that("duplicates are identified", {
+  data(msats.g)
+  
+  dups <- dupGenotypes(msats.g)
+  
+  expect_equal(nrow(dups), 12)
+  expect_equal(dups[1, "prop.loci.shared"], 1)
+  expect_equal(unname(unlist(dups[1, c("ids.1", "ids.2")])), c("41579", "45237"))
+})

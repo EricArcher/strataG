@@ -12,7 +12,7 @@ fscWrite(
   est = NULL,
   def = NULL,
   label = "strataG.fsc",
-  use.wd = TRUE
+  use.wd = FALSE
 )
 }
 \arguments{

@@ -1,0 +1,706 @@
+---
+title: "Running `fastsimcoal2` through `strataG`"
+author: "Eric Archer"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+vignette: >
+  %\VignetteIndexEntry{fastsimcoal2}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  comment = NA
+)
+options(scipen = 99)
+```
+
+The program, `fastsimcoal2`, is an implementation of a fast and powerful coalescent simulator. The program comes as a command line executable (current version is `fsc26`) which operates by reading a formatted text file. Output is then written to a set of formatted text files in a folder for the run. 
+
+The R package, `strataG` contains a set of functions designed to ease interaction with `fastsimcoal2`, sampling of scenario parameters, and downstream analyses in R. The `fastsimcoal2` manual is an excellent resource for details on input file formatting, command line options, and simulator usage. This vignette is not designed to replace that manual, but rather be a guide for how to run the simulator through `strataG` to both produce data and set up models for demographic parameter estimation.
+
+## Installation
+
+1\. The latest version of the R package `strataG` can be installed from github:
+```{r eval=FALSE}
+if(!require(devtools)) install.packages(devtools)
+devtools::install_github("ericarcher/strataG", dependencies = TRUE)
+```
+
+2\. You will also need to download and install the latest version (2.6.0.2 as of this writing) of `fastsimcoal2` from: http://cmpg.unibe.ch/software/fastsimcoal2/
+
+Once the file has been downloaded and uncompressed, `fastsimcoal2` will need to be placed somewhere in your system's PATH so that `strataG` can access it from the command line in whatever the current working directory is. There are different methods for editing the PATH depending on your operating system. Here are a couple of links describing the process:
+
+Windows PCs: https://www.howtogeek.com/118594/how-to-edit-your-system-path-for-easy-command-line-access/  
+Mac/UNIX: https://www.architectryan.com/2012/10/02/add-to-the-path-on-mac-os-x-mountain-lion/
+
+3\. Test that it has been correctly installed in the path by opening a terminal window (in RStudio, you can use the menu option Tools|Terminal|New Terminal). At the prompt, type `fsc26` and press Enter. If it has been correctly installed, you should see a list of command line options for `fastsimcoal2`.
+
+## Overview
+
+There are four main steps to carry out for every `fastsimcoal2` run:
+
+1) Specify simulation parameters with a set of `fscSettingsXXX()` functions.
+2) Write input files with `fscWrite()`.
+3) Run the simulation with `fscRun()`.
+4) Read the output with `fscRead()`.  
+  
+First we clear the workspace and load the `strataG` package.
+
+```{r}
+rm(list = ls())
+library(strataG)
+```
+
+### Setting the parameters
+
+For our initial example, we will walk through the steps to set up and run a simple simulation of a population with 2000 individuals from which we draw 10 samples represented by 20 microsatellite loci with a mutation rate of 10^-4^.  
+The first step is to specify the simulation parameter settings. There are four categories of parameters that can be specified: deme information, migration rates, historical events, and genetic information. To create the input for each category, there is a `fscSettingsX()` function, where "X" is either "Demes", "Migration", "Events", or "Genetics". The minimum parameters necessary to start a simulation are descriptions of the deme and the genetic data. 
+
+Here we use the `fscDeme()` function to specify the deme size and sample size. We will leave the other possible arguments, `sample.time`, `inbreeding`, and `growth` to their defaults. Here we specify a deme with 1000 randomly mating individuals, of which we want to sample 4 individuals.
+
+```{r}
+deme0 <- fscDeme(deme.size = 1000, sample.size = 4)
+```
+
+The deme input is then specified by supplying each defined deme to the `fscSettingsDemes()` function:
+
+```{r}
+demes <- fscSettingsDemes(deme0)
+```
+
+Note that because `fastsimcoal2` generates haploid genes, we have to specify the ploidy of the desired output via the `ploidy` argument to `fscSettingsDemes()`. This value is then used when writing the input files as a multiplier for deme and sample size to ensure that we are simulating enough data for the requested number of individuals. By default, `ploidy = 2`, so we only need to change it if we specifically want to simulate a haploid or polyploid population.
+
+Along with the deme size and sample size, we also have the option of specifying a time in the past when the samples are to be taken (`sample.time`), which defaults to 0 meaning the present time, an inbreeding coefficient (`inbreeding`), and a growth rate for the deme (`growth`). The latter two arguments default to 0 as well so we don't have to explicitly define them unless necessary.
+
+Next, we specify the microsattelites that we want to simulate. There are four marker types that we could use: DNA sequences, SNPs, microsattelites, and "standard" data, which is a simple infinite alleles marker. Each is specified with its own `fscBlock_xxx()` function, each of which has arguments specific to that marker type. Here is the microsatellite specification:
+
+```{r}
+msats <- fscBlock_microsat(num.loci = 1, mut.rate = 1e-3)
+```
+
+We have specified this as a single locus (`num.loci = 1`) because each function call creates a "block" of linked loci. The recombination rate among loci within a block can be specified with the `recomb.rate` argument. However, we want 5 unlinked loci, so we will indicate this by putting them on 5 separate "chromosomes". We create the input for genetic data with a call to `fscSettingsGenetics()`:
+
+```{r}
+genetics <- fscSettingsGenetics(msats, num.chrom = 5)
+```
+
+
+### Writing the input file
+
+Now that we have our parameters specified, we will write the input file using the `fscWrite()` function. This function both writes an input file and returns a list of parameters.
+
+```{r}
+ex1.params <- fscWrite(demes = demes, genetics = genetics, label = "ex1")
+```
+
+This writes a parameter input file in the current working directory, called `r ex1.params$files$input`. That file looks like this:  
+
+```{r echo=FALSE}
+cat(readLines(file.path(ex1.params$folder, ex1.params$files$input)), sep = '\n')
+```
+
+Here are the contents of the parameter list that is returned:
+
+```{r}
+print(str(ex1.params))
+```
+
+It has three elements: 
+
+`label`: the run label that we specified at the beginning.  
+`files`: a list of files written and output.  
+`settings`: a list of the settings used to write the input file.  
+
+This parameter object is used to run the simulation, will be updated with more information about the run, and will be used to extract and parse the data.
+
+### Running the simulation
+
+We are now ready to run the simulation, which is accomplished with the `fscRun()` function. For example purposes, we will only run a single replicate. Note that the function returns an updated `params` object that we will need for later.
+
+```{r}
+ex1.params <- fscRun(ex1.params, num.sim = 1)
+```
+
+This created a folder for the run and made three files in it:
+
+```{r}
+dir(ex1.params$label)
+```
+
+The file ending in ".arp" is an Arlequin formatted input file that contains the simulated genetic data. There will be one of these files for every replicate run.
+The `ex1.params` object has also been updated with two lists, one contains the run parameters (`$run.params`), and the other contains information used to map the loci in the output ".arp" file with the specified loci (`$locus.info`):
+
+```{r}
+str(ex1.params[c("run.params", "locus.info")])
+```
+
+### Reading the genetic data
+
+Depending on parameters were used to run the simulation, and the kind of genetic data being simulated, there will be different files written to the output folder. There are separate functions for reading these different kinds of output. For Arlequin files, we use the `fscReadArp()` function.
+
+```{r}
+arp.file <- fscReadArp(ex1.params)
+str(arp.file)
+
+# The first 6 columns
+arp.file[, 1:6]
+```
+
+This function produces a data frame with one row for each individual genotype. The first two columns list the individual ids and their deme membership, and every column thereafter contains the genetic data. You'll notice that the id column is composed of two different ids. This is because the actual output of the .arp file contains one row per haploid individual. We make diploid individuals by combining every two haplotypes.
+
+### Multiple genetic blocks
+
+Let's simulate a more complex combination of genetic markers to see how to select specific markers from each .arp file.
+
+```{r}
+# create 3 independent chromosomes with the same structure of four markers
+complex.chroms <- fscSettingsGenetics(
+  fscBlock_microsat(2, 1e-4),
+  fscBlock_dna(4, 1e-5),
+  fscBlock_dna(6, 1e-3),
+  fscBlock_microsat(2, 1e-5),
+  num.chrom = 3
+)
+complex.params <- fscWrite(
+  demes = demes, 
+  genetics = complex.chroms,
+  label = "complex_chroms"
+)
+complex.params <- fscRun(complex.params, num.sims = 1)
+arp <- fscReadArp(complex.params)
+str(arp)
+```
+
+Note that we get all marker types and loci simulated. By default, each locus is separated into its own column. Column names are assigned denoting the chromsome number (e.g., C2), the block number (e.g., B1), what kind of marker it is (e.g., MICROSAT). If there are several loci for that marker, then that is numbered as well (e.g., L1). 
+
+If multiple markers have been simulated, specific markers can be selected by using the `marker` argument. Below we read only the microsattelite loci that were generated.
+
+```{r}
+str(fscReadArp(complex.params, marker = "microsat"))
+```
+
+Genotypes can also be formatted to combine alleles into  one column per locus by setting `one.col = TRUE`:
+
+```{r}
+fscReadArp(complex.params, marker = "microsat", one.col = TRUE)[, 1:6]
+```
+
+Specific chromosomes can be selected by providing their numbers to the `chrom` argument:
+
+```{r}
+arp <- fscReadArp(complex.params, chrom = c(1, 3), one.col = TRUE)
+str(arp)
+```
+
+Each chromosome can also be separated into its own list by specifying `sep.chrom = TRUE`:
+
+```{r}
+arp <- fscReadArp(complex.params, sep.chrom = TRUE)
+str(arp)
+```
+
+## Specifying SNPs
+
+Although `fastsimcoal2` has a "SNP" marker type, the manual explicitly suggests that it not be used to actually simulate SNPs due to biases in the site frequency spectrum that can arise from the way they are generated. In the `strataG` wrapper, SNPs are simulated based on the current recommended procedure by Excoffier as short DNA sequences with that are only allowed to mutate via transitions (`transition.rate = 1`).
+
+The general strategy is to simulate a short sequence of base pairs over a large number of chromosomes such that they are all considered to be independent, unlinked loci. The mutation rate can then be adjusted to produce the desired number of SNPs. When running the simulation, we specify the `all.sites = F` argument, which will return only polymorphic sites and save time parsing the data and having to filter out monomorphic sites.
+
+Here we set up a simple model to demonstrate:
+
+```{r}
+rm(list = ls())
+library(strataG)
+
+demes <- fscSettingsDemes(fscDeme(deme.size = 1000, sample.size = 10))
+genetics <- fscSettingsGenetics(fscBlock_snp(10, 1e-6), num.chrom = 1000)
+p <- fscWrite(demes = demes, genetics = genetics, label = "ex2.snps.1k")
+p <- fscRun(p, all.sites = F)
+snp.df <- fscReadArp(p)
+
+# an example of the data generated
+snp.df[1:6, 1:6]
+```
+
+This particular run generated `r ncol(snp.df) - 2` out of a possible `r p$locus.info$num.markers[1] * attr(p$settings$genetics, "num.chrom")` SNP loci simulated.
+
+### Linked vs. unlinked SNPs
+
+Some of these SNPs are linked on the same 10 base pair chromosome. Let's see what percent of chromosomes (loci) contain 1, 2, 3.. SNPs. 
+
+```{r}
+snpOccurFreq <- function(mat) {
+  # Extract the SNP names from the matrix column names
+  snp.name <- colnames(mat[, -(1:2)])
+  # Extract the chromosome name (starts with "C" and is followed by numbers) 
+  #   from the SNP names
+  chrom.names <- regmatches(snp.name, regexpr("^C[[:digit:]]+", snp.name))
+  # Count number of occurrences of each chromosome
+  chrom.freq <- table(chrom.names)
+  # Get frequencies of number of occurrences (how many 1s, 2s, 3s...)
+  table(chrom.freq, dnn = NULL)
+}
+
+# The occurrence frequencies
+snp.occ.freq <- snpOccurFreq(snp.df)
+snp.occ.freq
+
+# Convert to proportions
+snp.occ.prop <- prop.table(snp.occ.freq)
+round(snp.occ.prop, 3)
+```
+
+This shows that most SNPs (`r paste0(round(snp.occ.prop[1], 0) * 100, "%")`) are non-linked, but there are some loci with more than one SNP. If we want a data set of only unlinked loci, we will have to randomly select one SNP from each locus.
+
+```{r}
+sampleOnePerLocus <- function(mat) {
+  # Extract the SNP names from the matrix column names
+  snp.name <- colnames(mat[, -(1:2)])
+  # Extract the chromosome name (starts with "C" and is followed by numbers) 
+  #   from the SNP names
+  chrom.names <- regmatches(snp.name, regexpr("^C[[:digit:]]+", snp.name))
+  # Choose one SNP per chromosome
+  one.per.loc <- tapply(colnames(mat[, -(1:2)]), chrom.names, sample, size = 1)
+  # Return matrix of 
+  mat[, c("id", "deme", one.per.loc)]
+}
+
+unlinked.snps <- sampleOnePerLocus(snp.df)
+# number of unlinked SNPs
+ncol(unlinked.snps) - 2
+```
+
+To get more SNPs, we could increase the mutation rate, however that will increase the number of hits on multiple sites at each locus as well. If we decrease the number of sites at each locus, we do not increase mutations at other loci because each locus is simulated independently. The only way to increase the number of independent SNPs is the increase the number of independent loci (chromosomes). Note that this will also increase the time each simulation takes.
+
+Here we simulated 10,000 chromosomes rather than 1,000 we simulated previously.
+
+```{r}
+genetics <- fscSettingsGenetics(fscBlock_snp(10, 1e-6), num.chrom = 10000)
+p <- fscWrite(demes = demes, genetics = genetics, label = "ex2.snps.10k")
+p <- fscRun(p, all.sites = F)
+snp.df <- fscReadArp(p)
+
+# number of SNPs
+ncol(snp.df) - 2
+
+# proportion of n SNPs per locus
+round(prop.table(snpOccurFreq(snp.df)), 3)
+```
+
+By increasing the number of loci by an order of magnitude we get an order of magnitude more SNPs, but keep the same proportion of unlinked SNPs. For the sake of comparison, here is the result when we increase mutation rate by an order of magnitude, but keep the number of chromosomes at 1,000:
+
+```{r}
+genetics <- fscSettingsGenetics(fscBlock_snp(10, 1e-5), num.chrom = 1000)
+p <- fscWrite(demes = demes, genetics = genetics, label = "ex2.snps.mut")
+p <- fscRun(p, all.sites = F, num.sims = 1)
+snp.df <- fscReadArp(p)
+
+# number of SNPs
+ncol(snp.df) - 2
+
+# proportion of n SNPs per locus
+snp.occ.freq <- snpOccurFreq(snp.df)
+round(prop.table(snp.occ.freq), 3)
+```
+
+We still get an order of magnitude more SNPs, but we have a much lower percentage that are unlinked. The full number of unlinked SNPs in this run is `r sum(snp.occ.freq)`, which is more than we had with a lower mutation rate and the same number of loci, but less than we had at the same mutation rate, but with more loci. 
+
+### Infinite sites
+
+The final twist to this issue is that we are currently not using an infinite sites model. Because SNPs are being simulated as DNA base pairs that only mutate by transitions, there is chance of having multiple mutations at the same site that would go unobserved. Thus, the number of SNPs without infinite sites turned on will always be an underestimate of the actual number of segregating sites. 
+The expected number of SNPs is $2N\mu s\sum_{i=1}^{n-1}(\frac{1}{i})$ where N is the number of haploid individuals, $\mu$ is the mutation rate, n is the number of haploid genes sampled, and s is the total number of sites.  
+Below is a model that we'll use to demonstrate the effect. We have a diploid population size of 5000 (10,000 haploid genes), and we're sampling 5 individuals (10 haploid genes). The mutation rate is 10^-5^ and we'll be simulating 1000 unlinked loci, each one 10 base pairs long. Thus, the expected number of SNPs is `r round(2 * 10000 * 1e-5 * sum(1 / 1:(10 - 1)) * 10 * 1000, 0)`.
+
+```{r}
+demes <- fscSettingsDemes(fscDeme(deme.size = 5000, sample.size = 5))
+genetics <- fscSettingsGenetics(fscBlock_snp(10, 1e-5), num.chrom = 1000)
+p <- fscWrite(demes = demes, genetics = genetics, label = "ex2.inf.sites")
+p <- fscRun(p, all.sites = F)
+snp.df <- fscReadArp(p)
+
+# number of SNPs recovered
+ncol(snp.df) - 2
+```
+
+Here's the same model with infinite sites turned on (`inf.sites = T`), meaning every mutation is recorded as a new allele, even if it is at the same site. 
+
+```{r}
+p <- fscRun(p, all.sites = F, inf.sites = T, num.sims = 1)
+snp.df <- fscReadArp(p)
+
+# number of SNPs recovered
+ncol(snp.df) - 2
+```
+
+Here the observed number of SNPs is much closer to the expected number. The decision of whether or not to use an infinite sites model depends on if you are trying to simulate loci for comparison to an empirical data set where you are not able to observe multiple mutations on the same site (`inf.sites = FALSE`) or to a theoretical model (`inf.sites = TRUE`), where it is assumed that these mutations have been observed. Note that reported mutation rates are frequently underestimates of the true mutation rate unless they actively try to account for these hidden mutations.
+
+## Migration
+
+
+Migration between demes is specified by supplying matrices of migration rates for all pairs of demes through the `fscSettingsMigration()` function. The values in a migration matrix are read as the probability that an individual will migrate from one deme (rows) to another deme (column). Migration rates (m) between any pair of demes do not have to be the same (e.g., $m_{i,j}$ does not have to equal $m_{j,i}$). Also, values along the diagonal are ignored, but do have to be numeric.
+
+Here's a simple migration matrix where two demes exchange individuals at a rate of 0.00001 per generation.
+
+```{r message=FALSE}
+m <- 0.00001
+mig.mat <- matrix(c(0, m, m, 0), nrow = 2)
+mig.mat
+```
+
+We then set up and run a simulation where of two demes with 1000 individuals. We take 10 samples from each and are simulating 1000 SNPs:
+
+```{r}
+demes <- fscSettingsDemes(fscDeme(1000, 10), fscDeme(1000, 10))
+genetics <- fscSettingsGenetics(fscBlock_snp(1, 1e-6), num.chrom = 1000)
+p <- fscWrite(
+  demes = demes,
+  migration = fscSettingsMigration(mig.mat),
+  genetics = genetics,
+  label = "ex3.mig.ex"
+)
+p <- fscRun(p, all.sites = F)
+```
+
+The expected number of migrants per generation (Nm) is `r 1000 * m` which shouldn't be enough to homogenize the populations. We can confirm with an Fst test:
+
+```{r}
+snp.df <- fscReadArp(p, one.col = F)
+snp.g <- df2gtypes(snp.df, ploidy = 2)
+overallTest(snp.g, stat = "fst")
+```
+
+As expected, Fst is relatively high and shows significant differentiation. Lets see what happens if we increase migration several orders of magnitude.
+
+```{r results = "hide"}
+m.vec <- c(0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05)
+fst <- sapply(m.vec, function(m) {
+  mig.mat <- matrix(c(0, m, m, 0), nrow = 2)
+  p <- fscWrite(
+    demes = demes,
+    migration = fscSettingsMigration(mig.mat),
+    genetics = genetics, 
+    label = "mig.test"
+  )
+  p <- fscRun(p, all.sites = F, inf.sites = T)
+  snp.df <- fscReadArp(p, one.col = F)
+  snp.g <- df2gtypes(snp.df, ploidy = 2)
+  overallTest(snp.g, stat = c("fst"), quietly = T)$result[1, ]
+})
+```
+```{r}
+cbind(
+  m = m.vec, 
+  Nm = 1000 * m.vec, 
+  expFst = 1 / ((4 * 1000 * m.vec) + 1), 
+  t(fst)
+)
+```
+
+As expected, Fst decreases as m and Nm increase, becoming non-significant at the largest value, indicating that between 10 and 50 migrants per generation is sufficient to homogenize these two demes.
+
+We can set up a variety of migration rate matrices to examine various forms of connectivity among demes. Two classical forms are island and stepping stone models. In an island model, migration occurs between all populations, and in the simplest form all migration rates are equal. 
+
+### Island model
+
+Here is an island model for 5 populations with m set to 0.0005:
+
+```{r}
+num.demes <- 5
+m <- 0.0005
+
+mig.rate <- m / (num.demes - 1)
+island.mat <- matrix(rep(mig.rate, num.demes ^ 2), nrow = num.demes)
+diag(island.mat) <- 0
+island.mat
+
+qgraph::qgraph(island.mat)
+```
+
+Note that m is the rate for the entire population, so we have to apportion it to each population by dividing it by the number of connections (k - 1) for every entry. As mentioned before, `fastsimcoal2` ignores the diagonal, so we set it to 0 so that the between deme rates are highlighted in the figure.
+
+### Stepping stone model
+
+In a stepping stone model, migration is only between neighboring demes, which sets up a form of isolation by distance. Here is some code to set up a matrix representing the same 5 demes in a stepping stone configuration.
+
+```{r}
+mig.rate <- m / 2
+step.mat <- matrix(0, nrow = num.demes, ncol = num.demes)
+# set rate for neighbors
+for (k in 1:(num.demes - 1)) {
+  step.mat[k, k + 1] <- step.mat[k + 1, k] <- mig.rate
+}
+# demes at ends
+step.mat[1, num.demes] <- step.mat[num.demes, 1] <- mig.rate
+diag(step.mat) <- 0
+step.mat
+
+qgraph::qgraph(step.mat)
+```
+
+In this configuration, demes are linked, with each exchanging 0.00025 of its members with each neighbor. This form makes for a closed stepping stone model as the ends are linked. For an open, linear model with equivalent migration rates for the end demes, one would double their rates with their neighbor (e.g., `step.mat[1, 2] <- 0.0005` and `step.mat[1, 5] <- 0`).
+
+Here's the simulation with the island model. 
+
+```{r}
+demes <- fscSettingsDemes(
+  fscDeme(1000, 10), fscDeme(1000, 10), fscDeme(1000, 10), 
+  fscDeme(1000, 10), fscDeme(1000, 10)
+)
+genetics <- fscSettingsGenetics(fscBlock_snp(1, 1e-5), num.chrom = 1000)
+p.island <- fscWrite(
+  demes = demes,
+  migration = fscSettingsMigration(island.mat),
+  genetics = genetics,
+  label = "ex3.island"
+)
+p.island <- fscRun(p.island, all.sites = F)
+```
+
+...and the one with the stepping stone model.
+
+```{r}
+p.step <- fscWrite(
+  demes = demes,
+  migration = fscSettingsMigration(step.mat),
+  genetics = genetics,
+  label = "ex3.stepping.stone"
+)
+p.step <- fscRun(p.step, all.sites = F)
+```
+
+Here's Fst for both models:
+
+```{r}
+# expected Fst
+1 / ((4 * 1000 * m) + 1)
+
+island.g <- df2gtypes(fscReadArp(p.island, one.col = F), ploidy = 2)
+statFst(island.g)$result["estimate"]
+
+step.g <- df2gtypes(fscReadArp(p.step, one.col = F), ploidy = 2)
+statFst(step.g)$result["estimate"]
+```
+
+### Spatially-explicit migration
+
+Finally, we can make migration matrices spatially explicit by using pairwise spatial distances among demes to weight migration rates. For example, here are five randomly chosen demes in two-dimensional space:
+
+```{r}
+# choose 5 random points in two dimensions
+set.seed(50)
+deme.pos <- data.frame(
+  x = runif(num.demes, 0, 0.5),
+  y = runif(num.demes, 0, 0.5)
+)
+rownames(deme.pos) <- 1:num.demes
+
+plot(deme.pos, type = "n")
+text(deme.pos, labels = rownames(deme.pos))
+```
+
+We then compute the Euclidean distance among pairs in this space and scale it to the smallest distance:
+
+```{r}
+euc.dist <- dist(deme.pos[, -1], diag = FALSE, upper = TRUE)
+scaled.dist <- as.matrix(euc.dist / min(euc.dist))
+scaled.dist
+```
+
+Every other distance is a multiple of this distance. Dividing the reference migration rate by this matrix then gives a very strict and linear form of isolation by distance.
+
+```{r}
+ibd.mat <- 0.05 / scaled.dist
+diag(ibd.mat) <- 0
+ibd.mat
+qgraph::qgraph(ibd.mat)
+```
+
+Here's one replicate of a simulation with this matrix. The sample sizes have been increased to 30 per deme so we can better run some tests later.
+
+```{r}
+demes <- fscSettingsDemes(
+  fscDeme(1000, 30), fscDeme(1000, 30), fscDeme(1000, 30), 
+  fscDeme(1000, 30), fscDeme(1000, 30)
+)
+p.ibd <- fscWrite(
+  demes = demes,
+  migration = fscSettingsMigration(ibd.mat),
+  genetics = genetics,
+  label = "ex3.ibd"
+)
+p.ibd <- fscRun(p.ibd, all.sites = F)
+```
+
+Here are pairwise Fst tests:
+
+```{r results = "hide"}
+ibd.g <- df2gtypes(fscReadArp(p.ibd, one.col = F), ploidy = 2)
+pws <- pairwiseTest(ibd.g, stat = "fst")$pair.mat$Fst
+```
+```{r}
+pws
+```
+
+The lower left triangle of the matrix are pairwise Fst values and the upper right are permutation p-values. This shows that there is less differentiation among demes that are relatively close, while those that are farther apart show higher Fst values and are significantly different.
+
+## Historical Events
+
+So far we have run simulations where the only interaction between demes was migration. In the simulation, migration occurs throughout the coalescence process at a regular rate. `fastsimcoal2` also allows us to specify a more complex demographic history of the demes by describing events where demes exchange individuals at a different rates or change sizes at specific points in time. These historical events are created with the `fscEvent()` function and are loaded as comma separated items with the `fscSettingsEvents()` function.
+
+Below, we will duplicate the "3popDNASFS.par" model in the `fastsimcoal2` manual on page 32. Here is the historical event specification for that model:
+
+```{r message=FALSE}
+events <- fscSettingsEvents(
+  fscEvent(
+    event.time = 2000, 
+    source = 1, 
+    sink = 2, 
+    prop.migrants = 0.05, 
+    new.size = 1,
+    new.growth = 0,
+    migr.mat = 0
+  ),
+  fscEvent(
+    event.time = 2980, 
+    source = 1, 
+    sink = 1, 
+    prop.migrants = 0, 
+    new.size = 0.04
+  ),
+  fscEvent(3000, 1, 0, 1, 1),
+  fscEvent(15000, 0, 2, 1, 3)
+)
+```
+
+The "source" deme is the deme from which the individuals come, and the "sink" is the deme to which they go. If both source and sink are the same deme, then the event is describing a change within that deme. `prop.migrants` describes the proportion of migrants that are affected. `new.size` is a multiplier describing the factor by which the sink deme grows or shrinks in the past. `growth.rate` gives a new growth rate for the source deme, and `migr.mat` that specifies the number of the migration matrix (starting at index 0) in effect prior to this event. These latter two parameters are left at the default of 0 for this model.
+
+The above specification describes four events going backwards in time:
+
+Generations | Description
+----------|---------------------------------------------------------
+-2000 | 5% of the genes in deme 1 (the second deme) move to deme 2. deme 1 stays at its original size.
+-2980 | deme 1 reduces to 4% of its size.
+-3000 | 100% of the genes in deme 1 move to deme 0. 
+-15000 | 100% of the genes in deme 0 move to deme 2 and it grows to 3x its size.
+
+## Predefined Values
+
+Multiple iterations of a `fastsimcoal2` model with different settings values can be run by programmatically defining settings and re-running the code. Here's an example where we loop through a parameter space of population sizes and migration rates. Note that we change the label each iteration so as not to overwrite files:
+
+```{r}
+param.df <- data.frame(
+  N = 10 ^ runif(5, 2, 4),
+  MIG = 10 ^ runif(5, -8, -5)
+)
+
+param.p <- lapply(1:nrow(param.df), function(i) {
+  N <- param.df$N[i]
+  MIG <- param.df$MIG[i]
+  
+  p <- fscWrite(
+    demes = fscSettingsDemes(fscDeme(N, 5), fscDeme(N, 5)),
+    migration = fscSettingsMigration(matrix(c(0, MIG, MIG, 0), nrow = 2)),
+    genetics = fscSettingsGenetics(fscBlock_snp(100, 1e-6), num.chrom = 1000),
+    label = paste0("param.sim.", i)
+  )
+  fscRun(p)
+})
+
+dir(p$folder, pattern = "param.sim")
+```
+
+We can accomplish the same task by substituting character names for parameters in the settings and providing a matrix of parameter definition values. This is the same procedure described in the section entitled, "USING PREDEFINED VALUES FOR A PARTICULAR EVOLUTIONARY MODEL" on page 37 in the fastsimcoal2 manual. Below is an example using the parameter data frame from above:
+
+```{r warning=FALSE}
+p <- fscWrite(
+  demes = fscSettingsDemes(fscDeme("N", 5), fscDeme("N", 5)),
+  migration = fscSettingsMigration(matrix(c(0, "MIG", "MIG", 0), nrow = 2)),
+  genetics = fscSettingsGenetics(fscBlock_snp(100, 1e-6), num.chrom = 1000),
+  def = fscSettingsDef(param.df),
+  label = "param.sim"
+)
+p <- fscRun(p)
+
+dir(p$folder, pattern = "param.sim.def")
+```
+
+## Parameter Estimation
+
+`fastsimcoal2` also provides the functionality to estimate demographic parameters of a given coalescence model given empirical data. The empirical data is in the form of the site frequency spectrum (SFS) of SNP loci. To demonstrate, we first specify a model with known parameters that generates a SFS. We use the `1PopBot20Mb` example from the `fastsimcoal2` manual on page 38.
+
+```{r}
+obs.p <- fscWrite(
+  demes = fscSettingsDemes(fscDeme(7300, 20)),
+  events = fscSettingsEvents(
+    fscEvent(9800, 0, 0, 0, 3.5),
+    fscEvent(9900, 0, 0, 0, 1)
+  ),
+  genetics = fscSettingsGenetics(fscBlock_snp(10, 2.5e-6), num.chrom = 200000),
+  label = "known.1PopBot20Mb"
+)
+obs.p <- fscRun(obs.p, dna.to.snp = TRUE, no.arl.output = TRUE, num.cores = 3)
+obs.sfs <- fscReadSFS(obs.p)
+str(obs.sfs)
+```
+
+We specify the parameter estimation model as before by inserting character strings into the parameters to be estimated for each setting.
+
+```{r}
+demes <- fscSettingsDemes(fscDeme("NCUR", 20))
+events <- fscSettingsEvents(
+  fscEvent("TBOT", 0, 0, 0, "RESBOT"),
+  fscEvent("TENDBOT", 0, 0, 0, "RESENDBOT")
+)
+```
+
+We then create the parameter estimation settings, and load the observed SFS:
+
+```{r}
+est <- fscSettingsEst(
+  fscEstParam("NCUR", is.int = TRUE, distr = "unif", min = 10, max = 100000),
+   # default for is.int = TRUE and distr = "unif" 
+  fscEstParam("NANC", min = 10, max = 100000),
+  fscEstParam("NBOT", min = 10, max = 100000),
+  fscEstParam("TBOT", min = 10, max = 10000),
+  # these are "complex parameters" (only name and value are given)
+  fscEstParam("RESBOT", is.int = FALSE, value = "NBOT/NCUR", output = FALSE),
+  fscEstParam("RESENDBOT", is.int = FALSE, value = "NANC/NBOT", output = FALSE),
+  fscEstParam("TENDBOT", value = "TBOT+100", output = FALSE),
+  obs.sfs = obs.sfs$sfs$marginal[[1]]
+)
+est
+```
+
+We then write and run the model. Note that below, we only run it for 10000 iterations, however to produce stable estimates, many more (> 1000000) should be run.
+
+```{r warning=FALSE}
+est.p <- fscWrite(
+  demes = demes,
+  events = events,
+  genetics = fscSettingsGenetics(fscBlock_freq(2.5e-6)),
+  est = est,
+  label = "est.1PopBot20Mb"
+)
+est.p <- fscRun(est.p, num.sims = 10000, num.cores = 3)
+```
+
+This run produces several different files to the simulation folder:
+
+```{r}
+dir(est.p$label)
+```
+
+We read them in to R with `fscReadParamEst()`:
+
+```{r}
+param.est <- fscReadParamEst(est.p)
+str(param.est)
+param.est$max.lhoods
+```
+
+If the model contains more than one deme, then the only difference is that a list of the observed joint SFS with `fastsimcoal2` formatted row and column names must be provided to the `obs.sfs` argument of `fscSettingsEst()`.

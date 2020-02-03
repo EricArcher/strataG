@@ -21,7 +21,9 @@ Depends:
 Suggests:
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    qgraph,
+    hierfstat
 Imports:
     ape,
     apex (>= 1.0.3),
@@ -49,11 +51,8 @@ Imports:
     reshape2,
     rlang (>= 0.3.0.1),
     rmetasim,
-    shiny,
-    shinyFiles,
     stats,
     stringi,
-    survival (>= 2.40.1),
     swfscMisc,
     utils
 Collate:
@@ -87,7 +86,7 @@ Collate:
     summarizeSeqs.R
     gtypes.show.R
     gtypes.summary.R
-    write.gtypes.R
+    writeGtypes.R
     df2gtypes.R
     sequence2gtypes.R
     baseFreqs.R

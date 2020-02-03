@@ -39,12 +39,13 @@ browseVignettes("strataG")
 # To open a specific vignette
 vignette("gtypes")
 ```
-* Creating and Manipulating gtypes Objects ([ gtypes](https://github.com/ericarcher/stratag/blob/master/vignettes/gtypes.Rmd))
-* By-Locus Summaries ([ summaries](https://github.com/ericarcher/stratag/blob/master/vignettes/summaries.Rmd))
-* Working with sequences ([ sequences](https://github.com/ericarcher/stratag/blob/master/vignettes/sequences.Rmd))
-* Tests of Population Structure ([population.structure](https://github.com/ericarcher/stratag/blob/master/vignettes/population.structure.Rmd))
-* Quality Assurance / Quality Control ([qaqc](https://github.com/ericarcher/stratag/blob/master/vignettes/qaqc.Rmd))
-* Installing External Programs ([external.programs](https://github.com/ericarcher/stratag/blob/master/vignettes/external.programs.Rmd))
+* [Creating and Manipulating gtypes Objects](https://github.com/ericarcher/stratag/blob/master/vignettes/gtypes.Rmd)
+* [By-Locus Summaries](https://github.com/ericarcher/stratag/blob/master/vignettes/summaries.Rmd)
+* [Working with sequences](https://github.com/ericarcher/stratag/blob/master/vignettes/sequences.Rmd)
+* [Tests of Population Structure](https://github.com/ericarcher/stratag/blob/master/vignettes/population.structure.Rmd)
+* [Quality Assurance / Quality Control](https://github.com/ericarcher/stratag/blob/master/vignettes/qaqc.Rmd)
+* [Running `fastsimcoal2` through `strataG`](https://github.com/ericarcher/stratag/blob/master/vignettes/fastsimcoal2.Rmd)
+* [Installing External Programs](https://github.com/ericarcher/stratag/blob/master/vignettes/external.programs.Rmd)
 
 ## Citation
 
@@ -64,6 +65,10 @@ Archer, F. 2016. *strataG*: An *R* package for manipulating, summarizing and ana
 
 ## version 2.4.9
 * Deleted functions: `alleleFreqFormat`, `as.array.gtypes`
+* Changed structure of `gtypes` object, making it __no longer compatible with previous versions__
+* Fixed and enhanced `arlequinRead()` so that it will read and parse all .arp files. Added `arp2gtypes()` to create `gtypes` object from parsed .arp files.
+* Improved performance of several standard summary functions, most notably `dupGenotypes()`.
+* Full rework of _fastsimcoal2_ wrapper. 
 
 ## version 2.1   
 * fixed error in ldNe when missing data are present

@@ -101,7 +101,7 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
       p <- .fscWriteEst(p)
       p <- .fscWriteSFS(p)
     } else {
-      p$files$def <- paste0(p$label, ".def")
+      p$files$def <- file.path(p$folder, paste0(p$label, ".def"))
       utils::write.table(
         p$settings$def, file = p$files$def, quote = FALSE,
         sep = "\t", row.names = FALSE

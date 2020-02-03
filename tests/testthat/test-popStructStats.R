@@ -1,17 +1,17 @@
 context("Population structure metrics")
 
 test_that("statFst equals fstat", {
-  library(hierfstat)
   data(msats.g)
-  fstat_fst <- unname(fstat(gtypes2genind(msats.g))["Total", "pop"])
+  fstat_fst <- unname(hierfstat::fstat(gtypes2genind(msats.g))["Total", "pop"])
   strataG_fst <- unname(statFst(msats.g)$result["estimate"])
   expect_equal(round(fstat_fst, 4), round(strataG_fst, 4))
 })
 
 test_that("Hstat equals basic.stats", {
-  library(hierfstat)
   data(msats.g)
-  hierfstat_Hstats <- basic.stats(genind2hierfstat(gtypes2genind(msats.g)))
+  hierfstat_Hstats <- hierfstat::basic.stats(
+    hierfstat::genind2hierfstat(gtypes2genind(msats.g))
+  )
   hierfstat_Hstats <- as.matrix(hierfstat_Hstats$perloc)
   hierfstat_Hstats <- round(hierfstat_Hstats[, c("Ho", "Hs", "Ht")], 4)
   strataG_Hstats <- round(t(Hstats(msats.g)), 4)
@@ -19,9 +19,10 @@ test_that("Hstat equals basic.stats", {
 })
 
 test_that("Fis equals basic.stats", {
-  library(hierfstat)
   data(msats.g)
-  hierfstat_Hstats <- basic.stats(genind2hierfstat(gtypes2genind(msats.g)))
+  hierfstat_Hstats <- hierfstat::basic.stats(
+    hierfstat::genind2hierfstat(gtypes2genind(msats.g))
+  )
   hierfstat_Fis <- round(hierfstat_Hstats$perloc[, "Fis"], 4)
   strataG_Fis <- unname(sapply(
     getLociNames(msats.g), 
