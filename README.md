@@ -39,13 +39,13 @@ browseVignettes("strataG")
 # To open a specific vignette
 vignette("gtypes")
 ```
-* [Creating and Manipulating gtypes Objects](https://github.com/ericarcher/stratag/blob/master/vignettes/gtypes.Rmd)
-* [By-Locus Summaries](https://github.com/ericarcher/stratag/blob/master/vignettes/summaries.Rmd)
-* [Working with sequences](https://github.com/ericarcher/stratag/blob/master/vignettes/sequences.Rmd)
-* [Tests of Population Structure](https://github.com/ericarcher/stratag/blob/master/vignettes/population.structure.Rmd)
-* [Quality Assurance / Quality Control](https://github.com/ericarcher/stratag/blob/master/vignettes/qaqc.Rmd)
-* [Running `fastsimcoal2` through `strataG`](https://github.com/ericarcher/stratag/blob/master/vignettes/fastsimcoal2.Rmd)
-* [Installing External Programs](https://github.com/ericarcher/stratag/blob/master/vignettes/external.programs.Rmd)
+* [Creating and Manipulating gtypes Objects](https://github.com/ericarcher/stratag/blob/master/vignettes/gtypes.html)
+* [By-Locus Summaries](https://github.com/ericarcher/stratag/blob/master/vignettes/summaries.html)
+* [Working with sequences](https://github.com/ericarcher/stratag/blob/master/vignettes/sequences.html)
+* [Tests of Population Structure](https://github.com/ericarcher/stratag/blob/master/vignettes/population.structure.html)
+* [Quality Assurance / Quality Control](https://github.com/ericarcher/stratag/blob/master/vignettes/qaqc.html)
+* [Running `fastsimcoal2` through `strataG`](https://github.com/ericarcher/stratag/blob/master/vignettes/fastsimcoal2.html)
+* [Installing External Programs](https://github.com/ericarcher/stratag/blob/master/vignettes/external.programs.html)
 
 ## Citation
 

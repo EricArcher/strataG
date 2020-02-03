@@ -1,0 +1,51 @@
+---
+title: "Tests of Population Structure"
+author: "Eric Archer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{4. Tests of Population Structure}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+```{r echo = FALSE, message = FALSE}
+options(digits = 2)
+library(strataG)
+```
+
+Given some sample microsatellite data:
+```{r}
+data(msats.g)
+msats <- stratify(msats.g, "fine")
+msats <- msats[, getLociNames(msats)[1:4], ]
+```
+
+There are several ways that population structure analyses can be conducted. For each population structure metric, there is a function starting with "stat" (e.g., _statFst_, _statChi2_, _statGst_). A full list can be found in _?popStructStat_.
+
+Each of these functions takes a gtypes object and produces a list which contains the name of the statistic, the value of the estimate, the permutation p-value (based on 1000 replicates by default), and if `keep.null = TRUE`, the permutation null distribution:
+```{r}
+statFst(msats)
+
+statGst(msats, nrep = 10, keep.null = TRUE)
+```
+
+Population structure tests can be conducted in an "overall" manner which estimates the degree of differentiation due to the specified stratification scheme, or in a "pairwise" manner, which tests differentiation between all pairs of strata. The overall test is run via _overallTest()_. By default, all statistics are run and NAs are returned if they are not appropriate to the type of data (e.g., PHIst for diploid data). Tests for specified statistics can be conducted by listing them in the `stats` argument:
+```{r}
+ovl <- overallTest(msats, stats = c("fst", "chi2"), nrep = 1000)
+```
+
+Pairwise tests are conducted with _pairwiseTest()_ in a similar fashion. 
+```{r}
+pws <- pairwiseTest(msats, stats = c("fst.prime", "gst"), nrep = 1000)
+```
+
+The result of a pairwise test contains both a data.frame formatted for each pairwise comparison and pairwise matrices for each statistic with statistic estimates in the lower left, and p-values in the upper right.
+```{r}
+pws
+```
+
+Both overall and pairwise tests can be conducted at once with _popStructTest()_: 
+```{r}
+popStruct <- popStructTest(msats, stats = c("fst", "fst.prime"), nrep = 1000, quietly = TRUE)
+popStruct
+```
