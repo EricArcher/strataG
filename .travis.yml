@@ -5,6 +5,7 @@ r:
   - devel
 
 sudo: false
+dist: trusty
 cran: http://cran.at.r-project.org
 cache: packages
 warnings_are_errors: false
@@ -21,7 +22,9 @@ addons:
     packages:
       - libgsl0-dev
       - libudunits2-dev
-      - libcurl4-openssl-dev
+      - libcurl4-openssl-dev      
+      - gdal-bin
+      - libgdal1-dev
 
 before_install:
   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
