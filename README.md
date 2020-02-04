@@ -39,13 +39,12 @@ browseVignettes("strataG")
 # To open a specific vignette
 vignette("gtypes")
 ```
-* [Creating and Manipulating gtypes Objects](https://github.com/ericarcher/stratag/blob/master/vignettes/gtypes.html)
-* [By-Locus Summaries](https://github.com/ericarcher/stratag/blob/master/vignettes/summaries.html)
+* [Creating and manipulating gtypes](https://github.com/ericarcher/stratag/blob/master/vignettes/gtypes.html)
+* [Genotype and sequence summaries](https://github.com/ericarcher/stratag/blob/master/vignettes/summaries.html)
 * [Working with sequences](https://github.com/ericarcher/stratag/blob/master/vignettes/sequences.html)
-* [Tests of Population Structure](https://github.com/ericarcher/stratag/blob/master/vignettes/population.structure.html)
-* [Quality Assurance / Quality Control](https://github.com/ericarcher/stratag/blob/master/vignettes/qaqc.html)
+* [Tests of population structure](https://github.com/ericarcher/stratag/blob/master/vignettes/population.structure.html)
 * [Running `fastsimcoal2` through `strataG`](https://github.com/ericarcher/stratag/blob/master/vignettes/fastsimcoal2.html)
-* [Installing External Programs](https://github.com/ericarcher/stratag/blob/master/vignettes/external.programs.html)
+* [Installing external programs](https://github.com/ericarcher/stratag/blob/master/vignettes/external.programs.html)
 
 ## Citation
 

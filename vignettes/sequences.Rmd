@@ -4,7 +4,7 @@ author: "Eric Archer"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{3. Working With Sequences}
+  %\VignetteIndexEntry{Working with sequences}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---

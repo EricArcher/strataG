@@ -177,7 +177,7 @@ seq.df &lt;-<span class="st"> </span>dolph.strata[ <span class="kw">c</span>(<sp
 dl.g &lt;-<span class="st"> </span><span class="kw">df2gtypes</span>(seq.df, <span class="dt">ploidy =</span> <span class="dv">1</span>, <span class="dt">sequences =</span> dolph.seqs)
 dl.g</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2020-02-03 10:12:44 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2020-02-03 22:30:55 &gt;&gt;&gt;
 ## 
 ## Contents: 126 samples, 1 locus, 2 strata
 ## 
@@ -193,7 +193,7 @@ dl.g</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dl.haps &lt;-<span class="st"> </span><span class="kw">labelHaplotypes</span>(dl.g)
 dl.haps</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2020-02-03 10:12:44 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2020-02-03 22:30:55 &gt;&gt;&gt;
 ## 
 ## Contents: 126 samples, 1 locus, 2 strata
 ## Other info: haps.unassigned
@@ -214,7 +214,7 @@ dl.haps</code></pre></div>
 haps.g &lt;-<span class="st"> </span><span class="kw">sequence2gtypes</span>(dolph.haps)
 haps.g</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2020-02-03 10:12:45 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2020-02-03 22:30:55 &gt;&gt;&gt;
 ## 
 ## Contents: 33 samples, 1 locus, 1 stratum
 ## 
@@ -287,7 +287,7 @@ obj</code></pre></div>
 gi.g &lt;-<span class="st"> </span><span class="kw">genind2gtypes</span>(obj)
 gi.g</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2020-02-03 10:12:45 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2020-02-03 22:30:56 &gt;&gt;&gt;
 ## 
 ## Contents: 4 samples, 3 loci, 1 stratum
 ## Other info: genind
@@ -328,31 +328,31 @@ gi.g</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>msats.fine[<span class="kw">sample</span>(<span class="kw">getNumInd</span>(msats.fine), <span class="dv">10</span>), , ]
 sub.msats</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2020-02-03 10:12:44 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2020-02-03 22:30:55 &gt;&gt;&gt;
 ## 
 ## Contents: 10 samples, 5 loci, 2 strata
 ## 
 ## Strata summary:
 ##    stratum num.ind num.missing num.alleles
-## 1  Coastal       6           0         3.6
-## 2 Offshore       4           0         5.8</code></pre>
+## 1  Coastal       7           0         3.6
+## 2 Offshore       3           0         4.4</code></pre>
 <p>…or to return specific loci:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>sub.msats[, <span class="kw">c</span>(<span class="st">&quot;D11t&quot;</span>, <span class="st">&quot;EV37&quot;</span>, <span class="st">&quot;TV7&quot;</span>), ]
 sub.msats</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2020-02-03 10:12:44 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2020-02-03 22:30:55 &gt;&gt;&gt;
 ## 
 ## Contents: 10 samples, 2 loci, 2 strata
 ## 
 ## Strata summary:
 ##    stratum num.ind num.missing num.alleles
-## 1  Coastal       6           0         3.5
-## 2 Offshore       4           0         6.0</code></pre>
+## 1  Coastal       7           0         3.0
+## 2 Offshore       3           0         4.5</code></pre>
 <p>…or some loci in a specific stratum:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sub.msats &lt;-<span class="st"> </span>msats.fine[, <span class="kw">c</span>(<span class="st">&quot;Ttr11&quot;</span>, <span class="st">&quot;D11t&quot;</span>), <span class="st">&quot;Coastal&quot;</span>]
 sub.msats</code></pre></div>
 <pre><code>## 
-## &lt;&lt;&lt; gtypes created on 2020-02-03 10:12:44 &gt;&gt;&gt;
+## &lt;&lt;&lt; gtypes created on 2020-02-03 22:30:55 &gt;&gt;&gt;
 ## 
 ## Contents: 68 samples, 2 loci, 1 stratum
 ## 
@@ -649,8 +649,8 @@ msats</code></pre></div>
 ## 
 ## Strata summary:
 ##   stratum num.ind num.missing num.alleles
-## 1    Pop1      67         1.2        12.4
-## 2    Pop2      59         0.8        11.4</code></pre>
+## 1    Pop1      63         0.8        11.8
+## 2    Pop2      63         1.2        12.4</code></pre>
 <p>or, if there is a stratification scheme data.frame in the @schemes slot, you can use the <em>stratify</em> function to choose a stratification scheme:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># choose &quot;broad&quot; stratification scheme</span>
 msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats, <span class="st">&quot;broad&quot;</span>)
@@ -679,8 +679,8 @@ new.schemes<span class="op">$</span>ran.pop &lt;-<span class="st"> </span><span 
 ## 
 ## Strata summary:
 ##   stratum num.ind num.missing num.alleles
-## 1    Pop5      53         0.6        11.8
-## 2    Pop6      73         1.4        11.6</code></pre>
+## 1    Pop5      59         1.6        11.2
+## 2    Pop6      67         0.4        13.0</code></pre>
 <p>If some samples should be unstratified (excluded from any stratified analyses), they should have NAs in the appropriate position in the @strata slot. For example:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># unstratify a random 10 samples</span>
 x &lt;-<span class="st"> </span><span class="kw">getStrata</span>(msats)
@@ -723,9 +723,9 @@ ran.msats</code></pre></div>
 ## 
 ## Strata summary:
 ##          stratum num.ind num.missing num.alleles
-## 1        Coastal      68         1.8        12.2
-## 2 Offshore.North      40         0.2        11.0
-## 3 Offshore.South      18         0.0         9.4</code></pre>
+## 1        Coastal      68         0.6        12.6
+## 2 Offshore.North      40         1.2        10.2
+## 3 Offshore.South      18         0.2         9.0</code></pre>
 <p>NOTE: Only samples assigned to strata are permuted with <em>permuteStrata</em>. Those not assigned (NAs) remain unassigned.</p>
 </div>
 <div id="exporting" class="section level2">

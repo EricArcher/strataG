@@ -1,5 +1,5 @@
-#' @title Quality Assurance/Quality Control
-#' @description Conducts a suite of QA/QC tests. Summarizes missing data and 
+#' @title Summarize Genotypes and Sequences
+#' @description Conducts a suite of data summaries. Summarizes missing data and 
 #'   homozygosity by individual and locus, and looks for duplicate genotypes 
 #'   (see \code{\link{dupGenotypes}}). For sequence data, identifies low 
 #'   frequency substitutions (see \code{\link{lowFreqSubs}}), and computes 
@@ -34,7 +34,7 @@
 #' @importFrom utils write.csv
 #' @export
 #' 
-qaqc <- function(g, write.files = FALSE, label = NULL, ...) {
+summarizeAll <- function(g, write.files = FALSE, label = NULL, ...) {
   cat("\n")
   cat(format(Sys.time()), ": Individual summaries\n")
   by.sample <- summarizeInds(g)

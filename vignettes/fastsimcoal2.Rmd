@@ -7,7 +7,7 @@ output:
     toc: true
     toc_depth: 3
 vignette: >
-  %\VignetteIndexEntry{fastsimcoal2}
+  %\VignetteIndexEntry{Runnign fastsimcoal2 through strataG}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -520,12 +520,12 @@ ibd.mat
 qgraph::qgraph(ibd.mat)
 ```
 
-Here's one replicate of a simulation with this matrix. The sample sizes have been increased to 30 per deme so we can better run some tests later.
+Here's one replicate of a simulation with this matrix.
 
 ```{r}
 demes <- fscSettingsDemes(
-  fscDeme(1000, 30), fscDeme(1000, 30), fscDeme(1000, 30), 
-  fscDeme(1000, 30), fscDeme(1000, 30)
+  fscDeme(1000, 10), fscDeme(1000, 10), fscDeme(1000, 10), 
+  fscDeme(1000, 10), fscDeme(1000, 10)
 )
 p.ibd <- fscWrite(
   demes = demes,
@@ -540,7 +540,7 @@ Here are pairwise Fst tests:
 
 ```{r results = "hide"}
 ibd.g <- df2gtypes(fscReadArp(p.ibd, one.col = F), ploidy = 2)
-pws <- pairwiseTest(ibd.g, stat = "fst")$pair.mat$Fst
+pws <- pairwiseTest(ibd.g, stat = "fst", nrep = 100)$pair.mat$Fst
 ```
 ```{r}
 pws
@@ -692,7 +692,7 @@ est.p <- fscRun(est.p, num.sims = 10000, num.cores = 3)
 This run produces several different files to the simulation folder:
 
 ```{r}
-dir(est.p$label)
+dir(est.p$folder, pattern = est.p$label)
 ```
 
 We read them in to R with `fscReadParamEst()`:
@@ -700,7 +700,6 @@ We read them in to R with `fscReadParamEst()`:
 ```{r}
 param.est <- fscReadParamEst(est.p)
 str(param.est)
-param.est$max.lhoods
 ```
 
 If the model contains more than one deme, then the only difference is that a list of the observed joint SFS with `fastsimcoal2` formatted row and column names must be provided to the `obs.sfs` argument of `fscSettingsEst()`.

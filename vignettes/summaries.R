@@ -40,3 +40,29 @@ summarizeLoci(msats, by.strata = TRUE)
 alleleFreqs(msats)
 alleleFreqs(msats, by.strata = TRUE)
 
+## -----------------------------------------------------------------------------
+# Find samples that share alleles at 2/3rds of the loci
+dupGenotypes(msats, num.shared = 0.66)
+
+## -----------------------------------------------------------------------------
+library(ape)
+data(dolph.seqs)
+seq.smry <- summarizeSeqs(as.DNAbin(dolph.seqs))
+head(seq.smry)
+
+## -----------------------------------------------------------------------------
+bf <- baseFreqs(as.DNAbin(dolph.seqs))
+
+# nucleotide frequencies by site
+bf$site.freq[, 1:15]
+
+# overall nucleotide frequencies
+bf$base.freqs
+
+## -----------------------------------------------------------------------------
+lowFreqSubs(as.DNAbin(dolph.seqs), min.freq = 2)
+
+## -----------------------------------------------------------------------------
+data(dolph.haps)
+sequenceLikelihoods(as.DNAbin(dolph.haps))
+

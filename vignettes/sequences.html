@@ -131,7 +131,7 @@ x</code></pre></div>
 ## [361] &quot;c&quot; &quot;c&quot; &quot;c&quot; &quot;g&quot; &quot;c&quot; &quot;t&quot; &quot;c&quot; &quot;g&quot; &quot;g&quot; &quot;c&quot; &quot;a&quot; &quot;g&quot; &quot;g&quot; &quot;g&quot; &quot;a&quot; &quot;t&quot; &quot;c&quot; &quot;c&quot;
 ## [379] &quot;c&quot; &quot;t&quot; &quot;c&quot; &quot;t&quot; &quot;t&quot; &quot;c&quot; &quot;t&quot; &quot;c&quot; &quot;g&quot; &quot;c&quot; &quot;a&quot; &quot;c&quot; &quot;c&quot; &quot;g&quot; &quot;g&quot; &quot;g&quot; &quot;c&quot; &quot;c&quot;
 ## [397] &quot;c&quot; &quot;a&quot; &quot;t&quot; &quot;a&quot; &quot;t&quot; &quot;c&quot; &quot;t&quot; &quot;c&quot; &quot;g&quot; &quot;t&quot; &quot;g&quot; &quot;g&quot; &quot;g&quot; &quot;g&quot; &quot;g&quot; &quot;t&quot; &quot;n&quot; &quot;n&quot;
-## [415] &quot;n&quot;</code></pre>
+## [415] &quot;n&quot; &quot;n&quot; &quot;n&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x.trimmed &lt;-<span class="st"> </span><span class="kw">trimNs</span>(<span class="kw">as.DNAbin</span>(x))
 <span class="kw">as.character</span>(<span class="kw">as.list</span>(x.trimmed))</code></pre></div>
 <pre><code>## [[1]]
@@ -365,7 +365,7 @@ dloop &lt;-<span class="st"> </span><span class="kw">labelHaplotypes</span>(dloo
 <pre><code>## [1] &quot;74962&quot; &quot;6290&quot;  &quot;4498&quot;  &quot;18652&quot; &quot;5815&quot;</code></pre>
 <p>The other function selects the most representative sequences by first clustering the sequences and selecting the sequences closest to the center of each cluster:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mostRepresentativeSequences</span>(x, <span class="dt">num.seqs =</span> <span class="dv">5</span>)</code></pre></div>
-<pre><code>## [1] &quot;6153&quot;  &quot;18655&quot; &quot;74964&quot; &quot;78051&quot; &quot;78054&quot;</code></pre>
+<pre><code>## [1] &quot;6153&quot;  &quot;18652&quot; &quot;25469&quot; &quot;26305&quot; &quot;45230&quot;</code></pre>
 
 
 

@@ -142,7 +142,7 @@ Collate:
     gelato.R
     phase.R
     maverickRun.R
-    qaqc.R
+    summarizeAll.R
     landscape2gtypes.R
 LazyData: TRUE
 VignetteBuilder: knitr

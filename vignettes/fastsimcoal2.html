@@ -190,7 +190,7 @@ MICROSAT 1 0 0.001 0 0</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">str</span>(ex1.params))</code></pre></div>
 <pre><code>List of 4
  $ label   : chr &quot;ex1&quot;
- $ folder  : chr &quot;/var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK&quot;
+ $ folder  : chr &quot;/var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN&quot;
  $ files   :List of 1
   ..$ input: chr &quot;ex1.par&quot;
  $ settings:List of 6
@@ -228,8 +228,8 @@ NULL</code></pre>
 <h3>Running the simulation</h3>
 <p>We are now ready to run the simulation, which is accomplished with the <code>fscRun()</code> function. For example purposes, we will only run a single replicate. Note that the function returns an updated <code>params</code> object that we will need for later.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ex1.params &lt;-<span class="st"> </span><span class="kw">fscRun</span>(ex1.params, <span class="dt">num.sim =</span> <span class="dv">1</span>)</code></pre></div>
-<pre><code>2020-02-03 10:09:59 running fastsimcoal2...
-2020-02-03 10:10:00 run complete</code></pre>
+<pre><code>2020-02-03 22:29:56 running fastsimcoal2...
+2020-02-03 22:29:57 run complete</code></pre>
 <p>This created a folder for the run and made three files in it:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dir</span>(ex1.params<span class="op">$</span>label)</code></pre></div>
 <pre><code>character(0)</code></pre>
@@ -276,35 +276,35 @@ NULL</code></pre>
 <h3>Reading the genetic data</h3>
 <p>Depending on parameters were used to run the simulation, and the kind of genetic data being simulated, there will be different files written to the output folder. There are separate functions for reading these different kinds of output. For Arlequin files, we use the <code>fscReadArp()</code> function.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arp.file &lt;-<span class="st"> </span><span class="kw">fscReadArp</span>(ex1.params)</code></pre></div>
-<pre><code>2020-02-03 10:10:00 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/ex1/ex1_1_1.arp 
-2020-02-03 10:10:00 parsing genetic data...</code></pre>
+<pre><code>2020-02-03 22:29:57 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/ex1/ex1_1_1.arp 
+2020-02-03 22:29:57 parsing genetic data...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(arp.file)</code></pre></div>
 <pre><code>'data.frame':   4 obs. of  12 variables:
  $ id             : chr  &quot;1_1/1_2&quot; &quot;1_3/1_4&quot; &quot;1_5/1_6&quot; &quot;1_7/1_8&quot;
  $ deme           : chr  &quot;Deme.1&quot; &quot;Deme.1&quot; &quot;Deme.1&quot; &quot;Deme.1&quot;
- $ C1B1_MICROSAT.1: chr  &quot;500&quot; &quot;499&quot; &quot;500&quot; &quot;500&quot;
- $ C1B1_MICROSAT.2: chr  &quot;500&quot; &quot;500&quot; &quot;502&quot; &quot;499&quot;
- $ C2B1_MICROSAT.1: chr  &quot;500&quot; &quot;504&quot; &quot;500&quot; &quot;503&quot;
- $ C2B1_MICROSAT.2: chr  &quot;502&quot; &quot;504&quot; &quot;503&quot; &quot;500&quot;
- $ C3B1_MICROSAT.1: chr  &quot;503&quot; &quot;502&quot; &quot;502&quot; &quot;502&quot;
- $ C3B1_MICROSAT.2: chr  &quot;503&quot; &quot;503&quot; &quot;503&quot; &quot;503&quot;
- $ C4B1_MICROSAT.1: chr  &quot;502&quot; &quot;502&quot; &quot;498&quot; &quot;498&quot;
- $ C4B1_MICROSAT.2: chr  &quot;502&quot; &quot;502&quot; &quot;502&quot; &quot;502&quot;
- $ C5B1_MICROSAT.1: chr  &quot;502&quot; &quot;497&quot; &quot;501&quot; &quot;502&quot;
- $ C5B1_MICROSAT.2: chr  &quot;494&quot; &quot;495&quot; &quot;497&quot; &quot;497&quot;
- - attr(*, &quot;file&quot;)= chr &quot;/var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/ex1/ex1_1_1.arp&quot;</code></pre>
+ $ C1B1_MICROSAT.1: chr  &quot;502&quot; &quot;500&quot; &quot;501&quot; &quot;501&quot;
+ $ C1B1_MICROSAT.2: chr  &quot;501&quot; &quot;500&quot; &quot;501&quot; &quot;501&quot;
+ $ C2B1_MICROSAT.1: chr  &quot;501&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
+ $ C2B1_MICROSAT.2: chr  &quot;500&quot; &quot;500&quot; &quot;501&quot; &quot;501&quot;
+ $ C3B1_MICROSAT.1: chr  &quot;499&quot; &quot;502&quot; &quot;503&quot; &quot;499&quot;
+ $ C3B1_MICROSAT.2: chr  &quot;498&quot; &quot;499&quot; &quot;499&quot; &quot;500&quot;
+ $ C4B1_MICROSAT.1: chr  &quot;501&quot; &quot;501&quot; &quot;501&quot; &quot;497&quot;
+ $ C4B1_MICROSAT.2: chr  &quot;502&quot; &quot;501&quot; &quot;501&quot; &quot;503&quot;
+ $ C5B1_MICROSAT.1: chr  &quot;501&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
+ $ C5B1_MICROSAT.2: chr  &quot;499&quot; &quot;500&quot; &quot;502&quot; &quot;500&quot;
+ - attr(*, &quot;file&quot;)= chr &quot;/var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/ex1/ex1_1_1.arp&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The first 6 columns</span>
 arp.file[, <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>]</code></pre></div>
 <pre><code>       id   deme C1B1_MICROSAT.1 C1B1_MICROSAT.2 C2B1_MICROSAT.1
-1 1_1/1_2 Deme.1             500             500             500
-2 1_3/1_4 Deme.1             499             500             504
-3 1_5/1_6 Deme.1             500             502             500
-4 1_7/1_8 Deme.1             500             499             503
+1 1_1/1_2 Deme.1             502             501             501
+2 1_3/1_4 Deme.1             500             500             500
+3 1_5/1_6 Deme.1             501             501             500
+4 1_7/1_8 Deme.1             501             501             500
   C2B1_MICROSAT.2
-1             502
-2             504
-3             503
-4             500</code></pre>
+1             500
+2             500
+3             501
+4             501</code></pre>
 <p>This function produces a data frame with one row for each individual genotype. The first two columns list the individual ids and their deme membership, and every column thereafter contains the genetic data. You’ll notice that the id column is composed of two different ids. This is because the actual output of the .arp file contains one row per haploid individual. We make diploid individuals by combining every two haplotypes.</p>
 </div>
 <div id="multiple-genetic-blocks" class="section level3">
@@ -324,11 +324,11 @@ complex.params &lt;-<span class="st"> </span><span class="kw">fscWrite</span>(
   <span class="dt">label =</span> <span class="st">&quot;complex_chroms&quot;</span>
 )
 complex.params &lt;-<span class="st"> </span><span class="kw">fscRun</span>(complex.params, <span class="dt">num.sims =</span> <span class="dv">1</span>)</code></pre></div>
-<pre><code>2020-02-03 10:10:01 running fastsimcoal2...
-2020-02-03 10:10:02 run complete</code></pre>
+<pre><code>2020-02-03 22:29:57 running fastsimcoal2...
+2020-02-03 22:29:59 run complete</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arp &lt;-<span class="st"> </span><span class="kw">fscReadArp</span>(complex.params)</code></pre></div>
-<pre><code>2020-02-03 10:10:02 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/complex_chroms/complex_chroms_1_1.arp 
-2020-02-03 10:10:02 parsing genetic data...</code></pre>
+<pre><code>2020-02-03 22:29:59 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/complex_chroms/complex_chroms_1_1.arp 
+2020-02-03 22:29:59 parsing genetic data...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(arp)</code></pre></div>
 <pre><code>'data.frame':   4 obs. of  38 variables:
  $ id                : chr  &quot;1_1/1_2&quot; &quot;1_3/1_4&quot; &quot;1_5/1_6&quot; &quot;1_7/1_8&quot;
@@ -337,44 +337,44 @@ complex.params &lt;-<span class="st"> </span><span class="kw">fscRun</span>(comp
  $ C1B1_MICROSAT_L1.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C1B1_MICROSAT_L2.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C1B1_MICROSAT_L2.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
- $ C1B2_DNA.1        : chr  &quot;CAAA&quot; &quot;CAAA&quot; &quot;TAAA&quot; &quot;TAAA&quot;
- $ C1B2_DNA.2        : chr  &quot;TAAA&quot; &quot;CAAA&quot; &quot;TAAA&quot; &quot;TAAA&quot;
- $ C1B3_DNA.1        : chr  &quot;GACGGT&quot; &quot;CGCGGT&quot; &quot;GAGGAT&quot; &quot;GTGCAC&quot;
- $ C1B3_DNA.2        : chr  &quot;GTGTCG&quot; &quot;CACGGT&quot; &quot;ATGTCC&quot; &quot;GTGCAC&quot;
+ $ C1B2_DNA.1        : chr  &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot;
+ $ C1B2_DNA.2        : chr  &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot;
+ $ C1B3_DNA.1        : chr  &quot;TGTTGT&quot; &quot;GAGCTT&quot; &quot;AACTTA&quot; &quot;ACATGT&quot;
+ $ C1B3_DNA.2        : chr  &quot;GTTAAA&quot; &quot;TCTTGT&quot; &quot;TGTTGT&quot; &quot;TCTTGT&quot;
  $ C1B4_MICROSAT_L1.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C1B4_MICROSAT_L1.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C1B4_MICROSAT_L2.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C1B4_MICROSAT_L2.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C2B1_MICROSAT_L1.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C2B1_MICROSAT_L1.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
- $ C2B1_MICROSAT_L2.1: chr  &quot;500&quot; &quot;498&quot; &quot;500&quot; &quot;500&quot;
- $ C2B1_MICROSAT_L2.2: chr  &quot;500&quot; &quot;500&quot; &quot;498&quot; &quot;498&quot;
+ $ C2B1_MICROSAT_L2.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
+ $ C2B1_MICROSAT_L2.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C2B2_DNA.1        : chr  &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot;
  $ C2B2_DNA.2        : chr  &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot;
- $ C2B3_DNA.1        : chr  &quot;ACGCCC&quot; &quot;AGTGAC&quot; &quot;ACAGGC&quot; &quot;GAGTGC&quot;
- $ C2B3_DNA.2        : chr  &quot;AAAGGC&quot; &quot;GAGCAT&quot; &quot;ACTTTA&quot; &quot;ACTTTT&quot;
+ $ C2B3_DNA.1        : chr  &quot;TCTAGG&quot; &quot;AGGCGG&quot; &quot;TCTTGG&quot; &quot;GGGCGG&quot;
+ $ C2B3_DNA.2        : chr  &quot;AGGCGG&quot; &quot;ACTCTC&quot; &quot;AGGCGG&quot; &quot;CCGCTG&quot;
  $ C2B4_MICROSAT_L1.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C2B4_MICROSAT_L1.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C2B4_MICROSAT_L2.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C2B4_MICROSAT_L2.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
- $ C3B1_MICROSAT_L1.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;501&quot;
+ $ C3B1_MICROSAT_L1.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C3B1_MICROSAT_L1.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C3B1_MICROSAT_L2.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
- $ C3B1_MICROSAT_L2.2: chr  &quot;500&quot; &quot;500&quot; &quot;499&quot; &quot;499&quot;
+ $ C3B1_MICROSAT_L2.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C3B2_DNA.1        : chr  &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot;
  $ C3B2_DNA.2        : chr  &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot;
- $ C3B3_DNA.1        : chr  &quot;TGCTTA&quot; &quot;ATGATA&quot; &quot;GGGATA&quot; &quot;GTGACC&quot;
- $ C3B3_DNA.2        : chr  &quot;GTGATA&quot; &quot;TCCATG&quot; &quot;GCCCAC&quot; &quot;GCCCAC&quot;
+ $ C3B3_DNA.1        : chr  &quot;CTAGCA&quot; &quot;CTACCA&quot; &quot;CTACCA&quot; &quot;AAATAC&quot;
+ $ C3B3_DNA.2        : chr  &quot;TCTTTT&quot; &quot;CTACCA&quot; &quot;CTACCA&quot; &quot;GTGTAC&quot;
  $ C3B4_MICROSAT_L1.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C3B4_MICROSAT_L1.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C3B4_MICROSAT_L2.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C3B4_MICROSAT_L2.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
- - attr(*, &quot;file&quot;)= chr &quot;/var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/complex_chroms/complex_chroms_1_1.arp&quot;</code></pre>
+ - attr(*, &quot;file&quot;)= chr &quot;/var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/complex_chroms/complex_chroms_1_1.arp&quot;</code></pre>
 <p>Note that we get all marker types and loci simulated. By default, each locus is separated into its own column. Column names are assigned denoting the chromsome number (e.g., C2), the block number (e.g., B1), what kind of marker it is (e.g., MICROSAT). If there are several loci for that marker, then that is numbered as well (e.g., L1).</p>
 <p>If multiple markers have been simulated, specific markers can be selected by using the <code>marker</code> argument. Below we read only the microsattelite loci that were generated.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(<span class="kw">fscReadArp</span>(complex.params, <span class="dt">marker =</span> <span class="st">&quot;microsat&quot;</span>))</code></pre></div>
-<pre><code>2020-02-03 10:10:02 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/complex_chroms/complex_chroms_1_1.arp 
-2020-02-03 10:10:02 parsing genetic data...
+<pre><code>2020-02-03 22:29:59 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/complex_chroms/complex_chroms_1_1.arp 
+2020-02-03 22:29:59 parsing genetic data...
 'data.frame':   4 obs. of  26 variables:
  $ id                : chr  &quot;1_1/1_2&quot; &quot;1_3/1_4&quot; &quot;1_5/1_6&quot; &quot;1_7/1_8&quot;
  $ deme              : chr  &quot;Deme.1&quot; &quot;Deme.1&quot; &quot;Deme.1&quot; &quot;Deme.1&quot;
@@ -388,25 +388,25 @@ complex.params &lt;-<span class="st"> </span><span class="kw">fscRun</span>(comp
  $ C1B4_MICROSAT_L2.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C2B1_MICROSAT_L1.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C2B1_MICROSAT_L1.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
- $ C2B1_MICROSAT_L2.1: chr  &quot;500&quot; &quot;498&quot; &quot;500&quot; &quot;500&quot;
- $ C2B1_MICROSAT_L2.2: chr  &quot;500&quot; &quot;500&quot; &quot;498&quot; &quot;498&quot;
+ $ C2B1_MICROSAT_L2.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
+ $ C2B1_MICROSAT_L2.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C2B4_MICROSAT_L1.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C2B4_MICROSAT_L1.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C2B4_MICROSAT_L2.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C2B4_MICROSAT_L2.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
- $ C3B1_MICROSAT_L1.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;501&quot;
+ $ C3B1_MICROSAT_L1.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C3B1_MICROSAT_L1.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C3B1_MICROSAT_L2.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
- $ C3B1_MICROSAT_L2.2: chr  &quot;500&quot; &quot;500&quot; &quot;499&quot; &quot;499&quot;
+ $ C3B1_MICROSAT_L2.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C3B4_MICROSAT_L1.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C3B4_MICROSAT_L1.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C3B4_MICROSAT_L2.1: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ C3B4_MICROSAT_L2.2: chr  &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
- - attr(*, &quot;file&quot;)= chr &quot;/var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/complex_chroms/complex_chroms_1_1.arp&quot;</code></pre>
+ - attr(*, &quot;file&quot;)= chr &quot;/var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/complex_chroms/complex_chroms_1_1.arp&quot;</code></pre>
 <p>Genotypes can also be formatted to combine alleles into one column per locus by setting <code>one.col = TRUE</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fscReadArp</span>(complex.params, <span class="dt">marker =</span> <span class="st">&quot;microsat&quot;</span>, <span class="dt">one.col =</span> <span class="ot">TRUE</span>)[, <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>]</code></pre></div>
-<pre><code>2020-02-03 10:10:02 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/complex_chroms/complex_chroms_1_1.arp 
-2020-02-03 10:10:02 parsing genetic data...</code></pre>
+<pre><code>2020-02-03 22:29:59 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/complex_chroms/complex_chroms_1_1.arp 
+2020-02-03 22:29:59 parsing genetic data...</code></pre>
 <pre><code>       id   deme C1B1_MICROSAT_L1 C1B1_MICROSAT_L2 C1B4_MICROSAT_L1
 1 1_1/1_2 Deme.1          500/500          500/500          500/500
 2 1_3/1_4 Deme.1          500/500          500/500          500/500
@@ -419,29 +419,29 @@ complex.params &lt;-<span class="st"> </span><span class="kw">fscRun</span>(comp
 4          500/500</code></pre>
 <p>Specific chromosomes can be selected by providing their numbers to the <code>chrom</code> argument:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arp &lt;-<span class="st"> </span><span class="kw">fscReadArp</span>(complex.params, <span class="dt">chrom =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="dt">one.col =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>2020-02-03 10:10:02 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/complex_chroms/complex_chroms_1_1.arp 
-2020-02-03 10:10:02 parsing genetic data...</code></pre>
+<pre><code>2020-02-03 22:29:59 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/complex_chroms/complex_chroms_1_1.arp 
+2020-02-03 22:29:59 parsing genetic data...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(arp)</code></pre></div>
 <pre><code>'data.frame':   4 obs. of  14 variables:
  $ id              : chr  &quot;1_1/1_2&quot; &quot;1_3/1_4&quot; &quot;1_5/1_6&quot; &quot;1_7/1_8&quot;
  $ deme            : chr  &quot;Deme.1&quot; &quot;Deme.1&quot; &quot;Deme.1&quot; &quot;Deme.1&quot;
  $ C1B1_MICROSAT_L1: chr  &quot;500/500&quot; &quot;500/500&quot; &quot;500/500&quot; &quot;500/500&quot;
  $ C1B1_MICROSAT_L2: chr  &quot;500/500&quot; &quot;500/500&quot; &quot;500/500&quot; &quot;500/500&quot;
- $ C1B2_DNA        : chr  &quot;CAAA/TAAA&quot; &quot;CAAA/CAAA&quot; &quot;TAAA/TAAA&quot; &quot;TAAA/TAAA&quot;
- $ C1B3_DNA        : chr  &quot;GACGGT/GTGTCG&quot; &quot;CGCGGT/CACGGT&quot; &quot;GAGGAT/ATGTCC&quot; &quot;GTGCAC/GTGCAC&quot;
+ $ C1B2_DNA        : chr  &quot;AAAA/AAAA&quot; &quot;AAAA/AAAA&quot; &quot;AAAA/AAAA&quot; &quot;AAAA/AAAA&quot;
+ $ C1B3_DNA        : chr  &quot;TGTTGT/GTTAAA&quot; &quot;GAGCTT/TCTTGT&quot; &quot;AACTTA/TGTTGT&quot; &quot;ACATGT/TCTTGT&quot;
  $ C1B4_MICROSAT_L1: chr  &quot;500/500&quot; &quot;500/500&quot; &quot;500/500&quot; &quot;500/500&quot;
  $ C1B4_MICROSAT_L2: chr  &quot;500/500&quot; &quot;500/500&quot; &quot;500/500&quot; &quot;500/500&quot;
- $ C3B1_MICROSAT_L1: chr  &quot;500/500&quot; &quot;500/500&quot; &quot;500/500&quot; &quot;501/500&quot;
- $ C3B1_MICROSAT_L2: chr  &quot;500/500&quot; &quot;500/500&quot; &quot;500/499&quot; &quot;500/499&quot;
+ $ C3B1_MICROSAT_L1: chr  &quot;500/500&quot; &quot;500/500&quot; &quot;500/500&quot; &quot;500/500&quot;
+ $ C3B1_MICROSAT_L2: chr  &quot;500/500&quot; &quot;500/500&quot; &quot;500/500&quot; &quot;500/500&quot;
  $ C3B2_DNA        : chr  &quot;AAAA/AAAA&quot; &quot;AAAA/AAAA&quot; &quot;AAAA/AAAA&quot; &quot;AAAA/AAAA&quot;
- $ C3B3_DNA        : chr  &quot;TGCTTA/GTGATA&quot; &quot;ATGATA/TCCATG&quot; &quot;GGGATA/GCCCAC&quot; &quot;GTGACC/GCCCAC&quot;
+ $ C3B3_DNA        : chr  &quot;CTAGCA/TCTTTT&quot; &quot;CTACCA/CTACCA&quot; &quot;CTACCA/CTACCA&quot; &quot;AAATAC/GTGTAC&quot;
  $ C3B4_MICROSAT_L1: chr  &quot;500/500&quot; &quot;500/500&quot; &quot;500/500&quot; &quot;500/500&quot;
  $ C3B4_MICROSAT_L2: chr  &quot;500/500&quot; &quot;500/500&quot; &quot;500/500&quot; &quot;500/500&quot;
- - attr(*, &quot;file&quot;)= chr &quot;/var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/complex_chroms/complex_chroms_1_1.arp&quot;</code></pre>
+ - attr(*, &quot;file&quot;)= chr &quot;/var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/complex_chroms/complex_chroms_1_1.arp&quot;</code></pre>
 <p>Each chromosome can also be separated into its own list by specifying <code>sep.chrom = TRUE</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arp &lt;-<span class="st"> </span><span class="kw">fscReadArp</span>(complex.params, <span class="dt">sep.chrom =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>2020-02-03 10:10:02 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/complex_chroms/complex_chroms_1_1.arp 
-2020-02-03 10:10:02 parsing genetic data...</code></pre>
+<pre><code>2020-02-03 22:29:59 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/complex_chroms/complex_chroms_1_1.arp 
+2020-02-03 22:29:59 parsing genetic data...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(arp)</code></pre></div>
 <pre><code>List of 4
  $ C1  :'data.frame':   4 obs. of  14 variables:
@@ -451,10 +451,10 @@ complex.params &lt;-<span class="st"> </span><span class="kw">fscRun</span>(comp
   ..$ C1B1_MICROSAT_L1.2: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
   ..$ C1B1_MICROSAT_L2.1: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
   ..$ C1B1_MICROSAT_L2.2: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
-  ..$ C1B2_DNA.1        : chr [1:4] &quot;CAAA&quot; &quot;CAAA&quot; &quot;TAAA&quot; &quot;TAAA&quot;
-  ..$ C1B2_DNA.2        : chr [1:4] &quot;TAAA&quot; &quot;CAAA&quot; &quot;TAAA&quot; &quot;TAAA&quot;
-  ..$ C1B3_DNA.1        : chr [1:4] &quot;GACGGT&quot; &quot;CGCGGT&quot; &quot;GAGGAT&quot; &quot;GTGCAC&quot;
-  ..$ C1B3_DNA.2        : chr [1:4] &quot;GTGTCG&quot; &quot;CACGGT&quot; &quot;ATGTCC&quot; &quot;GTGCAC&quot;
+  ..$ C1B2_DNA.1        : chr [1:4] &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot;
+  ..$ C1B2_DNA.2        : chr [1:4] &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot;
+  ..$ C1B3_DNA.1        : chr [1:4] &quot;TGTTGT&quot; &quot;GAGCTT&quot; &quot;AACTTA&quot; &quot;ACATGT&quot;
+  ..$ C1B3_DNA.2        : chr [1:4] &quot;GTTAAA&quot; &quot;TCTTGT&quot; &quot;TGTTGT&quot; &quot;TCTTGT&quot;
   ..$ C1B4_MICROSAT_L1.1: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
   ..$ C1B4_MICROSAT_L1.2: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
   ..$ C1B4_MICROSAT_L2.1: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
@@ -464,12 +464,12 @@ complex.params &lt;-<span class="st"> </span><span class="kw">fscRun</span>(comp
   ..$ deme              : chr [1:4] &quot;1&quot; &quot;1&quot; &quot;1&quot; &quot;1&quot;
   ..$ C2B1_MICROSAT_L1.1: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
   ..$ C2B1_MICROSAT_L1.2: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
-  ..$ C2B1_MICROSAT_L2.1: chr [1:4] &quot;500&quot; &quot;498&quot; &quot;500&quot; &quot;500&quot;
-  ..$ C2B1_MICROSAT_L2.2: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;498&quot; &quot;498&quot;
+  ..$ C2B1_MICROSAT_L2.1: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
+  ..$ C2B1_MICROSAT_L2.2: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
   ..$ C2B2_DNA.1        : chr [1:4] &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot;
   ..$ C2B2_DNA.2        : chr [1:4] &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot;
-  ..$ C2B3_DNA.1        : chr [1:4] &quot;ACGCCC&quot; &quot;AGTGAC&quot; &quot;ACAGGC&quot; &quot;GAGTGC&quot;
-  ..$ C2B3_DNA.2        : chr [1:4] &quot;AAAGGC&quot; &quot;GAGCAT&quot; &quot;ACTTTA&quot; &quot;ACTTTT&quot;
+  ..$ C2B3_DNA.1        : chr [1:4] &quot;TCTAGG&quot; &quot;AGGCGG&quot; &quot;TCTTGG&quot; &quot;GGGCGG&quot;
+  ..$ C2B3_DNA.2        : chr [1:4] &quot;AGGCGG&quot; &quot;ACTCTC&quot; &quot;AGGCGG&quot; &quot;CCGCTG&quot;
   ..$ C2B4_MICROSAT_L1.1: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
   ..$ C2B4_MICROSAT_L1.2: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
   ..$ C2B4_MICROSAT_L2.1: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
@@ -477,20 +477,20 @@ complex.params &lt;-<span class="st"> </span><span class="kw">fscRun</span>(comp
  $ C3  :'data.frame':   4 obs. of  14 variables:
   ..$ id                : chr [1:4] &quot;1_1/1_2&quot; &quot;1_3/1_4&quot; &quot;1_5/1_6&quot; &quot;1_7/1_8&quot;
   ..$ deme              : chr [1:4] &quot;1&quot; &quot;1&quot; &quot;1&quot; &quot;1&quot;
-  ..$ C3B1_MICROSAT_L1.1: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;501&quot;
+  ..$ C3B1_MICROSAT_L1.1: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
   ..$ C3B1_MICROSAT_L1.2: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
   ..$ C3B1_MICROSAT_L2.1: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
-  ..$ C3B1_MICROSAT_L2.2: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;499&quot; &quot;499&quot;
+  ..$ C3B1_MICROSAT_L2.2: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
   ..$ C3B2_DNA.1        : chr [1:4] &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot;
   ..$ C3B2_DNA.2        : chr [1:4] &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot; &quot;AAAA&quot;
-  ..$ C3B3_DNA.1        : chr [1:4] &quot;TGCTTA&quot; &quot;ATGATA&quot; &quot;GGGATA&quot; &quot;GTGACC&quot;
-  ..$ C3B3_DNA.2        : chr [1:4] &quot;GTGATA&quot; &quot;TCCATG&quot; &quot;GCCCAC&quot; &quot;GCCCAC&quot;
+  ..$ C3B3_DNA.1        : chr [1:4] &quot;CTAGCA&quot; &quot;CTACCA&quot; &quot;CTACCA&quot; &quot;AAATAC&quot;
+  ..$ C3B3_DNA.2        : chr [1:4] &quot;TCTTTT&quot; &quot;CTACCA&quot; &quot;CTACCA&quot; &quot;GTGTAC&quot;
   ..$ C3B4_MICROSAT_L1.1: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
   ..$ C3B4_MICROSAT_L1.2: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
   ..$ C3B4_MICROSAT_L2.1: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
   ..$ C3B4_MICROSAT_L2.2: chr [1:4] &quot;500&quot; &quot;500&quot; &quot;500&quot; &quot;500&quot;
  $ deme: chr(0) 
- - attr(*, &quot;file&quot;)= chr &quot;/var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/complex_chroms/complex_chroms_1_1.arp&quot;</code></pre>
+ - attr(*, &quot;file&quot;)= chr &quot;/var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/complex_chroms/complex_chroms_1_1.arp&quot;</code></pre>
 </div>
 </div>
 <div id="specifying-snps" class="section level2">
@@ -505,21 +505,21 @@ demes &lt;-<span class="st"> </span><span class="kw">fscSettingsDemes</span>(<sp
 genetics &lt;-<span class="st"> </span><span class="kw">fscSettingsGenetics</span>(<span class="kw">fscBlock_snp</span>(<span class="dv">10</span>, <span class="fl">1e-6</span>), <span class="dt">num.chrom =</span> <span class="dv">1000</span>)
 p &lt;-<span class="st"> </span><span class="kw">fscWrite</span>(<span class="dt">demes =</span> demes, <span class="dt">genetics =</span> genetics, <span class="dt">label =</span> <span class="st">&quot;ex2.snps.1k&quot;</span>)
 p &lt;-<span class="st"> </span><span class="kw">fscRun</span>(p, <span class="dt">all.sites =</span> F)</code></pre></div>
-<pre><code>2020-02-03 10:10:02 running fastsimcoal2...
-2020-02-03 10:10:03 run complete</code></pre>
+<pre><code>2020-02-03 22:29:59 running fastsimcoal2...
+2020-02-03 22:30:00 run complete</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">snp.df &lt;-<span class="st"> </span><span class="kw">fscReadArp</span>(p)</code></pre></div>
-<pre><code>2020-02-03 10:10:03 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/ex2.snps.1k/ex2.snps.1k_1_1.arp 
-2020-02-03 10:10:03 parsing genetic data...</code></pre>
+<pre><code>2020-02-03 22:30:00 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/ex2.snps.1k/ex2.snps.1k_1_1.arp 
+2020-02-03 22:30:00 parsing genetic data...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># an example of the data generated</span>
 snp.df[<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>]</code></pre></div>
-<pre><code>         id   deme C0002B1_SNP.1 C0002B1_SNP.2 C0006B1_SNP.1 C0006B1_SNP.2
-1   1_1/1_2 Deme.1             C             C             G             G
-2   1_3/1_4 Deme.1             T             T             A             A
-3   1_5/1_6 Deme.1             T             C             A             A
-4   1_7/1_8 Deme.1             C             C             A             G
-5  1_9/1_10 Deme.1             T             C             G             A
-6 1_11/1_12 Deme.1             T             C             A             A</code></pre>
-<p>This particular run generated 250 out of a possible 10000 SNP loci simulated.</p>
+<pre><code>         id   deme C0005B1_SNP.1 C0005B1_SNP.2 C0011B1_SNP.1 C0011B1_SNP.2
+1   1_1/1_2 Deme.1             C             T             G             G
+2   1_3/1_4 Deme.1             C             T             G             G
+3   1_5/1_6 Deme.1             T             T             G             G
+4   1_7/1_8 Deme.1             T             C             G             G
+5  1_9/1_10 Deme.1             T             C             G             G
+6 1_11/1_12 Deme.1             C             T             G             G</code></pre>
+<p>This particular run generated 244 out of a possible 10000 SNP loci simulated.</p>
 <div id="linked-vs.unlinked-snps" class="section level3">
 <h3>Linked vs. unlinked SNPs</h3>
 <p>Some of these SNPs are linked on the same 10 base pair chromosome. Let’s see what percent of chromosomes (loci) contain 1, 2, 3.. SNPs.</p>
@@ -538,13 +538,13 @@ snp.df[<span class="dv">1</span><span class="op">:</span><span class="dv">6</spa
 <span class="co"># The occurrence frequencies</span>
 snp.occ.freq &lt;-<span class="st"> </span><span class="kw">snpOccurFreq</span>(snp.df)
 snp.occ.freq</code></pre></div>
-<pre><code>  2   4   6 
-112   5   1 </code></pre>
+<pre><code>  2   4 
+104   9 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Convert to proportions</span>
 snp.occ.prop &lt;-<span class="st"> </span><span class="kw">prop.table</span>(snp.occ.freq)
 <span class="kw">round</span>(snp.occ.prop, <span class="dv">3</span>)</code></pre></div>
-<pre><code>    2     4     6 
-0.949 0.042 0.008 </code></pre>
+<pre><code>   2    4 
+0.92 0.08 </code></pre>
 <p>This shows that most SNPs (100%) are non-linked, but there are some loci with more than one SNP. If we want a data set of only unlinked loci, we will have to randomly select one SNP from each locus.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sampleOnePerLocus &lt;-<span class="st"> </span><span class="cf">function</span>(mat) {
   <span class="co"># Extract the SNP names from the matrix column names</span>
@@ -561,42 +561,42 @@ snp.occ.prop &lt;-<span class="st"> </span><span class="kw">prop.table</span>(sn
 unlinked.snps &lt;-<span class="st"> </span><span class="kw">sampleOnePerLocus</span>(snp.df)
 <span class="co"># number of unlinked SNPs</span>
 <span class="kw">ncol</span>(unlinked.snps) <span class="op">-</span><span class="st"> </span><span class="dv">2</span></code></pre></div>
-<pre><code>[1] 118</code></pre>
+<pre><code>[1] 113</code></pre>
 <p>To get more SNPs, we could increase the mutation rate, however that will increase the number of hits on multiple sites at each locus as well. If we decrease the number of sites at each locus, we do not increase mutations at other loci because each locus is simulated independently. The only way to increase the number of independent SNPs is the increase the number of independent loci (chromosomes). Note that this will also increase the time each simulation takes.</p>
 <p>Here we simulated 10,000 chromosomes rather than 1,000 we simulated previously.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">genetics &lt;-<span class="st"> </span><span class="kw">fscSettingsGenetics</span>(<span class="kw">fscBlock_snp</span>(<span class="dv">10</span>, <span class="fl">1e-6</span>), <span class="dt">num.chrom =</span> <span class="dv">10000</span>)
 p &lt;-<span class="st"> </span><span class="kw">fscWrite</span>(<span class="dt">demes =</span> demes, <span class="dt">genetics =</span> genetics, <span class="dt">label =</span> <span class="st">&quot;ex2.snps.10k&quot;</span>)
 p &lt;-<span class="st"> </span><span class="kw">fscRun</span>(p, <span class="dt">all.sites =</span> F)</code></pre></div>
-<pre><code>2020-02-03 10:10:03 running fastsimcoal2...
-2020-02-03 10:10:05 run complete</code></pre>
+<pre><code>2020-02-03 22:30:00 running fastsimcoal2...
+2020-02-03 22:30:02 run complete</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">snp.df &lt;-<span class="st"> </span><span class="kw">fscReadArp</span>(p)</code></pre></div>
-<pre><code>2020-02-03 10:10:05 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/ex2.snps.10k/ex2.snps.10k_1_1.arp 
-2020-02-03 10:10:05 parsing genetic data...</code></pre>
+<pre><code>2020-02-03 22:30:02 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/ex2.snps.10k/ex2.snps.10k_1_1.arp 
+2020-02-03 22:30:02 parsing genetic data...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># number of SNPs</span>
 <span class="kw">ncol</span>(snp.df) <span class="op">-</span><span class="st"> </span><span class="dv">2</span></code></pre></div>
-<pre><code>[1] 2772</code></pre>
+<pre><code>[1] 2912</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># proportion of n SNPs per locus</span>
 <span class="kw">round</span>(<span class="kw">prop.table</span>(<span class="kw">snpOccurFreq</span>(snp.df)), <span class="dv">3</span>)</code></pre></div>
-<pre><code>    2     4     6 
-0.931 0.066 0.003 </code></pre>
+<pre><code>    2     4     6     8 
+0.929 0.067 0.004 0.001 </code></pre>
 <p>By increasing the number of loci by an order of magnitude we get an order of magnitude more SNPs, but keep the same proportion of unlinked SNPs. For the sake of comparison, here is the result when we increase mutation rate by an order of magnitude, but keep the number of chromosomes at 1,000:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">genetics &lt;-<span class="st"> </span><span class="kw">fscSettingsGenetics</span>(<span class="kw">fscBlock_snp</span>(<span class="dv">10</span>, <span class="fl">1e-5</span>), <span class="dt">num.chrom =</span> <span class="dv">1000</span>)
 p &lt;-<span class="st"> </span><span class="kw">fscWrite</span>(<span class="dt">demes =</span> demes, <span class="dt">genetics =</span> genetics, <span class="dt">label =</span> <span class="st">&quot;ex2.snps.mut&quot;</span>)
 p &lt;-<span class="st"> </span><span class="kw">fscRun</span>(p, <span class="dt">all.sites =</span> F, <span class="dt">num.sims =</span> <span class="dv">1</span>)</code></pre></div>
-<pre><code>2020-02-03 10:10:06 running fastsimcoal2...
-2020-02-03 10:10:07 run complete</code></pre>
+<pre><code>2020-02-03 22:30:02 running fastsimcoal2...
+2020-02-03 22:30:04 run complete</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">snp.df &lt;-<span class="st"> </span><span class="kw">fscReadArp</span>(p)</code></pre></div>
-<pre><code>2020-02-03 10:10:07 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/ex2.snps.mut/ex2.snps.mut_1_1.arp 
-2020-02-03 10:10:07 parsing genetic data...</code></pre>
+<pre><code>2020-02-03 22:30:04 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/ex2.snps.mut/ex2.snps.mut_1_1.arp 
+2020-02-03 22:30:04 parsing genetic data...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># number of SNPs</span>
 <span class="kw">ncol</span>(snp.df) <span class="op">-</span><span class="st"> </span><span class="dv">2</span></code></pre></div>
-<pre><code>[1] 2616</code></pre>
+<pre><code>[1] 2698</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># proportion of n SNPs per locus</span>
 snp.occ.freq &lt;-<span class="st"> </span><span class="kw">snpOccurFreq</span>(snp.df)
 <span class="kw">round</span>(<span class="kw">prop.table</span>(snp.occ.freq), <span class="dv">3</span>)</code></pre></div>
 <pre><code>    2     4     6     8    10    12 
-0.456 0.357 0.132 0.041 0.012 0.001 </code></pre>
-<p>We still get an order of magnitude more SNPs, but we have a much lower percentage that are unlinked. The full number of unlinked SNPs in this run is 726, which is more than we had with a lower mutation rate and the same number of loci, but less than we had at the same mutation rate, but with more loci.</p>
+0.499 0.279 0.171 0.036 0.011 0.004 </code></pre>
+<p>We still get an order of magnitude more SNPs, but we have a much lower percentage that are unlinked. The full number of unlinked SNPs in this run is 753, which is more than we had with a lower mutation rate and the same number of loci, but less than we had at the same mutation rate, but with more loci.</p>
 </div>
 <div id="infinite-sites" class="section level3">
 <h3>Infinite sites</h3>
@@ -606,24 +606,24 @@ Below is a model that we’ll use to demonstrate the effect. We have a diploid p
 genetics &lt;-<span class="st"> </span><span class="kw">fscSettingsGenetics</span>(<span class="kw">fscBlock_snp</span>(<span class="dv">10</span>, <span class="fl">1e-5</span>), <span class="dt">num.chrom =</span> <span class="dv">1000</span>)
 p &lt;-<span class="st"> </span><span class="kw">fscWrite</span>(<span class="dt">demes =</span> demes, <span class="dt">genetics =</span> genetics, <span class="dt">label =</span> <span class="st">&quot;ex2.inf.sites&quot;</span>)
 p &lt;-<span class="st"> </span><span class="kw">fscRun</span>(p, <span class="dt">all.sites =</span> F)</code></pre></div>
-<pre><code>2020-02-03 10:10:07 running fastsimcoal2...
-2020-02-03 10:10:09 run complete</code></pre>
+<pre><code>2020-02-03 22:30:04 running fastsimcoal2...
+2020-02-03 22:30:05 run complete</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">snp.df &lt;-<span class="st"> </span><span class="kw">fscReadArp</span>(p)</code></pre></div>
-<pre><code>2020-02-03 10:10:09 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/ex2.inf.sites/ex2.inf.sites_1_1.arp 
-2020-02-03 10:10:09 parsing genetic data...</code></pre>
+<pre><code>2020-02-03 22:30:05 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/ex2.inf.sites/ex2.inf.sites_1_1.arp 
+2020-02-03 22:30:05 parsing genetic data...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># number of SNPs recovered</span>
 <span class="kw">ncol</span>(snp.df) <span class="op">-</span><span class="st"> </span><span class="dv">2</span></code></pre></div>
-<pre><code>[1] 8106</code></pre>
+<pre><code>[1] 8430</code></pre>
 <p>Here’s the same model with infinite sites turned on (<code>inf.sites = T</code>), meaning every mutation is recorded as a new allele, even if it is at the same site.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">fscRun</span>(p, <span class="dt">all.sites =</span> F, <span class="dt">inf.sites =</span> T, <span class="dt">num.sims =</span> <span class="dv">1</span>)</code></pre></div>
-<pre><code>2020-02-03 10:10:09 running fastsimcoal2...
-2020-02-03 10:10:10 run complete</code></pre>
+<pre><code>2020-02-03 22:30:06 running fastsimcoal2...
+2020-02-03 22:30:07 run complete</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">snp.df &lt;-<span class="st"> </span><span class="kw">fscReadArp</span>(p)</code></pre></div>
-<pre><code>2020-02-03 10:10:10 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/ex2.inf.sites/ex2.inf.sites_1_1.arp 
-2020-02-03 10:10:10 parsing genetic data...</code></pre>
+<pre><code>2020-02-03 22:30:07 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/ex2.inf.sites/ex2.inf.sites_1_1.arp 
+2020-02-03 22:30:07 parsing genetic data...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># number of SNPs recovered</span>
 <span class="kw">ncol</span>(snp.df) <span class="op">-</span><span class="st"> </span><span class="dv">2</span></code></pre></div>
-<pre><code>[1] 11212</code></pre>
+<pre><code>[1] 11294</code></pre>
 <p>Here the observed number of SNPs is much closer to the expected number. The decision of whether or not to use an infinite sites model depends on if you are trying to simulate loci for comparison to an empirical data set where you are not able to observe multiple mutations on the same site (<code>inf.sites = FALSE</code>) or to a theoretical model (<code>inf.sites = TRUE</code>), where it is assumed that these mutations have been observed. Note that reported mutation rates are frequently underestimates of the true mutation rate unless they actively try to account for these hidden mutations.</p>
 </div>
 </div>
@@ -647,17 +647,17 @@ p &lt;-<span class="st"> </span><span class="kw">fscWrite</span>(
   <span class="dt">label =</span> <span class="st">&quot;ex3.mig.ex&quot;</span>
 )
 p &lt;-<span class="st"> </span><span class="kw">fscRun</span>(p, <span class="dt">all.sites =</span> F)</code></pre></div>
-<pre><code>2020-02-03 10:10:11 running fastsimcoal2...
-2020-02-03 10:10:12 run complete</code></pre>
+<pre><code>2020-02-03 22:30:08 running fastsimcoal2...
+2020-02-03 22:30:09 run complete</code></pre>
 <p>The expected number of migrants per generation (Nm) is 0.01 which shouldn’t be enough to homogenize the populations. We can confirm with an Fst test:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">snp.df &lt;-<span class="st"> </span><span class="kw">fscReadArp</span>(p, <span class="dt">one.col =</span> F)</code></pre></div>
-<pre><code>2020-02-03 10:10:12 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/ex3.mig.ex/ex3.mig.ex_1_1.arp 
-2020-02-03 10:10:12 parsing genetic data...</code></pre>
+<pre><code>2020-02-03 22:30:09 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/ex3.mig.ex/ex3.mig.ex_1_1.arp 
+2020-02-03 22:30:09 parsing genetic data...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">snp.g &lt;-<span class="st"> </span><span class="kw">df2gtypes</span>(snp.df, <span class="dt">ploidy =</span> <span class="dv">2</span>)
 <span class="kw">overallTest</span>(snp.g, <span class="dt">stat =</span> <span class="st">&quot;fst&quot;</span>)</code></pre></div>
 <pre><code>
-&lt;&lt;&lt; gtypes created on 2020-02-03 10:10:12 &gt;&gt;&gt;
- 2020-02-03 10:10:12 : Overall test : 1000 permutations
+&lt;&lt;&lt; gtypes created on 2020-02-03 22:30:09 &gt;&gt;&gt;
+ 2020-02-03 22:30:09 : Overall test : 1000 permutations
 
         N
 Deme.1 10
@@ -665,7 +665,7 @@ Deme.2 10
 
 Population structure results:
      estimate       p.val
-Fst 0.9431011 0.000999001</code></pre>
+Fst 0.9192751 0.000999001</code></pre>
 <p>As expected, Fst is relatively high and shows significant differentiation. Lets see what happens if we increase migration several orders of magnitude.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m.vec &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.0001</span>, <span class="fl">0.0005</span>, <span class="fl">0.001</span>, <span class="fl">0.005</span>, <span class="fl">0.01</span>, <span class="fl">0.05</span>)
 fst &lt;-<span class="st"> </span><span class="kw">sapply</span>(m.vec, <span class="cf">function</span>(m) {
@@ -688,12 +688,12 @@ fst &lt;-<span class="st"> </span><span class="kw">sapply</span>(m.vec, <span cl
   <span class="kw">t</span>(fst)
 )</code></pre></div>
 <pre><code>          m   Nm      expFst     estimate       p.val
-[1,] 0.0001  0.1 0.714285714  0.507986111 0.000999001
-[2,] 0.0005  0.5 0.333333333  0.189592664 0.000999001
-[3,] 0.0010  1.0 0.200000000  0.086934156 0.000999001
-[4,] 0.0050  5.0 0.047619048  0.018709431 0.072927073
-[5,] 0.0100 10.0 0.024390244  0.032902344 0.006993007
-[6,] 0.0500 50.0 0.004975124 -0.008187135 0.696303696</code></pre>
+[1,] 0.0001  0.1 0.714285714  0.468555655 0.000999001
+[2,] 0.0005  0.5 0.333333333  0.242706394 0.000999001
+[3,] 0.0010  1.0 0.200000000  0.085584404 0.000999001
+[4,] 0.0050  5.0 0.047619048  0.038794169 0.017982018
+[5,] 0.0100 10.0 0.024390244  0.029277658 0.033966034
+[6,] 0.0500 50.0 0.004975124 -0.007147498 0.619380619</code></pre>
 <p>As expected, Fst decreases as m and Nm increase, becoming non-significant at the largest value, indicating that between 10 and 50 migrants per generation is sufficient to homogenize these two demes.</p>
 <p>We can set up a variety of migration rate matrices to examine various forms of connectivity among demes. Two classical forms are island and stepping stone models. In an island model, migration occurs between all populations, and in the simplest form all migration rates are equal.</p>
 <div id="island-model" class="section level3">
@@ -755,8 +755,8 @@ p.island &lt;-<span class="st"> </span><span class="kw">fscWrite</span>(
   <span class="dt">label =</span> <span class="st">&quot;ex3.island&quot;</span>
 )
 p.island &lt;-<span class="st"> </span><span class="kw">fscRun</span>(p.island, <span class="dt">all.sites =</span> F)</code></pre></div>
-<pre><code>2020-02-03 10:10:24 running fastsimcoal2...
-2020-02-03 10:10:25 run complete</code></pre>
+<pre><code>2020-02-03 22:30:20 running fastsimcoal2...
+2020-02-03 22:30:22 run complete</code></pre>
 <p>…and the one with the stepping stone model.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p.step &lt;-<span class="st"> </span><span class="kw">fscWrite</span>(
   <span class="dt">demes =</span> demes,
@@ -765,24 +765,24 @@ p.island &lt;-<span class="st"> </span><span class="kw">fscRun</span>(p.island, 
   <span class="dt">label =</span> <span class="st">&quot;ex3.stepping.stone&quot;</span>
 )
 p.step &lt;-<span class="st"> </span><span class="kw">fscRun</span>(p.step, <span class="dt">all.sites =</span> F)</code></pre></div>
-<pre><code>2020-02-03 10:10:25 running fastsimcoal2...
-2020-02-03 10:10:27 run complete</code></pre>
+<pre><code>2020-02-03 22:30:22 running fastsimcoal2...
+2020-02-03 22:30:23 run complete</code></pre>
 <p>Here’s Fst for both models:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># expected Fst</span>
 <span class="dv">1</span> <span class="op">/</span><span class="st"> </span>((<span class="dv">4</span> <span class="op">*</span><span class="st"> </span><span class="dv">1000</span> <span class="op">*</span><span class="st"> </span>m) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</code></pre></div>
 <pre><code>[1] 0.3333333</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">island.g &lt;-<span class="st"> </span><span class="kw">df2gtypes</span>(<span class="kw">fscReadArp</span>(p.island, <span class="dt">one.col =</span> F), <span class="dt">ploidy =</span> <span class="dv">2</span>)</code></pre></div>
-<pre><code>2020-02-03 10:10:27 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/ex3.island/ex3.island_1_1.arp 
-2020-02-03 10:10:27 parsing genetic data...</code></pre>
+<pre><code>2020-02-03 22:30:23 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/ex3.island/ex3.island_1_1.arp 
+2020-02-03 22:30:23 parsing genetic data...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">statFst</span>(island.g)<span class="op">$</span>result[<span class="st">&quot;estimate&quot;</span>]</code></pre></div>
 <pre><code> estimate 
-0.2754965 </code></pre>
+0.2847261 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">step.g &lt;-<span class="st"> </span><span class="kw">df2gtypes</span>(<span class="kw">fscReadArp</span>(p.step, <span class="dt">one.col =</span> F), <span class="dt">ploidy =</span> <span class="dv">2</span>)</code></pre></div>
-<pre><code>2020-02-03 10:10:28 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/ex3.stepping.stone/ex3.stepping.stone_1_1.arp 
-2020-02-03 10:10:28 parsing genetic data...</code></pre>
+<pre><code>2020-02-03 22:30:24 reading /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/ex3.stepping.stone/ex3.stepping.stone_1_1.arp 
+2020-02-03 22:30:24 parsing genetic data...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">statFst</span>(step.g)<span class="op">$</span>result[<span class="st">&quot;estimate&quot;</span>]</code></pre></div>
 <pre><code> estimate 
-0.3256439 </code></pre>
+0.3130501 </code></pre>
 </div>
 <div id="spatially-explicit-migration" class="section level3">
 <h3>Spatially-explicit migration</h3>
@@ -820,10 +820,10 @@ ibd.mat</code></pre></div>
 5 0.0021279208 0.0002257247 0.0002481669 0.0020410566 0.0000000000</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">qgraph<span class="op">::</span><span class="kw">qgraph</span>(ibd.mat)</code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
-<p>Here’s one replicate of a simulation with this matrix. The sample sizes have been increased to 30 per deme so we can better run some tests later.</p>
+<p>Here’s one replicate of a simulation with this matrix.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">demes &lt;-<span class="st"> </span><span class="kw">fscSettingsDemes</span>(
-  <span class="kw">fscDeme</span>(<span class="dv">1000</span>, <span class="dv">30</span>), <span class="kw">fscDeme</span>(<span class="dv">1000</span>, <span class="dv">30</span>), <span class="kw">fscDeme</span>(<span class="dv">1000</span>, <span class="dv">30</span>), 
-  <span class="kw">fscDeme</span>(<span class="dv">1000</span>, <span class="dv">30</span>), <span class="kw">fscDeme</span>(<span class="dv">1000</span>, <span class="dv">30</span>)
+  <span class="kw">fscDeme</span>(<span class="dv">1000</span>, <span class="dv">10</span>), <span class="kw">fscDeme</span>(<span class="dv">1000</span>, <span class="dv">10</span>), <span class="kw">fscDeme</span>(<span class="dv">1000</span>, <span class="dv">10</span>), 
+  <span class="kw">fscDeme</span>(<span class="dv">1000</span>, <span class="dv">10</span>), <span class="kw">fscDeme</span>(<span class="dv">1000</span>, <span class="dv">10</span>)
 )
 p.ibd &lt;-<span class="st"> </span><span class="kw">fscWrite</span>(
   <span class="dt">demes =</span> demes,
@@ -832,18 +832,18 @@ p.ibd &lt;-<span class="st"> </span><span class="kw">fscWrite</span>(
   <span class="dt">label =</span> <span class="st">&quot;ex3.ibd&quot;</span>
 )
 p.ibd &lt;-<span class="st"> </span><span class="kw">fscRun</span>(p.ibd, <span class="dt">all.sites =</span> F)</code></pre></div>
-<pre><code>2020-02-03 10:10:29 running fastsimcoal2...
-2020-02-03 10:10:31 run complete</code></pre>
+<pre><code>2020-02-03 22:30:25 running fastsimcoal2...
+2020-02-03 22:30:27 run complete</code></pre>
 <p>Here are pairwise Fst tests:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ibd.g &lt;-<span class="st"> </span><span class="kw">df2gtypes</span>(<span class="kw">fscReadArp</span>(p.ibd, <span class="dt">one.col =</span> F), <span class="dt">ploidy =</span> <span class="dv">2</span>)
-pws &lt;-<span class="st"> </span><span class="kw">pairwiseTest</span>(ibd.g, <span class="dt">stat =</span> <span class="st">&quot;fst&quot;</span>)<span class="op">$</span>pair.mat<span class="op">$</span>Fst</code></pre></div>
+pws &lt;-<span class="st"> </span><span class="kw">pairwiseTest</span>(ibd.g, <span class="dt">stat =</span> <span class="st">&quot;fst&quot;</span>, <span class="dt">nrep =</span> <span class="dv">100</span>)<span class="op">$</span>pair.mat<span class="op">$</span>Fst</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pws</code></pre></div>
-<pre><code>           Deme.1      Deme.2      Deme.3      Deme.4      Deme.5
-Deme.1         NA 0.000999001 0.000999001 0.131868132 0.000999001
-Deme.2 0.09263618          NA 0.000999001 0.000999001 0.000999001
-Deme.3 0.09482940 0.046858193          NA 0.000999001 0.000999001
-Deme.4 0.00126091 0.096409110 0.096664243          NA 0.000999001
-Deme.5 0.02911428 0.099855743 0.103316049 0.025367817          NA</code></pre>
+<pre><code>            Deme.1     Deme.2     Deme.3     Deme.4     Deme.5
+Deme.1          NA 0.00990099 0.00990099 0.02970297 0.00990099
+Deme.2 0.090644551         NA 0.00990099 0.00990099 0.00990099
+Deme.3 0.093885278 0.03607957         NA 0.00990099 0.00990099
+Deme.4 0.007690459 0.09730807 0.09463633         NA 0.00990099
+Deme.5 0.029376535 0.09365372 0.10520189 0.02450499         NA</code></pre>
 <p>The lower left triangle of the matrix are pairwise Fst values and the upper right are permutation p-values. This shows that there is less differentiation among demes that are relatively close, while those that are farther apart show higher Fst values and are significantly different.</p>
 </div>
 </div>
@@ -924,16 +924,16 @@ param.p &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class
   )
   <span class="kw">fscRun</span>(p)
 })</code></pre></div>
-<pre><code>2020-02-03 10:12:21 running fastsimcoal2...
-2020-02-03 10:12:23 run complete
-2020-02-03 10:12:23 running fastsimcoal2...
-2020-02-03 10:12:24 run complete
-2020-02-03 10:12:24 running fastsimcoal2...
-2020-02-03 10:12:26 run complete
-2020-02-03 10:12:26 running fastsimcoal2...
-2020-02-03 10:12:28 run complete
-2020-02-03 10:12:28 running fastsimcoal2...
-2020-02-03 10:12:29 run complete</code></pre>
+<pre><code>2020-02-03 22:30:35 running fastsimcoal2...
+2020-02-03 22:30:37 run complete
+2020-02-03 22:30:37 running fastsimcoal2...
+2020-02-03 22:30:38 run complete
+2020-02-03 22:30:38 running fastsimcoal2...
+2020-02-03 22:30:40 run complete
+2020-02-03 22:30:40 running fastsimcoal2...
+2020-02-03 22:30:41 run complete
+2020-02-03 22:30:41 running fastsimcoal2...
+2020-02-03 22:30:42 run complete</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dir</span>(p<span class="op">$</span>folder, <span class="dt">pattern =</span> <span class="st">&quot;param.sim&quot;</span>)</code></pre></div>
 <pre><code> [1] &quot;param.sim.1&quot;     &quot;param.sim.1.log&quot; &quot;param.sim.1.par&quot; &quot;param.sim.2&quot;    
  [5] &quot;param.sim.2.log&quot; &quot;param.sim.2.par&quot; &quot;param.sim.3&quot;     &quot;param.sim.3.log&quot;
@@ -948,8 +948,8 @@ param.p &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class
   <span class="dt">label =</span> <span class="st">&quot;param.sim&quot;</span>
 )
 p &lt;-<span class="st"> </span><span class="kw">fscRun</span>(p)</code></pre></div>
-<pre><code>2020-02-03 10:12:29 running fastsimcoal2...
-2020-02-03 10:12:30 run complete</code></pre>
+<pre><code>2020-02-03 22:30:42 running fastsimcoal2...
+2020-02-03 22:30:44 run complete</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dir</span>(p<span class="op">$</span>folder, <span class="dt">pattern =</span> <span class="st">&quot;param.sim.def&quot;</span>)</code></pre></div>
 <pre><code>[1] &quot;param.sim.def&quot;</code></pre>
 </div>
@@ -966,18 +966,18 @@ p &lt;-<span class="st"> </span><span class="kw">fscRun</span>(p)</code></pre></
   <span class="dt">label =</span> <span class="st">&quot;known.1PopBot20Mb&quot;</span>
 )
 obs.p &lt;-<span class="st"> </span><span class="kw">fscRun</span>(obs.p, <span class="dt">dna.to.snp =</span> <span class="ot">TRUE</span>, <span class="dt">no.arl.output =</span> <span class="ot">TRUE</span>, <span class="dt">num.cores =</span> <span class="dv">3</span>)</code></pre></div>
-<pre><code>2020-02-03 10:12:30 running fastsimcoal2...
-2020-02-03 10:12:32 run complete</code></pre>
+<pre><code>2020-02-03 22:30:44 running fastsimcoal2...
+2020-02-03 22:30:46 run complete</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">obs.sfs &lt;-<span class="st"> </span><span class="kw">fscReadSFS</span>(obs.p)</code></pre></div>
-<pre><code>2020-02-03 10:12:32 reading files in /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/known.1PopBot20Mb/known.1PopBot20Mb_1 </code></pre>
+<pre><code>2020-02-03 22:30:46 reading files in /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/known.1PopBot20Mb/known.1PopBot20Mb_1 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(obs.sfs)</code></pre></div>
 <pre><code>List of 3
  $ sfs        :List of 2
   ..$ marginal:List of 1
-  .. ..$ /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/known.1PopBot20Mb/known.1PopBot20Mb_1/known.1PopBot20Mb_MAFpop0.obs: Named int [1:41] 1234817 107047 66579 52737 45009 40236 37774 35544 34343 32822 ...
+  .. ..$ /var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/known.1PopBot20Mb/known.1PopBot20Mb_1/known.1PopBot20Mb_MAFpop0.obs: Named int [1:41] 1234904 107692 67116 52394 45234 40555 37758 35922 34168 32642 ...
   .. .. ..- attr(*, &quot;names&quot;)= chr [1:41] &quot;d0_0&quot; &quot;d0_1&quot; &quot;d0_2&quot; &quot;d0_3&quot; ...
   ..$ joint   : NULL
- $ polym.sites: Named num [1:5] 2000000 833194 0 37565 30446
+ $ polym.sites: Named num [1:5] 2000000 833428 0 37660 30672
   ..- attr(*, &quot;names&quot;)= chr [1:5] &quot;num.sim&quot; &quot;num.polym&quot; &quot;num.gt2.alleles&quot; &quot;num.fix.anc&quot; ...
  $ lhood      : NULL</code></pre>
 <p>We specify the parameter estimation model as before by inserting character strings into the parameters to be estimated for each setting.</p>
@@ -1015,11 +1015,11 @@ NULL
 
 $sfs
    d0_0    d0_1    d0_2    d0_3    d0_4    d0_5    d0_6    d0_7    d0_8    d0_9 
-1234817  107047   66579   52737   45009   40236   37774   35544   34343   32822 
+1234904  107692   67116   52394   45234   40555   37758   35922   34168   32642 
   d0_10   d0_11   d0_12   d0_13   d0_14   d0_15   d0_16   d0_17   d0_18   d0_19 
-  31614   31421   30476   29875   29746   29681   28806   29151   28998   28872 
+  31749   31414   30316   30061   29327   29114   28916   29050   28740   28762 
   d0_20   d0_21   d0_22   d0_23   d0_24   d0_25   d0_26   d0_27   d0_28   d0_29 
-  14452       0       0       0       0       0       0       0       0       0 
+  14166       0       0       0       0       0       0       0       0       0 
   d0_30   d0_31   d0_32   d0_33   d0_34   d0_35   d0_36   d0_37   d0_38   d0_39 
       0       0       0       0       0       0       0       0       0       0 
   d0_40 
@@ -1038,31 +1038,31 @@ attr(,&quot;class&quot;)
   <span class="dt">label =</span> <span class="st">&quot;est.1PopBot20Mb&quot;</span>
 )
 est.p &lt;-<span class="st"> </span><span class="kw">fscRun</span>(est.p, <span class="dt">num.sims =</span> <span class="dv">10000</span>, <span class="dt">num.cores =</span> <span class="dv">3</span>)</code></pre></div>
-<pre><code>2020-02-03 10:12:32 running fastsimcoal2...
-2020-02-03 10:12:44 run complete</code></pre>
+<pre><code>2020-02-03 22:30:46 running fastsimcoal2...
+2020-02-03 22:30:54 run complete</code></pre>
 <p>This run produces several different files to the simulation folder:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dir</span>(est.p<span class="op">$</span>label)</code></pre></div>
-<pre><code>character(0)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dir</span>(est.p<span class="op">$</span>folder, <span class="dt">pattern =</span> est.p<span class="op">$</span>label)</code></pre></div>
+<pre><code>[1] &quot;est.1PopBot20Mb&quot;             &quot;est.1PopBot20Mb.est&quot;        
+[3] &quot;est.1PopBot20Mb.log&quot;         &quot;est.1PopBot20Mb.par&quot;        
+[5] &quot;est.1PopBot20Mb.tpl&quot;         &quot;est.1PopBot20Mb_MAFpop0.obs&quot;</code></pre>
 <p>We read them in to R with <code>fscReadParamEst()</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">param.est &lt;-<span class="st"> </span><span class="kw">fscReadParamEst</span>(est.p)
 <span class="kw">str</span>(param.est)</code></pre></div>
 <pre><code>List of 3
  $ sfs       :List of 2
-  ..$ marginal: num [1:41, 1] 0 0.1393 0.0849 0.0685 0.0605 ...
+  ..$ marginal: num [1:41, 1] 0 0.1374 0.0856 0.0683 0.0585 ...
   .. ..- attr(*, &quot;dimnames&quot;)=List of 2
   .. .. ..$ : chr [1:41] &quot;d0_0&quot; &quot;d0_1&quot; &quot;d0_2&quot; &quot;d0_3&quot; ...
-  .. .. ..$ : chr &quot;/var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmptBUasK/est.1PopBot20Mb/est.1PopBot20Mb_MAFpop0.txt&quot;
+  .. .. ..$ : chr &quot;/var/folders/f6/2l43x9sd3wb_y4tjvltz1pfc0000gp/T//RtmpibY0eN/est.1PopBot20Mb/est.1PopBot20Mb_MAFpop0.txt&quot;
   ..$ joint   : NULL
  $ max.lhoods: NULL
  $ ecm.lhoods:'data.frame': 80 obs. of  6 variables:
   ..$ Param#     : num [1:80] 0 1 2 3 0 1 2 3 0 1 ...
-  ..$ NCUR       : num [1:80] 15487 15487 15487 15487 9986 ...
-  ..$ NANC       : num [1:80] 33101 39920 39920 39920 39920 ...
-  ..$ NBOT       : num [1:80] 505 505 474 474 474 474 508 508 508 508 ...
-  ..$ TBOT       : num [1:80] 4670 4670 4670 1110 1110 ...
-  ..$ MaxEstLhood: num [1:80] -1546361 -1543930 -1543680 -1543343 -1542077 ...</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">param.est<span class="op">$</span>max.lhoods</code></pre></div>
-<pre><code>NULL</code></pre>
+  ..$ NCUR       : num [1:80] 5512 5512 5512 5512 5755 ...
+  ..$ NANC       : num [1:80] 59801 57004 57004 57004 57004 ...
+  ..$ NBOT       : num [1:80] 79185 79185 87135 87135 87135 ...
+  ..$ TBOT       : num [1:80] 3921 3921 3921 3960 3960 ...
+  ..$ MaxEstLhood: num [1:80] -1546461 -1545653 -1545398 -1545409 -1545202 ...</code></pre>
 <p>If the model contains more than one deme, then the only difference is that a list of the observed joint SFS with <code>fastsimcoal2</code> formatted row and column names must be provided to the <code>obs.sfs</code> argument of <code>fscSettingsEst()</code>.</p>
 </div>
 

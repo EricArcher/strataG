@@ -1,10 +1,10 @@
 ---
-title: "Tests of Population Structure"
+title: "Tests of population structure"
 author: "Eric Archer"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{4. Tests of Population Structure}
+  %\VignetteIndexEntry{Tests of population structure}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---

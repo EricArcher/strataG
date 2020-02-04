@@ -4,7 +4,7 @@ author: "Eric Archer"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{6. Installing External Programs}
+  %\VignetteIndexEntry{Installing External Programs}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---

@@ -14,7 +14,7 @@
 
 <meta name="date" content="2020-02-03" />
 
-<title>Tests of Population Structure</title>
+<title>Tests of population structure</title>
 
 
 
@@ -93,7 +93,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore">Tests of Population Structure</h1>
+<h1 class="title toc-ignore">Tests of population structure</h1>
 <h4 class="author">Eric Archer</h4>
 <h4 class="date">2020-02-03</h4>
 
@@ -124,13 +124,13 @@ msats &lt;-<span class="st"> </span>msats[, <span class="kw">getLociNames</span>
 ##    0.061    0.091 
 ## 
 ## $null.dist
-##  [1] -0.0032 -0.0034  0.0024 -0.0027  0.0050 -0.0041 -0.0023  0.0046 -0.0016
-## [10] -0.0026</code></pre>
+##  [1]  2.8e-03  6.1e-03 -3.5e-03  3.3e-03 -1.3e-03 -2.8e-03  8.5e-05  2.0e-03
+##  [9] -2.2e-03 -3.1e-03</code></pre>
 <p>Population structure tests can be conducted in an “overall” manner which estimates the degree of differentiation due to the specified stratification scheme, or in a “pairwise” manner, which tests differentiation between all pairs of strata. The overall test is run via <em>overallTest()</em>. By default, all statistics are run and NAs are returned if they are not appropriate to the type of data (e.g., PHIst for diploid data). Tests for specified statistics can be conducted by listing them in the <code>stats</code> argument:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ovl &lt;-<span class="st"> </span><span class="kw">overallTest</span>(msats, <span class="dt">stats =</span> <span class="kw">c</span>(<span class="st">&quot;fst&quot;</span>, <span class="st">&quot;chi2&quot;</span>), <span class="dt">nrep =</span> <span class="dv">1000</span>)</code></pre></div>
 <pre><code>## 
 ## &lt;&lt;&lt; dolphin msats &gt;&gt;&gt;
-##  2020-02-03 10:12:46 : Overall test : 1000 permutations
+##  2020-02-03 22:34:52 : Overall test : 1000 permutations
 ## 
 ##                 N
 ## Coastal        68
@@ -145,20 +145,20 @@ msats &lt;-<span class="st"> </span>msats[, <span class="kw">getLociNames</span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pws &lt;-<span class="st"> </span><span class="kw">pairwiseTest</span>(msats, <span class="dt">stats =</span> <span class="kw">c</span>(<span class="st">&quot;fst.prime&quot;</span>, <span class="st">&quot;gst&quot;</span>), <span class="dt">nrep =</span> <span class="dv">1000</span>)</code></pre></div>
 <pre><code>## 
 ## &lt;&lt;&lt; dolphin msats &gt;&gt;&gt;
-##  2020-02-03 10:12:47 : Pairwise tests : 1000 permutations
-##    2020-02-03 10:12:47 : Coastal v. Offshore.North 
-##    2020-02-03 10:12:48 : Coastal v. Offshore.South 
-##    2020-02-03 10:12:49 : Offshore.North v. Offshore.South 
+##  2020-02-03 22:34:53 : Pairwise tests : 1000 permutations
+##    2020-02-03 22:34:53 : Coastal v. Offshore.North 
+##    2020-02-03 22:34:53 : Coastal v. Offshore.South 
+##    2020-02-03 22:34:54 : Offshore.North v. Offshore.South 
 ## 
 ## Population structure results:
 ##                                               F'st F'st.p.val      Gst
 ## Coastal (68) v. Offshore.North (40)         0.5117      0.001  0.06713
 ## Coastal (68) v. Offshore.South (18)         0.5902      0.001  0.07613
-## Offshore.North (40) v. Offshore.South (18) -0.0099      0.556 -0.00054
+## Offshore.North (40) v. Offshore.South (18) -0.0099      0.529 -0.00054
 ##                                            Gst.p.val
 ## Coastal (68) v. Offshore.North (40)            0.001
 ## Coastal (68) v. Offshore.South (18)            0.001
-## Offshore.North (40) v. Offshore.South (18)     0.540</code></pre>
+## Offshore.North (40) v. Offshore.South (18)     0.514</code></pre>
 <p>The result of a pairwise test contains both a data.frame formatted for each pairwise comparison and pairwise matrices for each statistic with statistic estimates in the lower left, and p-values in the upper right.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pws</code></pre></div>
 <pre><code>## $result
@@ -169,23 +169,23 @@ msats &lt;-<span class="st"> </span>msats[, <span class="kw">getLociNames</span>
 ##                                            n.2    F'st F'st.p.val      Gst
 ## Coastal (68) v. Offshore.North (40)         40  0.5117      0.001  0.06713
 ## Coastal (68) v. Offshore.South (18)         18  0.5902      0.001  0.07613
-## Offshore.North (40) v. Offshore.South (18)  18 -0.0099      0.556 -0.00054
+## Offshore.North (40) v. Offshore.South (18)  18 -0.0099      0.529 -0.00054
 ##                                            Gst.p.val
 ## Coastal (68) v. Offshore.North (40)            0.001
 ## Coastal (68) v. Offshore.South (18)            0.001
-## Offshore.North (40) v. Offshore.South (18)     0.540
+## Offshore.North (40) v. Offshore.South (18)     0.514
 ## 
 ## $pair.mat
 ## $pair.mat$`F'st`
 ##                Coastal Offshore.North Offshore.South
 ## Coastal             NA         0.0010          0.001
-## Offshore.North    0.51             NA          0.556
+## Offshore.North    0.51             NA          0.529
 ## Offshore.South    0.59        -0.0099             NA
 ## 
 ## $pair.mat$Gst
 ##                Coastal Offshore.North Offshore.South
 ## Coastal             NA        0.00100          0.001
-## Offshore.North   0.067             NA          0.540
+## Offshore.North   0.067             NA          0.514
 ## Offshore.South   0.076       -0.00054             NA
 ## 
 ## 
@@ -218,23 +218,23 @@ popStruct</code></pre></div>
 ##                                            n.2     Fst Fst.p.val    F'st
 ## Coastal (68) v. Offshore.North (40)         40  0.1308     0.001  0.5117
 ## Coastal (68) v. Offshore.South (18)         18  0.1552     0.001  0.5902
-## Offshore.North (40) v. Offshore.South (18)  18 -0.0012     0.533 -0.0099
+## Offshore.North (40) v. Offshore.South (18)  18 -0.0012     0.558 -0.0099
 ##                                            F'st.p.val
 ## Coastal (68) v. Offshore.North (40)             0.001
 ## Coastal (68) v. Offshore.South (18)             0.001
-## Offshore.North (40) v. Offshore.South (18)      0.535
+## Offshore.North (40) v. Offshore.South (18)      0.560
 ## 
 ## $pairwise$pair.mat
 ## $pairwise$pair.mat$Fst
 ##                Coastal Offshore.North Offshore.South
 ## Coastal             NA         0.0010          0.001
-## Offshore.North    0.13             NA          0.533
+## Offshore.North    0.13             NA          0.558
 ## Offshore.South    0.16        -0.0012             NA
 ## 
 ## $pairwise$pair.mat$`F'st`
 ##                Coastal Offshore.North Offshore.South
 ## Coastal             NA         0.0010          0.001
-## Offshore.North    0.51             NA          0.535
+## Offshore.North    0.51             NA          0.560
 ## Offshore.South    0.59        -0.0099             NA
 ## 
 ## 

@@ -303,8 +303,8 @@ qgraph::qgraph(ibd.mat)
 
 ## -----------------------------------------------------------------------------
 demes <- fscSettingsDemes(
-  fscDeme(1000, 30), fscDeme(1000, 30), fscDeme(1000, 30), 
-  fscDeme(1000, 30), fscDeme(1000, 30)
+  fscDeme(1000, 10), fscDeme(1000, 10), fscDeme(1000, 10), 
+  fscDeme(1000, 10), fscDeme(1000, 10)
 )
 p.ibd <- fscWrite(
   demes = demes,
@@ -316,7 +316,7 @@ p.ibd <- fscRun(p.ibd, all.sites = F)
 
 ## ----results = "hide"---------------------------------------------------------
 ibd.g <- df2gtypes(fscReadArp(p.ibd, one.col = F), ploidy = 2)
-pws <- pairwiseTest(ibd.g, stat = "fst")$pair.mat$Fst
+pws <- pairwiseTest(ibd.g, stat = "fst", nrep = 100)$pair.mat$Fst
 
 ## -----------------------------------------------------------------------------
 pws
@@ -423,10 +423,9 @@ est.p <- fscWrite(
 est.p <- fscRun(est.p, num.sims = 10000, num.cores = 3)
 
 ## -----------------------------------------------------------------------------
-dir(est.p$label)
+dir(est.p$folder, pattern = est.p$label)
 
 ## -----------------------------------------------------------------------------
 param.est <- fscReadParamEst(est.p)
 str(param.est)
-param.est$max.lhoods
 
