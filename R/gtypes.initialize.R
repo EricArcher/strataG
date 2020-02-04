@@ -23,7 +23,7 @@
 #' alleles of one locus. Locus names are taken from the column names in 
 #' \code{gen.data} and should be formatted with the same root locus name, with 
 #' unique suffixes representing alleles (e.g., for Locus1234: Locus1234.1 
-#' and Locus1234.2, or Locus1234_A and Locus1234_B). \cr\cr
+#' and Locus1234.2, or Locus1234_A and Locus1234_B). \cr
 #' If \code{gen.data} is a vector it is assumed to represent haplotypes of a 
 #' haploid marker.
 #' Sample names can be either in the rownames of \code{gen.data} or given 

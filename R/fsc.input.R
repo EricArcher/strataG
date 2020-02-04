@@ -72,7 +72,7 @@
 #' @note All settings must be passed to \code{\link{fscWrite}} using one
 #'   of the \code{fscSettingsXXX} functions. Most of these functions in turn
 #'   take as their input comma-separated values which are the result of specific
-#'   \code{fscXXX} functions:\cr\cr 
+#'   \code{fscXXX} functions:\cr
 #'   \describe{ 
 #'     \item{fscSettingsDemes()}{comma-separated instances of fscDeme(). If 
 #'        names are given for each deme, these names will be used in the parsed 
@@ -87,7 +87,7 @@
 #'     \item{fscSettingsEst()}{comma-separated instances of fscEstParam() 
 #'       as well as site frequency spectra (\code{obs.sfs}) and
 #'       parameter rules {\code{rules}}.}
-#'   }\cr\cr
+#'   }\cr
 #'   \code{fastsimcoal2} is not included with `strataG` and must be downloaded 
 #'     separately. Additionally, it must be installed such that it can be run
 #'     from the command line in the current working directory. 

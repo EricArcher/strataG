@@ -69,6 +69,7 @@ Archer, F. 2016. *strataG*: An *R* package for manipulating, summarizing and ana
 * Fixed and enhanced `arlequinRead()` so that it will read and parse all .arp files. Added `arp2gtypes()` to create `gtypes` object from parsed .arp files.
 * Improved performance of several standard summary functions, most notably `dupGenotypes()`.
 * Full rework of _fastsimcoal2_ wrapper. 
+* Removed `strataGUI()`.
 
 ## version 2.1   
 * fixed error in ldNe when missing data are present
