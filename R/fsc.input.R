@@ -87,7 +87,7 @@
 #'     \item{fscSettingsEst()}{comma-separated instances of fscEstParam() 
 #'       as well as site frequency spectra (\code{obs.sfs}) and
 #'       parameter rules {\code{rules}}.}
-#'   }\cr
+#'   }
 #'   \code{fastsimcoal2} is not included with `strataG` and must be downloaded 
 #'     separately. Additionally, it must be installed such that it can be run
 #'     from the command line in the current working directory. 
