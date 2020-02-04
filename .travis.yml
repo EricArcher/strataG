@@ -19,8 +19,10 @@ r_packages:
 addons:
   apt:
     packages:
+      - libgsl0-dev
       - libgsl2
       - libudunits2-dev
+      - libcurl4-openssl-dev
 
 before_install:
   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
