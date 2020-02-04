@@ -5,7 +5,7 @@ r:
   - devel
 
 sudo: false
-dist: trusty
+# dist: trusty
 cran: http://cran.at.r-project.org
 cache: packages
 warnings_are_errors: false
