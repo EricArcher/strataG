@@ -43,7 +43,7 @@ MavericK is not included with \code{strataG} and must be downloaded
 }
 \references{
 Robert Verity and Richard Nichols. (2016) Estimating the number of 
-subpopulations (K) in structured populations. Genetics \cr\cr
+subpopulations (K) in structured populations. Genetics \cr
 Robert Verity and Richard Nichols. (2016) Documentation for MavericK 
 software: Version 1.0
 }

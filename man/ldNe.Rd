@@ -54,7 +54,7 @@ Estimate Ne from linkage disequilibrium based on Pearson
 \references{
 Waples, R.S. 2006. A bias correction for estimates of effective
   population size based on linkage disequilibrium at unlinked gene loci.
-  Conservation Genetics 7:167-184. \cr\cr
+  Conservation Genetics 7:167-184. \cr
   Waples RK, Larson WA, and Waples RS. 2016. Estimating contemporary 
   effective population size in non-model species using linkage 
   disequilibrium across thousands of loci. Heredity 117:233-240; 
