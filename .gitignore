@@ -9,7 +9,6 @@
 *.Rproj
 test haps.R
 *.Rcheck/
-inst/doc
 .RData
 devel/
 .DS_Store
