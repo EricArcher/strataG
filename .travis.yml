@@ -20,7 +20,6 @@ addons:
   apt:
     packages:
       - libgsl0-dev
-      - libgsl2
       - libudunits2-dev
       - libcurl4-openssl-dev
 
