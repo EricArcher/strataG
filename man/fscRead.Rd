@@ -77,9 +77,9 @@ Read arlequin formatted output or parameter estimation files
 \note{
 \code{fastsimcoal2} is not included with `strataG` and must be
   downloaded separately. Additionally, it must be installed such that it can
-  be run from the command line in the current working directory. See the
-  \code{"fastsimcoal2"} vignette for more details on installation and the
-  interface.
+  be run from the command line in the current working directory. 
+  The function \code{fscTutorial()} will open a detailed tutorial on the 
+  interface in your web browser.
 }
 \examples{
 \dontrun{
