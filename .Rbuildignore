@@ -10,3 +10,5 @@ tar.gz$
 ^\.travis\.yml$
 ^appveyor\.yml$
 ^Meta$
+^doc$
+^doc/*.html$

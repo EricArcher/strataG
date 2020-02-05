@@ -41,7 +41,7 @@ vignette("gtypes")
 
 Vignettes are available on:
 ```
-* [Creating and manipulating gtypes](https://github.com/ericarcher/stratag/blob/master/vignettes/gtypes.Rmd)
+* [Creating and manipulating gtypes](https://github.com/ericarcher/stratag/blob/master/doc/gtypes.html)
 * [Genotype and sequence summaries](https://github.com/ericarcher/stratag/blob/master/vignettes/summaries.html)
 * [Working with sequences](https://github.com/ericarcher/stratag/blob/master/vignettes/sequences.html)
 * [Tests of population structure](https://github.com/ericarcher/stratag/blob/master/vignettes/population.structure.html)
