@@ -38,8 +38,10 @@ browseVignettes("strataG")
 
 # To open a specific vignette
 vignette("gtypes")
+
+Vignettes are available on:
 ```
-* [Creating and manipulating gtypes](https://github.com/ericarcher/stratag/blob/master/vignettes/gtypes.html)
+* [Creating and manipulating gtypes](https://github.com/ericarcher/stratag/blob/master/vignettes/gtypes.Rmd)
 * [Genotype and sequence summaries](https://github.com/ericarcher/stratag/blob/master/vignettes/summaries.html)
 * [Working with sequences](https://github.com/ericarcher/stratag/blob/master/vignettes/sequences.html)
 * [Tests of population structure](https://github.com/ericarcher/stratag/blob/master/vignettes/population.structure.html)
