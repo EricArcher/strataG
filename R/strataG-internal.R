@@ -1,27 +1,9 @@
-#' @title Internal Functions
-#' @description Functions intended to be used only by functions within 
-#'   the strataG package.
-#'   
-#' @details \describe{
-#'   \item{.getFileLabel}{}
-#'   \item{.parseLocusNames}{}
-#'   \item{.setupClusters}{}
-#'   \item{.strataPairs}{}
-#' }
-#'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
-#' 
-#' @name strataG-internal
-NULL
-
-
-#' @rdname strataG-internal
 #' @param g a \linkS4class{gtypes} object.
 #' @param label label for filename(s). Default is the gtypes description if present.
-#' @keywords internal
+#' @noRd
 #' 
 .getFileLabel <- function(g, label = NULL) {
-  desc <- description(g)
+  desc <- getDescription(g)
   label <- if(!is.null(label)) {
     label 
   } else if(!is.null(desc)) {
@@ -31,13 +13,22 @@ NULL
 }
   
 
-#' @rdname strataG-internal
+#' @param locus.names a vector of locus names.
+#' @param ploidy integer representing the ploidy of the data.
+#' @noRd
+#' 
+.expandLocusNames <- function(locus.names, ploidy) {
+  if(ploidy == 1) return(locus.names)
+  paste(rep(locus.names, each = ploidy), 1:ploidy, sep = ".")
+}
+
+
 #' @param locus.names a vector of column names, where each locus must be
 #'   named with the same roots. For example, diploid locus 'ABCD' would have
 #'   two columns named something like 'ABCD.1' and 'ABCD.2', or
 #'   'ABCD_A' and 'ABCD_B'.\cr
 #' @param ploidy integer representing the ploidy of the data.
-#' @keywords internal
+#' @noRd
 #' 
 .parseLocusNames <- function(locus.names, ploidy) {
   if(ploidy == 1) return(locus.names)
@@ -66,79 +57,165 @@ NULL
 }
 
 
-#' @rdname strataG-internal
-#' @param num.cores number of cores for multithreading. If \code{NULL}, the number 
-#'   used is set to the value of \code{detectCores() - 1}.
-#' @importFrom parallel detectCores makePSOCKcluster makeForkCluster
-#' @keywords internal
+#' @param num.cores number of cores for multithreading. 
+#'   If \code{NULL}, the number used is set to the 
+#'   value of \code{parallel::detectCores() - 1}.
+#' @param max.cores maximum number of cores to use.
+#' @noRd
 #' 
-.setupClusters <- function(num.cores = NULL) {
+.getNumCores <- function(num.cores, max.cores = NULL) {
+  if(is.null(max.cores)) max.cores <- parallel::detectCores() - 1
+  if(is.na(max.cores)) max.cores <- 1
+  if(max.cores < 1) max.cores <- 1
+  min(num.cores, max.cores)
+}
+
+
+#' @param num.cores number of cores for multithreading. 
+#'   If \code{NULL}, the number used is set to the 
+#'   value of \code{parallel::detectCores() - 1}.
+#' @param max.cores maximum number of cores to use.
+#' @noRd
+#' 
+.setupClusters <- function(num.cores = NULL, max.cores = NULL) {
   # setup clusters
-  if(is.null(num.cores)) num.cores <- detectCores() - 1
-  if(is.na(num.cores)) num.cores <- 1
-  num.cores <- max(1, num.cores)
-  num.cores <- min(num.cores, detectCores() - 1)
+  if(is.null(num.cores)) num.cores <- parallel::detectCores() - 1
+  num.cores <- .getNumCores(num.cores, max.cores)
   if(num.cores > 1) {
-    is.windows <- .Platform$OS.type == "windows"
-    cl.func <- ifelse(is.windows, makePSOCKcluster, makeForkCluster)
+    cl.func <- ifelse(
+      .Platform$OS.type == "windows", 
+      parallel::makePSOCKcluster, 
+      parallel::makeForkCluster
+    )
     cl.func(num.cores)
   } else NULL
 }
 
 
-#' @rdname strataG-internal
 #' @param g a \linkS4class{gtypes} object.
-#' @importFrom utils combn
-#' @keywords internal
+#' @noRd
+#' 
+.strataFreq <- function(g) table(getStrata(g), useNA = "no")
+
+
+#' @param g a \linkS4class{gtypes} object.
+#' @noRd
 #' 
 .strataPairs <- function(g) {
-  st <- strataNames(g)
+  st <- getStrataNames(g)
   if(length(st) < 2) return(NULL)
-  strata.pairs <- t(combn(st, 2))
-  colnames(strata.pairs) <- c("strata.1", "strata.2")
-  as.data.frame(strata.pairs, stringsAsFactors = FALSE)
+  utils::combn(st, 2) %>% 
+    t() %>%  
+    as.data.frame(stringsAsFactors = FALSE) %>% 
+    stats::setNames(c("strata.1", "strata.2"))
 }
 
 
-#' @rdname strataG-internal
 #' @param g a \linkS4class{gtypes} object.
-#' @keywords internal
+#' @noRd
 #' 
 .removeIdsMissingAllLoci <- function(g) {
-  ids <- NULL # For CRAN CHECK
-  is.missing.all <- g@data[, list(missing = all(is.na(.SD))), .SDcols = !c("ids", "strata"), by = "ids"]
-  to.remove <- is.missing.all[(missing)]$ids
+  to.remove <- g@data %>% 
+    dplyr::group_by(.data$id) %>% 
+    dplyr::summarize(to.remove = all(is.na(.data$allele))) %>% 
+    dplyr::filter(.data$to.remove) %>% 
+    dplyr::pull(.data$id) %>% 
+    as.character()
+
   if(length(to.remove) > 0) {
     warning(
       "The following samples are missing data for all loci and have been removed: ", 
-      paste(to.remove, collapse = ", ")
+      paste(to.remove, collapse = ", "),
+      call. = FALSE
     )
-    g@data <- g@data[!ids %in% to.remove]
+    g@data <- g@data %>% 
+      dplyr::filter(!.data$id %in% to.remove) %>% 
+      data.table::as.data.table()
   }
   g@data <- droplevels(g@data)
   g
 }
 
 
-#' @rdname strataG-internal
 #' @param fun a function that takes one locus column at a time.
 #' @param g a \linkS4class{gtypes} object.
-#' @keywords internal
+#' @param by.strata logical - return results grouped by strata?
+#' @noRd
 #' 
-.applyPerLocus <- function(fun, g, ...) {
-  g@data[, apply(.SD, 2, fun, ...), .SDcols = !c("ids", "strata")]
+.applyPerLocus <- function(fun, g, by.strata = FALSE, ...) {
+  result <- if(by.strata) {
+    g@data %>% 
+      dplyr::group_by(.data$stratum, .data$locus) %>%  
+      dplyr::summarize(value = fun(.data$allele, ...))
+  } else {
+    g@data %>% 
+      dplyr::group_by(.data$locus) %>%  
+      dplyr::summarize(value = fun(.data$allele, ...))
+  }
+  dplyr::ungroup(result)
 }
 
 
-#' @rdname strataG-internal
 #' @param g a \linkS4class{gtypes} object.
-#' @keywords internal
+#' @param min.val minimum value to start allele numbering with
+#' @noRd
 #' 
-.numericLoci <- function(g, min.val = 0) {
-  ids <- NULL # For CRAN CHECK
-  .convToNum <- function(x) min.val + (as.numeric(droplevels(x)) - 1)
-  list(
-    ids = g@data[, unique(ids)],
-    loci = as.matrix(g@data[, sapply(.SD, .convToNum), .SDcols = !c("ids", "strata")])
-  )
+.alleles2integer <- function(g, min.val = 0) {
+  g@data %>% 
+    dplyr::group_by(.data$locus) %>% 
+    dplyr::mutate(allele = min.val - 1 + as.integer(factor(.data$allele))) %>% 
+    dplyr::ungroup() 
+}
+
+
+#' @param g a \linkS4class{gtypes} object.
+#' @param alleles2integer convert alleles to integers?
+#' @param na.val value to replace NAs with.
+#' @noRd
+#' 
+.stackedAlleles <- function(g, alleles2integer = FALSE, na.val = NULL, ...) {
+  x <- if(alleles2integer) .alleles2integer(g, ...) else g@data
+  if(!is.null(na.val)) x$allele[is.na(x$allele)] <- na.val
+  x %>% 
+    dplyr::arrange(.data$id, .data$locus) %>% 
+    dplyr::mutate(a = rep(1:getPloidy(g), dplyr::n() / getPloidy(g))) %>% 
+    tidyr::spread(.data$locus, .data$allele) %>% 
+    dplyr::rename(allele = "a") %>% 
+    dplyr::select(.data$id, .data$stratum, .data$allele, dplyr::everything())
+}
+
+
+#' @param x a vector
+#' @param sep a character for separating
+#' @param sort a logical for whether to sort alleles
+#' @noRd
+#' 
+.combineLoci <- function(x, sep, sort) {
+  x <- as.character(x)
+  if(any(is.na(x))) {
+    as.character(NA)
+  } else {
+    x <- if(sort) sort(x) else x
+    paste(x, collapse = sep)
+  }
+}
+
+
+#' @param g a \linkS4class{gtypes} object.
+#' @noRd
+#' 
+.checkHapsLabelled <- function(g) {
+  if(
+    getPloidy(g) == 1 & 
+    !is.null(getSequences(g)) & 
+    !is.null(getOther(g, "haps.unassigned"))
+  ) labelHaplotypes(g) else g
+}
+
+
+#' @noRd
+#' 
+.zeroPad <- function(x, y = NULL) {
+  if(is.null(y)) y <- x
+  formatC(x, digits = floor(log10(max(y))), flag = "0", mode = "integer") 
 }

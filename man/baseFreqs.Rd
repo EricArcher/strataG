@@ -4,24 +4,25 @@
 \alias{baseFreqs}
 \title{Base Frequencies}
 \usage{
-baseFreqs(x, bases = NULL, ignore = c("n", "x", "-", "."))
+baseFreqs(x, bases = NULL, ignore = c("n", "x", "-", "."), simplify = TRUE)
 }
 \arguments{
-\item{x}{a \linkS4class{gtypes} object with aligned sequences or a list of 
+\item{x}{a \linkS4class{gtypes} object with aligned sequences or a list of
 aligned DNA sequences.}
 
-\item{bases}{character vector of bases. Must contain valid IUPAC codes. 
-If \code{NULL}, will return summary of frequencies of observed bases.}
+\item{bases}{character vector of bases. Must contain valid IUPAC codes. If
+\code{NULL}, will return summary of frequencies of observed bases.}
 
-\item{ignore}{a character vector of bases to ignore when 
-calculating frequencies.}
+\item{ignore}{a character vector of bases to ignore when calculating site
+frequencies.}
+
+\item{simplify}{if there is a single locus, return result in a simplified
+form? If \code{FALSE} a list will be returned wth one element per locus.}
 }
 \value{
-For each gene, a list containing:
-\tabular{ll}{
-  \code{site.freqs} \tab a matrix of base frequencies at each site.\cr
-  \code{base.freqs} \tab a vector of overall base proportion composition.\cr
-}
+For each gene, a list containing: \tabular{ll}{ \code{site.freqs}
+  \tab a matrix of base frequencies at each site.\cr \code{base.freqs} \tab a
+  vector of overall base proportion composition.\cr }
 }
 \description{
 Calculate nucleotide base frequencies along a sequence.

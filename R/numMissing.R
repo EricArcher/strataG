@@ -2,6 +2,7 @@
 #' @description Calculate the number of individuals with missing data by locus.
 #'
 #' @param g a \linkS4class{gtypes} object.
+#' @param by.strata logical - return results grouped by strata?
 #' @param prop logical determining whether to return proportion missing.
 #'
 #' @return a vector of loci with number (or, if \code{prop = TRUE},
@@ -17,11 +18,19 @@
 #'
 #' @export
 #' 
-numMissing <- function(g, prop = FALSE) {
-  .countNAs <- function(locus, prop) {
-    count <- sum(is.na(locus))
-    if(prop) count <- count / length(locus)
-    count
-  }
-  .applyPerLocus(.countNAs, g, prop = prop) / ploidy(g)
+numMissing <- function(g, by.strata = FALSE, prop = FALSE) {
+  cols <- if(by.strata) c("locus", "stratum") else "locus"
+  as.data.frame(
+    if(prop) {
+      g@data[, 
+             list(num.missing = mean(is.na(allele)) / getPloidy(g)), 
+             by = cols
+             ]
+    } else {
+      g@data[, 
+             list(num.missing = sum(is.na(allele)) / getPloidy(g)), 
+             by = cols
+             ]
+    }
+  )
 }

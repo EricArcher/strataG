@@ -7,7 +7,7 @@
 #'   
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \link{sequences}, \link{getSequences}
+#' @seealso \link{getSequences}
 #' 
 #' @examples 
 #' # convert list of character vectors
@@ -32,7 +32,7 @@ as.multidna <- function(x) {
     if(is.null(x@sequences)) {
       stop("the gtypes object does not contain sequences")
     }
-    return(x@sequences)
+    return(getSequences(x, as.multidna = TRUE))
   }
   
   # a DNAbin
@@ -40,12 +40,12 @@ as.multidna <- function(x) {
   
   # character matrix or list of character vectors
   if(is.character(x) | (is.list(x) & all(sapply(x, is.character)))) {
-    x <- list(as.DNAbin(x))
+    x <- list(ape::as.DNAbin(x))
   }
   
   # list of DNAbin
   if(is.list(x) & all(sapply(x, function(elem) inherits(elem, "DNAbin")))) {
-    x <- lapply(x, as.matrix)
+    x <- sapply(x, as.matrix, simplify = FALSE)
     if(is.null(names(x))) names(x) <- paste("gene", 1:length(x), sep = "")
     return(new("multidna", x))
   }

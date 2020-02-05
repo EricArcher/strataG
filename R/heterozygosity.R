@@ -1,12 +1,12 @@
-#' @title Observed and Expected Heterozygosity 
-#' @description Calculate observed heterozygosity for diploid data.
+#' @title Heterozygosity 
+#' @description Calculate observed and heterozygosity.
 #' 
 #' @param g a \linkS4class{gtypes} object.
+#' @param by.strata logical - return results by strata?
+#' @param type return \code{expected} or \code{observed} heterozygosity
 #' 
-#' @note For a measure of haplotypic diversity (haploid "heterozygosity"), 
-#'   use \code{exptdHet}. If \code{g} is a haploid object with sequences, make sure to run 
-#'   \code{\link{labelHaplotypes}} if sequences aren't already grouped by 
-#'   haplotype.
+#' @note If \code{g} is a haploid object with sequences, the value for 
+#'   expected heterozygosity (= haplotpyic diversity) will be returned.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
@@ -14,33 +14,40 @@
 #' data(msats.g)
 #' 
 #' # Expected heterozygosity
-#' exptdHet(msats.g)
+#' heterozygosity(msats.g, type = "expected")
 #' 
-#' # Observed heterozygosity
-#' obsvdHet(msats.g)
+#' # Observed heterozygosity by strata
+#' heterozygosity(msats.g, FALSE, "observed")
 #' 
-#' @name heterozygosity
-#' 
-NULL
-
-
-#' @rdname heterozygosity
-#' @importFrom swfscMisc diversity
 #' @export
 #' 
-exptdHet <- function(g) {
-  .applyPerLocus(swfscMisc::diversity, g)
-}
-
-
-#' @rdname heterozygosity
-#' @importFrom stats na.omit
-#' @export
-#' 
-obsvdHet <- function(g) {
-  isHom <- function(x) {
-    if(any(is.na(x))) NA else length(unique(x)) == 1
-  }
-  is.homzgt <- g@data[, lapply(.SD, isHom), .SDcols = !c("ids", "strata"), by = "ids"]
-  is.homzgt[, 1 - sapply(.SD, mean, na.rm = TRUE), .SDcols = !"ids"]
+heterozygosity <- function(g, by.strata = FALSE, type = c("expected", "observed")) {
+  if(getPloidy(g) == 1) type <- "expected"
+  g <- .checkHapsLabelled(g)
+  
+  switch(
+    match.arg(type),
+    expected = .applyPerLocus(swfscMisc::diversity, g, by.strata = by.strata) %>% 
+      dplyr::rename(exptd.het = .data$value) %>% 
+      as.data.frame(),
+    observed = {
+      is.het <- if(by.strata) {
+        g@data %>% 
+          dplyr::group_by(.data$stratum, .data$locus, .data$id) %>% 
+          dplyr::summarize(is.het = dplyr::n_distinct(.data$allele) > 1) %>% 
+          dplyr::ungroup() %>% 
+          dplyr::group_by(.data$stratum, .data$locus)
+      } else {        
+        g@data %>% 
+          dplyr::group_by(.data$locus, .data$id) %>% 
+          dplyr::summarize(is.het = dplyr::n_distinct(.data$allele) > 1) %>% 
+          dplyr::ungroup() %>% 
+          dplyr::group_by(.data$locus)
+      }
+      is.het %>% 
+        dplyr::summarize(obsvd.het = mean(.data$is.het, na.rm = TRUE)) %>% 
+        dplyr::ungroup() %>% 
+        as.data.frame()
+    }
+  )
 }

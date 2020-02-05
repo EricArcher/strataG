@@ -4,7 +4,7 @@
 \alias{lowFreqSubs}
 \title{Low Frequency Substitutions}
 \usage{
-lowFreqSubs(x, min.freq = 3, motif.length = 10, ...)
+lowFreqSubs(x, min.freq = 3, motif.length = 10, simplify = TRUE)
 }
 \arguments{
 \item{x}{a \code{\link[ape]{DNAbin}} object.}
@@ -13,7 +13,8 @@ lowFreqSubs(x, min.freq = 3, motif.length = 10, ...)
 
 \item{motif.length}{length of motif around low frequency base to output.}
 
-\item{...}{arguments passed from other functions (ignored).}
+\item{simplify}{if there is a single locus, return result in a simplified
+form? If \code{FALSE} a list will be returned wth one element per locus.}
 }
 \value{
 data.frame listing id, site number, and motif around low frequency 
@@ -24,9 +25,8 @@ Check nucleotide sites for low frequency substitutions.
 }
 \examples{
 data(dolph.haps)
-library(ape)
 
-lowFreqSubs(as.DNAbin(dolph.haps))
+lowFreqSubs(dolph.haps)
 
 }
 \author{

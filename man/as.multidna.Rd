@@ -27,7 +27,7 @@ gtype.mdna
 
 }
 \seealso{
-\link{sequences}, \link{getSequences}
+\link{getSequences}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

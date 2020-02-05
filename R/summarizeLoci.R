@@ -4,7 +4,6 @@
 #' @param g a \linkS4class{gtypes} object.
 #' @param by.strata logical. If \code{TRUE}, return a list of summary matrices 
 #'   for each stratum.
-#' @param ... arguments to be passed on to summary functions.
 #' 
 #' @return A matrix with rows for each locus and columns containing summaries of:
 #' \describe{
@@ -27,21 +26,26 @@
 #' 
 #' @export
 #' 
-summarizeLoci <- function(g, by.strata = FALSE, ...) {
-  smry.func <- function(x) {
-    n.gtyped <- numGenotyped(x)
-    cbind(
-      num.genotyped = n.gtyped,
-      prop.genotyped = n.gtyped / nInd(x),
-      num.alleles = numAlleles(x),
-      allelic.richness = allelicRichness(x),
-      prop.unique.alleles = propUniqueAlleles(x),
-      exptd.heterozygosity = exptdHet(x),
-      obsvd.heterozygosity = obsvdHet(x)
-    )
+summarizeLoci <- function(g, by.strata = FALSE) {
+  by.cols <- if(by.strata) c("stratum", "locus") else "locus"
+  smry <- numGenotyped(g, by.strata) %>% 
+    dplyr::left_join(numMissing(g, by.strata), by = by.cols) %>% 
+    dplyr::mutate(prop.genotyped = .data$num.genotyped / (.data$num.genotyped + .data$num.missing)) %>% 
+    dplyr::left_join(numAlleles(g, by.strata), by = by.cols) %>% 
+    dplyr::left_join(allelicRichness(g, by.strata), by = by.cols) %>% 
+    dplyr::left_join(propUniqueAlleles(g, by.strata), by = by.cols) %>% 
+    dplyr::left_join(heterozygosity(g, by.strata, "expected"), by = by.cols) %>% 
+    dplyr::left_join(heterozygosity(g, by.strata, "observed"), by = by.cols) 
+
+  if(getPloidy(g) == 1) {
+    smry <- smry %>% 
+      dplyr::rename(
+        num.haplotypes = .data$num.alleles,
+        prop.unique.haplotypes = .data$prop.unique.alleles,
+        haplotypic.diversity = .data$exptd.het.x
+      ) %>% 
+      dplyr::select(-.data$exptd.het.y)
   }
   
-  if(by.strata) {
-    lapply(strataSplit(g), smry.func)
-  } else smry.func(g)
+  smry
 }

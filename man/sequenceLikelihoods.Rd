@@ -4,8 +4,15 @@
 \alias{sequenceLikelihoods}
 \title{Sequence Likelihoods}
 \usage{
-sequenceLikelihoods(x, model = "N", pairwise.deletion = FALSE, n = NULL,
-  ...)
+sequenceLikelihoods(
+  x,
+  model = "N",
+  pairwise.deletion = FALSE,
+  n = NULL,
+  plot = TRUE,
+  simplify = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{a \code{\link[ape]{DNAbin}} object.}
@@ -19,6 +26,11 @@ sites with missing data in a pairwise way. Passed to
 
 \item{n}{number of sequences with lowest delta(log-likelihoods) to 
 plot. Defaults to all sequences Set to 0 to supress plotting.}
+
+\item{plot}{generate a plot of top \code{n} most unlikely sequences.}
+
+\item{simplify}{if there is a single locus, return result in a simplified
+form? If \code{FALSE} a list will be returned wth one element per locus.}
 
 \item{...}{arguments passed from other functions (ignored).}
 }
@@ -39,10 +51,9 @@ Fits a Gamma distribution to the pairwise distances of sequences
   observed values.
 }
 \examples{
-library(ape)
 data(dolph.haps)
 
-sequenceLikelihoods(as.DNAbin(dolph.haps))
+sequenceLikelihoods(dolph.haps)
 
 }
 \author{

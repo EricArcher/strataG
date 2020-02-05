@@ -4,10 +4,12 @@
 \alias{numMissing}
 \title{Number Missing Data}
 \usage{
-numMissing(g, prop = FALSE)
+numMissing(g, by.strata = FALSE, prop = FALSE)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
+
+\item{by.strata}{logical - return results grouped by strata?}
 
 \item{prop}{logical determining whether to return proportion missing.}
 }

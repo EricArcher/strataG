@@ -15,8 +15,7 @@
 #'   \linkS4class{multidna} object containing sequences. 
 #' @param schemes an optional data.frame of stratification schemes.
 #' @param description a label for the object (optional).
-#' @param other a slot to carry other related information - unused in package
-#'   analyses (optional).
+#' @param other a list to carry other related information (optional).
 #' 
 #' @details
 #' The genetic data in \code{x} starting at \code{loc.col} should be 
@@ -24,7 +23,7 @@
 #' alleles of one locus. Locus names are taken from the column names in 
 #' \code{x} and should be formatted with the same root locus name, with 
 #' unique suffixes representing allels (e.g., for Locus1234: Locus1234.1 
-#' and Locus1234.2, or Locus1234_A and Locus1234_B). \cr\cr
+#' and Locus1234.2, or Locus1234_A and Locus1234_B).\cr 
 #' If sequences are provided in \code{sequences}, then they should be named 
 #' and match haplotype labels in \code{loc.col} of \code{x}. If multiple 
 #' genes are given as a \linkS4class{multidna}, then they should have the 
@@ -34,8 +33,9 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \link{initialize.gtypes}, \link{sequence2gtypes}, 
-#'   \link{as.data.frame.gtypes}, \link{gtypes2genind}, \link{gtypes2loci}
+#' @seealso \link{gtypes.initialize}, \link{sequence2gtypes}, 
+#'   \link{as.data.frame.gtypes}, \link{gtypes2genind}, \link{gtypes2loci},
+#'   \link{gtypes2phyDat}
 #' 
 #' @examples
 #' #--- create a diploid (microsatellite) gtypes object
@@ -51,7 +51,6 @@
 #' dl.g <- df2gtypes(seq.df, ploidy = 1, sequences = dolph.haps)
 #' dl.g
 #' 
-#' @importFrom methods new
 #' @export
 #' 
 df2gtypes <- function(x, ploidy, id.col = 1, strata.col = 2, loc.col = 3, 
@@ -80,19 +79,24 @@ df2gtypes <- function(x, ploidy, id.col = 1, strata.col = 2, loc.col = 3,
   
   # extract id, strata, and locus information
   ind.names <- if(is.null(id.col)) {
-    if(is.null(rownames(x))) {
-      1:nrow(x) 
-    } else {
-      rownames(x)
-    }
-  } else x[, id.col]
+    if(is.null(rownames(x))) 1:nrow(x) else rownames(x)
+  } else {
+    x[, id.col]
+  }
   ind.names <- as.character(ind.names)
   strata <- if(is.null(strata.col)) NULL else x[, strata.col]
   gen.data <- x[, loc.col:ncol(x), drop = FALSE]
   
   # return new gtypes object
-  new("gtypes", gen.data = gen.data, ploidy = ploidy, ind.names = ind.names,
-      strata = strata, schemes = schemes, sequences = sequences, 
-      description = description, other = other
+  methods::new(
+    "gtypes", 
+    gen.data = gen.data, 
+    ploidy = ploidy, 
+    ind.names = ind.names,
+    strata = strata, 
+    schemes = schemes, 
+    sequences = sequences, 
+    description = description, 
+    other = if(is.null(other)) list() else other
   )
 }

@@ -4,15 +4,13 @@
 \alias{dupGenotypes}
 \title{Duplicate Genotypes}
 \usage{
-dupGenotypes(g, num.shared = 0.8, num.cores = 1)
+dupGenotypes(g, num.shared = 0.8)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
 \item{num.shared}{either number of loci or percentage of loci two 
 individuals must share to be considered duplicate individuals.}
-
-\item{num.cores}{number of CPU cores to use.}
 }
 \value{
 if no duplicates are present, the result is \code{NULL}, otherwise
@@ -20,12 +18,12 @@ if no duplicates are present, the result is \code{NULL}, otherwise
 \tabular{ll}{
   \code{ids.1, ids.2} \tab sample ids.\cr
   \code{strata.1, strata.2} \tab sample stratification.\cr
+  \code{mismatch.loci} \tab loci where the two samples do not match.\cr
   \code{num.loci.genotyped} \tab number of loci genotyped for both 
     samples.\cr
   \code{num.loci.shared} \tab number of loci shared (all alleles the same) between both samples.\cr
   \code{prop.loci.shared} \tab proportion of loci genotyped for both samples 
     that are shared.\cr
-  \code{mismatch.loci} \tab loci where the two samples do not match.\cr
 }
 }
 \description{
@@ -35,7 +33,9 @@ Identify duplicate or very similar genotypes.
 data(msats.g)
 
 # identify potential duplicates in Coastal strata
-dupes <- dupGenotypes(msats.g[, , "Coastal"])
+coastal <- msats.g[, , "Coastal"]
+coastal.5 <- coastal[getIndNames(coastal)[1:5], , ]
+dupes <- dupGenotypes(coastal.5)
 dupes
 
 }

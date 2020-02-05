@@ -10,6 +10,9 @@
 #'   \code{\link[ape]{dist.dna}}.
 #' @param n number of sequences with lowest delta(log-likelihoods) to 
 #'   plot. Defaults to all sequences Set to 0 to supress plotting.
+#' @param plot generate a plot of top \code{n} most unlikely sequences.
+#' @param simplify if there is a single locus, return result in a simplified
+#'   form? If \code{FALSE} a list will be returned wth one element per locus.
 #' @param ... arguments passed from other functions (ignored).
 #' 
 #' @details Fits a Gamma distribution to the pairwise distances of sequences 
@@ -25,60 +28,81 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
 #' @examples
-#' library(ape)
 #' data(dolph.haps)
 #' 
-#' sequenceLikelihoods(as.DNAbin(dolph.haps))
+#' sequenceLikelihoods(dolph.haps)
 #' 
-#' @importFrom stats sd dgamma reorder
-#' @importFrom ggplot2 ggplot aes_string geom_point xlab theme element_blank
 #' @export
 #' 
 sequenceLikelihoods <- function(x, model = "N", pairwise.deletion = FALSE, 
-                                n = NULL, ...) {
-  
-  if(!inherits(x, "DNAbin")) stop("'x' must be a DNAbin object")
-  
-  # calculate distance between sequences
-  seq.dist <- dist.dna(
-    x, model = model, pairwise.deletion = pairwise.deletion, as.matrix = TRUE
+                                n = NULL, plot = TRUE, simplify = TRUE, ...) {
+  result <- sapply(
+    apex::getSequences(as.multidna(x), simplify = FALSE),
+    function(dna) {
+      # calculate distance between sequences
+      seq.dist <- ape::dist.dna(
+        dna, 
+        model = model, 
+        pairwise.deletion = pairwise.deletion, 
+        as.matrix = TRUE
+      )
+      if(any(is.nan(seq.dist)) | any(is.na(seq.dist))) {
+        warning("NA/NaN in pairwise distance matrix. NULL returned.")
+        return(NULL)
+      }
+      
+      dist.vec <- seq.dist[lower.tri(seq.dist)]
+      dist.mean <- mean(dist.vec)
+      dist.sd <- stats::sd(dist.vec)
+      scale <- (dist.sd ^ 2) / dist.mean
+      shape <- (dist.mean / dist.sd) ^ 2
+      
+      do.call(rbind, sapply(rownames(seq.dist), function(i) {
+        this.dist <- seq.dist[i, ]
+        this.dist <- this.dist[names(this.dist) != i]
+        mean.dist <- mean(this.dist, na.rm = TRUE)
+        ll <- this.dist[this.dist != 0] %>% 
+          stats::dgamma(shape = shape, scale = scale) %>% 
+          log() %>% 
+          sum(na.rm = TRUE)
+        c(mean.dist = mean.dist, neg.log.lik = -ll)
+      }, simplify = FALSE)) %>% 
+        tibble::as.tibble() %>% 
+        dplyr::mutate(
+          id = rownames(seq.dist),
+          min.ll = min(.data$neg.log.lik, na.rm = TRUE),
+          delta.log.lik = .data$neg.log.lik - .data$min.ll
+        ) %>% 
+        dplyr::arrange(dplyr::desc(.data$delta.log.lik)) %>% 
+        dplyr::select(
+          .data$id, .data$mean.dist, .data$neg.log.lik, .data$delta.log.lik
+        ) %>% 
+        as.data.frame()
+    },
+    simplify = FALSE
   )
-  if(any(is.nan(seq.dist)) | any(is.na(seq.dist))) {
-    warning("NA/NaN in pairwise distance matrix. NULL returned.")
-    return(NULL)
+  
+  if(plot) {
+    for(locus in names(result)) {
+      df <- result[[locus]]
+      if(is.null(n)) n <- nrow(df)
+      n <- min(n, nrow(df))
+      if(n > 0) {
+        p <- df[1:n, ] %>% 
+          dplyr::mutate(id = stats::reorder(.data$id, .data$delta.log.lik)) %>% 
+          ggplot2::ggplot(
+            ggplot2::aes_string(x = "delta.log.lik", y = "id")
+          ) +
+          ggplot2::geom_point() +
+          ggplot2::labs(
+            x = expression(paste("-", Delta, "lnL")),
+            title = locus
+          ) +
+          ggplot2::theme(axis.title.y = ggplot2::element_blank())
+        print(p)
+      }
+    }
   }
   
-  dist.vec <- seq.dist[lower.tri(seq.dist)]
-  dist.mean <- mean(dist.vec)
-  dist.sd <- sd(dist.vec)
-  scale <- (dist.sd ^ 2) / dist.mean
-  shape <- (dist.mean / dist.sd) ^ 2
-  
-  mat <- t(sapply(rownames(seq.dist), function(this.seq) {
-    this.dist <- seq.dist[this.seq, ]
-    this.dist <- this.dist[names(this.dist) != this.seq]
-    mean.dist <- mean(this.dist, na.rm = TRUE)
-    this.dist <- this.dist[this.dist != 0]
-    ll <- -sum(log(dgamma(this.dist, shape = shape, scale = scale)), na.rm = TRUE)
-    c(mean.dist = mean.dist, negLogLik = ll)
-  }))
-  mat <- cbind(mat, deltaLogLik = mat[, "negLogLik"] - min(mat[, "negLogLik"], na.rm = T))
-  df <- data.frame(id = rownames(mat), mat)
-  df$id <- reorder(df$id, df$deltaLogLik)
-  rownames(df) <- df$id
-  
-  if(is.null(n)) n <- nrow(df)
-  n <- min(n, nrow(df))
-  
-  if(n > 0) {
-    df.sort <- df[order(-df$deltaLogLik), ]
-    p <- ggplot(df.sort[1:n, ], aes_string(x = "deltaLogLik", y = "id")) +
-      geom_point() +
-      xlab(expression(paste("-", Delta, "lnL"))) +
-      theme(axis.title.y = element_blank())
-    print(p)
-  }
-  
-  rownames(df) <- NULL  
-  df
+  if(length(result) == 1 & simplify) result[[1]] else result
 }

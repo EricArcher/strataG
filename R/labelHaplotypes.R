@@ -31,14 +31,13 @@
 #'      remain unassigned.}
 #'  }
 #'
-#'  For \code{gtypes}, a list with the following elements:
-#'  \describe{
-#'    \item{gtypes}{the new \code{gtypes} object with the haplotypes reassigned.}
-#'    \item{unassigned}{a list containing the \code{unassigned} \code{data.frame}
-#'      for each gene if present, otherwise \code{NULL}.}
-#'  }
+#'  For \code{gtypes}, a new \code{gtypes} object with unassigned individuals
+#'  stored in the @@other slot in an element named \code{'haps.unassigned'} (see
+#'  \code{\link{getOther}}).
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' 
+#' @seealso \code{\link{expandHaplotypes}}
 #'
 #' @examples
 #' # create 5 example short haplotypes
@@ -68,7 +67,6 @@
 #' hap.assign
 #'
 #' @name labelHaplotypes
-#' @importFrom swfscMisc zero.pad
 #' @export
 #'
 labelHaplotypes <- function(x, prefix = NULL, use.indels = TRUE) {
@@ -82,46 +80,60 @@ labelHaplotypes <- function(x, prefix = NULL, use.indels = TRUE) {
 labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
   if(!inherits(x, "DNAbin")) stop("'x' must be a DNAbin object.")
   x <- as.matrix(x)
-
+  
   # return same data if only one sequence exists
   if(nrow(x) == 1) {
     haps <- rownames(x)
     names(haps) <- haps
     return(list(haps = haps, hap.seqs = x, unassigned = NULL))
   }
-
+  
   # throw error if any sequence names are duplicated
   if(any(duplicated(rownames(x)))) {
-    warning("'x' cannot have duplicate sequence names. NULL returned.",
-            call. = FALSE, immediate. = TRUE)
+    warning(
+      "'x' cannot have duplicate sequence names. NULL returned.",
+      call. = FALSE, 
+      immediate. = TRUE
+    )
     return(NULL)
   }
-
-  # find sequences without Ns
-  has.ns <- apply(as.character(x), 1, function(bases) "n" %in% tolower(bases))
-  if(sum(!has.ns) <= 1) {
-    warning("There less than two sequences without ambiguities (N's). Can't assign haplotypes. NULL returned.",
-            call. = FALSE, immediate. = TRUE)
+  
+  # find sequences without ambiguities  
+  good.bases <- c("a", "c", "g", "t", "-")
+  has.amb <- apply(as.character(x), 1, function(bases) {
+    !all(tolower(bases) %in% good.bases)
+  })
+  if(sum(!has.amb) <= 1) {
+    warning(
+      "There are fewer than two sequences without ambiguities (N's). Can't assign haplotypes. NULL returned.",
+      call. = FALSE, 
+      immediate. = TRUE
+    )
     return(NULL)
   }
-
+  
   # get pairwise distances and set all non-0 distances to 1
-  x.no.ns <- x[!has.ns, , drop = FALSE]
-  hap.dist <- dist.dna(x.no.ns, model = "N", pairwise.deletion = TRUE)
-  if(use.indels) hap.dist <- hap.dist + dist.dna(x.no.ns, model = "indelblock")
+  x.no.amb <- x[!has.amb, , drop = FALSE]
+  hap.dist <- ape::dist.dna(x.no.amb, model = "N", pairwise.deletion = TRUE)
+  if(use.indels) {
+    hap.dist <- hap.dist + ape::dist.dna(x.no.amb, model = "indelblock")
+  }
   hap.dist <- as.matrix(hap.dist)
   hap.dist[hap.dist > 0] <- 1
-
+  
   # create haplotype code out of 0s and 1s
-  hap.code <- as.numeric(factor(apply(hap.dist, 1, paste, collapse = "")))
-  names(hap.code) <- rownames(hap.dist)
-
+  hap.code <- hap.dist %>% 
+    apply(1, paste, collapse = "") %>% 
+    factor() %>% 
+    as.numeric() %>% 
+    stats::setNames(rownames(hap.dist))
+  
   # rename haplotypes
   hap.labels <- if(!is.null(prefix)) {
     # use prefix+number if prefix given
     # sort based on frequency first
     hap.order <- as.numeric(names(sort(table(hap.code), decreasing = TRUE)))
-    hap.nums <- zero.pad(1:length(hap.order))
+    hap.nums <- swfscMisc::zero.pad(1:length(hap.order))
     names(hap.order) <- paste(prefix, hap.nums, sep = "")
     names(sort(hap.order))
   } else {
@@ -130,50 +142,67 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
   }
   hap.code <- hap.labels[hap.code]
   names(hap.code) <- rownames(hap.dist)
-
+  
   # get sequences for each haplotype
   unique.codes <- hap.code[!duplicated(hap.code)]
   hap.seqs <- x[names(unique.codes), , drop = FALSE]
   rownames(hap.seqs) <- unique.codes
-  hap.seqs <- hap.seqs[order(rownames(hap.seqs)), , drop = FALSE]
-  hap.seqs <- as.character(as.matrix(hap.seqs))
-
-  # get distance of all sequences with n's to other sequences (possible sequences)
-  x.has.ns <- as.character(x)[has.ns, , drop = FALSE]
-  unk.dist <- sapply(rownames(x.has.ns), function(i) {
-    # get sites with n's in this sequence
-    n.sites <- which(tolower(x.has.ns[i, ]) == "n")
-    if(length(n.sites) == 0) return(NULL)
-    # create matrix of sites that n's are at and remove sequences with n's
-    possible.sites <- unique(hap.seqs[, n.sites, drop = FALSE])
+  hap.seqs <- hap.seqs[order(rownames(hap.seqs)), , drop = FALSE] %>% 
+    as.matrix() %>% 
+    as.character()
+  
+  # get distance of all sequences with n's to other sequences (possible matching sequences)
+  x.has.amb <- as.character(x)[has.amb, , drop = FALSE]
+  unk.dist <- sapply(rownames(x.has.amb), function(i) {
+    # get ambiguity sites in this sequence
+    amb.sites <- which(!tolower(x.has.amb[i, ]) %in% good.bases)
+    if(length(amb.sites) == 0) return(NULL)
+    # create matrix of ambiguity sites and remove sequences with ambiguities
+    possible.sites <- unique(hap.seqs[, amb.sites, drop = FALSE])
     # create sequences to test
     if(nrow(possible.sites) == 0) return(NULL)
     test.seqs <- do.call(rbind, lapply(1:nrow(possible.sites), function(j) {
-      seq.j <- x.has.ns[i, ]
-      seq.j[n.sites] <- possible.sites[j, ]
+      seq.j <- x.has.amb[i, ]
+      seq.j[amb.sites] <- possible.sites[j, ]
       seq.j
     }))
     test.names <- paste("test.seq.", 1:nrow(test.seqs), sep = "")
     rownames(test.seqs) <- test.names
     # get distances between test sequences and sequences without n's
-    new.mat <- as.DNAbin(rbind(hap.seqs, test.seqs))
-    hap.dist <- dist.dna(new.mat, model = "N", pairwise.deletion = TRUE, as.matrix = TRUE)
-    if(use.indels) hap.dist <- hap.dist + dist.dna(new.mat, model = "indelblock", as.matrix = TRUE)
+    new.mat <- ape::as.DNAbin(rbind(hap.seqs, test.seqs))
+    hap.dist <- ape::dist.dna(
+      new.mat, 
+      model = "N", 
+      pairwise.deletion = TRUE, 
+      as.matrix = TRUE
+    )
+    if(use.indels) hap.dist <- hap.dist + 
+      ape::dist.dna(
+        new.mat, 
+        model = "indelblock", 
+        as.matrix = TRUE
+      )
     hap.dist[test.names, !colnames(hap.dist) %in% test.names, drop = FALSE]
   }, simplify = FALSE, USE.NAMES = TRUE)
-
-  # get minimum distance of unknowns to other sequences
-  min.dist <- t(sapply(unk.dist, function(mat) apply(mat, 2, min)))
-
-  # assign sequences if only one of the minimum sequences is 0
-  hap.assign <- apply(min.dist, 1, function(counts) {
-    num.matches <- sum(counts == 0)
-    if(num.matches == 1) colnames(min.dist)[counts == 0] else NA
-  })
-
+  
+  min.dist <- NULL
+  hap.assign <- if(length(unk.dist) > 0) {
+    # get minimum distance of unknowns to other sequences
+    min.dist <- do.call(rbind, sapply(
+      unk.dist, 
+      function(mat) apply(mat, 2, min), 
+      simplify = FALSE
+    ))
+    # assign sequences if only one of the minimum sequences is 0
+    apply(min.dist, 1, function(counts) {
+      num.matches <- sum(counts == 0)
+      if(num.matches == 1) colnames(min.dist)[counts == 0] else NA
+    })
+  } else NULL
+  
   # compile vector of haplotype assignments
   hap.vec <- c(hap.code, hap.assign)[rownames(x)]
-
+  
   # create data.frame of unassigned sequences
   unassigned.df <- if(any(is.na(hap.vec))) {
     mat <- min.dist[names(hap.vec)[is.na(hap.vec)], , drop = FALSE]
@@ -186,21 +215,24 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
     rownames(df) <- rownames(mat)
     df
   } else NULL
-
-  list(haps = hap.vec, hap.seqs = as.DNAbin(hap.seqs), unassigned = unassigned.df)
+  
+  list(
+    haps = hap.vec, 
+    hap.seqs = ape::as.DNAbin(hap.seqs), 
+    unassigned = unassigned.df
+  )
 }
 
+#' @rdname labelHaplotypes
+#' @export
+#'
+labelHaplotypes.list <- function(x, ...) labelHaplotypes(ape::as.DNAbin(x),...)
+
 
 #' @rdname labelHaplotypes
 #' @export
 #'
-labelHaplotypes.list <- function(x, ...) labelHaplotypes(as.DNAbin(x),...)
-
-
-#' @rdname labelHaplotypes
-#' @export
-#'
-labelHaplotypes.character <- function(x, ...) labelHaplotypes(as.DNAbin(x), ...)
+labelHaplotypes.character <- function(x, ...) labelHaplotypes(ape::as.DNAbin(x), ...)
 
 
 #' @rdname labelHaplotypes
@@ -208,14 +240,12 @@ labelHaplotypes.character <- function(x, ...) labelHaplotypes(as.DNAbin(x), ...)
 #'
 labelHaplotypes.gtypes <- function(x, ...) {
   # check that sequences are present
-  if(ploidy(x) > 1 | is.null(sequences(x))) {
+  if(getPloidy(x) > 1 | is.null(getSequences(x))) {
     stop("'x' is not haploid or does not have any sequences")
   }
 
   # label haplotypes for each gene
-  new.haps <- lapply(
-    getSequences(sequences(x), simplify = FALSE), labelHaplotypes, ...
-  )
+  new.haps <- purrr::map(getSequences(x), labelHaplotypes, ...)
   has.errors <- sapply(new.haps, is.null)
   if(sum(has.errors) > 0) {
     has.errors <- paste(names(new.haps)[has.errors], collapse = ", ")
@@ -237,13 +267,15 @@ labelHaplotypes.gtypes <- function(x, ...) {
   unassigned <- lapply(new.haps, function(x) x$unassigned)
 
   # create new gtypes
-  st <- strata(x)
-  x <- df2gtypes(
-    hap.df, ploidy = 1, id.col = 1, strata.col = 2, loc.col = 3,
-    sequences = hap.seqs, description = description(x), schemes = schemes(x),
-    other = other(x)
+  df2gtypes(
+    hap.df, 
+    ploidy = 1, 
+    id.col = 1, 
+    strata.col = 2, 
+    loc.col = 3,
+    sequences = hap.seqs, 
+    description = getDescription(x), 
+    schemes = getSchemes(x),
+    other = c(getOther(x), list(haps.unassigned = unassigned))
   )
-  strata(x) <- st
-
-  list(gtypes = x, unassigned = unassigned)
 }

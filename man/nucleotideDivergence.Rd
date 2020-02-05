@@ -5,8 +5,7 @@
 \alias{dA}
 \title{Nucleotide Divergence}
 \usage{
-nucleotideDivergence(g, probs = c(0, 0.025, 0.5, 0.975, 1), model = "raw",
-  ...)
+nucleotideDivergence(g, probs = c(0, 0.025, 0.5, 0.975, 1), model = "raw", ...)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
@@ -21,20 +20,18 @@ for options.}
 }
 \value{
 a list with summaries of the \code{within} and \code{between} strata 
-  pairwise distances including Nei's dA.
+  pairwise distances including Nei's dA (in \code{between}).
 }
 \description{
 Calculate Nei's dA between strata, and distributions of 
   between- and within-strata nucleotide divergence (sequence distance).
 }
 \examples{
-data(dolph.strata)
-data(dolph.seqs)
-strata <- dolph.strata$fine
-names(strata) <- dolph.strata$ids
-dloop <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop")
+data(dloop.g)
 
-nucleotideDivergence(dloop)
+nd <- nucleotideDivergence(dloop.g)
+nd$within
+nd$between
 
 }
 \references{

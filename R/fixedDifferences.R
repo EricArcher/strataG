@@ -1,19 +1,17 @@
 #' @title Fixed Differences
 #' @description Summarize fixed base pair differences between strata.
-#' 
+#'
 #' @param g a \linkS4class{gtypes} object.
-#' @param count.indels logical. Count indels when evaluating sites for fixed 
+#' @param count.indels logical. Count indels when evaluating sites for fixed
 #'   differences?
-#' @param consec.indels.as.one logical. If \code{count.indels} is TRUE, count 
+#' @param consec.indels.as.one logical. If \code{count.indels} is TRUE, count
 #'   consecutive indels as a a single indel?
 #' @param bases a character vector of valid bases to consider.
-#' 
-#' @return a list with components:
-#' \describe{
-#'   \item{sites}{list of sites with fixed differences for each pair of strata}
-#'   \item{num.fixed}{data.frame of number of sites fixed between each pair of strata}
-#' }
-#' 
+#'
+#' @return a list with components: \describe{ \item{sites}{list of sites with
+#'   fixed differences for each pair of strata} \item{num.fixed}{data.frame of
+#'   number of sites fixed between each pair of strata} }
+#'   
 #' @author Eric Archer <eric.archer@@noaa.gov>
 #' 
 #' @seealso \code{\link{fixedSites}}, \code{\link{variableSites}}
@@ -29,10 +27,11 @@ fixedDifferences <- function(g, count.indels = TRUE,
                              consec.indels.as.one = TRUE, 
                              bases = c("a", "c", "g", "t", "-")) {  
   # get fixed sites for each strata
-  strata.gtypes <- strataSplit(g, remove.sequences = TRUE)
-  fixed.sites <- sapply(strata.gtypes, function(strata) {
-    fixedSites(strata, bases)
-  }, simplify = FALSE)
+  fixed.sites <- sapply(
+    strataSplit(g, remove.sequences = TRUE),
+    fixedSites, bases = bases, 
+    simplify = FALSE
+  )
   
   # for each pair of strata, return matrix of sites with fixed differences
   # fixed differences are sites which aren't variable in a strata and 

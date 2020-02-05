@@ -4,12 +4,22 @@
 \alias{mafft}
 \title{MAFFT Alignment}
 \usage{
-mafft(x, run.label = "align.mafft", delete.output = TRUE, op = 3,
-  ep = 0.123, maxiterate = 0, quiet = FALSE, num.cores = 1,
-  opts = "--auto")
+mafft(
+  x,
+  run.label = "align.mafft",
+  delete.output = TRUE,
+  op = 3,
+  ep = 0.123,
+  maxiterate = 0,
+  quiet = FALSE,
+  num.cores = 1,
+  opts = "--auto",
+  simplify = TRUE
+)
 }
 \arguments{
-\item{x}{a list or a matrix of DNA sequences (see \code{\link[ape]{write.dna}}).}
+\item{x}{a list or a matrix of DNA sequences 
+(see \code{\link[ape]{write.dna}}).}
 
 \item{run.label}{label for output alignment FASTA file.}
 
@@ -27,6 +37,10 @@ mafft(x, run.label = "align.mafft", delete.output = TRUE, op = 3,
 \code{--thread}.}
 
 \item{opts}{character string other options to provide to command line.}
+
+\item{simplify}{if \code{TRUE}, if \code{x} is a single sequence, 
+a single \code{DNAbin} object is returned, otherwise, a list of alignments
+is returned.}
 }
 \value{
 a \code{\link[ape]{DNAbin}} object with aligned sequences.

@@ -27,7 +27,7 @@ data(msats.g)
 
 # Proportion of unique alleles in each stratum
 msats.list <- strataSplit(msats.g)
-sapply(msats.list, propUniqueAlleles)
+lapply(msats.list, propUniqueAlleles)
 
 }
 \author{

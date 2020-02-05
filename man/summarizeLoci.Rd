@@ -4,15 +4,13 @@
 \alias{summarizeLoci}
 \title{Locus Summaries}
 \usage{
-summarizeLoci(g, by.strata = FALSE, ...)
+summarizeLoci(g, by.strata = FALSE)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
 \item{by.strata}{logical. If \code{TRUE}, return a list of summary matrices 
 for each stratum.}
-
-\item{...}{arguments to be passed on to summary functions.}
 }
 \value{
 A matrix with rows for each locus and columns containing summaries of:

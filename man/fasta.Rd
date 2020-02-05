@@ -8,7 +8,7 @@
 \usage{
 read.fasta(file)
 
-write.fasta(x, file = "sequences.fasta")
+write.fasta(x, file = NULL)
 }
 \arguments{
 \item{file}{a FASTA-formatted file of sequences.}

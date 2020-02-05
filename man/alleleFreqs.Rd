@@ -4,40 +4,38 @@
 \alias{alleleFreqs}
 \title{Allele Frequencies}
 \usage{
-alleleFreqs(g, by.strata = FALSE)
+alleleFreqs(g, by.strata = FALSE, type = c("freq", "prop"))
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
-\item{by.strata}{logical. If \code{TRUE} every element in the return list is 
-a three dimensional array where the third dimension contains frequencies 
-and proportions for each stratum.}
+\item{by.strata}{logical determining if results should be returned by strata?}
+
+\item{type}{return counts (\code{"freq"}) or proportions (\code{"prop"})}
 }
 \value{
 A list of allele frequencies for each locus. Each element is a
-  matrix or array with frequencies by count (\code{freq}) and 
-  proportion (\code{prop}) of each allele.
+  vector (\code{by.strata = FALSE}) or matrix (\code{by.strata = TRUE}) 
+  with the frequency or proportion of each allele.
 }
 \description{
-Calculate allele frequencies for each locus.
+Calculate allele frequencies or proportions for each locus.
 }
 \note{
-If \code{g} is a haploid object with sequences, make sure to run 
+If \code{g} is a haploid object with sequences, the function will run 
   \code{\link{labelHaplotypes}} if sequences aren't already grouped by 
-  haplotype.
+  haplotype. The \code{gtypes} object used with haplotype assignments and 
+  unassigned individuals will be stored in \code{attr(*, "gtypes")}.
 }
 \examples{
 data(msats.g)
 
 f <- alleleFreqs(msats.g)
-f$D11t # Frequencies and proportions for Locus D11t
+f$D11t # Frequencies for Locus D11t
 
-f.pop <- alleleFreqs(msats.g, TRUE)
-f.pop$EV94[, "freq", "Coastal"] # Frequencies for EV94 in the Coastal population
+f.pop <- alleleFreqs(msats.g, TRUE, "prop")
+f.pop$EV94[, "Coastal"] # Proportions of EV94 alleles in the Coastal population
 
-}
-\seealso{
-\link{alleleFreqFormat}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

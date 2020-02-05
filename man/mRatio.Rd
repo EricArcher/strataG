@@ -4,30 +4,29 @@
 \alias{mRatio}
 \title{M ratio}
 \usage{
-mRatio(g, by.strata = TRUE, rpt.size = 8:2)
+mRatio(g, by.strata = FALSE, rpt.size = 8:2)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
 \item{by.strata}{calculate ratio for each stratum separately?}
 
-\item{rpt.size}{set of values to check for allele repeat size. Function 
-will use the largest common denominator found in this vector or return \code{NA}.}
-}
-\value{
-If \code{by.strata = TRUE}, a matrix with loci as rows and strata 
-  as columns, otherwise a vector with the statistic for each locus over all
-  samples.
+\item{rpt.size}{set of values to check for allele repeat size. Function will
+use the largest common denominator found in this vector or return
+\code{NA}.}
 }
 \description{
-Calculate Garza-Williamson M ratio (bottleneck) statistic for 
+Calculate Garza-Williamson M ratio (bottleneck) statistic for
   microsattelite data.
 }
 \note{
-The function will only compute the metric for microastellite loci, which 
- is defined as loci with allele labels that can be converted to numeric 
- values in their entirety and have a fixed repeat size. \code{NA} is returned 
- for all others.
+The function will only compute the metric for microastellite loci,
+  which is defined as loci with allele labels that can be converted to
+  numeric values in their entirety and have a fixed repeat size. \code{NA} is
+  returned for all loci that do not have all numeric alleles.  
+  \code{NA} will also be returned if a locus is monomorphic, the locus has no
+  genotypes, or a minimum repeat size cannot be found for all alleles at a
+  locus.
 }
 \examples{
 data(msats.g)
@@ -40,10 +39,10 @@ m.overall
 
 }
 \references{
-Garza, J.C. and E.G. Williamson. 2001. Detection of reduction in 
-  population size using data form microsatellite loci. 
-  Molecular Ecology 10(2):305-318.
+Garza, J.C. and E.G. Williamson. 2001. Detection of reduction in
+  population size using data form microsatellite loci. Molecular Ecology
+  10(2):305-318.
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov} (adapted from code by Sean Hoban)
+Eric Archer \email{eric.archer@noaa.gov}
 }

@@ -15,19 +15,16 @@ nucleotideDiversity(x, bases = c("a", "c", "g", "t"), simplify = TRUE)
 otherwise, a list of vectors with one element per locus will be returned.}
 }
 \value{
-Nucleotide diversity by site.
+Vector of nucleotide diversity by site.
 }
 \description{
 Calculate nucleotide diversity for set of haplotypes.
 }
 \examples{
-data(dolph.strata)
-data(dolph.seqs)
-strata <- dolph.strata$fine
-names(strata) <- dolph.strata$ids
-dloop <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop")
+data(dloop.g)
 
-nucleotideDiversity(dloop)
+nd <- nucleotideDiversity(dloop.g)
+quantile(nd)
 
 }
 \author{

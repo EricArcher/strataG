@@ -7,9 +7,9 @@
 #'  
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @seealso \link{initialize.gtypes}, \link{df2gtypes}, 
-#'   \link{sequence2gtypes}, \link{as.data.frame.gtypes}, 
-#'   \link{gtypes2genind}, \link{gtypes2loci}
+#' @seealso \link{initialize.gtypes}, \link{df2gtypes}, \link{sequence2gtypes},
+#'   \link{as.data.frame.gtypes}, \link{as.matrix.gtypes}, \link{gtypes2genind},
+#'   \link{gtypes2loci}
 #' 
 #' @examples
 #' data(dloop.g)
@@ -23,18 +23,21 @@
 #' gt 
 #' 
 #' @name gtypes2phyDat 
-#' @importFrom phangorn as.phyDat
 #' @export
 #' 
 gtypes2phyDat <- function(x, locus = 1) {
-  x <- getSequences(sequences(x), loci = locus, simplify = TRUE) 
-  as.phyDat(as.matrix(x))
+  if(getPloidy(x) != 1) stop("conversion can only be done with haploid gtypes.")
+  getSequences(x)[[locus]] %>% 
+    as.matrix() %>% 
+    phangorn::as.phyDat()
 }
 
 #' @rdname gtypes2phyDat
 #' @export
 #' 
 phyDat2gtypes <- function(x, ...) {
-  sequence2gtypes(as.DNAbin(x), ...)
+  x %>% 
+    ape::as.DNAbin() %>% 
+    sequence2gtypes(...)
 }
   

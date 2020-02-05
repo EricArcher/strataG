@@ -15,9 +15,10 @@ Calculate Fu's Fs for a set of sequences to test
   for selection.
 }
 \note{
-Currently, this function is limited to calculating Fs for fewer than 
-  approximately 172 sequences due to numerical overflow issues. \code{NaN} will 
-  be returned for larger data sets.
+Currently, this function is limited to calculating Fs for fewer than
+  approximately 172 sequences due to numerical overflow issues. \code{NaN}
+  will be returned for larger data sets. Statistical significance (p-values)
+  of Fs must be calculated with case-specific simulations.
 }
 \examples{
 data(dolph.seqs)

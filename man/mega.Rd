@@ -10,7 +10,14 @@
 \usage{
 read.mega(file)
 
-write.mega(g, file = NULL, label = NULL, line.width = 60, locus = 1)
+write.mega(
+  g,
+  file = NULL,
+  label = NULL,
+  line.width = 60,
+  locus = 1,
+  as.haplotypes = TRUE
+)
 }
 \arguments{
 \item{file}{a MEGA-formatted file of sequences.}
@@ -23,6 +30,10 @@ gtypes description is used if present.}
 \item{line.width}{width of sequence lines.}
 
 \item{locus}{number or name of locus to write.}
+
+\item{as.haplotypes}{output sequences as haplotypes? If \code{TRUE}, contents
+of \code{@sequences} slot are returned - treated as if they were
+haplotypes. If \code{FALSE}, one sequence per individual is returned.}
 }
 \value{
 for \code{read.mega}, a list of:

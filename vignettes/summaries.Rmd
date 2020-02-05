@@ -1,10 +1,10 @@
 ---
-title: "By-Locus Summaries"
+title: "Genotype and sequence summaries"
 author: "Eric Archer"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{2. By-Locus Summaries}
+  %\VignetteIndexEntry{Genotype and sequence summaries}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -16,7 +16,7 @@ There are several by-locus summary functions available for _gtypes_ objects. Giv
 ```{r}
 data(msats.g)
 msats <- stratify(msats.g, "broad")
-msats <- msats[, locNames(msats)[1:4], ]
+msats <- msats[, getLociNames(msats)[1:4], ]
 ```
 
 One can calculate the following summaries:
@@ -42,8 +42,11 @@ allelicRichness(msats)
 
 The observed and expected heterozygosity:
 ```{r}
-obsvdHet(msats)
-exptdHet(msats)
+# observed
+heterozygosity(msats, type = "observed")
+
+# expected
+heterozygosity(msats, type = "expected")
 ```
 
 The proportion of alleles that are unique (present in only one sample):
@@ -67,3 +70,41 @@ One can also obtain the allelic frequencies for each locus overall and by-strata
 alleleFreqs(msats)
 alleleFreqs(msats, by.strata = TRUE)
 ```
+
+The _dupGenotypes_ function identifies samples that have the same or nearly the same genotypes. The number (or percent) of loci that must be shared in order for it to be considered a duplicate can be set by the _num.shared_ argument. The return data.frame provides which loci the two samples show mismatches at so they can be reviewed.
+```{r}
+# Find samples that share alleles at 2/3rds of the loci
+dupGenotypes(msats, num.shared = 0.66)
+```
+
+The start and end positions and number of N's and indels can be generated with the _summarizeSeqs_ function:
+```{r}
+library(ape)
+data(dolph.seqs)
+seq.smry <- summarizeSeqs(as.DNAbin(dolph.seqs))
+head(seq.smry)
+```
+
+Base frequencies can be generated with _baseFreqs_:
+```{r}
+bf <- baseFreqs(as.DNAbin(dolph.seqs))
+
+# nucleotide frequencies by site
+bf$site.freq[, 1:15]
+
+# overall nucleotide frequencies
+bf$base.freqs
+```
+
+Sequences can be scanned for low-frequency substitutions with _lowFreqSubs_:
+```{r}
+lowFreqSubs(as.DNAbin(dolph.seqs), min.freq = 2)
+```
+
+Unusual sequences can be identified by plotting likelihoods based on pairwise distances:
+```{r}
+data(dolph.haps)
+sequenceLikelihoods(as.DNAbin(dolph.haps))
+```
+
+All of the above functions can be conducted at once with the _qaqc_ function. Only those functions appropriate to the data type contained (haploid or diploid) will be run. Files are written for each output that are labelled either by the _\@description_ slot of the gtypes object or the optional _label_ argument of the function.

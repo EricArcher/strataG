@@ -4,10 +4,12 @@
 \alias{theta}
 \title{Theta}
 \usage{
-theta(g)
+theta(g, by.strata = FALSE)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
+
+\item{by.strata}{logical - return results grouped by strata?}
 }
 \value{
 vector of theta values for each locus.
@@ -16,7 +18,7 @@ vector of theta values for each locus.
 Calculate theta from heterozygosity of each locus.
 }
 \details{
-Calculates theta for each locus using the 
+Calculates theta for each locus using the
   \code{\link[pegas]{theta.h}} function.
 }
 \examples{

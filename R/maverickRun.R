@@ -12,6 +12,7 @@
 #' @param label folder where input and output files will be written to.
 #' @param data_fname file name of data input file.
 #' @param param_fname file name of parameters file.
+#' @param exec name of executable for MavericK.
 #' 
 #' @note MavericK is not included with \code{strataG} and must be downloaded 
 #'   separately. It can be obtained from \url{http://www.bobverity.com/}. 
@@ -23,7 +24,7 @@
 #' 
 #' @references 
 #' Robert Verity and Richard Nichols. (2016) Estimating the number of 
-#' subpopulations (K) in structured populations. Genetics \cr\cr
+#' subpopulations (K) in structured populations. Genetics \cr
 #' Robert Verity and Richard Nichols. (2016) Documentation for MavericK 
 #' software: Version 1.0
 #' 
@@ -31,9 +32,10 @@
 #' 
 maverickRun <- function(g, params = NULL, label = "MavericK_files",
                         data_fname = "data.txt", 
-                        param_fname = "parameters.txt") {
+                        param_fname = "parameters.txt",
+                        exec = "Maverick1.0.5") {
   
-  if(ploidy(g) < 2) stop("ploidy of 'g' must be 2 or greater")
+  if(getPloidy(g) < 2) stop("ploidy of 'g' must be 2 or greater")
 
   # set parameters
   p <- .maverickDefaultParams()
@@ -50,9 +52,9 @@ maverickRun <- function(g, params = NULL, label = "MavericK_files",
   p$data <- data_fname
   p$headerRow_on <- TRUE
   p$missingData <- -9
-  p$ploidy <- ploidy(g)
+  p$ploidy <- getPloidy(g)
   p$ploidyCol_on <- FALSE
-  p$popCol_on <- nStrata(g) > 1
+  p$popCol_on <- getNumStrata(g) > 1
   
   # set directory
   wd <- getwd()
@@ -61,7 +63,7 @@ maverickRun <- function(g, params = NULL, label = "MavericK_files",
   setwd(label)
   
   # write parameters
-  write(paste("Description:", description(g)), file = param_fname)
+  write(paste("Description:", getDescription(g)), file = param_fname)
   write(
     paste0("Created on: ", format(Sys.time()), "\n"), 
     file = param_fname, 
@@ -81,12 +83,12 @@ maverickRun <- function(g, params = NULL, label = "MavericK_files",
   df[is.na(df)] <- -9
   df <- df[order(df$strata, nchar(df$ids), df$ids), ]
   rownames(df) <- NULL
-  write.table(
+  utils::write.table(
     df, file = data_fname, quote = FALSE, sep = "\t", row.names = FALSE
   )
   
   # run MavericK
-  cmd <- paste0("Maverick", " -parameters ", param_fname)
+  cmd <- paste0(exec, " -parameters ", param_fname)
   err.code <- system(cmd)
   if(err.code == 127) {
     stop("You do not have MavericK properly installed.")

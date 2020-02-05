@@ -2,13 +2,10 @@
 #' @description Calculate the proportion of alleles that are unique.
 #' 
 #' @param g a \linkS4class{gtypes} object.
+#' @param by.strata logical - return results grouped by strata?
 #' 
 #' @return a vector of the proportion of unique (occuring only in one individual) 
 #'   alleles for each locus.
-#' 
-#' @note If \code{g} is a haploid object with sequences, make sure to run 
-#'   \code{\link{labelHaplotypes}} if sequences aren't already grouped by 
-#'   haplotype.
 #'   
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
@@ -21,10 +18,29 @@
 #' 
 #' @export
 #' 
-propUniqueAlleles <- function(g) { 
-  sapply(locNames(g), function(locus) {
-    id.a.freqs <- table(g@data$ids, g@data[[locus]])
-    is.unique <- apply(id.a.freqs, 2, function(x) sum(x > 0) == 1)
-    sum(is.unique)
-  }) / numAlleles(g)
+propUniqueAlleles <- function(g, by.strata = FALSE) { 
+  g <- .checkHapsLabelled(g)
+  
+  if(by.strata) {
+    g@data %>% 
+      dplyr::group_by(.data$stratum, .data$locus, .data$allele) %>% 
+      dplyr::summarize(n = dplyr::n_distinct(.data$id)) %>% 
+      dplyr::ungroup() %>% 
+      dplyr::group_by(.data$stratum, .data$locus) %>% 
+      dplyr::summarize(num.unique = sum(.data$n == 1)) %>% 
+      dplyr::ungroup() %>% 
+      dplyr::left_join(numGenotyped(g, by.strata), by = c("stratum", "locus")) 
+  } else {
+    g@data %>% 
+      dplyr::group_by(.data$locus, .data$allele) %>% 
+      dplyr::summarize(n = dplyr::n_distinct(.data$id)) %>% 
+      dplyr::ungroup() %>% 
+      dplyr::group_by(.data$locus) %>% 
+      dplyr::summarize(num.unique = sum(.data$n == 1)) %>% 
+      dplyr::ungroup() %>% 
+      dplyr::left_join(numGenotyped(g, by.strata), by = c("locus"))
+  } %>% 
+    dplyr::mutate(prop.unique.alleles = .data$num.unique / .data$num.genotyped) %>% 
+    dplyr::select(-.data$num.unique, -.data$num.genotyped) %>% 
+    as.data.frame()
 }

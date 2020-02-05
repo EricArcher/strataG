@@ -40,7 +40,6 @@
 #' 
 #' @seealso \code{\link{structure}}
 #' 
-#' @importFrom utils file_test write.table
 #' @export
 #' 
 clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
@@ -60,7 +59,9 @@ clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
     folder <- sr
     if(!is.null(folder)) {
       if(!file.exists(folder)) dir.create(folder)
-      if(!file_test("-d", folder)) stop("'folder' is not a valid folder.")
+      if(!utils::file_test("-d", folder)) {
+        stop("'folder' is not a valid folder.")
+      }
       label <- file.path(folder, label)
     }
   }
@@ -96,8 +97,14 @@ clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
               paste("PERMUTATIONFILE", permutation.file))
       # write permutationfile
       perm.mat <- t(sapply(1:repeats, function(i) sample(1:length(sr))))
-      write.table(perm.mat, file = permutation.file, quote = FALSE, sep = " ", 
-                  row.names = FALSE, col.names = FALSE)
+      utils::write.table(
+        perm.mat, 
+        file = permutation.file, 
+        quote = FALSE, 
+        sep = " ", 
+        row.names = FALSE, 
+        col.names = FALSE
+      )
     }
     gp
   } else NULL
@@ -126,14 +133,15 @@ clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
   
   # write indfile
   id.order <- sr[[1]]$q.mat$id
-  q.mat.df <- do.call(rbind, lapply(sr, function(x) {
+  q.mat.df <- purrr::map(sr, function(x) {
     q.mat <- x$q.mat
     rownames(q.mat) <- q.mat$id
     q.mat <- q.mat[id.order, ]
     q.mat <- cbind(row = 1:nrow(q.mat), q.mat)
     rownames(q.mat) <- NULL
     cbind(q.mat[, 1:4], sep = rep(":", nrow(q.mat)), q.mat[, 5:ncol(q.mat)])
-  }))
+  }) %>% 
+    dplyr::bind_rows()
   q.mat.df$pct.miss <- paste("(", q.mat.df$pct.miss, ")", sep = "")
   pop.fac <- factor(q.mat.df$orig.pop)
   pops <- levels(pop.fac)
@@ -141,8 +149,14 @@ clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
   id.fac <- factor(q.mat.df$id)
   ids <- levels(id.fac)
   q.mat.df$id <- as.numeric(id.fac)
-  write.table(q.mat.df, file = ind.file, quote = FALSE, sep = " ", 
-              row.names = FALSE, col.names = FALSE)
+  utils::write.table(
+    q.mat.df, 
+    file = ind.file, 
+    quote = FALSE, 
+    sep = " ", 
+    row.names = FALSE, 
+    col.names = FALSE
+  )
   
   tryCatch({
     err.code <- system(paste("CLUMPP", param.file))

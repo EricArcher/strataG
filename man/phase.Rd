@@ -9,17 +9,34 @@
 \alias{phaseFilter}
 \title{PHASE}
 \usage{
-phase(g, loci, positions = NULL, type = NULL, num.iter = 1e+05,
-  thinning = 100, burnin = 1e+05, model = "new", ran.seed = NULL,
-  final.run.factor = NULL, save.posterior = FALSE, in.file = "phase_in",
-  out.file = "phase_out", delete.files = TRUE)
+phase(
+  g,
+  loci,
+  positions = NULL,
+  type = NULL,
+  num.iter = 1e+05,
+  thinning = 100,
+  burnin = 1e+05,
+  model = "new",
+  ran.seed = NULL,
+  final.run.factor = NULL,
+  save.posterior = FALSE,
+  in.file = "phase_in",
+  out.file = "phase_out",
+  delete.files = TRUE
+)
 
 phaseReadSample(out.file, type)
 
 phaseReadPair(out.file)
 
-phaseWrite(g, loci, positions = NULL, type = rep("S", length(loci)),
-  in.file = "phase_in")
+phaseWrite(
+  g,
+  loci,
+  positions = NULL,
+  type = rep("S", length(loci)),
+  in.file = "phase_in"
+)
 
 phasePosterior(ph.res, keep.missing = TRUE)
 
@@ -29,9 +46,11 @@ phaseFilter(ph.res, thresh = 0.5, keep.missing = TRUE)
 \item{g}{a \linkS4class{gtypes} object.}
 
 \item{loci}{vector or data.frame of loci in 'g' that are to be phased. If a 
-data.frame, it should have columns named \code{locus} (name of locus in 'g'),  
+data.frame, it should have columns named 
+\code{locus} (name of locus in 'g'),  
 \code{group} (number identifying loci in same linkage group), and
-\code{position} (integer identifying location of each locus in a linkage group).}
+\code{position} (integer identifying location of each locus in a
+   linkage group).}
 
 \item{positions}{position along chromosome of each locus.}
 
@@ -59,7 +78,8 @@ data.frame, it should have columns named \code{locus} (name of locus in 'g'),
 
 \item{ph.res}{result from \code{phase.run}.}
 
-\item{keep.missing}{logical. T = keep missing data from original data set. F = Use estimated genotypes from PHASE.}
+\item{keep.missing}{logical. T = keep missing data from original data set. 
+F = Use estimated genotypes from PHASE.}
 
 \item{thresh}{minimum probability for a genotype to be selected (0.5 - 1).}
 }
@@ -67,16 +87,23 @@ data.frame, it should have columns named \code{locus} (name of locus in 'g'),
 \describe{
  \item{phase}{a list containing:
    \tabular{ll}{
-     \code{locus.name} \tab new locus name, which is a combination of loci in group.\cr
-     \code{gtype.probs} \tab a data.frame listing the estimated genotype for every sample along with probability.\cr
-     \code{orig.gtypes} \tab the original gtypes object for the composite loci.\cr
-     \code{posterior} \tab a list of \code{num.iter} data.frames representing posterior sample of genotypes for each sample.\cr
+     \code{locus.name} \tab new locus name, which is a combination of loci
+        in group.\cr
+     \code{gtype.probs} \tab a data.frame listing the estimated genotype 
+       for every sample along with probability.\cr
+     \code{orig.gtypes} \tab the original gtypes object for the
+        composite loci.\cr
+     \code{posterior} \tab a list of \code{num.iter} data.frames 
+        representing posterior sample of genotypes for each sample.\cr
    }}
- \item{phaseWrite}{a list with the input filename and the \linkS4class{gtypes} object used.}
+ \item{phaseWrite}{a list with the input filename and the 
+   \linkS4class{gtypes} object used.}
  \item{phaseReadPair}{a data.frame of genotype probabilities.}
- \item{phaseReadSample}{a list of data.frames representing the posterior sample of genotypes for one set of loci for each sample.}
+ \item{phaseReadSample}{a list of data.frames representing the 
+   posterior sample of genotypes for one set of loci for each sample.}
  \item{phaseFilter}{a matrix of genotypes for each sample.}
- \item{phasePosterior}{a list of data.frames representing the posterior sample of all genotypes for each sample.}
+ \item{phasePosterior}{a list of data.frames representing the posterior 
+   sample of all genotypes for each sample.}
 }
 }
 \description{
@@ -84,12 +111,15 @@ Run PHASE to estimate the phase of loci in diploid data.
 }
 \details{
 \tabular{ll}{
-  \code{phase} \tab runs PHASE assuming that the executable is installed properly and available on the command line.\cr
+  \code{phase} \tab runs PHASE assuming that the executable is installed 
+    properly and available on the command line.\cr
   \code{phaseWrite} \tab writes a PHASE formatted file.\cr
   \code{phaseReadPair} \tab reads the '_pair' output file.\cr
   \code{phaseReadSample} \tab reads the '_sample' output file.\cr
-  \code{phaseFilter} \tab filters the result from \code{phase.run} to extract one genotype for each sample.\cr
-  \code{phasePosterior} \tab create a data.frame all genotypes for each posterior sample.\cr
+  \code{phaseFilter} \tab filters the result from \code{phase.run} to 
+    extract one genotype for each sample.\cr
+  \code{phasePosterior} \tab create a data.frame of all genotypes for each 
+    posterior sample.\cr
 }
 }
 \note{
@@ -122,9 +152,10 @@ summary(phased.snps)
 
 }
 \references{
-Stephens, M., and Donnelly, P. (2003). A comparison of Bayesian methods for haplotype reconstruction from 
-  population genotype data. American Journal of Human Genetics 73:1162-1169.
-  Available at: \url{http://stephenslab.uchicago.edu/software.html#phase}
+Stephens, M., and Donnelly, P. (2003). A comparison of Bayesian
+  methods for haplotype reconstruction from population genotype data.
+  American Journal of Human Genetics 73:1162-1169. Available at:
+  \url{http://stephenslab.uchicago.edu/software.html#phase}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

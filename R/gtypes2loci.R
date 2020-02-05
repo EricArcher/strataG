@@ -22,31 +22,32 @@
 #' gt 
 #' 
 #' @name gtypes2loci 
-#' @importFrom pegas as.loci
 #' @export
 #' 
 gtypes2loci <- function(x) {
-  df <- as.data.frame(x, one.col = TRUE, sep = "/", ids = FALSE)
-  for(i in 2:ncol(df)) df[, i] <- as.factor(df[, i])
-  as.loci(df, col.pop = 1)
+  if(!is.gtypes(x)) stop("'x' must be a gtypes object")
+  as.data.frame(x, one.col = TRUE, sep = "/") %>% 
+    dplyr::filter(!is.na(.data$stratum)) %>% 
+    dplyr::mutate_all(function(x) ifelse(is.na(x), "0/0", x)) %>% 
+    dplyr::mutate_all(factor) %>% 
+    tibble::column_to_rownames("id") %>% 
+    as.data.frame() %>% 
+    pegas::as.loci(allele.sep = "/", col.pop = 1)
 }
 
 #' @rdname gtypes2loci
 #' @export
 #' 
 loci2gtypes <- function(x, description = NULL) {
-  lc <- attr(x, "locicol")
-  x <- as.data.frame(x)
-  loci <- do.call(cbind, lapply(colnames(x)[lc], function(l.name) {
-    locus <- x[, l.name]
-    locus <- strsplit(as.character(locus), split = "/")
-    max.len <- max(sapply(locus, length))
-    locus <- lapply(locus, function(l) if(length(l == max.len)) l else rep(l, max.len))
-    locus <- do.call(rbind, locus)
-    colnames(locus) <- paste(l.name, 1:ncol(locus), sep = ".")
-    locus
-  }))
-  gen.mat <- cbind(ids = rownames(x), x[, 1], loci)
-  df2gtypes(gen.mat, ploidy = 2, description = description)
+  if(!inherits(x, "loci")) stop("'x' must be a loci object")
+  mat <- as.data.frame(x) %>% 
+    dplyr::mutate_all(as.character) %>% 
+    dplyr::select(attr(x, "locicol")) %>% 
+    alleleSplit(sep = "/")
+  cbind(
+    id = rownames(x),
+    pop = as.character(x$population),
+    mat
+  ) %>% 
+    df2gtypes(ploidy = 2, description = description)
 }
-  

@@ -9,12 +9,15 @@
 #'   are generated.
 #' @param schemes an optional data.frame of stratification schemes.
 #' @param description an optional label for the object.
-#' @param other a slot to carry other related information - unused in package
-#'   analyses.
+#' @param other a list to carry other related information (optional).
 #' 
 #' @return a \linkS4class{gtypes} object.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' 
+#' @seealso \link{gtypes.initialize}, \link{as.matrix.gtypes}, 
+#'   \link{as.data.frame.gtypes}, \link{gtypes2genind}, \link{gtypes2loci},
+#'   \link{gtypes2phyDat}
 #' 
 #' @examples
 #' #--- create a haploid sequence (mtDNA) gtypes object
@@ -38,20 +41,30 @@ sequence2gtypes <- function(x, strata = NULL, seq.names = NULL, schemes = NULL,
     if(length(seq.names) != getNumLoci(x)) {
       stop("length of 'seq.names' is not equal to number of genes")
     }
-    setLocusNames(x) <- seq.names
+    x <- apex::"setLocusNames<-"(x, seq.names)
   }
   
   # create gen.data data.frame
-  ind.names <- unique(unlist(getSequenceNames(x)))
-  gen.data <- do.call(data.frame, lapply(getSequences(x, simplify = FALSE), function(dna) {
-    x.labels <- labels(dna)
-    factor(x.labels[match(ind.names, x.labels)])
-  }))
-  colnames(gen.data) <- getLocusNames(x)
+  ind.names <- unique(unlist(apex::getSequenceNames(x)))
+  gen.data <- do.call(
+    data.frame, 
+    lapply(apex::getSequences(x, simplify = FALSE), function(dna) {
+      x.labels <- labels(dna)
+      x.labels[match(ind.names, x.labels)]
+    })
+  )
+  colnames(gen.data) <- apex::getLocusNames(x)
   rownames(gen.data) <- ind.names
   
   # return new gtypes object
-  new("gtypes", gen.data = gen.data, ploidy = 1, strata = strata,
-      schemes = schemes, sequences = x, description = description, other = other
+  new(
+    "gtypes", 
+    gen.data = gen.data, 
+    ploidy = 1, 
+    strata = strata,
+    schemes = schemes, 
+    sequences = x, 
+    description = description, 
+    other = if(is.null(other)) list() else other
   )
 }

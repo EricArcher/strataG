@@ -10,7 +10,7 @@
 #' @param ... other arguments passed to \code{\link[ape]{dist.dna}}.
 #' 
 #' @return a list with summaries of the \code{within} and \code{between} strata 
-#'   pairwise distances including Nei's dA. 
+#'   pairwise distances including Nei's dA (in \code{between}). 
 #'   
 #' @references Nei, M., and S. Kumar (2000) Molecular Evolution and 
 #'   Phylogenetics. Oxford University Press, Oxford. (dA: pp. 256, eqn 12.67)
@@ -18,65 +18,86 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @examples
-#' data(dolph.strata)
-#' data(dolph.seqs)
-#' strata <- dolph.strata$fine
-#' names(strata) <- dolph.strata$ids
-#' dloop <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop")
+#' data(dloop.g)
 #' 
-#' nucleotideDivergence(dloop)
+#' nd <- nucleotideDivergence(dloop.g)
+#' nd$within
+#' nd$between
 #' 
 #' @aliases dA
-#' @importFrom stats quantile
 #' @export
 #' 
-nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1), model = "raw", ...) { 
-  if(ploidy(g) > 1) stop("'g' must be haploid")
+nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1), 
+                                 model = "raw", ...) { 
+  if(getPloidy(g) > 1) stop("'g' must be haploid")
   if(is.null(g@sequences)) stop("'g' must have sequences")
   
-  pair.dist.summary <- function(haps, d, probs) {
-    pws.dist <- apply(haps, 1, function(h) {
+  .pair.dist.smry <- function(haps, d, probs) {
+    pws.dist <- apply(haps, 2, function(h) {
       if(any(is.na(h))) return(NA)
       d[h[1], h[2]]
     })
-    dist.quant <- quantile(pws.dist, probs, na.rm = TRUE)
-    names(dist.quant) <- paste("pct.", probs, sep = "")
+    dist.quant <- stats::quantile(pws.dist, probs, na.rm = TRUE)
+    names(dist.quant) <- paste0("q.", probs)
     c(mean = mean(pws.dist, na.rm = TRUE), dist.quant)
   }
   
-  g <- g[, , strataNames(g)]
-  st.pairs <- .strataPairs(g)
-  if(!is.null(st.pairs)) st.pairs <- as.matrix(st.pairs)
-  st <- strata(g)
-  hap.dist <- lapply(
-    getSequences(sequences(g), simplify = FALSE), 
-    dist.dna, model = model, as.matrix = TRUE, ...
+  .expand.smry.cols <- function(df) {
+    dplyr::bind_cols(
+      df, 
+      as.data.frame(do.call(rbind, df$smry))
+    ) %>% 
+      dplyr::select(-.data$smry) %>% 
+      as.data.frame()
+  }
+  
+  g <- g[, , getStrataNames(g)]
+  hap.dist <- sapply(
+    getSequences(g), 
+    ape::dist.dna, 
+    model = model, 
+    as.matrix = TRUE, 
+    ...,
+    simplify = FALSE
   )
   
-  result <- lapply(locNames(g), function(loc) {
-    within.dist <- do.call(rbind, tapply(names(st), st, function(ids) {
-      #haps <- as.character(loci(g, ids = ids, loci = loc)[, 1])
-      haps <- as.array(g, ids = ids, loci = loc, drop = TRUE)
-      pair.dist.summary(t(combn(haps, 2)), hap.dist[[loc]], probs)
-    }))
+  within <- g@data %>% 
+    dplyr::group_by(.data$locus, .data$stratum) %>% 
+    dplyr::do(smry = {
+      haps <- combn(.data$allele, 2)
+      loc <- unique(.data$locus)
+      .pair.dist.smry(haps, hap.dist[[loc]], probs)
+    }) 
+  within <- .expand.smry.cols(within)
+      
+  st.pairs <- .strataPairs(g)
+  st.pairs <- do.call(rbind, lapply(getLociNames(g), function(loc) {
+    cbind(locus = loc, st.pairs)
+  }))
+  between <- if(is.null(st.pairs)) NA else {
+    result <- st.pairs %>% 
+      dplyr::group_by(.data$locus, .data$strata.1, .data$strata.2) %>% 
+      dplyr::do(smry = {
+        st.1 <- .data$strata.1
+        st.2 <- .data$strata.2
+        loc <- unique(.data$locus)
+        h1 <- g@data %>% 
+          dplyr::filter(.data$stratum == st.1) %>% 
+          dplyr::pull(.data$allele)
+        h2 <- g@data %>% 
+          dplyr::filter(.data$stratum == st.2) %>% 
+          dplyr::pull(.data$allele)
+        haps <- t(expand.grid(h1, h2))
+        smry <- .pair.dist.smry(haps, hap.dist[[loc]], probs)
+        wthn.sum <- within %>%
+          dplyr::filter(.data$locus == loc & .data$stratum %in% c(st.1, st.2)) %>%
+          dplyr::summarize(sum = sum(.data$mean, na.rm = TRUE)) %>%
+          dplyr::pull("sum")
+        dA <- unname(smry["mean"] - (wthn.sum / 2))
+        c(dA = dA, smry)
+      })
+    .expand.smry.cols(result)
+  }
   
-    between.dist <- if(is.null(st.pairs)) NA else {
-      btwn <- t(apply(st.pairs, 1, function(sp) {
-        ids1 <- names(st)[which(st == sp[1])]
-        ids2 <- names(st)[which(st == sp[2])]
-        # h1 <- as.character(loci(g, ids = ids1, loci = loc)[, 1])
-        # h2 <- as.character(loci(g, ids = ids2, loci = loc)[, 1])
-        h1 <- as.array(g, ids = ids1, loci = loc, drop = TRUE)
-        h2 <- as.array(g, ids = ids2, loci = loc, drop = TRUE)
-        btwn <- pair.dist.summary(expand.grid(h1, h2), hap.dist[[loc]], probs)
-        dA <- btwn["mean"] - (sum(within.dist[sp, "mean"], na.rm = TRUE) / 2)
-        c(dA = unname(dA), btwn)
-      }))
-      data.frame(st.pairs, btwn, stringsAsFactors = FALSE)
-    }
-    
-    list(within = within.dist, between = between.dist) 
-  })
-  names(result) <- locNames(g)
-  result
+  list(within = within, between = between)
 }

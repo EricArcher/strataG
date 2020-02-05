@@ -7,7 +7,8 @@
 #' 
 #' @return a list with:
 #' \describe{
-#'   \item{\code{df}}{data.frame with Evanno log-likelihood metrics for each value of K.}
+#'   \item{\code{df}}{data.frame with Evanno log-likelihood metrics for each
+#'     value of K.}
 #'   \item{\code{plots}}{list of four ggplot objects for later plotting.}
 #' }
 #' 
@@ -30,10 +31,6 @@
 #' evno
 #' }
 #' 
-#' @importFrom stats sd
-#' @importFrom ggplot2 ggplot aes_string geom_line geom_segment geom_point xlim ylab theme element_blank theme_void geom_text ggplot_gtable ggplot_build
-#' @importFrom grid unit.pmax
-#' @importFrom gridExtra grid.arrange
 #' @export
 #' 
 evanno <- function(sr, plot = TRUE) {
@@ -48,7 +45,7 @@ evanno <- function(sr, plot = TRUE) {
   
   # calculate mean and sd of LnPr(K)
   ln.k <- tapply(sr.smry[, "est.ln.prob"], sr.smry[, "k"], mean)
-  sd.ln.k <- tapply(sr.smry[, "est.ln.prob"], sr.smry[, "k"], sd)
+  sd.ln.k <- tapply(sr.smry[, "est.ln.prob"], sr.smry[, "k"], stats::sd)
   
   # Ln'(K)
   ln.pk <- diff(ln.k)
@@ -75,37 +72,61 @@ evanno <- function(sr, plot = TRUE) {
   df$sd.max <- df$mean.ln.k + df$sd.ln.k
   
   plot.list <- list(
-    mean.ln.k = ggplot(df, aes_string(x = "k", y = "mean.ln.k")) +
-      ylab("mean LnP(K)") +
-      geom_segment(aes_string(x = "k", xend = "k", y = "sd.min", yend = "sd.max")),
-    ln.pk = ggplot(df[!is.na(df$ln.pk), ], aes_string(x = "k", y = "ln.pk")) +
-      ylab("LnP'(K)"),
-    ln.ppk = ggplot(df[!is.na(df$ln.ppk), ], aes_string(x = "k", y = "ln.ppk")) +
-      ylab("LnP''(K)")
+    mean.ln.k = ggplot2::ggplot(
+        df, 
+        ggplot2::aes_string(x = "k", y = "mean.ln.k")
+      ) +
+        ggplot2::ylab("mean LnP(K)") +
+        ggplot2::geom_segment(
+          ggplot2::aes_string(
+            x = "k", 
+            xend = "k", 
+            y = "sd.min", 
+            yend = "sd.max"
+          )
+        ),
+    ln.pk = ggplot2::ggplot(
+      df[!is.na(df$ln.pk), ], 
+      ggplot2::aes_string(x = "k", y = "ln.pk")
+    ) +
+      ggplot2::ylab("LnP'(K)"),
+    ln.ppk = ggplot2::ggplot(
+      df[!is.na(df$ln.ppk), ], 
+      ggplot2::aes_string(x = "k", y = "ln.ppk")
+    ) +
+      ggplot2::ylab("LnP''(K)")
   )
   if(!all(is.na(df$delta.k))) {
-    plot.list$delta.k <- ggplot(df[!is.na(df$delta.k), ], aes_string(x = "k", y = "delta.k")) +
-        ylab(expression(Delta(K)))
+    plot.list$delta.k <- ggplot2::ggplot(
+      df[!is.na(df$delta.k), ], 
+      ggplot2::aes_string(x = "k", y = "delta.k")
+    ) +
+      ggplot2::ylab(expression(Delta(K)))
   }
   
   for(i in 1:length(plot.list)) {
     plot.list[[i]] <- plot.list[[i]] + 
-      geom_line() +
-      geom_point(fill = "white", shape = 21, size = 3) +
-      xlim(c(1, max(df$k))) +
-      theme(axis.title.x = element_blank())
+      ggplot2::geom_line() +
+      ggplot2::geom_point(fill = "white", shape = 21, size = 3) +
+      ggplot2::xlim(c(1, max(df$k))) +
+      ggplot2::theme(axis.title.x = ggplot2::element_blank())
   }
 
   if(plot) {
-    p <- lapply(plot.list, function(x) ggplot_gtable(ggplot_build(x)))
-    maxWidth <- do.call(unit.pmax, lapply(p, function(x) x$widths[2:3]))
+    p <- plot.list %>% 
+      purrr::map(function(x) {
+        ggplot2::ggplot_gtable(ggplot2::ggplot_build(x))
+      })
+    maxWidth <- do.call(
+      grid::unit.pmax, 
+      purrr::map(p, function(x) x$widths[2:3])
+    )
     for(i in 1:length(p)) p[[i]]$widths[2:3] <- maxWidth
     p$bottom <- "K"
     p$ncol <- 2
-    do.call(grid.arrange, p)
+    do.call(gridExtra::grid.arrange, p)
   } 
   
   df$sd.min <- df$sd.max <- NULL
-  print(df)
   invisible(list(df = df, plots = plot.list))
 }

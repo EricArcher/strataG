@@ -4,34 +4,42 @@
 \alias{mostDistantSequences}
 \title{Most Distant Sequences}
 \usage{
-mostDistantSequences(x, num.seqs = NULL, model = "raw",
-  pairwise.deletion = TRUE)
+mostDistantSequences(
+  x,
+  num.seqs = NULL,
+  model = "raw",
+  pairwise.deletion = TRUE,
+  simplify = TRUE
+)
 }
 \arguments{
-\item{x}{a \code{\link[ape]{DNAbin}} object.}
+\item{x}{a set of sequences or a \linkS4class{gtypes} object with sequences.}
 
-\item{num.seqs}{number of sequences to return.}
+\item{num.seqs}{number of sequences to return. If \code{NULL} (default), all
+sequences are returned from most to least distant.}
 
-\item{model}{a character string specifying the evolutionary model to be used. 
+\item{model}{a character string specifying the evolutionary model to be used.
 See \link{dist.dna} for more information.}
 
-\item{pairwise.deletion}{a logical indicating whether to delete sites 
-with missing data. See \link{dist.dna} for more information.}
+\item{pairwise.deletion}{a logical indicating whether to delete sites with
+missing data. See \link{dist.dna} for more information.}
+
+\item{simplify}{if there is a single locus, return result in a simplified
+form? If \code{FALSE} a list will be returned wth one element per locus.}
 }
 \value{
-a vector of the sequence names that are have the greatest mean 
-  pairwise distance and smallest variance of pairwise distances. 
-  The names are returned in order from most to least distant.
+a vector of the \code{num.seqs} sequence names that are the most
+  divergent sorted from greatest to least distant.
 }
 \description{
-Finds the set of sequences that have the greatest mean 
-  pairwise distance and smallest variance of pairwise distances.
+Finds the set of sequences that are on the edges of the cloud of
+  distances. These are the ones that have the greatest mean pairwise distance
+  and greatest variance in distances.
 }
 \examples{
-library(ape)
 data(dolph.haps)
 
-mostDistantSequences(as.DNAbin(dolph.haps))
+mostDistantSequences(dolph.haps, 5)
 
 }
 \author{

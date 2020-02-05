@@ -31,7 +31,6 @@
 #' x <- df2gtypes(gen.data, ploidy = 1)
 #' summary(x)
 #' 
-#' @importFrom stats complete.cases
 #' @export
 #' 
 freq2GenData <- function(freq.mat, hap.col = NULL, freq.col = 1, 
@@ -41,13 +40,17 @@ freq2GenData <- function(freq.mat, hap.col = NULL, freq.col = 1,
   } else {
     if(length(hap.col) == 1) freq.mat[, hap.col] else hap.col
   }
+  
   df <- do.call(rbind, lapply(freq.col:ncol(freq.mat), function(i) {
     freq.sub <- cbind(haps, freq.mat[, i])
-    freq.sub <- freq.sub[complete.cases(freq.sub), , drop = FALSE]
+    freq.sub <- freq.sub[stats::complete.cases(freq.sub), , drop = FALSE]
     haps <- rep(freq.sub[, 1], times = as.numeric(freq.sub[, 2]))
     if(!is.null(hap.label)) haps <- paste(hap.label, haps, sep = ".")   
-    data.frame(strata = colnames(freq.mat)[i], haplotype = haps, 
-               stringsAsFactors = FALSE)
+    data.frame(
+      strata = colnames(freq.mat)[i], 
+      haplotype = haps, 
+      stringsAsFactors = FALSE
+    )
   }))
   ids <- 1:nrow(df)
   if(!is.null(id.label)) ids <- paste(id.label, ids, sep = ".")

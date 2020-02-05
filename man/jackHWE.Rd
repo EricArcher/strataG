@@ -4,14 +4,16 @@
 \alias{jackHWE}
 \alias{jackInfluential}
 \alias{plot.jack.influential}
+\alias{.alleleFreqFormat}
 \title{Hardy-Weinberg Equlibrium Jackknife}
 \usage{
-jackHWE(g, exclude.num = 1, min.hwe.samples = 5, show.progress = TRUE,
-  use.genepop = FALSE, ...)
+jackHWE(g, exclude.num = 1, min.hwe.samples = 5, show.progress = TRUE, ...)
 
 jackInfluential(jack.result, alpha = 0.05)
 
 \method{plot}{jack.influential}(x, main = NULL, ...)
+
+.alleleFreqFormat(x, g)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
@@ -22,16 +24,14 @@ jackInfluential(jack.result, alpha = 0.05)
 
 \item{show.progress}{logical. Show progress of jackknife?}
 
-\item{use.genepop}{logical. Use GENEPOP to calculate HWE p-values? If \code{FALSE} 
-then \code{\link[pegas]{hw.test}} is used.}
-
-\item{...}{other arguments to be passed to GENEPOP.}
+\item{...}{other arguments to be passed to \code{\link{hweTest}}.}
 
 \item{jack.result}{result from run of \code{jackHWE}.}
 
 \item{alpha}{critical value to determine if exclusion is "influential".}
 
-\item{x}{result from a call to \code{jackInfluential}.}
+\item{x}{a matrix or data.frame where first column is sample id and 
+second colum is locus name.}
 
 \item{main}{main title for influential sample plots from 
 \code{plot.jack.influential}.}
@@ -66,13 +66,6 @@ Test influence of samples on Hardy-Weinberg equilibrium via
     line marks the smallest influential exclusion}
 }
 }
-\note{
-If \code{use.genepop = TRUE}, the command line version of GENEPOP v.4 
-  must be properly installed and available on the command line, so it is 
-  executable from any directory. On PC's, this requires having it in a 
-  folder in the PATH environmental variable. On Macs, the executable should 
-  be installed in a folder like \code{/usr/local/bin}.
-}
 \references{
 Morin, P.A., R.G. LeDuc, F.I. Archer, K.K. Martien, 
   R. Huebinger, J.W. Bickham, and B.L. Taylor. 2009. Significant deviations 
@@ -85,3 +78,4 @@ Morin, P.A., R.G. LeDuc, F.I. Archer, K.K. Martien,
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
 }
+\keyword{internal}

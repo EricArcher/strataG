@@ -4,8 +4,14 @@
 \alias{sequence2gtypes}
 \title{Convert Sequences To \code{gtypes}}
 \usage{
-sequence2gtypes(x, strata = NULL, seq.names = NULL, schemes = NULL,
-  description = NULL, other = NULL)
+sequence2gtypes(
+  x,
+  strata = NULL,
+  seq.names = NULL,
+  schemes = NULL,
+  description = NULL,
+  other = NULL
+)
 }
 \arguments{
 \item{x}{DNA sequences as a character matrix, a \code{\link{DNAbin}} object, 
@@ -21,8 +27,7 @@ are generated.}
 
 \item{description}{an optional label for the object.}
 
-\item{other}{a slot to carry other related information - unused in package
-analyses.}
+\item{other}{a list to carry other related information (optional).}
 }
 \value{
 a \linkS4class{gtypes} object.
@@ -39,6 +44,11 @@ names(strata) <- dolph.strata$ids
 dloop.fine <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop", 
 description = "dLoop: fine-scale stratification")
 
+}
+\seealso{
+\link{gtypes.initialize}, \link{as.matrix.gtypes}, 
+  \link{as.data.frame.gtypes}, \link{gtypes2genind}, \link{gtypes2loci},
+  \link{gtypes2phyDat}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

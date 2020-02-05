@@ -6,7 +6,7 @@ Description: A toolkit for analyzing stratified population genetic data.
   calculating most population subdivision metrics, and running external programs 
   such as structure and fastsimcoal. The package is further described in 
   Archer et al (2016) <doi:10.1111/1755-0998.12559>.
-Version: 2.1
+Version: 2.4.9
 License: GNU General Public License
 Authors@R: c(
   EA = person("Eric", "Archer", email = "eric.archer@noaa.gov", role = c("aut", "cre")),
@@ -17,29 +17,42 @@ Authors@R: c(
 URL: https://github.com/EricArcher/strataG
 BugReports: https://github.com/EricArcher/strataG/issues
 Depends:
-    R (>= 3.2.0), apex, ape, adegenet
+    R (>= 3.5.0)
 Suggests:
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    qgraph,
+    hierfstat
 Imports:
-    data.table,
+    ape,
+    apex (>= 1.0.3),
+    adegenet,
+    dplyr (>= 0.7.6),
+    tibble (>= 1.4.2),
+    tidyr (>= 0.8.1),
+    purrr (>= 0.2.5),
+    data.table (>= 1.11.4),
     copula,
     DT,
+    genepop (>= 1.0.5),
     ggplot2,
     graphics,
     grid,
     gridExtra,
-    Hmisc,
+    Hmisc (>= 4.1),
+    magrittr (>= 1.5),
     methods,
-    pegas,
-    phangorn,
+    pegas (>= 0.11),
+    phangorn (>= 2.4.0),
     RColorBrewer,
     Rcpp,
-    shiny,
-    shinyFiles,
+    readr,
+    reshape2,
+    rlang (>= 0.3.0.1),
+    rmetasim,
     stats,
-    survival (>= 2.40.1),
+    stringi,
     swfscMisc,
     utils
 Collate:
@@ -47,92 +60,92 @@ Collate:
     gtypes.class.R
     gtypes.accessors.R
     is.gtypes.R
-    initialize.gtypes.R
+    gtypes.initialize.R
     strataG-internal.R
-    as.array.gtypes.R
-    as.matrix.gtypes.R
     as.data.frame.gtypes.R
-    alleleFreqFormat.R
     alleleFreqs.R
     alleleSplit.R
     allelicRichness.R
-    arlequin.R
     as.multidna.R
-    baseFreqs.R
-    clumpp.R
-    createConsensus.R
     dupGenotypes.R
-    evanno.R
-    expandHaplotypes.R
-    fasta.R
-    fastsimcoal.input.R
-    fastsimcoal.R
-    fixedDifferences.R
-    fixedSites.R
-    freq2GenData.R
-    fusFs.R
-    gelato.R
-    genepop.R
     heterozygosity.R
-    hweTest.R
-    iupacCode.R
-    jackHWE.R
     labelHaplotypes.R
-    ldNe.R
-    LDgenepop.R
-    lowFreqSubs.R
-    mRatio.R
-    maf.R
-    mafft.R
-    maverickRun.R
-    mega.R
-    mostDistantSequences.R
-    mostRepresentativeSequences.R
-    neiDa.R
-    nucleotideDivergence.R
-    nucleotideDiversity.R
     numAlleles.R
-    numericSNPmat.R
     numGenotyped.R
     numMissing.R
     permuteStrata.R
-    phase.R
-    popGenEqns.R
-    popStructStat.R
-    popStructTest.R
     privateAlleles.R
     propUniqueAlleles.R
-    qaqc.R
-    RcppExports.R
     readGenData.R
     removeSequences.R
-    sequenceLikelihoods.R
     sharedLoci.R
-    show.gtypes.R
-    simGammaHaps.R
-    strataGUI.R
     strataSplit.R
     stratify.R
-    structure.R
-    structurePlot.R
     summarizeLoci.R
-    summarizeSamples.R
+    summarizeInds.R
     summarizeSeqs.R
-    summary.gtypes.R
-    tajimasD.R
-    theta.R
-    TiTvRatio.R
-    trimNs.R
+    gtypes.show.R
+    gtypes.summary.R
+    writeGtypes.R
+    df2gtypes.R
+    sequence2gtypes.R
+    baseFreqs.R
+    createConsensus.R
+    iupacCode.R
     validIupacCodes.R
+    expandHaplotypes.R
+    trimNs.R
+    fasta.R
+    fixedSites.R
     variableSites.R
-    write.gtypes.R
-    write.nexus.snapp.R
+    nucleotideDiversity.R
+    fixedDifferences.R
+    lowFreqSubs.R
+    sequenceLikelihoods.R
+    nucleotideDivergence.R
+    popGenEqns.R
+    freq2GenData.R
     gtypes2genind.R
     gtypes2loci.R
     gtypes2phyDat.R
-    df2gtypes.R
-    sequence2gtypes.R
+    theta.R
+    maf.R
+    TiTvRatio.R
+    simGammaHaps.R
+    mostDistantSequences.R
+    mostRepresentativeSequences.R
+    write.nexus.snapp.R
+    mega.R
+    mRatio.R
+    neiDa.R
+    mafft.R
+    arlequin.R
+    ldNe.R
+    genepop.R
+    hweTest.R
+    jackHWE.R
+    LDgenepop.R
+    fsc.input.R
+    fscWrite.R
+    fscRun.R
+    fscRead.R
+    sfs.R
+    structure.R
+    structurePlot.R
+    evanno.R
+    clumpp.R
+    fusFs.R
+    tajimasD.R
+    popStructStat.R
+    popStructTest.R
+    RcppExports.R
+    gelato.R
+    phase.R
+    maverickRun.R
+    summarizeAll.R
+    landscape2gtypes.R
 LazyData: TRUE
 VignetteBuilder: knitr
 LinkingTo: Rcpp
-RoxygenNote: 6.0.1
+Encoding: UTF-8
+RoxygenNote: 7.0.2

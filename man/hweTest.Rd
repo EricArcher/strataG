@@ -6,8 +6,17 @@
 \alias{HWE}
 \title{Hardy-Weinberg Equilibrium}
 \usage{
-hweTest(g, use.genepop = FALSE, B = 1000, show.output = FALSE,
-  delete.files = TRUE, label = "HWE.genepop", ...)
+hweTest(
+  g,
+  use.genepop = FALSE,
+  which = c("Proba", "excess", "deficit"),
+  enumeration = FALSE,
+  dememorization = 10000,
+  batches = 20,
+  num.rep = 5000,
+  delete.files = TRUE,
+  label = NULL
+)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
@@ -15,29 +24,22 @@ hweTest(g, use.genepop = FALSE, B = 1000, show.output = FALSE,
 \item{use.genepop}{logical. Use GENEPOP to calculate HWE p-values? 
 If \code{FALSE} then \code{\link[pegas]{hw.test}} is used.}
 
-\item{B}{the number of replicates for the Monte Carlo procedure for 
-\code{\link[pegas]{hw.test}}.}
+\item{which, enumeration, dememorization, batches}{parameters for GENEPOP MCMC
+HWE procedure as defined in \code{\link[genepop]{test_HW}}.}
 
-\item{show.output}{logical. Show output from GENEPOP?}
+\item{num.rep}{the number of replicates for the Monte Carlo procedure for
+\code{\link[pegas]{hw.test}} or number of iterations for
+\code{\link[genepop]{test_HW}}.}
 
 \item{delete.files}{logical. Delete GENEPOP files when done?}
 
 \item{label}{character string to use to label GENEPOP files.}
-
-\item{...}{arguments to be passed to \code{\link{genepop}}.}
 }
 \value{
 a vector of p-values for each locus.
 }
 \description{
 Calculate Hardy-Weinberg equilibrium p-values.
-}
-\note{
-If \code{use.genepop = TRUE}, the command line version of GENEPOP v.4 
-  must be properly installed and available on the command line, so it is 
-  executable from any directory. On PC's, this requires having it in a 
-  folder in the PATH environmental variable. On Macs, the executable should 
-  be installed in a folder like \code{/usr/local/bin}.
 }
 \examples{
 data(msats.g)

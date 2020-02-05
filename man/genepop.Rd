@@ -5,11 +5,20 @@
 \alias{genepopWrite}
 \title{Run GENEPOP}
 \usage{
-genepop(g, output.ext = "", show.output = F, label = "genepop.run",
-  dem = 10000, batches = 100, iter = 5000, other.settings = "",
-  input.fname = "loc_data.txt", exec = "Genepop")
+genepop(
+  g,
+  output.ext = "",
+  show.output = F,
+  label = "genepop.run",
+  dem = 10000,
+  batches = 100,
+  iter = 5000,
+  other.settings = "",
+  input.fname = "loc_data.txt",
+  exec = "Genepop"
+)
 
-genepopWrite(g, label = "genepop.write", input.fname = "loc_data.txt")
+genepopWrite(g, label = NULL)
 }
 \arguments{
 \item{g}{a \code{\link{gtypes}} object.}
@@ -36,9 +45,9 @@ arguments.}
 \value{
 \describe{
   \item{\code{genepop}}{a list with a vector of the locus names and a vector 
-    of the input and output filenames}
-  \item{\code{genepopWrite}}{a vector of the locus names used in the 
-    input file}
+    of the input and output filenames.}
+  \item{\code{genepopWrite}}{a list with the filename written and a vector
+    mapping locus names in the file to the original locus names.}
 }
 }
 \description{

@@ -2,12 +2,12 @@
 #' @description Calculate linkage disequilibrium p-values using GENEPOP.
 #' 
 #' @param g a \linkS4class{gtypes} object.
-#' @param show.output logical. Show GENEPOP output on console?
+#' @param dememorization,batches,iterations parameters for GENEPOP MCMC
+#'   LD procedure as defined in \code{\link[genepop]{test_LD}}.
 #' @param delete.files logical. Delete GENEPOP input and output files when done?
 #' @param label character string to use to label GENEPOP input and output files.
-#' @param ... other arguments to be passed to \code{\link{genepop}}.
 #' 
-#' @return data.frame of disequilibrium estimates between pairs of individuals
+#' @return data.frame of disequilibrium estimates between pairs of loci
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
@@ -21,25 +21,44 @@
 #' 
 #' @export
 #' 
-LDgenepop <- function(g, show.output = FALSE, delete.files = TRUE, 
-                      label = "linkage.genepop", ...) {
-  
+LDgenepop <- function(
+  g, 
+  dememorization = 10000,
+  batches = 100, 
+  iterations = 5000, 
+  delete.files = TRUE, 
+  label = NULL
+) {
+    
   # Run Genepop
-  g <- stratify(g, rep("1", nInd(g)))
-  output <- genepop(g, output.ext = ".DIS", show.output = show.output, 
-                    label = label, other.settings = "MenuOptions=2.1", ...)
-  if(!is.list(output)) return(NULL)
+  g <- stratify(g)
+  in.file <- genepopWrite(g, label)
   
-  result <- scan(output$files["output.fname"], what = "character", quiet = TRUE)
-  loc.names <- output$locus.names
+  output <- genepop::test_LD(
+    in.file$fname,
+    dememorization = dememorization,
+    batches = batches,
+    iterations = iterations,
+    verbose = FALSE
+  )
+  result <- scan(output, what = "character", quiet = TRUE)
   
   # Create empty matrix
-  numrows <- ((length(loc.names) ^ 2) - length(loc.names)) / 2
-  result.mat <- matrix(as.character(NA), numrows, 5)
+  locus.names <- in.file$locus.names
+  numrows <- ((length(locus.names) ^ 2) - length(locus.names)) / 2
+  result.mat <- matrix(
+    as.character(NA), 
+    nrow = numrows, 
+    ncol = 5,
+    dimnames = list(
+      1:numrows,
+      c("Locus.1", "Locus.2", "p.value", "std.err", "switches")
+    )
+  )
   
   # Find starting points
   loc <- grep("Switches", result, value = F) + 7
-  first.col <- grep(names(loc.names)[1], result)[1]
+  first.col <- grep(names(locus.names)[1], result)[1]
   num.skip <- first.col - loc
   row.mask <- c(rep(F, num.skip), rep(T, 5))
   
@@ -50,14 +69,20 @@ LDgenepop <- function(g, show.output = FALSE, delete.files = TRUE,
   }
   
   # Convert to data.frame and format columns
-  result.df <- data.frame(result.mat, stringsAsFactors = FALSE)
-  colnames(result.df) <- c("Locus.1", "Locus.2", "p.value", "std.err", "switches")
-  result.df$p.value <- as.numeric(result.df$p.value)
-  result.df$std.err <- as.numeric(result.df$std.err)
-  result.df$switches <- as.integer(result.df$switches)
-  result.df$Locus.1 <- loc.names[result.df$Locus.1]
-  result.df$Locus.2 <- loc.names[result.df$Locus.2]    
+  result.df <- tibble::as.tibble(result.mat) %>% 
+    dplyr::mutate(
+      Locus.1 = locus.names[.data$Locus.1],
+      Locus.2 = locus.names[.data$Locus.2],
+      p.value = as.numeric(.data$p.value),
+      std.err = as.numeric(.data$std.err),
+      switches = as.integer(.data$switches)
+    ) %>% 
+    as.data.frame()
   
-  if(delete.files) for(f in output$files) if(file.exists(f)) file.remove(f) 
+  if(delete.files) {
+    files <- c(output, in.file$fname, "fichier.in", "cmdline.txt")
+    for(f in files) if(file.exists(f)) file.remove(f)
+  }
+  
   result.df
 }

@@ -81,9 +81,7 @@ numGensEq <- function(fst, Ne, gen.time) {
 #' @rdname popGenEqns
 #' @export
 #' 
-fstToNm <- function(fst, ploidy) {
-  ((1 / fst) - 1) / (ploidy * 2)
-}
+fstToNm <- function(fst, ploidy) ((1 / fst) - 1) / (ploidy * 2)
 
 
 #' @rdname popGenEqns

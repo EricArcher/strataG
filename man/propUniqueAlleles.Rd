@@ -4,10 +4,12 @@
 \alias{propUniqueAlleles}
 \title{Proportion Unique Alleles}
 \usage{
-propUniqueAlleles(g)
+propUniqueAlleles(g, by.strata = FALSE)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
+
+\item{by.strata}{logical - return results grouped by strata?}
 }
 \value{
 a vector of the proportion of unique (occuring only in one individual) 
@@ -15,11 +17,6 @@ a vector of the proportion of unique (occuring only in one individual)
 }
 \description{
 Calculate the proportion of alleles that are unique.
-}
-\note{
-If \code{g} is a haploid object with sequences, make sure to run 
-  \code{\link{labelHaplotypes}} if sequences aren't already grouped by 
-  haplotype.
 }
 \examples{
 data(msats.g)

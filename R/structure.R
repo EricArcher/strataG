@@ -10,7 +10,7 @@
 #' @param label label to use for input and output files
 #' @param delete.files logical. Delete all files when STRUCTURE is finished?
 #' @param exec name of executable for STRUCTURE. Defaults to "structure".
-#' @param ... arguments to be passed to \code{structure.write}.
+#' @param ... arguments to be passed to \code{structureWrite}.
 #' @param maxpops number of groups.
 #' @param burnin number of iterations for MCMC burnin.
 #' @param numreps number of MCMC replicates.
@@ -41,12 +41,13 @@
 #'    
 #' @return
 #' \describe{
-#'  \item{\code{structure.run}}{a list where each element is a list with results 
-#'    from \code{structure.read} and a vector of the filenames used}
-#'  \item{\code{structure.write}}{a vector of the filenames used by STRUCTURE}
-#'  \item{\code{structure.read}}{a list containing:
+#'  \item{\code{structureRun}}{a list where each element is a list with results 
+#'    from \code{structureRead} and a vector of the filenames used}
+#'  \item{\code{structureWrite}}{a vector of the filenames used by STRUCTURE}
+#'  \item{\code{structureRead}}{a list containing:
 #'    \describe{
-#'      \item{\code{summary}}{new locus name, which is a combination of loci in group}
+#'      \item{\code{summary}}{new locus name, which is a combination of loci in
+#'        group}
 #'      \item{\code{q.mat}}{data.frame of assignment probabilities for each id}
 #'      \item{\code{prior.anc}}{list of prior ancestry estimates for each 
 #'        individual where population priors were used}
@@ -94,37 +95,45 @@
 NULL
 
 #' @rdname structure
-#' @importFrom utils file_test
 #' @export
 #' 
-structureRun <- function(g, k.range = NULL, num.k.rep = 1, label = NULL, 
-                         delete.files = TRUE, exec = "structure", ...) {
+structureRun <- function(
+  g, 
+  k.range = NULL, 
+  num.k.rep = 1, 
+  label = NULL, 
+  delete.files = TRUE, 
+  exec = "structure", 
+  ...
+) {
   
-  if(!ploidy(g) > 1) stop("'g' must have a ploidy > 1")
+  if(!getPloidy(g) > 1) stop("'g' must have a ploidy > 1")
   
   # setup folder
-  if(is.null(label)) label <- paste(description(g), "structureRun", sep = ".")
-  label <- gsub("[[:punct:]|[:space:]]", ".", label)
+  label <- .getFileLabel(g, label)
+  label <- paste(label, "structureRun", sep = ".")
+  label <- gsub("[[:space:]]", ".", label)
   unlink(label, recursive = TRUE, force = TRUE)
   dir.create(label)
-  if(!file_test("-d", label)) {
+  if(!utils::file_test("-d", label)) {
     stop(paste("'", label, "' is not a valid folder.", sep = ""))
   }
   label <- file.path(label, label)
   
   # setup k and replicate data.frame to cycle through
-  if(is.null(k.range)) k.range <- 1:nStrata(g)
+  if(is.null(k.range)) k.range <- 1:getNumStrata(g)
   rep.df <- expand.grid(rep = 1:num.k.rep, k = k.range)
   
   rownames(rep.df) <- paste(label, ".k", rep.df$k, ".r", rep.df$rep, sep = "")
   out.files <- lapply(rownames(rep.df), function(x) {
     sw.out <- structureWrite(g, label = x, maxpops = rep.df[x, "k"], ...)
     files <- sw.out$files
-    cmd <- paste(exec, " -m ", files["mainparams"], 
-                 " -e ", files["extraparams"], 
-                 " -i ", files["data"], 
-                 " -o ", files["out"], 
-                 sep = ""
+    cmd <- paste0(
+      exec, 
+      " -m ", files["mainparams"], 
+      " -e ", files["extraparams"], 
+      " -i ", files["data"], 
+      " -o ", files["out"]
     )
     
     err.code <- system(cmd)
@@ -162,14 +171,27 @@ structureRun <- function(g, k.range = NULL, num.k.rep = 1, label = NULL,
 #' @rdname structure
 #' @export
 #' 
-structureWrite <- function(g, label = NULL, maxpops = nlevels(strata(g)), 
-                           burnin = 1000, numreps = 1000, noadmix = TRUE, 
-                           freqscorr = FALSE, randomize = TRUE, seed = 0, 
-                           pop.prior = NULL, locpriorinit = 1, maxlocprior = 20, 
-                           gensback = 2, migrprior = 0.05,
-                           pfrompopflagonly = TRUE, popflag = NULL, ...) {
+structureWrite <- function(
+  g, 
+  label = NULL, 
+  maxpops = getNumStrata(g), 
+  burnin = 1000, 
+  numreps = 1000, 
+  noadmix = TRUE, 
+  freqscorr = FALSE, 
+  randomize = TRUE, 
+  seed = 0, 
+  pop.prior = NULL, 
+  locpriorinit = 1, 
+  maxlocprior = 20, 
+  gensback = 2,
+  migrprior = 0.05,
+  pfrompopflagonly = TRUE, 
+  popflag = NULL, 
+  ...
+) {
   
-  if(ploidy(g) != 2) stop("'g' must be diploid")
+  if(getPloidy(g) != 2) stop("'g' must be diploid")
   
   # check parameters
   if(!is.null(pop.prior)) {
@@ -177,45 +199,48 @@ structureWrite <- function(g, label = NULL, maxpops = nlevels(strata(g)),
       stop("'pop.prior' must be 'locprior' or 'usepopinfo'.")
     }
   }
-  if(is.null(popflag)) popflag <- rep(1, nInd(g))
-  if(length(popflag) != nInd(g)) {
+  if(is.null(popflag)) popflag <- rep(1, getNumInd(g))
+  if(length(popflag) != getNumInd(g)) {
     stop("'popflag' should be the same length as the number of individuals in 'g'.")
   }
   if(!all(popflag %in% c(0, 1))) {
     stop("all values in 'popflag' must be 0 or 1.")
   }
+  if(is.null(names(popflag))) names(popflag) <- getIndNames(g)
   
   in.file <- ifelse(is.null(label), "data", paste(label, "data", sep = "_"))
   out.file <- ifelse(is.null(label), "out", paste(label, "out", sep = "_"))
-  main.file <- ifelse(is.null(label), "mainparams", 
-                      paste(label, "mainparams", sep = "_"))
-  extra.file <- ifelse(is.null(label), "extraparams", 
-                       paste(label, "extraparams", sep = "_"))
+  main.file <- ifelse(
+    is.null(label), 
+    "mainparams", 
+    paste(label, "mainparams", sep = "_")
+  )
+  extra.file <- ifelse(
+    is.null(label), 
+    "extraparams", 
+    paste(label, "extraparams", sep = "_")
+  )
   
   # write data
-  num.loc <- .numericLoci(g)
-  num.loc$ids <- rep(num.loc$ids, each = ploidy(g))
-  num.loc$loci[is.na(num.loc$loci)] <- -9
-  popdata <- as.numeric(factor(strata(g))[num.loc$ids])
-  if(!is.null(names(popflag))) popflag <- popflag[num.loc$ids]
-  popflag <- rep(popflag, each = ploidy(g))
-  mat <- cbind(num.loc$ids, popdata, popflag, num.loc$loci)
+  mat <- .stackedAlleles(g, alleles2integer = T, na.val = -9) %>% 
+    dplyr::select(-.data$allele) %>% 
+    dplyr::mutate(
+      id = gsub(" ", "_", .data$id),
+      stratum = as.numeric(factor(.data$stratum)),
+      popflag = popflag[.data$id]
+    ) %>% 
+    dplyr::select(
+      .data$id, 
+      .data$stratum, 
+      .data$popflag, 
+      dplyr::everything()
+    ) %>% 
+    as.matrix()
   
-  write(paste(locNames(g), collapse = " "), file = in.file)
+  write(paste(getLociNames(g), collapse = " "), file = in.file)
   for(i in 1:nrow(mat)) {
     write(paste(mat[i, ], collapse = " "), file = in.file, append = TRUE)
   }
-
-  # for(i in 1:nInd(g)) {
-  #   id <- indNames(g)[i]
-  #   loci <- loci(g, id, locNames(g))
-  #   loci <- c(as.matrix(sapply(loci, as.numeric)))
-  #   loci[is.na(loci)] <- -9
-  #   loci <- paste(loci, collapse = " ")
-  #   write(paste(id, popdata[i], popflag[i], loci), 
-  #         file = in.file, append = TRUE
-  #   )
-  # }
   
   # write mainparams
   main.params <- c(
@@ -224,8 +249,8 @@ structureWrite <- function(g, label = NULL, maxpops = nlevels(strata(g)),
     paste("NUMREPS", as.integer(numreps)),
     paste("INFILE", in.file),
     paste("OUTFILE", out.file),
-    paste("NUMINDS", nInd(g)),
-    paste("NUMLOCI", nLoc(g)),
+    paste("NUMINDS", getNumInd(g)),
+    paste("NUMLOCI", getNumLoci(g)),
     "MISSING -9",
     #"ONEROWPERIND 1",
     "LABEL 1",
@@ -287,7 +312,7 @@ structureWrite <- function(g, label = NULL, maxpops = nlevels(strata(g)),
   invisible(list(
     files = c(data = in.file, mainparams = main.file, 
               extraparams = extra.file, out = out.file),
-    pops = levels(strata(g))
+    pops = getStrataNames(g)
   ))
 }
 
@@ -352,11 +377,13 @@ structureRead <- function(file, pops = NULL) {
   # Create table of population assignments for lines with population priors
   has.prior <- if(length(prior.lines) > 0) {
     prior.txt <- strsplit(tbl.txt[prior.lines], "[|]")
+    
     # Get base table
     prior.q.txt <- unlist(lapply(prior.txt, function(x) x[1]))
     df <- .structureParseQmat(prior.q.txt, pops)
+    
     # Parse ancestry assignments into matrix
-    prior.anc <- lapply(prior.txt, function(x) {
+    prior.anc <- purrr::map(prior.txt, function(x) {
       anc.mat <- matrix(NA, nrow = maxpops, ncol = gensback + 1)
       rownames(anc.mat) <- paste("Pop", 1:nrow(anc.mat), sep = ".")
       colnames(anc.mat) <- paste("Gen", 0:gensback, sep = ".")
@@ -371,8 +398,8 @@ structureRead <- function(file, pops = NULL) {
         anc.mat[pop, ] <- as.numeric(x[-1, i])
       }
       anc.mat
-    })
-    names(prior.anc) <- df$id
+    }) %>% 
+      stats::setNames(df$id)
     
     # Create population probability matrix for samples with priors and add to end of base table
     prob.mat <- t(sapply(1:nrow(df), function(i) {
@@ -412,21 +439,24 @@ structureRead <- function(file, pops = NULL) {
   q.mat.txt <- sub("[)]", "", q.mat.txt)
   q.mat.txt <- sub("[|][ ]+$", "", q.mat.txt)
   
-  # Parse population assignment portion of table to create single-line 
-  #   data.frame
-  do.call(rbind, lapply(q.mat.txt, function(x) {
-    # Split on spaces and remove empty spaces and colons
-    x <- strsplit(x, " ")[[1]]
-    x <- x[!x %in% c("", ":")]
-    p <- as.numeric(x[4])
-    
-    df <- data.frame(row = as.numeric(x[1]), id = x[2], 
-                     pct.miss = as.numeric(x[3]), 
-                     orig.pop = if(is.null(pops)) p else pops[p], 
-                     stringsAsFactors = FALSE
-    )
-    pop.prob <- as.data.frame(rbind(as.numeric(x[-(1:4)])))
-    colnames(pop.prob) <- paste("Group", 1:ncol(pop.prob), sep = ".")
-    cbind(df, pop.prob) 
-  }))
+  cols1to4 <- c("row", "id", "pct.miss", "orig.pop")
+  
+  strsplit(q.mat.txt, " ") %>% 
+    purrr::map(function(q) {
+      q <- q[! q %in% c("", " ", ":")] %>% 
+        as.character() %>% 
+        rbind() %>% 
+        as.data.frame(stringsAsFactors = FALSE) 
+      stats::setNames(q, c(cols1to4, paste("Group", 1:(ncol(q) - 4), sep = ".")))
+    }) %>% 
+    dplyr::bind_rows() %>% 
+    dplyr::mutate_at(
+      dplyr::vars("row", "pct.miss", "orig.pop", dplyr::starts_with("Group.")), 
+      as.numeric
+    ) %>% 
+    dplyr::mutate(orig.pop = if(!is.null(pops)) {
+      pops[.data$orig.pop] 
+    } else {
+      .data$orig.pop
+    })
 }

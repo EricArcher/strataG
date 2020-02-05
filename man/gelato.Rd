@@ -5,7 +5,7 @@
 \alias{gelatoPlot}
 \title{GELATo - Group ExcLusion and Assignment Test}
 \usage{
-gelato(g, unknown.strata, nrep = 1000, min.sample.size = 5)
+gelato(g, unknown.strata, nrep = 1000, min.sample.size = 5, num.cores = NULL)
 
 gelatoPlot(gelato.result, unknown = NULL, main = NULL)
 }
@@ -22,12 +22,17 @@ knowns. If the known sample size would be smaller than this after drawing
 an equivalent number of unknowns for self-assignment, then the comparison 
 is not done.}
 
+\item{num.cores}{The number of cores to use to distribute replicates over.
+Default (NULL) sets value to what is reported by
+\code{\link[parallel]{detectCores} - 1}.}
+
 \item{gelato.result}{the result of a call to \code{gelato}.}
 
-\item{unknown}{the names of the unknown strata in the \code{x$likelihoods} 
-element to create plots. If \code{NULL} one plot for each stratum is created.}
+\item{unknown}{the names of the unknown strata in the \code{x$likelihoods}
+element to create plots. If \code{NULL} one plot for each stratum is
+created.}
 
-\item{main}{main label for top of plot.}
+\item{main}{main label for top of plot.#'}
 }
 \value{
 A list with the following elements:
@@ -44,7 +49,7 @@ Run a GELATo test to evaluate assignment likelihoods of
 data(msats.g)
 
 # Run GELATo analysis
-gelato.fine <- gelato(msats.g, unk = "Offshore.South", nrep = 20)
+gelato.fine <- gelato(msats.g, unk = "Offshore.South", nrep = 20, num.cores = 2)
 gelato.fine
 
 # Plot results
@@ -54,7 +59,7 @@ gelatoPlot(gelato.fine, "Offshore.South")
 \references{
 O'Corry-Crowe, G., W. Lucey, F.I. Archer, and B. Mahoney. 2015. 
   The genetic ecology and population origins of the beluga whales of 
-  Yakutat Bay. Marine Fisheries Review.
+  Yakutat Bay. Marine Fisheries Review 77(1):47-58
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

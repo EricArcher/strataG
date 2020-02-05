@@ -10,8 +10,9 @@ expandHaplotypes(g)
 \item{g}{a haploid \linkS4class{gtypes} object with sequences.}
 }
 \value{
-a \code{gtypes} object with sequences expanded and renamed so there is
-  one sequence per individual. Sequence names are set to individual sample IDs.
+a \code{gtypes} object with sequences expanded and renamed so there
+  is one sequence per individual. Sequence names are set to individual sample
+  IDs.
 }
 \description{
 Expand haplotypes to a single sequence per individual.
@@ -26,6 +27,9 @@ dloop.g
 expanded.g <- expandHaplotypes(dloop.g)
 expanded.g
 
+}
+\seealso{
+\code{\link{labelHaplotypes}}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

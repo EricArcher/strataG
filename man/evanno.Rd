@@ -14,7 +14,8 @@ evanno(sr, plot = TRUE)
 \value{
 a list with:
 \describe{
-  \item{\code{df}}{data.frame with Evanno log-likelihood metrics for each value of K.}
+  \item{\code{df}}{data.frame with Evanno log-likelihood metrics for each
+    value of K.}
   \item{\code{plots}}{list of four ggplot objects for later plotting.}
 }
 }

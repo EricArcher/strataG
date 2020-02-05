@@ -52,14 +52,12 @@ dloop.g <- new("gtypes", gen.data = dloop.haps, ploidy = 1,
                schemes = strata.schemes, sequences = dolph.seqs, 
                strata = "fine")
 dloop.g
-dloop.g <- labelHaplotypes(dloop.g, "Hap.")$gtypes
-dloop.g
+labelHaplotypes(dloop.g, "Hap.")
 
 }
 \seealso{
 \code{\link{df2gtypes}}, \code{\link{sequence2gtypes}},
-  \code{\link{genind2gtypes}}, \code{\link{gtypes.accessors}},
-  \code{\link{initialize.gtypes}}
+  \code{\link{gtypes.accessors}}, \code{\link{gtypes.initialize}}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

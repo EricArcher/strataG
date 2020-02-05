@@ -4,9 +4,17 @@
 \alias{clumpp}
 \title{Run CLUMPP}
 \usage{
-clumpp(sr, k, align.algorithm = "greedy", sim.stat = "g",
-  greedy.option = "ran.order", repeats = 100, order.by.run = 0,
-  label = NULL, delete.files = TRUE)
+clumpp(
+  sr,
+  k,
+  align.algorithm = "greedy",
+  sim.stat = "g",
+  greedy.option = "ran.order",
+  repeats = 100,
+  order.by.run = 0,
+  label = NULL,
+  delete.files = TRUE
+)
 }
 \arguments{
 \item{sr}{result from \code{\link{structure}} or folder name containing 

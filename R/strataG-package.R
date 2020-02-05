@@ -6,6 +6,9 @@
 #' @title Summaries and population structure analyses of DNA sequence genotypic 
 #'   data
 #' @keywords package
+#' @importFrom rlang .data
+#' @importFrom magrittr %>%
+#' 
 NULL
 
 #' @docType data
@@ -116,3 +119,5 @@ NULL
 #'   Endangered Species Research 19, 129-147.
 #' @keywords datasets
 NULL
+
+globalVariables(c("id", "locus", "stratum", "allele"))

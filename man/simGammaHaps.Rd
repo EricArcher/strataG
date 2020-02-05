@@ -4,8 +4,7 @@
 \alias{simGammaHaps}
 \title{Simulate Haplotypes}
 \usage{
-simGammaHaps(pop.size, num.haps, shape, scale, return.freq = TRUE,
-  plot = TRUE)
+simGammaHaps(pop.size, num.haps, shape, scale, return.freq = TRUE, plot = TRUE)
 }
 \arguments{
 \item{pop.size}{size of population.}

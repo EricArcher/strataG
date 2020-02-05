@@ -32,9 +32,9 @@ gt
 
 }
 \seealso{
-\link{initialize.gtypes}, \link{df2gtypes}, 
-  \link{sequence2gtypes}, \link{as.data.frame.gtypes}, 
-  \link{gtypes2genind}, \link{gtypes2loci}
+\link{initialize.gtypes}, \link{df2gtypes}, \link{sequence2gtypes},
+  \link{as.data.frame.gtypes}, \link{as.matrix.gtypes}, \link{gtypes2genind},
+  \link{gtypes2loci}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

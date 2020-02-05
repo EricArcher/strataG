@@ -6,9 +6,7 @@
 #' @param exclude.num Number of samples to exclude at a time.
 #' @param min.hwe.samples minimum samples needed to calculate HWE.
 #' @param show.progress logical. Show progress of jackknife?
-#' @param use.genepop logical. Use GENEPOP to calculate HWE p-values? If \code{FALSE} 
-#'   then \code{\link[pegas]{hw.test}} is used.
-#' @param ... other arguments to be passed to GENEPOP.
+#' @param ... other arguments to be passed to \code{\link{hweTest}}.
 #' @param jack.result result from run of \code{jackHWE}.
 #' @param alpha critical value to determine if exclusion is "influential".
 #' @param x result from a call to \code{jackInfluential}.
@@ -37,14 +35,7 @@
 #' \item{allele.freqs}{a \code{data.frame} listing the allele frequencies of 
 #'   influential exclusions.}
 #' \item{odds.ratio}{a \code{matrix} of odds ratios between exclusions (rows) 
-#'   and loci (columns).}
-#'   
-#' @note If \code{use.genepop = TRUE}, the command line version of GENEPOP v.4 
-#'   must be properly installed and available on the command line, so it is 
-#'   executable from any directory. On PC's, this requires having it in a 
-#'   folder in the PATH environmental variable. On Macs, the executable should 
-#'   be installed in a folder like \code{/usr/local/bin}.
-#' 
+#'   and loci (columns).} 
 #' 
 #' @references Morin, P.A., R.G. LeDuc, F.I. Archer, K.K. Martien, 
 #'   R. Huebinger, J.W. Bickham, and B.L. Taylor. 2009. Significant deviations 
@@ -55,18 +46,17 @@
 #' 
 #' @seealso \code{\link{hweTest}}
 #' 
-#' @importFrom utils combn
 #' @export
 #' 
 jackHWE <- function(g, exclude.num = 1, min.hwe.samples = 5, 
-                    show.progress = TRUE, use.genepop = FALSE, ...) {  
+                    show.progress = TRUE, ...) {  
   
-  if((nInd(g) - exclude.num) < min.hwe.samples){
+  if((getNumInd(g) - exclude.num) < min.hwe.samples){
     stop(paste("'exclude.num' or 'min.HWE.samples' is too large to analyze this data"))
   }
   
   # Setup array of samples to exclude
-  exclude.arr <- combn(indNames(g), exclude.num)
+  exclude.arr <- utils::combn(getIndNames(g), exclude.num)
   
   start.time <- Sys.time()
   nsteps <- ncol(exclude.arr) + 1 
@@ -75,7 +65,7 @@ jackHWE <- function(g, exclude.num = 1, min.hwe.samples = 5,
   }
   
   # calculate observed HWE
-  obs <- hweTest(g, use.genepop = use.genepop, show.output = FALSE, ...)
+  obs <- hweTest(g, ...)
   
   # jackknife HWE
   jack <- sapply(1:ncol(exclude.arr), function(i) {           
@@ -87,15 +77,18 @@ jackHWE <- function(g, exclude.num = 1, min.hwe.samples = 5,
           format(est.complete.time, "%Y-%m-%d %H:%M:%S\n")
       )
     }
-    to.keep <- setdiff(indNames(g), exclude.arr[, i])
+    to.keep <- setdiff(getIndNames(g), exclude.arr[, i])
     jack.gtypes <- g[to.keep, , ]
-    hweTest(jack.gtypes, use.genepop = use.genepop, show.output = FALSE, ...)
+    hweTest(jack.gtypes, ...)
   })
 
-  exclude.vec <- apply(exclude.arr, 2, function(x) paste(x, collapse = ", "))
   result <- list(
     obs = obs, 
-    jack = data.frame(excluded = exclude.vec, t(jack), stringsAsFactors = FALSE), 
+    jack = data.frame(
+      excluded = apply(exclude.arr, 2, paste, collapse = ", "), 
+      t(jack), 
+      stringsAsFactors = FALSE
+    ), 
     gtypes = g
   )
   class(result) <- c("jack.result", class(result))
@@ -104,7 +97,6 @@ jackHWE <- function(g, exclude.num = 1, min.hwe.samples = 5,
 
 
 #' @rdname jackHWE
-#' @importFrom swfscMisc odds
 #' @export
 #' 
 jackInfluential <- function(jack.result, alpha = 0.05) {  
@@ -120,39 +112,42 @@ jackInfluential <- function(jack.result, alpha = 0.05) {
   obs.arr <- matrix(obs, length(obs), length(exclude.vec))
   which.infl <- which((obs.arr <= alpha) & (jack > alpha), arr.ind = TRUE)
   influential <- if(nrow(which.infl) > 0) {
-    infl <- data.frame(excluded = exclude.vec[which.infl[, "col"]], 
-                       stringsAsFactors = FALSE) 
-    infl$locus <- names(obs)[which.infl[, "row"]]
-    infl$obs.pval <- obs[which.infl[, "row"]]
-    infl$jack.pval <- apply(which.infl, 1, function(i) jack[i[1], i[2]])
-    infl$obs.odds <- odds(infl$obs.pval)
-    infl$jack.odds <- odds(infl$jack.pval)
-    infl$odds.ratio <- infl$jack.odds / infl$obs.odds
-    infl <- infl[order(infl$odds.ratio, decreasing = TRUE), ] 
-    rownames(infl) <- 1:nrow(infl) 
-    infl  
+    tibble::tibble(
+      excluded = exclude.vec[which.infl[, "col"]],
+      locus = names(obs)[which.infl[, "row"]],
+      obs.pval = obs[which.infl[, "row"]],
+      jack.pval = apply(which.infl, 1, function(i) jack[i[1], i[2]])
+    ) %>% 
+      dplyr::mutate(
+        obs.odds = swfscMisc::odds(.data$obs.pval),
+        jack.odds = swfscMisc::odds(.data$jack.pval),
+        odds.ratio = .data$jack.odds / .data$obs.odds
+      ) %>% 
+      dplyr::arrange(dplyr::desc(.data$odds.ratio)) %>% 
+      as.data.frame()
   } else NULL
   
   # Calculate allele frequencies of influential samples 
   allele.freqs <- if(!is.null(influential)) {
-    samples.loci <- unique(do.call(rbind, lapply(1:nrow(influential), function(i) {
-      samples <- unlist(strsplit(influential$excluded[i], ", "))
-      data.frame(id = samples, locus = influential$locus[i], 
-                 stringsAsFactors = FALSE)
-    })))
-    formatted.freqs <- alleleFreqFormat(samples.loci, jack.result$gtypes)
-    rownames(formatted.freqs) <- 1:nrow(formatted.freqs)
-    colnames(formatted.freqs)[1] <- "id"
-    formatted.freqs
+    purrr::map(1:nrow(influential), function(i) {
+      ids <- unlist(strsplit(influential$excluded[i], ", "))
+      tibble::tibble(id = ids, locus = influential$locus[i])
+    }) %>% 
+      dplyr::bind_rows() %>% 
+      unique() %>% 
+      .alleleFreqFormat(jack.result$gtypes)
   } else NULL
   
   # Calculate full odds ratio matrix
-  odds.ratio <- t(odds(jack) / odds(obs.arr))
+  odds.ratio <- t(swfscMisc::odds(jack) / swfscMisc::odds(obs.arr))
   rownames(odds.ratio) <- exclude.vec
   colnames(odds.ratio) <- names(obs)
   
-  result <- list(influential = influential, allele.freqs = allele.freqs, 
-                 odds.ratio = odds.ratio)
+  result <- list(
+    influential = influential, 
+    allele.freqs = allele.freqs, 
+    odds.ratio = odds.ratio
+  )
   class(result) <- c("jack.influential", class(result))
   result
 }
@@ -160,24 +155,58 @@ jackInfluential <- function(jack.result, alpha = 0.05) {
 
 #' @rdname jackHWE
 #' @method plot jack.influential
-#' @importFrom ggplot2 ggplot aes_string geom_line labs ggtitle geom_vline
 #' @export
 #' 
 plot.jack.influential <- function(x, main = NULL, ...) {
-  or <- as.vector(x$odds.ratio)
-  or <- or[!is.na(or) | !is.nan(or) | !is.infinite(or)]
-  odds.sort <- sort(or)
-  odds.freq <- 1:length(odds.sort) / length(odds.sort)
-  df <- data.frame(x = odds.sort, y = odds.freq)
+  or.tbl <- tibble::tibble(or = as.vector(x$odds.ratio)) %>% 
+    dplyr::filter(
+      !is.na(.data$or) & 
+      !is.nan(.data$or) & 
+      !is.infinite(.data$or)
+    ) %>% 
+    dplyr::arrange(.data$or) %>% 
+    dplyr::mutate(freq = 1:dplyr::n() / dplyr::n()) 
+    
+  p <- ggplot2::ggplot(or.tbl, ggplot2::aes_string(x = "or", y = "freq")) + 
+    ggplot2::geom_line() +
+    ggplot2::labs(x = "Odds ratio", y = "Cumulative frequency")
   
-  p <- ggplot(df, aes_string(x = "x", y = "y")) + 
-    geom_line() +
-    labs(x = "Odds ratio", y = "Cumulative frequency")
-  if(!is.null(main)) p <- p + ggtitle(main)
+  if(!is.null(main)) p <- p + ggplot2::ggtitle(main)
+  
   if(!is.null(x$influential)) {
-    min.influential <- min(x$influential$odds.ratio)
-    min.freq <- length(or[or < min.influential]) / length(or)
-    p <- p + geom_vline(xintercept = min.influential, linetype = 2, color = "red") 
+    p <- p + ggplot2::geom_vline(
+      xintercept = min(x$influential$odds.ratio, na.rm = TRUE), 
+      linetype = 2, 
+      color = "red"
+    ) 
   }
+  
   print(p)
+}
+
+#' @rdname jackHWE 
+#' @param x a matrix or data.frame where first column is sample id and 
+#'   second colum is locus name.
+#' @param g a \linkS4class{gtypes} object.
+#' @keywords internal
+#' 
+.alleleFreqFormat <- function(x, g) {
+  x <- as.matrix(x)
+  
+  freqs <- alleleFreqs(g, by.strata = FALSE, type = "prop")
+  fmtd <- rep(as.character(NA), nrow(x))
+  for(i in 1:length(fmtd)) {
+    # get genotype of this id at this locus
+    gt <- g@data %>% 
+      dplyr::filter(.data$id ==  x[i, 1] & .data$locus == x[i, 2]) %>% 
+      dplyr::pull(.data$allele) 
+    # if the genotype is NA skip and leave format as NA
+    if(any(is.na(gt))) next
+    # get frequency and round
+    f <- round(freqs[[x[i, 2]]][gt], 3)
+    f <- paste(gt, " (", format(f, nsmall = 3), ")", sep = "")
+    # return a single frequency if homozygote
+    fmtd[i] <- if(length(unique(gt)) == 1) f[1] else paste(f, collapse = " / ")
+  }
+  cbind(x, allele.freqs = fmtd)
 }

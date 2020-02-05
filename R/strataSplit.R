@@ -17,11 +17,15 @@
 #' 
 #' # Proportion of unique alleles in each stratum
 #' msats.list <- strataSplit(msats.g)
-#' sapply(msats.list, propUniqueAlleles)
+#' lapply(msats.list, propUniqueAlleles)
 #' 
 #' @export
 #' 
 strataSplit <- function(g, strata = NULL, remove.sequences = FALSE) {
-  if(is.null(strata)) strata <- strataNames(g)
-  sapply(strata, function(st) g[, , st, drop = remove.sequences], simplify = FALSE)
+  if(is.null(strata)) strata <- getStrataNames(g)
+  sapply(
+    strata, 
+    function(st) g[, , st, drop = remove.sequences], 
+    simplify = FALSE
+  )
 }

@@ -4,7 +4,14 @@
 \alias{ldNe}
 \title{ldNe}
 \usage{
-ldNe(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95)
+ldNe(
+  g,
+  maf.threshold = 0,
+  by.strata = FALSE,
+  ci = 0.95,
+  drop.missing = FALSE,
+  num.cores = NULL
+)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
@@ -12,18 +19,26 @@ ldNe(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95)
 \item{maf.threshold}{smallest minimum allele frequency permitted to include 
 a locus in calculation of Ne.}
 
-\item{by.strata}{apply the \code{maf.threshold} by strata. If \code{TRUE}
-then any locus that is below this threshold in any strata will be removed 
-from the calculation of Ne for every stratum. Otherwise, loci are removed 
-only if they are below the \code{maf.threshold} in the stratum for which 
-Ne is calculated.}
+\item{by.strata}{apply the `maf.threshold` by strata. If `TRUE`
+then loci that are below this threshold in any strata will be removed 
+from the calculation of Ne for all strata. Loci below `maf.threshold` 
+within a stratum are always removed for calculations of Ne for that 
+stratum.}
 
 \item{ci}{central confidence interval.}
+
+\item{drop.missing}{drop loci with missing genotypes? If `FALSE`, a slower 
+procedure is used where individuals with missing genotypes are removed 
+in a pairwise fashion.}
+
+\item{num.cores}{number of CPU cores to use.}
 }
 \value{
-a numeric matrix with one row per strata and the following columns:
+a data.frame with one row per strata and the following columns:
 \describe{
- \item{\code{S}}{harmonic mean of sample size across pairwise comparisons of loci}
+ \item{\code{stratum}}{stratum being summarized}
+ \item{\code{S}}{harmonic mean of sample size across pairwise comparisons of
+ loci}
  \item{\code{num.comp}}{number of pairwise loci comparisons used}
  \item{\code{mean.rsq}}{mean r^2 over all loci}
  \item{\code{mean.E.rsq}}{mean expected r^2 over all loci}
@@ -37,9 +52,9 @@ Estimate Ne from linkage disequilibrium based on Pearson
   by R. Waples and W. Larson.
 }
 \references{
-Waples, R.S. 2006. A bias correction for estimates of effective population 
-  size based on linkage disequilibrium at unlinked gene loci. 
-  Conservation Genetics 7:167-184. \cr\cr
+Waples, R.S. 2006. A bias correction for estimates of effective
+  population size based on linkage disequilibrium at unlinked gene loci.
+  Conservation Genetics 7:167-184. \cr
   Waples RK, Larson WA, and Waples RS. 2016. Estimating contemporary 
   effective population size in non-model species using linkage 
   disequilibrium across thousands of loci. Heredity 117:233-240; 

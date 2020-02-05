@@ -4,9 +4,11 @@
 #' 
 #' @param g a \linkS4class{gtypes} object.
 #' @param loci vector or data.frame of loci in 'g' that are to be phased. If a 
-#'   data.frame, it should have columns named \code{locus} (name of locus in 'g'),  
+#'   data.frame, it should have columns named 
+#'   \code{locus} (name of locus in 'g'),  
 #'   \code{group} (number identifying loci in same linkage group), and
-#'   \code{position} (integer identifying location of each locus in a linkage group).
+#'   \code{position} (integer identifying location of each locus in a
+#'      linkage group).
 #' @param positions position along chromosome of each locus.
 #' @param type type of each locus.
 #' @param num.iter number of PHASE MCMC iterations.
@@ -21,7 +23,8 @@
 #' @param delete.files logical. Delete PHASE input and output files when done?
 #' @param ph.res result from \code{phase.run}.
 #' @param thresh minimum probability for a genotype to be selected (0.5 - 1).
-#' @param keep.missing logical. T = keep missing data from original data set. F = Use estimated genotypes from PHASE.
+#' @param keep.missing logical. T = keep missing data from original data set. 
+#'   F = Use estimated genotypes from PHASE.
 #'  
 #' @note PHASE is not included with \code{strataG} and must be downloaded 
 #'   separately. Additionally, it must be installed such that it can be run from 
@@ -30,33 +33,44 @@
 #' 
 #' @details
 #' \tabular{ll}{
-#'   \code{phase} \tab runs PHASE assuming that the executable is installed properly and available on the command line.\cr
+#'   \code{phase} \tab runs PHASE assuming that the executable is installed 
+#'     properly and available on the command line.\cr
 #'   \code{phaseWrite} \tab writes a PHASE formatted file.\cr
 #'   \code{phaseReadPair} \tab reads the '_pair' output file.\cr
 #'   \code{phaseReadSample} \tab reads the '_sample' output file.\cr
-#'   \code{phaseFilter} \tab filters the result from \code{phase.run} to extract one genotype for each sample.\cr
-#'   \code{phasePosterior} \tab create a data.frame all genotypes for each posterior sample.\cr
+#'   \code{phaseFilter} \tab filters the result from \code{phase.run} to 
+#'     extract one genotype for each sample.\cr
+#'   \code{phasePosterior} \tab create a data.frame of all genotypes for each 
+#'     posterior sample.\cr
 #' }
 #'  
 #' @return
 #' \describe{
 #'  \item{phase}{a list containing:
 #'    \tabular{ll}{
-#'      \code{locus.name} \tab new locus name, which is a combination of loci in group.\cr
-#'      \code{gtype.probs} \tab a data.frame listing the estimated genotype for every sample along with probability.\cr
-#'      \code{orig.gtypes} \tab the original gtypes object for the composite loci.\cr
-#'      \code{posterior} \tab a list of \code{num.iter} data.frames representing posterior sample of genotypes for each sample.\cr
+#'      \code{locus.name} \tab new locus name, which is a combination of loci
+#'         in group.\cr
+#'      \code{gtype.probs} \tab a data.frame listing the estimated genotype 
+#'        for every sample along with probability.\cr
+#'      \code{orig.gtypes} \tab the original gtypes object for the
+#'         composite loci.\cr
+#'      \code{posterior} \tab a list of \code{num.iter} data.frames 
+#'         representing posterior sample of genotypes for each sample.\cr
 #'    }}
-#'  \item{phaseWrite}{a list with the input filename and the \linkS4class{gtypes} object used.}
+#'  \item{phaseWrite}{a list with the input filename and the 
+#'    \linkS4class{gtypes} object used.}
 #'  \item{phaseReadPair}{a data.frame of genotype probabilities.}
-#'  \item{phaseReadSample}{a list of data.frames representing the posterior sample of genotypes for one set of loci for each sample.}
+#'  \item{phaseReadSample}{a list of data.frames representing the 
+#'    posterior sample of genotypes for one set of loci for each sample.}
 #'  \item{phaseFilter}{a matrix of genotypes for each sample.}
-#'  \item{phasePosterior}{a list of data.frames representing the posterior sample of all genotypes for each sample.}
+#'  \item{phasePosterior}{a list of data.frames representing the posterior 
+#'    sample of all genotypes for each sample.}
 #' }
 #' 
-#' @references Stephens, M., and Donnelly, P. (2003). A comparison of Bayesian methods for haplotype reconstruction from 
-#'   population genotype data. American Journal of Human Genetics 73:1162-1169.
-#'   Available at: \url{http://stephenslab.uchicago.edu/software.html#phase}
+#' @references Stephens, M., and Donnelly, P. (2003). A comparison of Bayesian
+#'   methods for haplotype reconstruction from population genotype data.
+#'   American Journal of Human Genetics 73:1162-1169. Available at:
+#'   \url{http://stephenslab.uchicago.edu/software.html#phase}
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
@@ -88,14 +102,14 @@ phase <- function(g, loci, positions = NULL, type = NULL,
   ran.seed = NULL, final.run.factor = NULL, save.posterior = FALSE, 
   in.file = "phase_in", out.file = "phase_out", delete.files = TRUE) { 
   
-  if(ploidy(g) != 2) stop("'g' must be diploid")
+  if(getPloidy(g) != 2) stop("'g' must be diploid")
   
   # check loci format
   if(!is.data.frame(loci)) {
     if(!(is.character(loci) & is.vector(loci))) {
       stop("'loci' must be a data.frame or character vector")
     }
-    if(is.null(positions)) positions <- rep(1, nLoc(g))
+    if(is.null(positions)) positions <- rep(1, getNumLoci(g))
     if(length(positions) != length(loci)) {
       stop("'positions' must be same length as 'loci'")
     }
@@ -118,21 +132,29 @@ phase <- function(g, loci, positions = NULL, type = NULL,
     # Write input file
     group.df <- loci[loci$group == grp, ]  
     locus.type <- rep(type[grp], nrow(group.df))
-    in.file.data <- phaseWrite(g, loci = group.df$locus, 
-                               positions = group.df$position, 
-                               type = locus.type, in.file)
+    in.file.data <- phaseWrite(
+      g, 
+      loci = group.df$locus, 
+      positions = group.df$position, 
+      type = locus.type, in.file
+    )
 
     # Set parameters
     M.opt <- switch(model, new = "-MR", old = "-MS", hybrid = "-MQ", "")           
     S.opt <- ifelse(is.null(ran.seed), "", paste("-S", ran.seed, sep = ""))
-    X.opt <- ifelse(is.null(final.run.factor), "", 
-                    paste("-X", final.run.factor, sep = ""))
+    X.opt <- ifelse(
+      is.null(final.run.factor), 
+      "", 
+      paste("-X", final.run.factor, sep = "")
+    )
     s.opt <- ifelse(save.posterior, "-s", "")
     in.file.opt <- paste("\"", in.file, "\"", sep = "")
     out.file.opt <- paste("\"", out.file, "\"", sep = "")
     iter.params <- paste(trunc(num.iter), trunc(thinning), trunc(burnin))
-    phase.cmd <- paste("PHASE", M.opt, S.opt, X.opt, s.opt, in.file.opt, 
-                       out.file.opt, iter.params)
+    phase.cmd <- paste(
+      "PHASE", M.opt, S.opt, X.opt, s.opt, 
+      in.file.opt, out.file.opt, iter.params
+    )
     
     # Run Phase
     err.code <- system(phase.cmd)  
@@ -149,7 +171,7 @@ phase <- function(g, loci, positions = NULL, type = NULL,
     if(is.null(gtype.probs)) {
       alleles <- rep(NA, nrow(g$genotypes))
       gtype.probs <- data.frame(
-        id = indNames(g), a1 = alleles, a2 = alleles, pr = rep(1, nInd(g))
+        id = getIndNames(g), a1 = alleles, a2 = alleles, pr = rep(1, getNumInd(g))
       )
     }
     new.locus.name <- paste(group.df$locus, collapse = "_")
@@ -239,27 +261,29 @@ phaseReadPair <- function(out.file) {
 phaseWrite <- function(g, loci, positions = NULL, 
                        type = rep("S", length(loci)), in.file = "phase_in") {
   
-  if(ploidy(g) != 2) stop("'g' must be diploid")
+  if(getPloidy(g) != 2) stop("'g' must be diploid")
   
   # Make sure locus.names and locus.positions are sorted properly
-  if(is.null(positions)) positions <- rep(1, length(nLoc(g)))
+  if(is.null(positions)) positions <- rep(1, length(getNumLoci(g)))
   asc.order <- order(positions)
   loci <- loci[asc.order]
   positions <- positions[asc.order]
   
   sub.g <- g[, loci, ]
   write(c(
-    nInd(sub.g), 
+    getNumInd(sub.g), 
     length(loci),
     paste("P", paste(positions, collapse = " ")),
     paste(type, collapse = ""), ""
   ), file = in.file)
   
-  g.mat <- as.matrix(sub.g, ids = FALSE, strata = FALSE)
+  g.mat <- as.matrix(sub.g, ids = TRUE, strata = FALSE)
+  ids <- g.mat[, "id"]
+  g.mat <- g.mat[, -1]
   g.mat[is.na(g.mat)] <- "?"
   for(i in 1:nrow(g.mat)) {
     write(c(
-      rownames(g.mat)[i],
+      ids[i],
       paste(g.mat[i, seq(1, ncol(g.mat) - 1, 2)], collapse = " "),
       paste(g.mat[i, seq(2, ncol(g.mat), 2)], collapse = " ")
     ), file = in.file, append = TRUE)
@@ -285,7 +309,7 @@ phasePosterior <- function(ph.res, keep.missing = TRUE) {
       
       if(keep.missing) {
         for(i in 1:nrow(post.df)) {
-          ids <- which(indNames(ph.res$orig.gtypes) == post.df[i, 1])
+          ids <- which(getIndNames(ph.res$orig.gtypes) == post.df[i, 1])
           if(any(is.na(as.array(ph.res$orig.gtypes, ids = ids)))) {
             post.df[i, 2:3] <- NA
           }
@@ -322,17 +346,19 @@ phaseFilter <- function(ph.res, thresh = 0.5, keep.missing = TRUE) {
     
     if(keep.missing) {
       for(i in 1:nrow(locus.filtered)) {
-        ids <- which(indNames(x$orig.gtypes) == locus.filtered[i, 1])
-        if(any(is.na(as.array(x$orig.gtypes, ids = ids)))) {
-          locus.filtered[i, 2:3] <- NA
-        }
+        ids <- setdiff(getIndNames(x$orig.gtypes), locus.filtered[i, 1])
+        id.mat <- as.matrix(x$orig.gtypes, strata = FALSE)
+        id.mat <- id.mat[id.mat[, "id"] %in% ids, , drop = FALSE]
+        if(any(is.na(id.mat))) locus.filtered[i, 2:3] <- NA
       }
     }
     
     locus.filtered
   })
   
-  ids <- data.frame(id = sort(unique(unlist(lapply(filtered, function(x) x$id)))))
+  ids <- data.frame(
+    id = sort(unique(unlist(lapply(filtered, function(x) x$id))))
+  )
   filtered <- as.matrix(do.call(cbind, lapply(filtered, function(x) {
     merge(ids, x, by = "id", all.x = TRUE)[, 2:3]
   })))

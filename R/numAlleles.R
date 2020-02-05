@@ -2,12 +2,9 @@
 #' @description Return the number of alleles for each locus.
 #'
 #' @param g a \linkS4class{gtypes} object.
+#' @param by.strata logical - return results grouped by strata?
 #'
 #' @return vector of number of alleles per locus.
-#'
-#' @note If \code{g} is a haploid object with sequences, make sure to run 
-#'   \code{\link{labelHaplotypes}} if sequences aren't already grouped by 
-#'   haplotype.
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
@@ -16,10 +13,15 @@
 #' 
 #' numAlleles(msats.g)
 #'
-#' @importFrom stats na.omit
 #' @export
 #' 
-numAlleles <- function(g) {
-  .countAlleles <- function(locus) length(unique(na.omit(locus)))
-  .applyPerLocus(.countAlleles, g)
+numAlleles <- function(g, by.strata = FALSE) {
+  g <- .checkHapsLabelled(g)
+  cols <- if(by.strata) c("locus", "stratum") else "locus"
+  as.data.frame(
+    g@data[, 
+           list(num.alleles = dplyr::n_distinct(allele, na.rm = TRUE)), 
+           by = cols
+          ]
+  )
 }

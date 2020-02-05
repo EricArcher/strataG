@@ -30,16 +30,18 @@
 #' @export
 #' 
 gtypes2genind <- function(x, type = c("codom", "PA")) {
-  x.mat <- as.matrix(x, one.col = TRUE, sep = "/", ids = FALSE, strata = FALSE)
-  colnames(x.mat) <- gsub("[.]", "_", colnames(x.mat))
-  df2genind(
-    X = x.mat,
+  df <- as.data.frame(x, one.col = TRUE, sep = "/", strata = FALSE) %>% 
+    tibble::column_to_rownames("id") %>% 
+    as.data.frame()
+  colnames(df) <- gsub("[.]", "_", colnames(df))
+  
+  adegenet::df2genind(
+    X = df,
     sep = "/", 
-    pop = strata(x)[rownames(x.mat)],
+    pop =  getStrata(x)[rownames(df)],
     NA.char = NA,
-    ploidy = ploidy(x),
-    type = match.arg(type),
-    strata = schemes(x)[rownames(x.mat), , drop = FALSE]
+    ploidy = getPloidy(x),
+    type = match.arg(type)
   )
 }
 
@@ -48,9 +50,11 @@ gtypes2genind <- function(x, type = c("codom", "PA")) {
 #' @export
 #' 
 genind2gtypes <- function(x) {
-  gen.mat <- genind2df(x, usepop = TRUE, oneColPerAll = TRUE)
+  gen.mat <- adegenet::genind2df(x, usepop = TRUE, oneColPerAll = TRUE)
   gen.mat[gen.mat == "NA"] <- NA
   has.pop <- !is.null(x@pop)
+  # other <- 
+  # if(!is.null(other)) other <- list(genind = other)
   df2gtypes(
     x = gen.mat,
     ploidy = x@ploidy[1],
@@ -58,6 +62,6 @@ genind2gtypes <- function(x) {
     strata.col = if(has.pop) 1 else NULL,
     loc.col = if(has.pop) 2 else 1,
     schemes = x@strata,
-    other = other(x)
+    other = list(genind = adegenet::other(x))
   )  
 }

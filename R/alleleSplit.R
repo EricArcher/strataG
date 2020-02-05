@@ -24,7 +24,6 @@
 #' snps
 #' alleleSplit(snps)
 #' 
-#' 
 #' # A sample microsatellie data set with alleles separated by "/"
 #' alleles <- seq(100, 150, 2)
 #' msats <- do.call(cbind, lapply(1:3, function(i) {
@@ -37,8 +36,10 @@
 #' alleleSplit(msats, sep = "/")
 #' 
 #' @export
-
+#' 
 alleleSplit <- function(x, sep = NULL) {
+  if(!is.null(sep)) if(sep == "") sep <- NULL
+  
   locus.names <- if(is.null(colnames(x))) {
     paste("Locus", 1:ncol(x), sep = "") 
   } else {
@@ -46,7 +47,7 @@ alleleSplit <- function(x, sep = NULL) {
   }
   locus.names <- paste(rep(locus.names, each = 2), c(1, 2), sep = ".")
   
-  x <- do.call(rbind, lapply(1:nrow(x), function(r) as.character(x[r, ])))
+  x <- do.call(cbind, lapply(1:ncol(x), function(col) as.character(x[, col])))
 
   split.alleles <- lapply(1:ncol(x), function(i) {
     if(!is.null(sep)) {

@@ -1,72 +1,97 @@
 #' @title Most Distant Sequences
-#' @description Finds the set of sequences that have the greatest mean 
-#'   pairwise distance and smallest variance of pairwise distances.
-#' 
-#' @param x a \code{\link[ape]{DNAbin}} object.
-#' @param num.seqs number of sequences to return.
-#' @param model a character string specifying the evolutionary model to be used. 
+#' @description Finds the set of sequences that are on the edges of the cloud of
+#'   distances. These are the ones that have the greatest mean pairwise distance
+#'   and greatest variance in distances.
+#'
+#' @param x a set of sequences or a \linkS4class{gtypes} object with sequences.
+#' @param num.seqs number of sequences to return. If \code{NULL} (default), all
+#'   sequences are returned from most to least distant.
+#' @param model a character string specifying the evolutionary model to be used.
 #'   See \link{dist.dna} for more information.
-#' @param pairwise.deletion a logical indicating whether to delete sites 
-#'   with missing data. See \link{dist.dna} for more information.
-#' 
-#' @return a vector of the sequence names that are have the greatest mean 
-#'   pairwise distance and smallest variance of pairwise distances. 
-#'   The names are returned in order from most to least distant.
-#' 
+#' @param pairwise.deletion a logical indicating whether to delete sites with
+#'   missing data. See \link{dist.dna} for more information.
+#' @param simplify if there is a single locus, return result in a simplified
+#'   form? If \code{FALSE} a list will be returned wth one element per locus.
+#'
+#' @return a vector of the \code{num.seqs} sequence names that are the most
+#'   divergent sorted from greatest to least distant.
+#'   
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @examples
-#' library(ape)
 #' data(dolph.haps)
 #' 
-#' mostDistantSequences(as.DNAbin(dolph.haps))
+#' mostDistantSequences(dolph.haps, 5)
 #' 
-#' @importFrom stats cmdscale var
 #' @export
 #' 
-mostDistantSequences <- function(x, num.seqs = NULL, model = "raw", 
-                                 pairwise.deletion = TRUE) {  
-  if(!inherits(x, "DNAbin")) stop("'x' must be a DNAbin object")
-  x <- as.matrix(x)
-  if(is.null(num.seqs)) num.seqs <- nrow(x)
-  if(num.seqs > nrow(x)) stop(paste("'num.seqs' must be <=", nrow(x)))
+mostDistantSequences <- function(
+  x, num.seqs = NULL, model = "raw", pairwise.deletion = TRUE, simplify = TRUE
+) { 
   
-  # calculate distance between sequences
-  seq.dist <- dist.dna(
-    x, model = model, pairwise.deletion = pairwise.deletion, as.matrix = TRUE
+  x <- if(is.gtypes(x)) {
+    getSequences(x, as.haplotypes = TRUE, as.multidna = TRUE)
+  } else {
+    as.multidna(x)
+  }
+  
+  result <- sapply(
+    apex::getSequences(x, simplify = FALSE),
+    function(dna) {
+      # calculate distance between sequences
+      seq.dist <- ape::dist.dna(
+        dna, 
+        model = model, 
+        pairwise.deletion = pairwise.deletion, 
+        as.matrix = TRUE
+      )
+      
+      # initialize with furthest sequence
+      opt <- options(warn = -1)
+      seq.cmd <- stats::cmdscale(seq.dist, k = length(dna) - 1)
+      options(opt)
+      range.mean <- apply(seq.cmd, 2, function(p) {
+        p %>% 
+          range(na.rm = TRUE) %>% 
+          mean()
+      })
+      dist.to.centroid <- (t(seq.cmd) - range.mean) %>% 
+        t() %>% 
+        apply(1, function(p) {
+          sqrt(sum(p ^ 2, na.rm = TRUE))
+        }) %>% 
+        sort(decreasing = TRUE)
+      
+      num.seqs <- if(is.null(num.seqs)) {
+        length(dna) 
+      } else {
+        min(num.seqs, length(dna))
+      }
+      ids <- rep(as.character(NA), length = num.seqs)
+      ids[1] <- names(dist.to.centroid)[1]
+      if(num.seqs == 1) return(ids)
+      
+      for(i in 2:length(ids)) {      
+        current.ids <- ids[1:(i - 1)]
+        # add sequence with greatest mean distance and variance to current set
+        ids[i] <- setdiff(rownames(seq.dist), current.ids) %>% 
+          purrr::map(function(id) {
+            dist.to.current <- seq.dist[id, current.ids]
+            tibble::tibble(
+              id = id,
+              mean = mean(dist.to.current, na.rm = TRUE),
+              var = stats::var(dist.to.current, na.rm = TRUE)
+            )
+          }) %>% 
+          dplyr::bind_rows() %>% 
+          dplyr::arrange(dplyr::desc(.data$mean), dplyr::desc(.data$var)) %>% 
+          dplyr::slice(1) %>% 
+          dplyr::pull(.data$id)
+      }
+      ids
+    },
+    simplify = FALSE
   )
   
-  # convert distances to coordinates
-  opt <- options(warn = -1)
-  seq.cmd <- cmdscale(seq.dist, k = nrow(x) - 1)
-  options(opt)
-  
-  # normalize coordinates to have mean of 0
-  seq.range.mean <- apply(seq.cmd, 2, function(p) mean(range(p, na.rm = TRUE)))
-  seq.cmd <- t(t(seq.cmd) - seq.range.mean)
-  
-  # calculate euclidean distance to mean
-  euc.func <- function(p) sqrt(sum(p ^ 2, na.rm = TRUE))
-  euc.dist <- sort(apply(seq.cmd, 1, euc.func), decreasing = TRUE)
-  
-  # get the most distant 'num.seqs' sequences
-  ids <- rep(as.character(NA), length = num.seqs)
-  ids[1] <- names(euc.dist)[1]
-  if(num.seqs == 1) return(ids)
-  for(i in 2:num.seqs) {      
-    # add sequence with greatest mean distance and smallest variance
-    current.ids <- ids[!is.na(ids)]
-    other.seqs <- setdiff(rownames(seq.dist), current.ids)
-    mean.var <- data.frame(t(sapply(other.seqs, function(hap) {
-      m <- mean(seq.dist[hap, current.ids])
-      v <- var(seq.dist[hap, current.ids])
-      c(mean = m, var = v)
-    })))
-    mean.var <- cbind(mean.var, euc.dist = euc.dist[rownames(mean.var)])
-    ord <- order(mean.var$mean, -mean.var$var, mean.var$euc.dist, 
-                 decreasing = TRUE)
-    mean.var <- mean.var[ord, ]
-    ids[i] <- rownames(mean.var)[1]
-  }
-  ids
+  if(length(result) == 1 & simplify) result[[1]] else result
 }

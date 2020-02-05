@@ -7,6 +7,8 @@
 #' @param ignore.gaps logical. Ignore gaps at a site when creating consensus. 
 #'   If \code{TRUE}, then bases with a gap are removed before consensus is 
 #'   calculated. If \code{FALSE} and a gap is present, then the result is a gap.
+#' @param simplify if there is a single locus, return result in a simplified
+#'   form? If \code{FALSE} a list will be returned wth one element per locus.
 #'   
 #' @return A character vector of the consensus sequence.
 #' 
@@ -18,18 +20,15 @@
 #' 
 #' @export
 #' 
-createConsensus <- function(x, ignore.gaps = FALSE) { 
-  x <- getSequences(as.multidna(x), simplify = FALSE)
+createConsensus <- function(x, ignore.gaps = FALSE, simplify = TRUE) { 
+  result <- sapply(
+    apex::getSequences(as.multidna(x), simplify = FALSE), 
+    function(dna) {
+      dna <- as.character(as.matrix(dna))
+      apply(dna, 2, iupacCode, ignore.gaps = ignore.gaps)
+    },
+    simplify = FALSE
+  )
   
-  result <- lapply(x, function(dna) {
-    dna <- as.character(as.matrix(dna))
-    apply(dna, 2, iupacCode, ignore.gaps = ignore.gaps)
-  })
-  
-  if(length(result) == 1) {
-    result[[1]]
-  } else {
-    names(result) <- names(x)
-    result
-  }
+  if(length(result) == 1 & simplify) result[[1]] else result
 }

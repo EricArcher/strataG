@@ -13,7 +13,7 @@ removeSequences(g)
 a new \linkS4class{gtypes} object with unused sequences removed.
 }
 \description{
-Remove sequences not used by samples listed in \code{@data} slot.
+Remove sequences not used by samples.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

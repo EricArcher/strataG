@@ -7,6 +7,9 @@
 #'   gtypes description is used if present.
 #' @param line.width width of sequence lines.
 #' @param locus number or name of locus to write.
+#' @param as.haplotypes output sequences as haplotypes? If \code{TRUE}, contents
+#'   of \code{@@sequences} slot are returned - treated as if they were
+#'   haplotypes. If \code{FALSE}, one sequence per individual is returned.
 #' 
 #' @return for \code{read.mega}, a list of:
 #' \describe{
@@ -26,8 +29,13 @@
 #' @export
 #' 
 read.mega <- function(file) {  
-  mega.file <- scan(file, what = "character", sep = "\n", 
-                    strip.white = TRUE, quiet = TRUE)
+  mega.file <- scan(
+    file, 
+    what = "character", 
+    sep = "\n", 
+    strip.white = TRUE, 
+    quiet = TRUE
+  )
   markers <- c(grep("#", mega.file), length(mega.file) + 1)
   title <- paste(mega.file[2:(markers[2] - 1)], collapse = " ")
   seq.df <- as.data.frame(t(sapply(2:(length(markers) - 1), function(i) {
@@ -37,22 +45,30 @@ read.mega <- function(file) {
     dna.seq <- paste(mega.file[seq.start:seq.stop], collapse = "")
     c(id = id, sequence = dna.seq)
   })), stringsAsFactors = FALSE)
+  
   dna <- strsplit(seq.df$dna.seq, "")
   names(dna) <- dna$id
-  list(title = title, dna = as.DNAbin(dna))
+  sequence2gtypes(dna, description = title)
 }
 
 #' @rdname mega
 #' @export
 #' 
-write.mega <- function(g, file = NULL, label = NULL, line.width = 60, locus = 1) {
+write.mega <- function(
+  g, file = NULL, label = NULL, line.width = 60, locus = 1,
+  as.haplotypes = TRUE
+) {
+  
   label <- .getFileLabel(g, label)
-  dna <- as.character(as.matrix(getSequences(sequences(g), locus)))
+  dna <- getSequences(g, as.haplotypes = as.haplotypes, simplify = FALSE)
+  dna <- dna[[locus]] %>% 
+    as.matrix() %>% 
+    as.character()
   
   write("#MEGA", file)
-  write(paste("title:", description(g), sep = ""), file, append = TRUE)
+  write(paste("title:", getDescription(g), sep = ""), file, append = TRUE)
   write("", file, append = TRUE)
-  for(x in names(dna)) {
+  for(x in rownames(dna)) {
     write(paste("#", x, sep = ""), file, append = TRUE)
     mt.seq <- dna[x, ]
     for(j in seq(1, length(mt.seq), by = line.width)) {

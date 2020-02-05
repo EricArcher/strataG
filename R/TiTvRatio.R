@@ -31,18 +31,19 @@
 #' @export
 #' 
 TiTvRatio <- function(x) {
-  site.freqs <- baseFreqs(x, c("a", "c", "g", "t"))$site.freqs
-  ti.tv <- apply(site.freqs, 2, function(freqs) {
-    freqs <- freqs[freqs > 0]
-    if(length(freqs) < 2) {
-      c(Ti = 0, Tv = 0)
-    } else {
-      pairs <- combn(names(freqs), 2)
-      c(Ti = sum(apply(pairs, 2, function(bases) isTi(bases[1], bases[2]))),
-        Tv = sum(apply(pairs, 2, function(bases) isTv(bases[1], bases[2])))
-      )
-    }
-  })
+  ti.tv <- baseFreqs(x, c("a", "c", "g", "t"))$site.freqs %>% 
+    apply(2, function(freqs) {
+      freqs <- freqs[freqs > 0]
+      if(length(freqs) < 2) {
+        c(Ti = 0, Tv = 0)
+      } else {
+        pairs <- utils::combn(names(freqs), 2)
+        c(
+          Ti = sum(apply(pairs, 2, function(bases) isTi(bases[1], bases[2]))),
+          Tv = sum(apply(pairs, 2, function(bases) isTv(bases[1], bases[2])))
+        )
+      }
+    })
   
   Ti = sum(ti.tv["Ti", ])
   Tv = sum(ti.tv["Tv", ])
@@ -76,4 +77,3 @@ isTv <- function(b1, b2) {
   if(is.na(x)) return(FALSE)
   x == "tv"
 }
-  

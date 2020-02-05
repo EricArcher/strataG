@@ -3,10 +3,13 @@
 #'
 #' @param g a haploid \linkS4class{gtypes} object with sequences.
 #'
-#' @return a \code{gtypes} object with sequences expanded and renamed so there is
-#'   one sequence per individual. Sequence names are set to individual sample IDs.
+#' @return a \code{gtypes} object with sequences expanded and renamed so there
+#'   is one sequence per individual. Sequence names are set to individual sample
+#'   IDs.
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' 
+#' @seealso \code{\link{labelHaplotypes}}
 #'
 #' @examples
 #' data(dloop.g)
@@ -21,19 +24,22 @@
 #' @export
 #' 
 expandHaplotypes <- function(g) {
-  if(ploidy(g) != 1) stop("'g' must be a haploid gtypes object")
-  dna.seqs <- sequences(g, as.haplotypes = FALSE)
+  if(getPloidy(g) != 1) stop("'g' must be a haploid gtypes object")
+  dna.seqs <- getSequences(g, as.haplotypes = FALSE)
   if(is.null(dna.seqs)) stop("'g' must have associated sequences")
   gen.data <- as.data.frame(g)
-  for(x in getLocusNames(dna.seqs)) {
+  for(x in names(dna.seqs)) {
     to.replace <- which(!is.na(gen.data[, x]))
-    gen.data[to.replace, x] <- as.character(gen.data[to.replace, 1])
+    gen.data[to.replace, x] <- as.character(gen.data[to.replace, "id"])
   }
   
-  new.g <- df2gtypes(
-    gen.data, ploidy = 1, schemes = schemes(g), 
-    sequences = dna.seqs, description = description(g),
-    other = other(g)
+  df2gtypes(
+    gen.data, 
+    ploidy = 1, 
+    schemes = getSchemes(g), 
+    sequences = dna.seqs, 
+    description = getDescription(g),
+    other = getOther(g)
   )
 }
 

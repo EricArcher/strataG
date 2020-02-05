@@ -24,7 +24,7 @@
 trimNs <- function(x) {
   if(!inherits(x, "DNAbin")) {
     if(inherits(x, "list") | inherits(x, "matrix")) {
-      x <- as.DNAbin(x)
+      x <- ape::as.DNAbin(x)
     } else {
       stop("'x' must be a DNAbin object or a list or matrix of sequences")
     }
@@ -40,7 +40,5 @@ trimNs <- function(x) {
     dna[[i]][start:end]
   })
   
-  result <- as.DNAbin(result)
-  names(result) <- names(x)
-  result
+  stats::setNames(ape::as.DNAbin(result), names(x))
 }

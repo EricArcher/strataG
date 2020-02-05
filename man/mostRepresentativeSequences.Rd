@@ -4,19 +4,33 @@
 \alias{mostRepresentativeSequences}
 \title{Representative Sequences}
 \usage{
-mostRepresentativeSequences(x, num.seqs = NULL, model = "raw",
-  pairwise.deletion = TRUE)
+mostRepresentativeSequences(
+  x,
+  num.seqs = NULL,
+  model = "raw",
+  pairwise.deletion = TRUE,
+  as.haplotypes = TRUE,
+  simplify = TRUE
+)
 }
 \arguments{
 \item{x}{a \code{\link[ape]{DNAbin}} object.}
 
-\item{num.seqs}{number of sequence names to return.}
+\item{num.seqs}{number of sequences to return. If \code{NULL} (default), all
+sequences are returned.}
 
 \item{model}{a character string specifying the evolutionary model to be used. 
 See \link{dist.dna} for more information.}
 
 \item{pairwise.deletion}{a logical indicating whether to delete sites 
 with missing data. See \link{dist.dna} for more information.}
+
+\item{as.haplotypes}{treat sequences as haplotypes (\code{TRUE}) or expand
+haplotypes to one sequence per individual (\code{FALSE}). If the latter,
+individual frequencies are used in cluster formation.}
+
+\item{simplify}{if there is a single locus, return result in a simplified
+form? If \code{FALSE} a list will be returned wth one element per locus.}
 }
 \value{
 a vector of the sequence names.
@@ -26,10 +40,11 @@ Finds the set of sequences that represent the requested
   number of clusters.
 }
 \examples{
-library(ape)
 data(dolph.seqs)
 
-mostRepresentativeSequences(as.DNAbin(dolph.seqs))
+mostRepresentativeSequences(dolph.seqs, 5)
+
+mostRepresentativeSequences(dolph.seqs, 3)
 
 }
 \author{

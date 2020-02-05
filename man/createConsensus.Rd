@@ -4,7 +4,7 @@
 \alias{createConsensus}
 \title{Consensus Sequence}
 \usage{
-createConsensus(x, ignore.gaps = FALSE)
+createConsensus(x, ignore.gaps = FALSE, simplify = TRUE)
 }
 \arguments{
 \item{x}{a \linkS4class{gtypes} object with aligned sequences or a list of 
@@ -13,6 +13,9 @@ aligned DNA sequences.}
 \item{ignore.gaps}{logical. Ignore gaps at a site when creating consensus. 
 If \code{TRUE}, then bases with a gap are removed before consensus is 
 calculated. If \code{FALSE} and a gap is present, then the result is a gap.}
+
+\item{simplify}{if there is a single locus, return result in a simplified
+form? If \code{FALSE} a list will be returned wth one element per locus.}
 }
 \value{
 A character vector of the consensus sequence.

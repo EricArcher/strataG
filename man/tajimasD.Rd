@@ -4,11 +4,13 @@
 \alias{tajimasD}
 \title{Tajima's D}
 \usage{
-tajimasD(x)
+tajimasD(x, CI = 0.95)
 }
 \arguments{
 \item{x}{set of DNA sequences or a haploid \linkS4class{gtypes} 
 object with sequences.}
+
+\item{CI}{desired central confidence interval.}
 }
 \value{
 A named vector with the estimate for \code{D} and 

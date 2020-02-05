@@ -4,7 +4,8 @@
 #' @param x a \code{\link[ape]{DNAbin}} object.
 #' @param min.freq minimum frequency of base to be flagged.
 #' @param motif.length length of motif around low frequency base to output.
-#' @param ... arguments passed from other functions (ignored).
+#' @param simplify if there is a single locus, return result in a simplified
+#'   form? If \code{FALSE} a list will be returned wth one element per locus.
 #' 
 #' @return data.frame listing id, site number, and motif around low frequency 
 #'   base call.
@@ -13,42 +14,49 @@
 #' 
 #' @examples
 #' data(dolph.haps)
-#' library(ape)
 #' 
-#' lowFreqSubs(as.DNAbin(dolph.haps))
+#' lowFreqSubs(dolph.haps)
 #' 
 #' @export
 #' 
-lowFreqSubs <- function(x, min.freq = 3, motif.length = 10, ...) {  
+lowFreqSubs <- function(x, min.freq = 3, motif.length = 10, simplify = TRUE) {  
+  result <- sapply(
+    apex::getSequences(as.multidna(x), simplify = FALSE), 
+    function(dna) {
+      motif.half <- max(1, round(motif.length / 2, 0))
+      var.sites <- variableSites(dna)$site.freq
+      has.min.freq <- apply(var.sites, 2, function(freq) {
+        sum(freq > 0 & freq < min.freq) > 0
+      })
+      if(!any(has.min.freq)) return(NULL)
+      sites.w.min.freq <- var.sites[, has.min.freq, drop = FALSE]
+      dna <- as.character(as.matrix(dna))
+      sites.to.check <- purrr::map(colnames(sites.w.min.freq), function(col) {
+        position <- as.numeric(col)
+        site.freq <- sites.w.min.freq[, col]
+        bases <- names(site.freq)[which(site.freq > 0 & site.freq < min.freq)]
+        tibble::tibble(
+          id = names(dna[, position])[dna[, position] %in% bases], 
+          site = position
+        ) %>% 
+          dplyr::mutate(
+            base = dna[.data$id, position],
+            freq = sapply(.data$base, function(i) var.sites[i, col]),
+            motif = sapply(.data$id, function(i) {
+              start.bp <- max(1, position - motif.half)
+              end.bp <- min(ncol(dna), position + motif.half)
+              paste(dna[i, start.bp:end.bp], collapse = "")
+            })
+          )
+      }) %>% 
+        dplyr::bind_rows() %>% 
+        dplyr::arrange(.data$id, .data$site) %>% 
+        as.data.frame()
+      rownames(sites.to.check) <- NULL
+      sites.to.check
+    },
+    simplify = FALSE
+  )
   
-  if(!inherits(x, "DNAbin")) stop("'x' must be a DNAbin object")
-  x <- as.character(as.matrix(x))
-  
-  motif.half <- max(1, round(motif.length / 2, 0))
-  var.sites <- variableSites(x)
-  has.min.freq <- apply(var.sites$site.freq, 2, function(site.freq) {
-    site.freq <- site.freq[site.freq > 0 & site.freq < min.freq]
-    length(site.freq) > 0
-  })
-  if(!any(has.min.freq)) return(NULL)
-  sites.w.min.freq <- var.sites$site.freq[, has.min.freq, drop = FALSE]
-  sites.to.check <- lapply(colnames(sites.w.min.freq), function(site) {
-    position <- as.numeric(site)
-    site.freq <- sites.w.min.freq[, site]
-    bases <- names(site.freq)[which(site.freq > 0 & site.freq < min.freq)]
-    site <- x[, position]
-    id <- names(site)[which(site %in% bases)]
-    to.check <- data.frame(id = id, site = rep(position, length(id)), stringsAsFactors = FALSE)
-    to.check$base <- x[id, position]      
-    to.check$motif <- sapply(id, function(i) {
-      start.bp <- max(1, position - motif.half)
-      end.bp <- min(ncol(x), position + motif.half)
-      paste(x[i, start.bp:end.bp], collapse = "")
-    })
-    to.check
-  })
-  sites.to.check <- do.call(rbind, sites.to.check)
-  sites.to.check <- sites.to.check[order(sites.to.check$id, sites.to.check$site), , drop = FALSE]
-  rownames(sites.to.check) <- NULL
-  sites.to.check
+  if(length(result) == 1 & simplify) result[[1]] else result
 }

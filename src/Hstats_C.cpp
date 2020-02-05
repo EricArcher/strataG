@@ -13,7 +13,7 @@ double HoCalc(int nInd, IntegerVector locus, int ploidy,
   
   // Estimate Ho (frequency of all heterozygotes): Equation 5, page 254
   IntegerVector homGenotype(strata.size());
-  int numAlleles(getMaxInt(locus));
+  int numAlleles(getMaxInt(locus) + 1);
   for(int i = 0; i < strata.size(); i++) {
     IntegerVector gt = idGenotype(locus, i, ploidy);
     bool NAs = false;
@@ -72,9 +72,10 @@ double HtCalc(NumericMatrix alleleFreq, int ploidy, IntegerVector strataN,
   
   // Estimate Ht (expected heterozygosity overall): Equation 11, page 256 
   double meanHet = 1 - sum(pow(colMeanC(wrap(alleleFreq)), 2));
-  double harmNs = harmN * (sum(strataN * ploidy));
+  double harmNs = harmN * strataN.size(); //sum(strataN * ploidy);
   return meanHet + (Hs / harmNs) - (Ho / 2 / harmNs);
 }
+
 
 // [[Rcpp::export]]
 NumericMatrix Hstats_C(IntegerMatrix loci, IntegerVector strata) {
@@ -90,14 +91,14 @@ NumericMatrix Hstats_C(IntegerMatrix loci, IntegerVector strata) {
     IntegerVector strataN = calcStrataN(loci(_, i), strata, ploidy);
     hstats(0, i) = HoCalc(nInd, loci(_, i), ploidy, strata, strataN);
     NumericMatrix alleleFreq = wrap(table2D(rep_each(strata, ploidy), loci(_, i)));
-
+    
     double harmN;
     if(strataN.size() > 1) {
       harmN = harmonicMean_C(wrap(strataN));
     } else {
       harmN = strataN[0];
     }
-
+    
     hstats(1, i) = HsCalc(alleleFreq, ploidy, strataN, harmN, hstats(0, i));
     hstats(2, i) = HtCalc(alleleFreq, ploidy, strataN, harmN, hstats(0, i), hstats(1, i));
   }

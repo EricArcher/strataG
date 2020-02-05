@@ -2,27 +2,35 @@
 % Please edit documentation in R/maf.R
 \name{maf}
 \alias{maf}
-\title{Minimum Allele Frequencies}
+\title{Minor Allele Frequencies}
 \usage{
-maf(g, by.strata = FALSE)
+maf(g, by.strata = FALSE, maf.within = FALSE)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
-\item{by.strata}{logical. If \code{TRUE} every element in the return list is 
-a three dimensional array where the third dimension contains frequencies 
-and proportions for each stratum.}
+\item{by.strata}{logical - return results grouped by strata?}
+
+\item{maf.within}{if \code{by.strata = TRUE}, identify minor allele 
+within each strata independently? If \code{FALSE} minor allele is 
+identified from all individuals.}
 }
 \value{
-A vector or array of minimum allele frequencies at each locus.
+A vector or matrix of minor allele frequencies at each locus.
 }
 \description{
-Calculate minimum allele frequencies for each locus.
+Calculate minor allele frequencies for each locus.
 }
 \examples{
 data(msats.g)
 
 maf(msats.g)
+
+# minor allele identified from all indivudals
+maf(msats.g, by.strata = TRUE)
+
+# minor allele identified within each strata
+maf(msats.g, by.strata = TRUE, maf.within = TRUE)
 
 }
 \seealso{

@@ -4,6 +4,7 @@
 #' 
 #' @param x set of DNA sequences or a haploid \linkS4class{gtypes} 
 #'   object with sequences.
+#' @param CI desired central confidence interval.
 #' 
 #' @return A named vector with the estimate for \code{D} and 
 #'   the \code{p.value} that it is different from 0.
@@ -18,17 +19,38 @@
 #' 
 #' tajimasD(dolph.seqs)
 #' 
-#' @importFrom stats qbeta integrate
 #' @export
 #' 
-tajimasD <- function(x) {
-  x <- as.multidna(x)
+tajimasD <- function(x, CI = 0.95) {
+  # making life easier:
+  # D.to.x <- function(D, Dmin, Dmax) (D - Dmin) / (Dmax - Dmin) # conversion 1
+  x.to.D <- function(x, Dmin, Dmax) x * (Dmax - Dmin) + Dmin   # conversion 2
   
-  result <- do.call(rbind, lapply(getSequences(x, simplify = FALSE), function(dna) {
+  # distribution function from Tajima paper:
+  beta.D <- function(tajima.D, alpha, beta, Dmin, Dmax) { 
+    # return P(D | alpha, beta, Dmin, Dmax)
+    gamma(alpha + beta) * (Dmax - tajima.D) ^ (alpha - 1) * 
+      (tajima.D - Dmin) ^ (beta - 1) / 
+      (gamma(alpha) * gamma(beta) * (Dmax - Dmin) ^ (alpha + beta - 1))
+  }
+  
+  x <- if(inherits(x, "gtypes")) {
+    getSequences(x, as.haplotypes = FALSE, as.multidna = TRUE)
+  } else {
+    as.multidna(x)
+  }
+  x <- apex::getSequences(x, simplify = FALSE)
+  
+  purrr::map(x, function(dna) {
     dna <- as.matrix(dna)
     num.sites <- ncol(dna)
-   
-    pws.diff <- dist.dna(dna, model = "N", pairwise.deletion = TRUE, as.matrix = TRUE)
+    
+    pws.diff <- ape::dist.dna(
+      dna, 
+      model = "N", 
+      pairwise.deletion = TRUE, 
+      as.matrix = TRUE
+    )
     pi <- mean(pws.diff[lower.tri(pws.diff)])
     S <- ncol(variableSites(dna)$site.freqs) # number segregating sites
     n <- nrow(dna) # number individuals
@@ -52,10 +74,6 @@ tajimasD <- function(x) {
       return(c(D = NA, p.value = NA))
     }
     
-    # making life easier:
-    D.to.x <- function(D, Dmin, Dmax) (D - Dmin) / (Dmax - Dmin) # conversion 1
-    x.to.D <- function(x, Dmin, Dmax) x * (Dmax - Dmin) + Dmin   # conversion 2
-    
     # compare with expected value from beta distribution:
     DMin <- (2 / n - 1 / a1) / e2 ^ (1 / 2) #S approaches infinity
     DMax <- if(n %% 2 == 0) {
@@ -66,32 +84,31 @@ tajimasD <- function(x) {
     Alpha <- -(1 + DMin * DMax) * DMax / (DMax - DMin)
     Beta <- (1 + DMin * DMax) * DMin / (DMax - DMin)
     
-    # distribution function from Tajima paper:
-    beta.D <- function(tajima.D, alpha = Alpha, beta = Beta, 
-                       Dmin = DMin, Dmax = DMax) { 
-      # give P(D, given the other 4)
-      gamma(alpha + beta) * (Dmax - tajima.D) ^ (alpha - 1) * 
-        (tajima.D - Dmin) ^ (beta - 1) / 
-        (gamma(alpha) * gamma(beta) * (Dmax - Dmin) ^ (alpha + beta - 1))
-    }
-    
     # 95% confidence interval:
-    LB <- x.to.D(qbeta(.025, Beta, Alpha), DMin, DMax)
-    UB <- x.to.D(qbeta(.975, Beta, Alpha), DMin, DMax)
+    lci.p <- (1 - CI) / 2
+    LCI <- x.to.D(stats::qbeta(lci.p, Beta, Alpha), DMin, DMax)
+    UCI <- x.to.D(stats::qbeta(1 - lci.p, Beta, Alpha), DMin, DMax)
     
     # important probabilities 
-    # D negative: intregrate from Dmin to D, D positive: integrate from D to Dmax
+    # D negative: intregrate from Dmin to D, 
+    # D positive: integrate from D to Dmax
     tryCatch({
-      prob <- integrate(beta.D, lower = ifelse(D_obs < 0, DMin, D_obs),
-                        upper = ifelse(D_obs < 0, D_obs, DMax), 
-                        alpha = Alpha, beta = Beta, Dmin = DMin, Dmax = DMax)
-      c(D = D_obs, p.value = prob$value)
+      prob <- stats::integrate(
+        beta.D, 
+        lower = ifelse(D_obs < 0, DMin, D_obs),
+        upper = ifelse(D_obs < 0, D_obs, DMax), 
+        alpha = Alpha, 
+        beta = Beta, 
+        Dmin = DMin, 
+        Dmax = DMax
+      )
+      tibble::tibble(D = D_obs, p.value = prob$value, LCI = LCI, UCI = UCI)
     }, error = function(e) {
       warning("error in Tajima's D integration, NA returned")
-      c(D = NA, p.value = NA)
+      tibble::tibble(D = NA, p.value = NA, LCI = NA, UCI = NA)
     })
-  }))
-  
-  rownames(result) <- getLocusNames(x)
-  return(result)
+  }) %>% 
+    dplyr::bind_rows() %>% 
+    dplyr::mutate(locus = names(x)) %>% 
+    as.data.frame()
 }

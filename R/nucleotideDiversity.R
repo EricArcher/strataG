@@ -6,44 +6,38 @@
 #' @param simplify if \code{TRUE} and only one loci exists, return a vector, 
 #'   otherwise, a list of vectors with one element per locus will be returned.
 #' 
-#' @return Nucleotide diversity by site. 
+#' @return Vector of nucleotide diversity by site. 
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
 #' @examples
-#' data(dolph.strata)
-#' data(dolph.seqs)
-#' strata <- dolph.strata$fine
-#' names(strata) <- dolph.strata$ids
-#' dloop <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop")
+#' data(dloop.g)
 #' 
-#' nucleotideDiversity(dloop)
+#' nd <- nucleotideDiversity(dloop.g)
+#' quantile(nd)
 #' 
-#' @importFrom swfscMisc diversity
 #' @export
 #' 
 nucleotideDiversity <- function(x, bases = c("a", "c", "g", "t"), simplify = TRUE) {
   bases <- tolower(bases)
   
-  x <- if(inherits(x, "gtypes")) {
-    sequences(x, as.haplotypes = FALSE)
+  x <- if(is.gtypes(x)) {
+    getSequences(x, as.haplotypes = FALSE, as.multidna = TRUE)
   } else {
     as.multidna(x)
   }
   
-  result <- lapply(getSequences(x, simplify = FALSE), function(dna) {  
-    dna <- as.character(as.matrix(dna))
-    site.div <- apply(dna, 2, function(b) {
-      swfscMisc::diversity(b[b %in% bases])
-    })
-    names(site.div) <- 1:length(site.div)
-    site.div
-  })
+  result <- sapply(
+    apex::getSequences(x, simplify = FALSE), 
+    function(dna) {  
+      site.div <- dna %>% 
+        as.matrix() %>% 
+        as.character() %>% 
+        apply(2, function(b) swfscMisc::diversity(b[b %in% bases]))
+      stats::setNames(site.div, 1:length(site.div))
+    },
+    simplify = FALSE
+  )
   
-  if(length(result) == 1 & simplify) {
-    result[[1]]
-  } else {
-    names(result) <- getLocusNames(x)
-    result
-  }
+  if(length(result) == 1 & simplify) result[[1]] else result
 }

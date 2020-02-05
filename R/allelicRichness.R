@@ -2,6 +2,7 @@
 #' @description Calculate allelic richness for each locus.
 #'
 #' @param g a \linkS4class{gtypes} object.
+#' @param by.strata logical - return results grouped by strata?
 #' 
 #' @return the allelic richness of each locus calculated as the number of 
 #'   alleles divided by the number of samples without missing data at 
@@ -14,8 +15,14 @@
 #' allelicRichness(msats.g)
 #'
 #' @export
-
-allelicRichness <- function(g) {
-  if(ploidy(g) == 1 & !is.null(sequences(g))) g <- labelHaplotypes(g)$gtypes
-  numAlleles(g) / numGenotyped(g)
+#' 
+allelicRichness <- function(g, by.strata = FALSE) {
+  g <- .checkHapsLabelled(g)
+  join.by <- if(by.strata) c("stratum", "locus") else "locus"
+  # average number of alleles per locus genotyped
+  numAlleles(g, by.strata) %>% 
+    dplyr::left_join(numGenotyped(g, by.strata), by = join.by) %>% 
+    dplyr::mutate(allelic.richness = .data$num.alleles / .data$num.genotyped) %>% 
+    dplyr::select(-.data$num.alleles, -.data$num.genotyped) %>% 
+    as.data.frame()
 }

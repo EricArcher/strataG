@@ -9,16 +9,16 @@ readGenData(file, na.strings = c(NA, "NA", "", " ", "?", "."), ...)
 \arguments{
 \item{file}{filename of .csv file.}
 
-\item{na.strings}{see \code{\link{read.table}}.}
+\item{na.strings}{see \code{\link[data.table]{fread}}.}
 
-\item{...}{other arguments passed to \code{\link{read.table}}.}
+\item{...}{other arguments passed to \code{\link[data.table]{fread}}.}
 }
 \value{
 a \code{data.frame}.
 }
 \description{
-A wrapper for \code{\link{read.csv}} that sets common values
-  for missing data and removes blank lines.
+A wrapper for \code{\link[data.table]{fread}} that sets 
+  common values for missing data and removes blank lines.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

@@ -22,9 +22,9 @@
 #' 
 #' @return \describe{
 #'   \item{\code{genepop}}{a list with a vector of the locus names and a vector 
-#'     of the input and output filenames}
-#'   \item{\code{genepopWrite}}{a vector of the locus names used in the 
-#'     input file}
+#'     of the input and output filenames.}
+#'   \item{\code{genepopWrite}}{a list with the filename written and a vector
+#'     mapping locus names in the file to the original locus names.}
 #' }
 #' 
 #' @references GENEPOP 4.3 (08 July 2014; Rousset, 2008)\cr
@@ -52,7 +52,7 @@ genepop <- function(g, output.ext = "", show.output = F, label = "genepop.run",
                     other.settings = "", input.fname = "loc_data.txt",
                     exec = "Genepop") {
   
-  locus.names <- genepopWrite(g, label, input.fname)
+  locus.names <- genepopWrite(g, label)
   
   # Write settings file
   settings.fname <- "settings.txt"
@@ -66,19 +66,20 @@ genepop <- function(g, output.ext = "", show.output = F, label = "genepop.run",
   ), file = settings.fname)
   
   # Run Genepop
-  genepop.cmd <- paste(exec, " settingsFile=", settings.fname, sep = "")
-  
-  # If user is on Windows, supply show.output.on.console = F, minimized = F, 
-  #   invisible = T, else don't
-  err.code <- if(.Platform$OS.type == "windows") {
-    system(genepop.cmd, intern = F, ignore.stdout = !show.output, wait = T, 
-           ignore.stderr = T, show.output.on.console = F, minimized = F, 
-           invisible = T
-    ) 
-  } else {
-    system(genepop.cmd, intern = F, ignore.stdout = !show.output, wait = T, 
-           ignore.stderr = T) 
+  args <- list(
+    command = paste0(exec, " settingsFile=", settings.fname), 
+    intern = F, 
+    ignore.stdout = !show.output, 
+    wait = T, 
+    ignore.stderr = T
+  )
+  if(.Platform$OS.type == "windows") {
+    args <- c(
+      args, 
+      list(show.output.on.console = F, minimized = F, invisible = T)
+    )
   }
+  err.code <- do.call(system, args)
 
   if(err.code == 127) {
     stop("You do not have Genepop installed.")
@@ -97,47 +98,62 @@ genepop <- function(g, output.ext = "", show.output = F, label = "genepop.run",
 #' @rdname genepop
 #' @export
 #' 
-genepopWrite <- function(g, label = "genepop.write", 
-                         input.fname = "loc_data.txt") {
-  
-  if(ploidy(g) != 2) stop("'g' must be a diploid object")
-  
-  # g.mat <- as.matrix(g@data)[, -(1:2)]
-  # g.mat <- apply(g.mat, 2, function(x) {
-  #   x <- as.numeric(as.factor(x))
-  #   x[is.na(x)] <- 0
-  #   max.width <- max(2, nchar(x))
-  #   formatC(x, width = max.width, flag = "0")
-  # })
-  
-  .convLoci <- function(x, ids) {
-    loc <- as.numeric(x)
-    loc[is.na(loc)] <- 0
-    max.width <- max(2, nchar(loc))
-    loc <- formatC(loc, width = max.width, flag = "0")
-    df <- data.frame(ids = ids, loc = loc)
-    mat <- unstack(df, loc ~ ids)
-    apply(mat, 2, paste, collapse = "")
+genepopWrite <- function(g, label = NULL) {
+  if(getPloidy(g) != 2) stop("'g' must be a diploid object")
+
+  # convert alleles to equal spaced, zero-padded numbers
+  .convertAlleles <- function(x) {
+    x <- as.numeric(factor(x))
+    x[is.na(x)] <- 0
+    max.width <- formatC(x, width = max(2, nchar(x)), flag = "0")
   }
-  loc_dat <- g@data[, lapply(.SD, .convLoci, ids = g@data$ids), .SDcols = !c("ids", "strata")] 
-  loc_dat <- as.matrix(loc_dat)
-  loc_dat <- apply(loc_dat, 1, paste, collapse = " ")
-  names(loc_dat) <- indNames(g)
   
-  id.vec <- gsub(",", "_", names(loc_dat))
-  pop.vec <- gsub(",", "_", as.character(strata(g)))
+  # convert alleles to genotypes in GENEPOP format, substitute , for _ in
+  # stratum and id labels
+  genepop.fmt <- g@data %>% 
+    dplyr::group_by(.data$locus) %>% 
+    dplyr::mutate(allele = .convertAlleles(.data$allele)) %>% 
+    dplyr::ungroup() %>% 
+    dplyr::group_by(.data$stratum, .data$id, .data$locus) %>% 
+    dplyr::summarize(genotype = paste(.data$allele, collapse = "")) %>% 
+    dplyr::ungroup() %>% 
+    tidyr::spread(.data$locus, .data$genotype) %>% 
+    dplyr::mutate(
+      stratum = gsub(",", "_", .data$stratum),
+      id = gsub(",", "_", .data$id)
+    ) %>% 
+    dplyr::ungroup()
+
+  # create new short locus names to replace current ones
+  locus.names <- stats::setNames(
+    colnames(genepop.fmt)[-(1:2)],
+    paste("LOC", 1:(ncol(genepop.fmt) - 2), sep = "")
+  )
   
-  locus.names <- locNames(g)
-  names(locus.names) <- paste("LOC", 1:length(locus.names), sep = "")
-  write(c(label, names(locus.names)), file = input.fname)
-  for(pop in unique(pop.vec)) {
-    write("POP", file = input.fname, append = TRUE)
-    pop.rows <- which(pop.vec == pop)
-    for(i in pop.rows) {
-      write(paste(id.vec[i], pop, ",", loc_dat[i], collapse = " "), 
-            file = input.fname, append = TRUE)
+  # write header and locus names
+  fname <- paste0(.getFileLabel(g, label), "_loc_data.txt")
+  fname <- gsub(" ", "_", fname)
+  write(getDescription(g), file = fname)
+  write(
+    paste(names(locus.names), collapse = ", "),
+    file = fname, 
+    append = TRUE
+  )
+  
+  # write population genotypes
+  genepop.fmt <- split(genepop.fmt, genepop.fmt$stratum)
+  for(pop in genepop.fmt) {
+    write("POP", file = fname, append = TRUE)
+    for(i in 1:nrow(pop)) {
+      id <- paste(pop[i, 1:2], collapse = " ")
+      genotypes <- paste(pop[i, -(1:2)], collapse = " ")
+      write(
+        paste(id, genotypes, sep = " , "),
+        file = fname, 
+        append = TRUE
+      )
     }  
   }
   
-  invisible(locus.names)
+  invisible(list(fname = fname, locus.names = locus.names))
 }

@@ -7,14 +7,35 @@
 \alias{structureRead}
 \title{STRUCTURE}
 \usage{
-structureRun(g, k.range = NULL, num.k.rep = 1, label = NULL,
-  delete.files = TRUE, exec = "structure", ...)
+structureRun(
+  g,
+  k.range = NULL,
+  num.k.rep = 1,
+  label = NULL,
+  delete.files = TRUE,
+  exec = "structure",
+  ...
+)
 
-structureWrite(g, label = NULL, maxpops = nlevels(strata(g)),
-  burnin = 1000, numreps = 1000, noadmix = TRUE, freqscorr = FALSE,
-  randomize = TRUE, seed = 0, pop.prior = NULL, locpriorinit = 1,
-  maxlocprior = 20, gensback = 2, migrprior = 0.05,
-  pfrompopflagonly = TRUE, popflag = NULL, ...)
+structureWrite(
+  g,
+  label = NULL,
+  maxpops = getNumStrata(g),
+  burnin = 1000,
+  numreps = 1000,
+  noadmix = TRUE,
+  freqscorr = FALSE,
+  randomize = TRUE,
+  seed = 0,
+  pop.prior = NULL,
+  locpriorinit = 1,
+  maxlocprior = 20,
+  gensback = 2,
+  migrprior = 0.05,
+  pfrompopflagonly = TRUE,
+  popflag = NULL,
+  ...
+)
 
 structureRead(file, pops = NULL)
 }
@@ -33,7 +54,7 @@ If set to \code{NULL}, a single STRUCTURE run is conducted with
 
 \item{exec}{name of executable for STRUCTURE. Defaults to "structure".}
 
-\item{...}{arguments to be passed to \code{structure.write}.}
+\item{...}{arguments to be passed to \code{structureWrite}.}
 
 \item{maxpops}{number of groups.}
 
@@ -80,12 +101,13 @@ STRUCTURE file.}
 }
 \value{
 \describe{
- \item{\code{structure.run}}{a list where each element is a list with results 
-   from \code{structure.read} and a vector of the filenames used}
- \item{\code{structure.write}}{a vector of the filenames used by STRUCTURE}
- \item{\code{structure.read}}{a list containing:
+ \item{\code{structureRun}}{a list where each element is a list with results 
+   from \code{structureRead} and a vector of the filenames used}
+ \item{\code{structureWrite}}{a vector of the filenames used by STRUCTURE}
+ \item{\code{structureRead}}{a list containing:
    \describe{
-     \item{\code{summary}}{new locus name, which is a combination of loci in group}
+     \item{\code{summary}}{new locus name, which is a combination of loci in
+       group}
      \item{\code{q.mat}}{data.frame of assignment probabilities for each id}
      \item{\code{prior.anc}}{list of prior ancestry estimates for each 
        individual where population priors were used}

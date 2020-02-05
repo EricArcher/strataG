@@ -4,22 +4,27 @@
 \alias{LDgenepop}
 \title{Linkage Disequlibrium}
 \usage{
-LDgenepop(g, show.output = FALSE, delete.files = TRUE,
-  label = "linkage.genepop", ...)
+LDgenepop(
+  g,
+  dememorization = 10000,
+  batches = 100,
+  iterations = 5000,
+  delete.files = TRUE,
+  label = NULL
+)
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
-\item{show.output}{logical. Show GENEPOP output on console?}
+\item{dememorization, batches, iterations}{parameters for GENEPOP MCMC
+LD procedure as defined in \code{\link[genepop]{test_LD}}.}
 
 \item{delete.files}{logical. Delete GENEPOP input and output files when done?}
 
 \item{label}{character string to use to label GENEPOP input and output files.}
-
-\item{...}{other arguments to be passed to \code{\link{genepop}}.}
 }
 \value{
-data.frame of disequilibrium estimates between pairs of individuals
+data.frame of disequilibrium estimates between pairs of loci
 }
 \description{
 Calculate linkage disequilibrium p-values using GENEPOP.

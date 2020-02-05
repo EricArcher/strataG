@@ -4,8 +4,13 @@
 \alias{freq2GenData}
 \title{Convert Haplotype Frequency Matrices}
 \usage{
-freq2GenData(freq.mat, hap.col = NULL, freq.col = 1, id.label = NULL,
-  hap.label = NULL)
+freq2GenData(
+  freq.mat,
+  hap.col = NULL,
+  freq.col = 1,
+  id.label = NULL,
+  hap.label = NULL
+)
 }
 \arguments{
 \item{freq.mat}{a matrix or data.frame containing haplotypic 

@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
-<meta charset="utf-8">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="Eric Archer" />
 
-<meta name="date" content="2016-05-30" />
+<meta name="date" content="2020-02-03" />
 
-<title>By-Locus Summaries</title>
+<title>Genotype and sequence summaries</title>
 
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
+<style type="text/css" data-origin="pandoc">
 div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
@@ -55,11 +55,36 @@ code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
 code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
-<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+
+
 
 </head>
 
@@ -68,311 +93,483 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore">By-Locus Summaries</h1>
-<h4 class="author"><em>Eric Archer</em></h4>
-<h4 class="date"><em>2016-05-30</em></h4>
+<h1 class="title toc-ignore">Genotype and sequence summaries</h1>
+<h4 class="author">Eric Archer</h4>
+<h4 class="date">2020-02-03</h4>
 
 
 
 <p>There are several by-locus summary functions available for <em>gtypes</em> objects. Given some sample microsatellite data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(msats.g)
 msats &lt;-<span class="st"> </span><span class="kw">stratify</span>(msats.g, <span class="st">&quot;broad&quot;</span>)
-msats &lt;-<span class="st"> </span>msats[, <span class="kw">locNames</span>(msats)[<span class="dv">1</span>:<span class="dv">4</span>], ]</code></pre></div>
+msats &lt;-<span class="st"> </span>msats[, <span class="kw">getLociNames</span>(msats)[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], ]</code></pre></div>
 <p>One can calculate the following summaries:</p>
 <p>The number of alleles at each locus:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">numAlleles</span>(msats)</code></pre></div>
-<pre><code>##  D11t  EV37  EV94 Ttr11 
-##    12    22    15     9</code></pre>
+<pre><code>##   locus num.alleles
+## 1  D11t          12
+## 2  EV37          22
+## 3  EV94          15
+## 4 Ttr11           9</code></pre>
 <p>The number of samples with missing data at each locus:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">numMissing</span>(msats)</code></pre></div>
-<pre><code>##  D11t  EV37  EV94 Ttr11 
-##     1     7     1     1</code></pre>
+<pre><code>##   locus num.missing
+## 1  D11t           1
+## 2  EV37           7
+## 3  EV94           1
+## 4 Ttr11           1</code></pre>
 <p>which can also be expressed as a proportion of samples with missing data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">numMissing</span>(msats, <span class="dt">prop =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>##   D11t   EV37   EV94  Ttr11 
-## 0.0079 0.0556 0.0079 0.0079</code></pre>
+<pre><code>##   locus num.missing
+## 1  D11t       0.004
+## 2  EV37       0.028
+## 3  EV94       0.004
+## 4 Ttr11       0.004</code></pre>
 <p>The allelic richness, or the average number of alleles per sample:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">allelicRichness</span>(msats)</code></pre></div>
-<pre><code>##  D11t  EV37  EV94 Ttr11 
-## 0.096 0.185 0.120 0.072</code></pre>
+<pre><code>##   locus allelic.richness
+## 1  D11t            0.096
+## 2  EV37            0.185
+## 3  EV94            0.120
+## 4 Ttr11            0.072</code></pre>
 <p>The observed and expected heterozygosity:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">obsvdHet</span>(msats)</code></pre></div>
-<pre><code>##  D11t  EV37  EV94 Ttr11 
-##  0.70  0.70  0.78  0.70</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">exptdHet</span>(msats)</code></pre></div>
-<pre><code>##  D11t  EV37  EV94 Ttr11 
-##  0.75  0.83  0.83  0.80</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># observed</span>
+<span class="kw">heterozygosity</span>(msats, <span class="dt">type =</span> <span class="st">&quot;observed&quot;</span>)</code></pre></div>
+<pre><code>##   locus obsvd.het
+## 1  D11t      0.70
+## 2  EV37      0.66
+## 3  EV94      0.77
+## 4 Ttr11      0.70</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># expected</span>
+<span class="kw">heterozygosity</span>(msats, <span class="dt">type =</span> <span class="st">&quot;expected&quot;</span>)</code></pre></div>
+<pre><code>##   locus exptd.het
+## 1  D11t      0.75
+## 2  EV37      0.83
+## 3  EV94      0.83
+## 4 Ttr11      0.80</code></pre>
 <p>The proportion of alleles that are unique (present in only one sample):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">propUniqueAlleles</span>(msats)</code></pre></div>
-<pre><code>##  D11t  EV37  EV94 Ttr11 
-## 0.250 0.136 0.067 0.222</code></pre>
+<pre><code>##   locus prop.unique.alleles
+## 1  D11t               0.032
+## 2  EV37               0.025
+## 3  EV94               0.016
+## 4 Ttr11               0.024</code></pre>
 <p>The value of theta based on heterozygosity:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">theta</span>(msats)</code></pre></div>
-<pre><code>##  D11t  EV37  EV94 Ttr11 
-##  0.56  0.62  0.62  0.59</code></pre>
+<pre><code>##   locus theta
+## 1  D11t  0.56
+## 2  EV37  0.62
+## 3  EV94  0.62
+## 4 Ttr11  0.59</code></pre>
 <p>These measures are all calculated in the <em>summarizeLoci</em> function and returned as a matrix. This function also allows you to calculate the measures for each stratum separately, which returns a list for each stratum:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarizeLoci</span>(msats)</code></pre></div>
-<pre><code>##       num.genotyped prop.genotyped num.alleles allelic.richness
-## D11t            125           0.99          12            0.096
-## EV37            119           0.94          22            0.185
-## EV94            125           0.99          15            0.120
-## Ttr11           125           0.99           9            0.072
-##       prop.unique.alleles exptd.heterozygosity obsvd.heterozygosity
-## D11t                0.250                 0.75                 0.70
-## EV37                0.136                 0.83                 0.70
-## EV94                0.067                 0.83                 0.78
-## Ttr11               0.222                 0.80                 0.70</code></pre>
+<pre><code>##   locus num.genotyped num.missing prop.genotyped num.alleles allelic.richness
+## 1  D11t           125           1           0.99          12            0.096
+## 2  EV37           119           7           0.94          22            0.185
+## 3  EV94           125           1           0.99          15            0.120
+## 4 Ttr11           125           1           0.99           9            0.072
+##   prop.unique.alleles exptd.het obsvd.het
+## 1               0.032      0.75      0.70
+## 2               0.025      0.83      0.66
+## 3               0.016      0.83      0.77
+## 4               0.024      0.80      0.70</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarizeLoci</span>(msats, <span class="dt">by.strata =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>## $Coastal
-##       num.genotyped prop.genotyped num.alleles allelic.richness
-## D11t             67           0.99           3            0.045
-## EV37             63           0.93           7            0.111
-## EV94             68           1.00           5            0.074
-## Ttr11            68           1.00           4            0.059
-##       prop.unique.alleles exptd.heterozygosity obsvd.heterozygosity
-## D11t                 0.00                 0.49                 0.52
-## EV37                 0.43                 0.61                 0.62
-## EV94                 0.00                 0.77                 0.74
-## Ttr11                0.00                 0.66                 0.63
-## 
-## $Offshore
-##       num.genotyped prop.genotyped num.alleles allelic.richness
-## D11t             58           1.00          12             0.21
-## EV37             56           0.97          22             0.39
-## EV94             57           0.98          15             0.26
-## Ttr11            57           0.98           9             0.16
-##       prop.unique.alleles exptd.heterozygosity obsvd.heterozygosity
-## D11t                0.250                 0.86                 0.91
-## EV37                0.136                 0.94                 0.79
-## EV94                0.067                 0.86                 0.82
-## Ttr11               0.222                 0.82                 0.79</code></pre>
+<pre><code>##   locus  stratum num.genotyped.x num.missing prop.genotyped num.alleles
+## 1  D11t Offshore              58           0           1.00          12
+## 2  EV37 Offshore              56           2           0.97          22
+## 3  EV94 Offshore              57           1           0.98          15
+## 4 Ttr11 Offshore              57           1           0.98           9
+## 5  D11t  Coastal              67           1           0.99           3
+## 6  EV37  Coastal              63           5           0.93           7
+## 7  EV94  Coastal              68           0           1.00           5
+## 8 Ttr11  Coastal              68           0           1.00           4
+##   allelic.richness num.unique num.genotyped.y exptd.het obsvd.het
+## 1            0.207          3              58      0.86      0.91
+## 2            0.393          3              56      0.94      0.76
+## 3            0.263          2              57      0.86      0.81
+## 4            0.158          3              57      0.82      0.78
+## 5            0.045          1              67      0.49      0.51
+## 6            0.111          3              63      0.61      0.57
+## 7            0.074          0              68      0.77      0.74
+## 8            0.059          0              68      0.66      0.63</code></pre>
 <p>One can also obtain the allelic frequencies for each locus overall and by-strata by:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">alleleFreqs</span>(msats)</code></pre></div>
 <pre><code>## $D11t
-##     freq  prop
-## 117    1 0.004
-## 119    1 0.004
-## 121    4 0.016
-## 127    1 0.004
-## 129    3 0.012
-## 131   16 0.064
-## 133   75 0.300
-## 135   96 0.384
-## 137   20 0.080
-## 139   20 0.080
-## 141    7 0.028
-## 143    6 0.024
+## 
+## 117 119 121 127 129 131 133 135 137 139 141 143 
+##   1   1   4   1   3  16  75  96  20  20   7   6 
 ## 
 ## $EV37
-##     freq   prop
-## 190    3 0.0126
-## 200    4 0.0168
-## 202    5 0.0210
-## 204    2 0.0084
-## 206    7 0.0294
-## 208    8 0.0336
-## 210    3 0.0126
-## 212   13 0.0546
-## 214   86 0.3613
-## 216   39 0.1639
-## 218    8 0.0336
-## 220    6 0.0252
-## 222   20 0.0840
-## 224   11 0.0462
-## 226    3 0.0126
-## 228    8 0.0336
-## 230    5 0.0210
-## 232    2 0.0084
-## 234    1 0.0042
-## 236    2 0.0084
-## 240    1 0.0042
-## 254    1 0.0042
+## 
+## 190 200 202 204 206 208 210 212 214 216 218 220 222 224 226 228 230 232 234 236 
+##   3   4   5   2   7   8   3  13  86  39   8   6  20  11   3   8   5   2   1   2 
+## 240 254 
+##   1   1 
 ## 
 ## $EV94
-##     freq  prop
-## 229    1 0.004
-## 239    2 0.008
-## 243   15 0.060
-## 245   18 0.072
-## 247    3 0.012
-## 249   83 0.332
-## 251   41 0.164
-## 253    7 0.028
-## 255    6 0.024
-## 259   27 0.108
-## 261   27 0.108
-## 263    7 0.028
-## 265    8 0.032
-## 269    3 0.012
-## 271    2 0.008
+## 
+## 229 239 243 245 247 249 251 253 255 259 261 263 265 269 271 
+##   1   2  15  18   3  83  41   7   6  27  27   7   8   3   2 
 ## 
 ## $Ttr11
-##     freq  prop
-## 193    1 0.004
-## 197   10 0.040
-## 207   53 0.212
-## 209   17 0.068
-## 211   35 0.140
-## 213   80 0.320
-## 215   46 0.184
-## 217    7 0.028
-## 219    1 0.004</code></pre>
+## 
+## 193 197 207 209 211 213 215 217 219 
+##   1  10  53  17  35  80  46   7   1</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">alleleFreqs</span>(msats, <span class="dt">by.strata =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <pre><code>## $D11t
-## , , Coastal
-## 
-##     freq  prop
-## 117    0 0.000
-## 119    0 0.000
-## 121    0 0.000
-## 127    0 0.000
-## 129    0 0.000
-## 131    0 0.000
-## 133   48 0.358
-## 135   83 0.619
-## 137    3 0.022
-## 139    0 0.000
-## 141    0 0.000
-## 143    0 0.000
-## 
-## , , Offshore
-## 
-##     freq   prop
-## 117    1 0.0086
-## 119    1 0.0086
-## 121    4 0.0345
-## 127    1 0.0086
-## 129    3 0.0259
-## 131   16 0.1379
-## 133   27 0.2328
-## 135   13 0.1121
-## 137   17 0.1466
-## 139   20 0.1724
-## 141    7 0.0603
-## 143    6 0.0517
-## 
+##      
+##       Coastal Offshore
+##   117       0        1
+##   119       0        1
+##   121       0        4
+##   127       0        1
+##   129       0        3
+##   131       0       16
+##   133      48       27
+##   135      83       13
+##   137       3       17
+##   139       0       20
+##   141       0        7
+##   143       0        6
 ## 
 ## $EV37
-## , , Coastal
-## 
-##     freq   prop
-## 190    0 0.0000
-## 200    0 0.0000
-## 202    0 0.0000
-## 204    0 0.0000
-## 206    0 0.0000
-## 208    0 0.0000
-## 210    0 0.0000
-## 212    1 0.0079
-## 214   71 0.5635
-## 216   33 0.2619
-## 218    2 0.0159
-## 220    0 0.0000
-## 222   11 0.0873
-## 224    7 0.0556
-## 226    1 0.0079
-## 228    0 0.0000
-## 230    0 0.0000
-## 232    0 0.0000
-## 234    0 0.0000
-## 236    0 0.0000
-## 240    0 0.0000
-## 254    0 0.0000
-## 
-## , , Offshore
-## 
-##     freq   prop
-## 190    3 0.0268
-## 200    4 0.0357
-## 202    5 0.0446
-## 204    2 0.0179
-## 206    7 0.0625
-## 208    8 0.0714
-## 210    3 0.0268
-## 212   12 0.1071
-## 214   15 0.1339
-## 216    6 0.0536
-## 218    6 0.0536
-## 220    6 0.0536
-## 222    9 0.0804
-## 224    4 0.0357
-## 226    2 0.0179
-## 228    8 0.0714
-## 230    5 0.0446
-## 232    2 0.0179
-## 234    1 0.0089
-## 236    2 0.0179
-## 240    1 0.0089
-## 254    1 0.0089
-## 
+##      
+##       Coastal Offshore
+##   190       0        3
+##   200       0        4
+##   202       0        5
+##   204       0        2
+##   206       0        7
+##   208       0        8
+##   210       0        3
+##   212       1       12
+##   214      71       15
+##   216      33        6
+##   218       2        6
+##   220       0        6
+##   222      11        9
+##   224       7        4
+##   226       1        2
+##   228       0        8
+##   230       0        5
+##   232       0        2
+##   234       0        1
+##   236       0        2
+##   240       0        1
+##   254       0        1
 ## 
 ## $EV94
-## , , Coastal
-## 
-##     freq  prop
-## 229    0 0.000
-## 239    0 0.000
-## 243    0 0.000
-## 245   12 0.088
-## 247    0 0.000
-## 249   47 0.346
-## 251   30 0.221
-## 253    0 0.000
-## 255    0 0.000
-## 259   25 0.184
-## 261   22 0.162
-## 263    0 0.000
-## 265    0 0.000
-## 269    0 0.000
-## 271    0 0.000
-## 
-## , , Offshore
-## 
-##     freq   prop
-## 229    1 0.0088
-## 239    2 0.0175
-## 243   15 0.1316
-## 245    6 0.0526
-## 247    3 0.0263
-## 249   36 0.3158
-## 251   11 0.0965
-## 253    7 0.0614
-## 255    6 0.0526
-## 259    2 0.0175
-## 261    5 0.0439
-## 263    7 0.0614
-## 265    8 0.0702
-## 269    3 0.0263
-## 271    2 0.0175
-## 
+##      
+##       Coastal Offshore
+##   229       0        1
+##   239       0        2
+##   243       0       15
+##   245      12        6
+##   247       0        3
+##   249      47       36
+##   251      30       11
+##   253       0        7
+##   255       0        6
+##   259      25        2
+##   261      22        5
+##   263       0        7
+##   265       0        8
+##   269       0        3
+##   271       0        2
 ## 
 ## $Ttr11
-## , , Coastal
-## 
-##     freq  prop
-## 193    0 0.000
-## 197    0 0.000
-## 207   42 0.309
-## 209    0 0.000
-## 211    0 0.000
-## 213   59 0.434
-## 215   33 0.243
-## 217    2 0.015
-## 219    0 0.000
-## 
-## , , Offshore
-## 
-##     freq   prop
-## 193    1 0.0088
-## 197   10 0.0877
-## 207   11 0.0965
-## 209   17 0.1491
-## 211   35 0.3070
-## 213   21 0.1842
-## 215   13 0.1140
-## 217    5 0.0439
-## 219    1 0.0088</code></pre>
+##      
+##       Coastal Offshore
+##   193       0        1
+##   197       0       10
+##   207      42       11
+##   209       0       17
+##   211       0       35
+##   213      59       21
+##   215      33       13
+##   217       2        5
+##   219       0        1</code></pre>
+<p>The <em>dupGenotypes</em> function identifies samples that have the same or nearly the same genotypes. The number (or percent) of loci that must be shared in order for it to be considered a duplicate can be set by the <em>num.shared</em> argument. The return data.frame provides which loci the two samples show mismatches at so they can be reviewed.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Find samples that share alleles at 2/3rds of the loci</span>
+<span class="kw">dupGenotypes</span>(msats, <span class="dt">num.shared =</span> <span class="fl">0.66</span>)</code></pre></div>
+<pre><code>##    ids.1 ids.2 strata.1 strata.2 mismatch.loci num.loci.genotyped
+## 1  78045 78058  Coastal  Coastal          &lt;NA&gt;                  4
+## 2  25509 41822  Coastal  Coastal          &lt;NA&gt;                  4
+## 3  42193 78035  Coastal  Coastal          &lt;NA&gt;                  3
+## 4  41579 45237  Coastal  Coastal          &lt;NA&gt;                  3
+## 5  40916 78038  Coastal  Coastal          &lt;NA&gt;                  3
+## 6  78063 78069  Coastal  Coastal          EV94                  4
+## 7  78053 78061  Coastal  Coastal          EV94                  4
+## 8  78051 78065  Coastal  Coastal          EV94                  4
+## 9  78049 78057  Coastal  Coastal          EV94                  4
+## 10 78048 78054  Coastal  Coastal          D11t                  4
+## 11 78044 78067  Coastal  Coastal          D11t                  4
+## 12 78044 78063  Coastal  Coastal          EV37                  4
+## 13 78043 78046  Coastal  Coastal          EV94                  4
+## 14 78041 78066  Coastal  Coastal          EV37                  4
+## 15 78038 78051  Coastal  Coastal          D11t                  4
+## 16 78038 78046  Coastal  Coastal          EV94                  4
+## 17 78038 78043  Coastal  Coastal          EV94                  4
+## 18 78036 78067  Coastal  Coastal          EV37                  4
+## 19 78035 78053  Coastal  Coastal          D11t                  4
+## 20 78034 78043  Coastal  Coastal          EV37                  4
+## 21 78034 78040  Coastal  Coastal          EV94                  4
+## 22 45236 78065  Coastal  Coastal         Ttr11                  4
+## 23 45231 78041  Coastal  Coastal          EV94                  4
+## 24 45230 78040  Coastal  Coastal         Ttr11                  4
+## 25 45230 78035  Coastal  Coastal          EV94                  4
+## 26 44721 78059  Coastal  Coastal          EV37                  4
+## 27 44720 78058  Coastal  Coastal          EV94                  4
+## 28 44720 78045  Coastal  Coastal          EV94                  4
+## 29 44719 78044  Coastal  Coastal         Ttr11                  4
+## 30 44719 45233  Coastal  Coastal          EV94                  4
+## 31 44718 78037  Coastal  Coastal          EV94                  4
+## 32 41822 78065  Coastal  Coastal          EV94                  4
+## 33 41822 78051  Coastal  Coastal          EV94                  4
+## 34 41821 78060  Coastal  Coastal          EV94                  4
+## 35 41820 78035  Coastal  Coastal         Ttr11                  4
+## 36 41820 45229  Coastal  Coastal          EV94                  4
+## 37 41819 78040  Coastal  Coastal         Ttr11                  4
+## 38 41819 45230  Coastal  Coastal         Ttr11                  4
+## 39 41578 45233  Coastal  Coastal          EV94                  4
+## 40 41578 44719  Coastal  Coastal          EV94                  4
+## 41 41540 78040  Coastal  Coastal          D11t                  4
+## 42 41538 45231  Coastal  Coastal          D11t                  4
+## 43 40915 78047  Coastal  Coastal         Ttr11                  4
+## 44 25509 78065  Coastal  Coastal          EV94                  4
+## 45 25509 78051  Coastal  Coastal          EV94                  4
+## 46 25503 78053  Coastal  Coastal         Ttr11                  4
+## 47 25503 41539  Coastal  Coastal          EV94                  4
+## 48 23945 78065  Coastal  Coastal          EV37                  4
+## 49 23945 78050  Coastal  Coastal         Ttr11                  4
+## 50 51981 78069  Coastal  Coastal          EV37                  3
+## 51 45237 78069  Coastal  Coastal         Ttr11                  3
+## 52 45237 78068  Coastal  Coastal          EV94                  3
+## 53 45237 78048  Coastal  Coastal          EV94                  3
+## 54 45237 78038  Coastal  Coastal         Ttr11                  3
+## 55 45237 78033  Coastal  Coastal          EV94                  3
+## 56 42193 78058  Coastal  Coastal          EV94                  3
+## 57 42193 78053  Coastal  Coastal          D11t                  3
+## 58 42193 78045  Coastal  Coastal          EV94                  3
+## 59 42193 51982  Coastal  Coastal         Ttr11                  3
+## 60 42193 45233  Coastal  Coastal          EV94                  3
+## 61 42193 45230  Coastal  Coastal          EV94                  3
+## 62 42193 44720  Coastal  Coastal          EV94                  3
+## 63 42193 44719  Coastal  Coastal          EV94                  3
+## 64 42192 78066  Coastal  Coastal          EV94                  3
+## 65 42192 78051  Coastal  Coastal          D11t                  3
+## 66 42192 78041  Coastal  Coastal          EV94                  3
+## 67 42192 78038  Coastal  Coastal          D11t                  3
+## 68 42192 45231  Coastal  Coastal          EV94                  3
+## 69 41820 42193  Coastal  Coastal         Ttr11                  3
+## 70 41819 45237  Coastal  Coastal          EV94                  3
+## 71 41579 78069  Coastal  Coastal         Ttr11                  3
+## 72 41579 78068  Coastal  Coastal          EV94                  3
+## 73 41579 78048  Coastal  Coastal          EV94                  3
+## 74 41579 78038  Coastal  Coastal         Ttr11                  3
+## 75 41579 78033  Coastal  Coastal          EV94                  3
+## 76 41579 41819  Coastal  Coastal          EV94                  3
+## 77 41578 45237  Coastal  Coastal         Ttr11                  3
+## 78 41578 42193  Coastal  Coastal          EV94                  3
+## 79 41578 41579  Coastal  Coastal         Ttr11                  3
+## 80 40916 78069  Coastal  Coastal         Ttr11                  3
+## 81 40916 78051  Coastal  Coastal          D11t                  3
+## 82 40916 78046  Coastal  Coastal          EV94                  3
+## 83 40916 78043  Coastal  Coastal          EV94                  3
+## 84 40916 78040  Coastal  Coastal          EV94                  3
+## 85 40916 78034  Coastal  Coastal          EV94                  3
+## 86 40916 45237  Coastal  Coastal         Ttr11                  3
+## 87 40916 42192  Coastal  Coastal          D11t                  3
+## 88 40916 41579  Coastal  Coastal         Ttr11                  3
+## 89 40916 41578  Coastal  Coastal         Ttr11                  3
+##    num.loci.shared prop.loci.shared
+## 1                4             1.00
+## 2                4             1.00
+## 3                3             1.00
+## 4                3             1.00
+## 5                3             1.00
+## 6                3             0.75
+## 7                3             0.75
+## 8                3             0.75
+## 9                3             0.75
+## 10               3             0.75
+## 11               3             0.75
+## 12               3             0.75
+## 13               3             0.75
+## 14               3             0.75
+## 15               3             0.75
+## 16               3             0.75
+## 17               3             0.75
+## 18               3             0.75
+## 19               3             0.75
+## 20               3             0.75
+## 21               3             0.75
+## 22               3             0.75
+## 23               3             0.75
+## 24               3             0.75
+## 25               3             0.75
+## 26               3             0.75
+## 27               3             0.75
+## 28               3             0.75
+## 29               3             0.75
+## 30               3             0.75
+## 31               3             0.75
+## 32               3             0.75
+## 33               3             0.75
+## 34               3             0.75
+## 35               3             0.75
+## 36               3             0.75
+## 37               3             0.75
+## 38               3             0.75
+## 39               3             0.75
+## 40               3             0.75
+## 41               3             0.75
+## 42               3             0.75
+## 43               3             0.75
+## 44               3             0.75
+## 45               3             0.75
+## 46               3             0.75
+## 47               3             0.75
+## 48               3             0.75
+## 49               3             0.75
+## 50               2             0.67
+## 51               2             0.67
+## 52               2             0.67
+## 53               2             0.67
+## 54               2             0.67
+## 55               2             0.67
+## 56               2             0.67
+## 57               2             0.67
+## 58               2             0.67
+## 59               2             0.67
+## 60               2             0.67
+## 61               2             0.67
+## 62               2             0.67
+## 63               2             0.67
+## 64               2             0.67
+## 65               2             0.67
+## 66               2             0.67
+## 67               2             0.67
+## 68               2             0.67
+## 69               2             0.67
+## 70               2             0.67
+## 71               2             0.67
+## 72               2             0.67
+## 73               2             0.67
+## 74               2             0.67
+## 75               2             0.67
+## 76               2             0.67
+## 77               2             0.67
+## 78               2             0.67
+## 79               2             0.67
+## 80               2             0.67
+## 81               2             0.67
+## 82               2             0.67
+## 83               2             0.67
+## 84               2             0.67
+## 85               2             0.67
+## 86               2             0.67
+## 87               2             0.67
+## 88               2             0.67
+## 89               2             0.67</code></pre>
+<p>The start and end positions and number of N’s and indels can be generated with the <em>summarizeSeqs</em> function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ape)
+<span class="kw">data</span>(dolph.seqs)
+seq.smry &lt;-<span class="st"> </span><span class="kw">summarizeSeqs</span>(<span class="kw">as.DNAbin</span>(dolph.seqs))
+<span class="kw">head</span>(seq.smry)</code></pre></div>
+<pre><code>##      start end length num.ns num.indels
+## 4495     1 402    402      0          2
+## 4496     1 402    402      0          2
+## 4498     1 402    402      0          1
+## 5814     1 402    402      0          2
+## 5815     1 402    402      0          2
+## 5816     1 402    402      0          2</code></pre>
+<p>Base frequencies can be generated with <em>baseFreqs</em>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bf &lt;-<span class="st"> </span><span class="kw">baseFreqs</span>(<span class="kw">as.DNAbin</span>(dolph.seqs))
 
+<span class="co"># nucleotide frequencies by site</span>
+bf<span class="op">$</span>site.freq[, <span class="dv">1</span><span class="op">:</span><span class="dv">15</span>]</code></pre></div>
+<pre><code>##     1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
+## a   0 126 126 126 126 126   5   0   0   0   0 126   0   0   0
+## c   0   0   0   0   0   0   0   0 126   0   0   0   0   0   0
+## g 126   0   0   0   0   0   0 126   0   0   0   0   0   0 126
+## t   0   0   0   0   0   0   0   0   0 126 126   0 126 126   0
+## u   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## r   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## y   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## m   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## k   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## w   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## s   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## b   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## d   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## h   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## v   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## n   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## x   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## -   0   0   0   0   0   0 121   0   0   0   0   0   0   0   0
+## .   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># overall nucleotide frequencies</span>
+bf<span class="op">$</span>base.freqs</code></pre></div>
+<pre><code>## 
+##     a     c     g     t     u     r     y     m     k     w     s     b     d 
+## 15179 11561  6501 17166     0     0     0     0     0     0     0     0     0 
+##     h     v     n     x     -     . 
+##     0     0     0     0   245     0</code></pre>
+<p>Sequences can be scanned for low-frequency substitutions with <em>lowFreqSubs</em>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lowFreqSubs</span>(<span class="kw">as.DNAbin</span>(dolph.seqs), <span class="dt">min.freq =</span> <span class="dv">2</span>)</code></pre></div>
+<pre><code>##      id site base freq       motif
+## 1 23792  274    t    1 cctattgatcc
+## 2 23794  287    g    1 cctccgttata
+## 3 26304  274    a    1 cctataaatcc
+## 4 26304  394    t    1 taccttgtggg
+## 5 74962   57    a    1 taaaaataatt
+## 6 74962  104    g    1 catacgcatgt
+## 7 74962  392    t    1 catgctccgtg
+## 8 74962  393    c    1 atgctccgtgg</code></pre>
+<p>Unusual sequences can be identified by plotting likelihoods based on pairwise distances:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(dolph.haps)
+<span class="kw">sequenceLikelihoods</span>(<span class="kw">as.DNAbin</span>(dolph.haps))</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<pre><code>##        id mean.dist neg.log.lik delta.log.lik
+## 1  Hap.32      13.7         110          26.3
+## 2  Hap.22      12.7         104          20.7
+## 3  Hap.06      13.1         102          19.2
+## 4  Hap.02       6.3          99          16.0
+## 5  Hap.15       7.4          98          14.8
+## 6  Hap.29      11.8          97          13.4
+## 7  Hap.10       7.8          94          11.1
+## 8  Hap.30       8.9          93           9.4
+## 9  Hap.23       9.7          93           9.2
+## 10 Hap.03       7.1          92           8.9
+## 11 Hap.04       8.1          92           8.8
+## 12 Hap.33       7.9          92           8.8
+## 13 Hap.31       7.2          91           8.1
+## 14 Hap.14       8.2          91           7.6
+## 15 Hap.09       7.3          91           7.5
+## 16 Hap.12      11.6          91           7.4
+## 17 Hap.18      11.7          90           7.2
+## 18 Hap.19      11.3          90           7.0
+## 19 Hap.07       7.2          90           6.8
+## 20 Hap.21       8.5          88           4.3
+## 21 Hap.13       8.6          88           4.3
+## 22 Hap.20       8.1          87           3.3
+## 23 Hap.26       8.7          87           3.3
+## 24 Hap.27       7.2          86           3.2
+## 25 Hap.16       8.3          86           2.9
+## 26 Hap.05       7.9          86           2.9
+## 27 Hap.24       8.8          86           2.7
+## 28 Hap.17       7.2          86           2.2
+## 29 Hap.25      11.2          85           1.8
+## 30 Hap.01       8.0          85           1.7
+## 31 Hap.08       8.9          85           1.4
+## 32 Hap.28      11.0          84           1.2
+## 33 Hap.11       7.7          83           0.0</code></pre>
+<p>All of the above functions can be conducted at once with the <em>qaqc</em> function. Only those functions appropriate to the data type contained (haploid or diploid) will be run. Files are written for each output that are labelled either by the <em>@description</em> slot of the gtypes object or the optional <em>label</em> argument of the function.</p>
+
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
@@ -380,7 +577,7 @@ msats &lt;-<span class="st"> </span>msats[, <span class="kw">locNames</span>(msa
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

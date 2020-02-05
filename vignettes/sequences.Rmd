@@ -4,7 +4,7 @@ author: "Eric Archer"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{3. Working With Sequences}
+  %\VignetteIndexEntry{Working with sequences}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -73,7 +73,8 @@ createConsensus(dolph.seqs)
 
 Nucleotide diversity for each site is calculaed with:
 ```{r}
-nucleotideDiversity(dolph.seqs)
+nd <- nucleotideDiversity(dolph.seqs)
+head(nd)
 ```
 
 For a stratified _gtypes_ object, one can calculate net nucleotide divergence (Nei's dA), and distributions of between- and within-strata divergence:
@@ -81,9 +82,10 @@ For a stratified _gtypes_ object, one can calculate net nucleotide divergence (N
 # create gtypes
 data(dolph.seqs)
 data(dolph.strata)
+rownames(dolph.strata) <- dolph.strata$id
 dloop <- df2gtypes(dolph.strata[, c("id", "fine", "id")], ploidy = 1,
              schemes = dolph.strata[, c("fine", "broad")], sequences = dolph.seqs)
-dloop <- labelHaplotypes(dloop, "Hap.")$gtypes
+dloop <- labelHaplotypes(dloop, "Hap.")
 
 # calculate divergence
 nucleotideDivergence(dloop)

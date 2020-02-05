@@ -44,12 +44,9 @@ For \code{character}, \code{list}, or \code{DNAbin}, a list with the following e
      remain unassigned.}
  }
 
- For \code{gtypes}, a list with the following elements:
- \describe{
-   \item{gtypes}{the new \code{gtypes} object with the haplotypes reassigned.}
-   \item{unassigned}{a list containing the \code{unassigned} \code{data.frame}
-     for each gene if present, otherwise \code{NULL}.}
- }
+ For \code{gtypes}, a new \code{gtypes} object with unassigned individuals
+ stored in the @other slot in an element named \code{'haps.unassigned'} (see
+ \code{\link{getOther}}).
 }
 \description{
 Identify and group sequences that share the same haplotype.
@@ -89,6 +86,9 @@ for(i in with.error) {
 hap.assign <- labelHaplotypes(sample.seqs, prefix = "Hap.")
 hap.assign
 
+}
+\seealso{
+\code{\link{expandHaplotypes}}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

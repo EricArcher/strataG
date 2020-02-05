@@ -1,3 +1,5 @@
+#' @name fasta
+#' @aliases fasta
 #' @title Read and Write FASTA
 #' @description Read and write FASTA formatted files of sequences.
 #' 
@@ -12,34 +14,45 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @name fasta
-#' @aliases fasta
 #' @export
 #' 
 read.fasta <- function(file) {
-  dna.seq <- read.dna(file, format = "fasta", as.character = TRUE, 
-                      as.matrix = FALSE)
-  # replace ?s with Ns and convert to lower-case
-  as.list(as.DNAbin(lapply(dna.seq, function(x) tolower(gsub("\\?", "n", x)))))
+  ape::read.dna(
+    file, format = "fasta", as.character = TRUE, as.matrix = FALSE
+  ) %>% 
+    # replace ?s with Ns and convert to lower-case
+    purrr::map(function(x) tolower(gsub("\\?", "n", x))) %>% 
+    ape::as.DNAbin() %>% 
+    as.list()
 }
 
 
 #' @rdname fasta
 #' @export
 #' 
-write.fasta <- function(x, file = "sequences.fasta") {
-  if(is.gtypes(x)) x <- sequences(x)
-  fname <- if(inherits(x, "multidna")) {
-    x <- getSequences(x, simplify = FALSE)
+write.fasta <- function(x, file = NULL) {
+  fasta.func <- function(dna, f) {
+    ape::write.dna(
+      dna, file = f, format = "fasta", nbcol = -1, 
+      colsep = "", indent = 0, blocksep = 0
+    )
+    f
+  }
+  
+  if(is.gtypes(x)) file <- .getFileLabel(x, file)
+  if(is.null(file)) file <- "sequences.fasta"
+  if(!grepl("((\\.fas)$)|((\\.fasta)$)", tolower(file))) {
+    file <- paste0(file, ".fasta")
+  }
+  
+  fname <- if(inherits(x, "multidna") | is.gtypes(x)) {
+    x <- apex::getSequences(as.multidna(x), simplify = TRUE)
     sapply(names(x), function(gene) {
-      write.dna(x[[gene]], file = paste(gene, file), format = "fasta", 
-                nbcol = -1, colsep = "", indent = 0, blocksep = 0)
+      fasta.func(x[[gene]], paste0(gene, " ", file))
     })
   } else {
-    if(inherits(x, "DNAbin")) x <- as.character(x)
-    write.dna(x, file = file, format = "fasta", nbcol = -1, colsep = "", 
-              indent = 0, blocksep = 0)
-    file
+    x <- if(inherits(x, "DNAbin")) as.character(x) else ape::as.DNAbin(x)
+    fasta.func(x, file)
   }
-  invisible(file)
+  invisible(fname)
 }
