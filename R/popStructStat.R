@@ -103,7 +103,11 @@ NULL
   input$ploidy <- getPloidy(g)
   input$keep.null = keep.null
   
-  func.args <- as.list(match.call())
+  func.args <- lapply(
+    as.list(match.call()[-1]), 
+    eval, 
+    envir = parent.frame()
+  )
   
   input$prime.type <- if(is.null(func.args$prime.type)) {
     1
