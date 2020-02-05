@@ -33,7 +33,7 @@ devtools::install_github('ericarcher/strataG', build_vignettes = TRUE)
 ## Vignettes
 
 Vignettes are available on several topics:
-```
+
 * Creating and manipulating gtypes (gtypes)
 * Genotype and sequence summaries (summaries)
 * Working with sequences (sequences)

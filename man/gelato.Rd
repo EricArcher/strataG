@@ -46,6 +46,7 @@ Run a GELATo test to evaluate assignment likelihoods of
   groups of samples.
 }
 \examples{
+\dontrun{
 data(msats.g)
 
 # Run GELATo analysis
@@ -54,6 +55,7 @@ gelato.fine
 
 # Plot results
 gelatoPlot(gelato.fine, "Offshore.South")
+}
 
 }
 \references{
