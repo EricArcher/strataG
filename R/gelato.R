@@ -31,7 +31,7 @@
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @examples
+#' @examples \dontrun{
 #' data(msats.g)
 #' 
 #' # Run GELATo analysis
@@ -40,6 +40,7 @@
 #' 
 #' # Plot results
 #' gelatoPlot(gelato.fine, "Offshore.South")
+#' }
 #' 
 #' @name gelato
 #' @export
