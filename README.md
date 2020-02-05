@@ -32,22 +32,25 @@ devtools::install_github('ericarcher/strataG', build_vignettes = TRUE)
 
 ## Vignettes
 
-```r
-# To see the list of available vignettes
-browseVignettes("strataG") 
-
-# To open a specific vignette
-vignette("gtypes")
-
-Vignettes are available on:
+Vignettes are available on several topics:
 ```
-* [Creating and manipulating gtypes](https://github.com/ericarcher/stratag/blob/master/doc/gtypes.html)
-* [Genotype and sequence summaries](https://github.com/ericarcher/stratag/blob/master/vignettes/summaries.html)
-* [Working with sequences](https://github.com/ericarcher/stratag/blob/master/vignettes/sequences.html)
-* [Tests of population structure](https://github.com/ericarcher/stratag/blob/master/vignettes/population.structure.html)
-* [Installing external programs](https://github.com/ericarcher/stratag/blob/master/vignettes/external.programs.html)
+* Creating and manipulating gtypes (gtypes)
+* Genotype and sequence summaries (summaries)
+* Working with sequences (sequences)
+* Tests of population structure (population.structure)
+* Installing external programs (external.programs)
 
-There is also a tutorial detailing [running _fastsimcoal2_ through _strataG_](https://github.com/ericarcher/stratag/blob/master/inst/fastsimcoal2.html) available through the function `fscTutorial()`.
+To see the list of available vignettes in R:
+```r
+browseVignettes("strataG")
+```
+
+To open a specific vignette:
+```r
+vignette("gtypes")
+```
+
+There is also a tutorial detailing running _fastsimcoal2_ through _strataG_ available through the function `fscTutorial()`.
 
 ## Citation
 
