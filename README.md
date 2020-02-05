@@ -11,7 +11,7 @@
 
 ## Description
 
-*strataG* is a toolkit for haploid sequence and multilocus genetic data summaries, and analyses of population structure.
+*strataG* is a toolkit for haploid sequence and multilocus genetic data summaries, and analyses of population structure. One can select select specific individuals, loci, or strata using standard R '[' indexing methods. . The package contains functions for summarizing haploid and diploid loci (e.g., allelic richness, heterozygosity, haplotypic diversity, etc.), and haploid sequences by locus and by strata as well as functions for computing by-site base frequencies and identifying variable and fixed sites among strata. There are both overall and pairwise standard tests of population structure like PHIst, Fst, Gst, and Jost's D. If individuals are stratified according to multiple schemes, these stratifications can be changed with the `stratify()` function and summaries or tests can be re-run on the new object. The package also includes wrappers for several external programs like *fastsimcoal2*, *STRUCTURE*, and *mafft*. There are also multiple conversion functions for data objects for other population packages such as *adegenet*, *pegas*, and *phangorn*.
 
 ## Installation
 
@@ -68,7 +68,7 @@ Archer, F. 2016. *strataG*: An *R* package for manipulating, summarizing and ana
 * send a pull request: <https://github.com/ericarcher/strataG/>
 * e-mail: <eric.archer@noaa.gov>
 
-## version 2.4.9
+## version 2.4.9 (devel)
 * Deleted functions: `alleleFreqFormat`, `as.array.gtypes`
 * Changed structure of `gtypes` object, making it __no longer compatible with previous versions__
 * Fixed and enhanced `arlequinRead()` so that it will read and parse all .arp files. Added `arp2gtypes()` to create `gtypes` object from parsed .arp files.
