@@ -2,15 +2,19 @@
 % Please edit documentation in R/landscape2gtypes.R
 \name{landscape2gtypes}
 \alias{landscape2gtypes}
-\title{Create gtypes from Rmetasim landscape}
+\alias{landscape2df}
+\title{Convert Rmetasim landscape}
 \usage{
 landscape2gtypes(Rland)
+
+landscape2df(Rland)
 }
 \arguments{
 \item{Rland}{rmetasim landscape object}
 }
 \description{
-Create a gtypes object from an Rmetasim landscape object.
+`landscape2gtypes` creates a gtypes object from an 
+  Rmetasim landscape object. `landscape2df` creates a data.frame.
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

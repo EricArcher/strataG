@@ -178,7 +178,7 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = 0,
   }, finally = setwd(wd))
   if(err != 0) {
     stop(
-      format(Sys.time()), " fastsimcoal exited with error ", err, "\n",
+      format(Sys.time()), " fastsimcoal exited with error ", err, ". ",
       "The command was:\n", exec, " ", p$run.params$args
     )
   }
