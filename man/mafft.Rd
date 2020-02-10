@@ -33,7 +33,9 @@ mafft(
 
 \item{quiet}{logical. Run MAFFT quietly?}
 
-\item{num.cores}{number of cores to be used. Passed to MAFFT argument 
+\item{num.cores}{The number of cores to use. If set to \code{NULL}, 
+the value will be what is reported by 
+\code{\link[parallel]{detectCores} - 1}. Passed to MAFFT argument 
 \code{--thread}.}
 
 \item{opts}{character string other options to provide to command line.}

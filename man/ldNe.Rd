@@ -10,7 +10,7 @@ ldNe(
   by.strata = FALSE,
   ci = 0.95,
   drop.missing = FALSE,
-  num.cores = NULL
+  num.cores = 1
 )
 }
 \arguments{
@@ -31,7 +31,9 @@ stratum.}
 procedure is used where individuals with missing genotypes are removed 
 in a pairwise fashion.}
 
-\item{num.cores}{number of CPU cores to use.}
+\item{num.cores}{The number of cores to use to distribute computations over.
+If set to \code{NULL}, the value will be what is reported 
+by \code{\link[parallel]{detectCores} - 1}.}
 }
 \value{
 a data.frame with one row per strata and the following columns:

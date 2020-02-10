@@ -13,7 +13,7 @@ popStructTest(
   type = c("both", "overall", "pairwise"),
   keep.null = FALSE,
   quietly = FALSE,
-  max.cores = NULL,
+  max.cores = 1,
   write.output = FALSE,
   ...
 )
@@ -61,9 +61,10 @@ permutation test?}
 \item{quietly}{logical. Print progress and results?}
 
 \item{max.cores}{The maximum number of cores to use to distribute separate 
-statistics over. Default (NULL) sets value to what is reported by 
-\code{\link[parallel]{detectCores} - 1}. Any value greater than this will 
-be set to this value. If \code{detectCores} reports \code{NA}, 
+statistics over. The number of cores to use to distribute separate
+statistics over. If set to \code{NULL}, the value will be what is 
+reported by \code{\link[parallel]{detectCores} - 1}. 
+If \code{detectCores} reports \code{NA}, 
 \code{max.cores} will be set to 1.}
 
 \item{write.output}{logical. Write a .csv file with results?}

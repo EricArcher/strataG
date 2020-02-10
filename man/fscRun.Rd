@@ -20,7 +20,7 @@ fscRun(
   min.num.loops = 20,
   brentol = 0.01,
   trees = FALSE,
-  num.cores = NULL,
+  num.cores = 1,
   seed = NULL,
   quiet = TRUE,
   exec = "fsc26"
@@ -70,7 +70,8 @@ computation time. Default = 0.01. Value is restricted between
 
 \item{trees}{output NEXUS formatted coalescent trees for all replicates?}
 
-\item{num.cores}{number of cores to use.}
+\item{num.cores}{number of cores to use. If set to \code{NULL}, the value
+will be what is reported by \code{\link[parallel]{detectCores} - 1}.}
 
 \item{seed}{random number seed for simulation.}
 

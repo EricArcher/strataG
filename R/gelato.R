@@ -16,8 +16,8 @@
 #'   created.
 #' @param main main label for top of plot.#' 
 #' @param num.cores The number of cores to use to distribute replicates over.
-#'   Default (NULL) sets value to what is reported by
-#'   \code{\link[parallel]{detectCores} - 1}.
+#'   If set to \code{NULL}, the value will be what is reported 
+#'   by \code{\link[parallel]{detectCores} - 1}.
 #' 
 #' @return A list with the following elements:
 #' \tabular{ll}{
@@ -46,7 +46,7 @@
 #' @export
 #' 
 gelato <- function(g, unknown.strata, nrep = 1000, 
-                   min.sample.size = 5, num.cores = NULL) {
+                   min.sample.size = 5, num.cores = 1) {
   # Check unknown strata
   all.strata <- getStrata(g)
   unknown.strata <- unique(as.character(unknown.strata))

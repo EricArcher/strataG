@@ -16,9 +16,10 @@
 #'   "pairwise", or "both". If "pairwise" or "both" are chosen and there are 
 #'   only two strata, then only an overall test will be conducted.
 #' @param max.cores The maximum number of cores to use to distribute separate 
-#'   statistics over. Default (NULL) sets value to what is reported by 
-#'   \code{\link[parallel]{detectCores} - 1}. Any value greater than this will 
-#'   be set to this value. If \code{detectCores} reports \code{NA}, 
+#'   statistics over. The number of cores to use to distribute separate
+#'   statistics over. If set to \code{NULL}, the value will be what is 
+#'   reported by \code{\link[parallel]{detectCores} - 1}. 
+#'   If \code{detectCores} reports \code{NA}, 
 #'   \code{max.cores} will be set to 1.
 #' @param keep.null logical. Keep the null distribution from the 
 #'   permutation test?
@@ -77,7 +78,7 @@
 popStructTest <- function(g, nrep = 1000, stats = "all", 
                           type = c("both", "overall", "pairwise"),
                           keep.null = FALSE, quietly = FALSE, 
-                          max.cores = NULL, write.output = FALSE, ...) {
+                          max.cores = 1, write.output = FALSE, ...) {
   # check arguments
   type <- match.arg(type)
     

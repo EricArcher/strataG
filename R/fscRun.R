@@ -28,7 +28,8 @@
 #'   computation time. Default = 0.01. Value is restricted between 
 #'   1e-5 and 1e-1.
 #' @param trees output NEXUS formatted coalescent trees for all replicates?
-#' @param num.cores number of cores to use.
+#' @param num.cores number of cores to use. If set to \code{NULL}, the value
+#'   will be what is reported by \code{\link[parallel]{detectCores} - 1}.
 #' @param seed random number seed for simulation.
 #' @param quiet logical indicating if fastsimcoal2 should be run in quiet mode.
 #' @param exec name of fastsimcoal executable.
@@ -102,7 +103,7 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = 0,
                    all.sites = TRUE, inf.sites = FALSE, 
                    no.arl.output = FALSE, num.loops = 20, 
                    min.num.loops = 20, brentol = 0.01, trees = FALSE,
-                   num.cores = NULL, seed = NULL, quiet = TRUE, 
+                   num.cores = 1, seed = NULL, quiet = TRUE, 
                    exec = "fsc26") {
   
   run.params <- as.list(environment())

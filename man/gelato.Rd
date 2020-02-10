@@ -5,7 +5,7 @@
 \alias{gelatoPlot}
 \title{GELATo - Group ExcLusion and Assignment Test}
 \usage{
-gelato(g, unknown.strata, nrep = 1000, min.sample.size = 5, num.cores = NULL)
+gelato(g, unknown.strata, nrep = 1000, min.sample.size = 5, num.cores = 1)
 
 gelatoPlot(gelato.result, unknown = NULL, main = NULL)
 }
@@ -23,8 +23,8 @@ an equivalent number of unknowns for self-assignment, then the comparison
 is not done.}
 
 \item{num.cores}{The number of cores to use to distribute replicates over.
-Default (NULL) sets value to what is reported by
-\code{\link[parallel]{detectCores} - 1}.}
+If set to \code{NULL}, the value will be what is reported 
+by \code{\link[parallel]{detectCores} - 1}.}
 
 \item{gelato.result}{the result of a call to \code{gelato}.}
 

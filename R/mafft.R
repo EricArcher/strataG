@@ -9,7 +9,9 @@
 #' @param ep offset value, which works like gap extension penalty.
 #' @param maxiterate number cycles of iterative refinement are performed.
 #' @param quiet logical. Run MAFFT quietly?
-#' @param num.cores number of cores to be used. Passed to MAFFT argument 
+#' @param num.cores The number of cores to use. If set to \code{NULL}, 
+#'   the value will be what is reported by 
+#'   \code{\link[parallel]{detectCores} - 1}. Passed to MAFFT argument 
 #'   \code{--thread}.
 #' @param opts character string other options to provide to command line.
 #' @param simplify if \code{TRUE}, if \code{x} is a single sequence, 

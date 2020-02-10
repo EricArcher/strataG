@@ -20,7 +20,7 @@
 #' sharedAlleles(msats.g)
 #' 
 #' \dontrun{
-#' propSharedLoci(msats.g, num.cores = 2)
+#' propSharedLoci(msats.g)
 #' }
 #' 
 #' @name sharedLoci

@@ -15,7 +15,9 @@
 #' @param drop.missing drop loci with missing genotypes? If `FALSE`, a slower 
 #'   procedure is used where individuals with missing genotypes are removed 
 #'   in a pairwise fashion. 
-#' @param num.cores number of CPU cores to use.
+#' @param num.cores The number of cores to use to distribute computations over.
+#'   If set to \code{NULL}, the value will be what is reported 
+#'   by \code{\link[parallel]{detectCores} - 1}.
 #'
 #' @return a data.frame with one row per strata and the following columns:
 #' \describe{
@@ -42,7 +44,7 @@
 #' @export
 #' 
 ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95, 
-                 drop.missing = FALSE, num.cores = NULL) {
+                 drop.missing = FALSE, num.cores = 1) {
   if(getPloidy(g) != 2) stop("'g' must have diploid data")
   
   mat <- as.data.frame(g, coded.snps = TRUE) %>% 
