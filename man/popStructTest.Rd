@@ -24,7 +24,7 @@ overallTest(
   stats = "all",
   keep.null = FALSE,
   quietly = FALSE,
-  max.cores = NULL,
+  max.cores = 1,
   ...
 )
 
@@ -34,7 +34,7 @@ pairwiseTest(
   stats = "all",
   keep.null = FALSE,
   quietly = FALSE,
-  max.cores = NULL,
+  max.cores = 1,
   ...
 )
 }

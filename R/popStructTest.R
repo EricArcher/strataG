@@ -177,7 +177,7 @@ popStructTest <- function(g, nrep = 1000, stats = "all",
 #' @export
 #' 
 overallTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE, 
-                        quietly = FALSE, max.cores = NULL, ...) {
+                        quietly = FALSE, max.cores = 1, ...) {
   # check requested stats
   stats <- .checkStats(stats, getPloidy(g))
   
@@ -210,7 +210,7 @@ overallTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE,
     tryCatch({
       parallel::clusterEvalQ(cl, require(strataG))
       parallel::clusterExport(cl, "input", environment())
-      parallel::parLapply(cl, stats, .runStatFunc, input = input)
+      parallel::parLapplyLB(cl, stats, .runStatFunc, input = input)
     }, finally = parallel::stopCluster(cl))
   }
   
@@ -243,7 +243,7 @@ overallTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE,
 #' @export
 #' 
 pairwiseTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE, 
-                         quietly = FALSE, max.cores = NULL, ...) { 
+                         quietly = FALSE, max.cores = 1, ...) { 
   
   if(getNumStrata(g) == 1) stop("'g' must have more than one stratum defined.")
   
