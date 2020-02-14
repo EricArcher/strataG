@@ -1,8 +1,8 @@
 #' @title Run fastsimcoal
-#' @description Run a fastsimcoal simulation and load results into a 
-#'   \linkS4class{gtypes} object. 
+#' @description Run a fastsimcoal simulation. 
 #'
-#' @param p list of fastsimcoal input parameters and output.
+#' @param p list of fastsimcoal input parameters and output produced by 
+#'   \link{fscWrite}.
 #' @param num.sims number of simulation replicates to run.
 #' @param dna.to.snp convert DNA sequences to numerical SNPs?
 #' @param max.snps maximum number of SNPs to retain.

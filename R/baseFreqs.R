@@ -10,9 +10,11 @@
 #' @param simplify if there is a single locus, return result in a simplified
 #'   form? If \code{FALSE} a list will be returned wth one element per locus.
 #'
-#' @return For each gene, a list containing: \tabular{ll}{ \code{site.freqs}
-#'   \tab a matrix of base frequencies at each site.\cr \code{base.freqs} \tab a
-#'   vector of overall base proportion composition.\cr }
+#' @return For each gene, a list containing: 
+#' \tabular{ll}{ 
+#'   \code{site.freqs} \tab a matrix of base frequencies at each site.\cr 
+#'   \code{base.freqs} \tab a vector of overall base proportion composition.\cr 
+#' }
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'

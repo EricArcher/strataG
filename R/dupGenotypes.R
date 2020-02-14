@@ -6,7 +6,7 @@
 #'   individuals must share to be considered duplicate individuals.
 #' 
 #' @return if no duplicates are present, the result is \code{NULL}, otherwise
-#'   a data.frame with the following columns is returned:
+#'   a data frame with the following columns is returned:
 #' \tabular{ll}{
 #'   \code{ids.1, ids.2} \tab sample ids.\cr
 #'   \code{strata.1, strata.2} \tab sample stratification.\cr

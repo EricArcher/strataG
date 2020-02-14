@@ -51,7 +51,6 @@
 #' 
 #' @name popStructStat
 #' @useDynLib strataG, .registration = TRUE
-# #' @importFrom Rcpp sourceCpp
 #'
 NULL
 

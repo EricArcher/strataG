@@ -63,7 +63,7 @@ major allele at each SNP is used as the reference.}
 \item{...}{additional arguments to be passed to or from methods.}
 }
 \value{
-A \code{data.frame} or \code{matrix} with one row per sample.
+A \code{data.frame} or \code{matrix} with one row per individual.
 }
 \description{
 Create a formatted data.frame or matrix 

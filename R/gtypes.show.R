@@ -7,9 +7,8 @@
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'
 #' @aliases show.gtypes
-#' @importFrom methods setMethod
 #' 
-setMethod("show", "gtypes", function(object) {
+methods::setMethod("show", "gtypes", function(object) {
   .printBaseSmry(.baseSmry(object))
   invisible(NULL)
 })

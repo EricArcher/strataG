@@ -26,7 +26,6 @@
 #' 
 #' mostRepresentativeSequences(dolph.seqs, 3)
 #' 
-#' @importFrom stats cmdscale kmeans
 #' @export
 #' 
 mostRepresentativeSequences <- function(
@@ -60,14 +59,14 @@ mostRepresentativeSequences <- function(
       
       # create k clusters of sequences using k-means
       k <- min(nrow(seq.cmd), k)
-      seq.cl <- kmeans(seq.cmd, centers = k)$cluster
+      seq.cl <- stats::kmeans(seq.cmd, centers = k)$cluster
       
       ids <- tapply(names(seq.cl), seq.cl, function(ind) {
         if(length(ind) == 1) return(ind)
         if(length(ind) == 2) return(sample(ind, 1))
         # find id in this cluster that is closest to centroid
         ind.dist <- as.matrix(seq.dist[ind, ind])
-        cl.cmd <- cmdscale(ind.dist, k = nrow(ind.dist) - 1)
+        cl.cmd <- stats::cmdscale(ind.dist, k = nrow(ind.dist) - 1)
         cmd.mean <- colMeans(cl.cmd)
         dist.to.centroid <- sapply(1:nrow(cl.cmd), function(i) {
           sqrt(sum((cl.cmd[i, ] - cmd.mean) ^ 2))

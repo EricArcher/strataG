@@ -20,9 +20,11 @@ frequencies.}
 form? If \code{FALSE} a list will be returned wth one element per locus.}
 }
 \value{
-For each gene, a list containing: \tabular{ll}{ \code{site.freqs}
-  \tab a matrix of base frequencies at each site.\cr \code{base.freqs} \tab a
-  vector of overall base proportion composition.\cr }
+For each gene, a list containing: 
+\tabular{ll}{ 
+  \code{site.freqs} \tab a matrix of base frequencies at each site.\cr 
+  \code{base.freqs} \tab a vector of overall base proportion composition.\cr 
+}
 }
 \description{
 Calculate nucleotide base frequencies along a sequence.

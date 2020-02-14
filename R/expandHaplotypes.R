@@ -1,4 +1,4 @@
-#' @title Expand haplotypes
+#' @title Expand Haplotypes
 #' @description Expand haplotypes to a single sequence per individual.
 #'
 #' @param g a haploid \linkS4class{gtypes} object with sequences.

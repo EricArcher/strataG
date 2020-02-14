@@ -77,7 +77,7 @@ sfs <- function(x, strata.col = 2, locus.col = 3, fsc.dimnames = TRUE,
   }, simplify = FALSE)
   
   joint <- if(length(st.order) == 1) NULL else {
-    combn(st.order, 2, function(pair) {
+    utils::combn(st.order, 2, function(pair) {
       k1 <- pair[1]
       k2 <- pair[2]
       count1 <- st.count[[k1]]

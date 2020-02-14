@@ -2,7 +2,7 @@
 % Please edit documentation in R/expandHaplotypes.R
 \name{expandHaplotypes}
 \alias{expandHaplotypes}
-\title{Expand haplotypes}
+\title{Expand Haplotypes}
 \usage{
 expandHaplotypes(g)
 }

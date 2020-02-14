@@ -12,9 +12,9 @@ allelicRichness(g, by.strata = FALSE)
 \item{by.strata}{logical - return results grouped by strata?}
 }
 \value{
-the allelic richness of each locus calculated as the number of 
-  alleles divided by the number of samples without missing data at 
-  that locus.
+a data frame with the allelic richness of each locus calculated
+  as the number of alleles divided by the number of samples without
+  missing data at that locus.
 }
 \description{
 Calculate allelic richness for each locus.

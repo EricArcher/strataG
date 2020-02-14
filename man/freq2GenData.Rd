@@ -30,11 +30,11 @@ data.frame.}
 resulting data.frame.}
 }
 \value{
-a data.frame with one row per sample and columns for id, strata, 
+a data frame with one row per sample and columns for id, strata, 
   and haplotype, suitable for use in \link{df2gtypes}.
 }
 \description{
-Create a data.frame of stratified individuals and their 
+Create a data frame of stratified individuals and their 
   haplotypes from a frequency table
 }
 \examples{

@@ -46,10 +46,9 @@ setClassUnion("dnaSequences", c("multidna", "NULL"))
 #' 
 #' @aliases gtypes
 #' @import data.table apex
-#' @importFrom methods setClass
 #' @export
 #' 
-setClass(
+methods::setClass(
   Class = "gtypes",
   slots = c(
     data = "data.table", sequences = "dnaSequences",

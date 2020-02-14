@@ -31,7 +31,6 @@
 #'   \code{\link{dupGenotypes}}, \code{\link{lowFreqSubs}}, 
 #'   \code{\link{sequenceLikelihoods}}
 #' 
-#' @importFrom utils write.csv
 #' @export
 #' 
 summarizeAll <- function(g, write.files = FALSE, label = NULL, ...) {
@@ -67,21 +66,21 @@ summarizeAll <- function(g, write.files = FALSE, label = NULL, ...) {
     label <- if(is.null(label)) getDescription(g) else label
     label <- gsub("[[:punct:]]", ".", label)
     fname <- paste(label, ".sample.summary.csv", sep = "")
-    write.csv(by.sample, file = fname, row.names = FALSE)
+    utils::write.csv(by.sample, file = fname, row.names = FALSE)
     fname <- paste(label, ".locus.summary.csv", sep = "")
-    write.csv(by.locus, file = fname, row.names = FALSE)
+    utils::write.csv(by.locus, file = fname, row.names = FALSE)
     
     if(!is.null(dup.df)) {
       fname <- paste(label, ".duplicate.samples.csv", sep = "")
-      write.csv(dup.df, file = fname, row.names = FALSE)
+      utils::write.csv(dup.df, file = fname, row.names = FALSE)
     }
     
     if(!is.null(by.seq)) {
       for(x in names(by.seq)) {
         fname <- paste(label, "low.freq.subs", x, "csv", sep = ".")
-        write.csv(by.seq[[x]]$low.freq.subs, file = fname, row.names = FALSE)
+        utils::write.csv(by.seq[[x]]$low.freq.subs, file = fname, row.names = FALSE)
         fname <- paste(label, "sequence.likelihoods", x, "csv", sep = ".")
-        write.csv(by.seq[[x]]$seq.likelihoods, file = fname, row.names = FALSE)
+        utils::write.csv(by.seq[[x]]$seq.likelihoods, file = fname, row.names = FALSE)
       }
     }
   }

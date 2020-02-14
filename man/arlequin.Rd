@@ -41,17 +41,16 @@ haploid data.}
 }
 \value{
 \describe{
- \item{arlequinRead}{a list containing:
-   \tabular{ll}{
-     \code{file} \tab name and full path of .arp file that was read.\cr
-     \code{profile.info} \tab list containing parameters in 
-       \code{[[Profile]]} section of .arp file. All parameters are provided.
-       Parameters unset in .arp file are set to default values.\cr
-     \code{data.info} \tab list containing data from \code{[[Data]]} section 
-       of .arp file. Can contain elements for \code{haplotype.definition} 
-       (a data.frame), \code{distance.matrix} (a matrix), \code{sample.data} 
-       (a data.frame), or \code{genetic.structure} (a list).\cr
-   }}
+ \item{arlequinRead}{a list containing: \tabular{ll}{
+   \code{file} \tab name and full path of .arp file that was read.\cr
+   \code{profile.info} \tab list containing parameters in \code{[[Profile]]} 
+     section of .arp file. All parameters are provided. Parameters unset in 
+     .arp file are set to default values.\cr
+   \code{data.info} \tab list containing data from \code{[[Data]]} section 
+     of .arp file. Can contain elements for \code{haplotype.definition} 
+     (a data.frame), \code{distance.matrix} (a matrix), \code{sample.data} 
+     (a data.frame), or \code{genetic.structure} (a list).\cr
+ }}
  \item{arp2gtypes}{a \linkS4class{gtypes} object.}
  \item{arlequinWrite}{the filename of the .arp file that was written.}
 }

@@ -5,11 +5,10 @@
 #' @param sr output from a call to \code{\link{structure}}.
 #' @param plot logical. Generate a plot of Evanno metrics?
 #' 
-#' @return a list with:
-#' \describe{
-#'   \item{\code{df}}{data.frame with Evanno log-likelihood metrics for each
-#'     value of K.}
-#'   \item{\code{plots}}{list of four ggplot objects for later plotting.}
+#' @return a list with: \tabular{ll}{
+#'   \code{df} \tab data.frame with Evanno log-likelihood metrics for each
+#'     value of K.\cr
+#'   \code{plots} \tab list of four ggplot objects for later plotting.\cr
 #' }
 #' 
 #' @references Evanno, G., Regnaut, S., and J. Goudet. 2005. Detecting the 

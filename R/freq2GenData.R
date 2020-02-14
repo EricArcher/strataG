@@ -1,5 +1,5 @@
 #' @title Convert Haplotype Frequency Matrices
-#' @description Create a data.frame of stratified individuals and their 
+#' @description Create a data frame of stratified individuals and their 
 #'   haplotypes from a frequency table
 #' 
 #' @param freq.mat a matrix or data.frame containing haplotypic 
@@ -14,7 +14,7 @@
 #' @param hap.label character to label haplotypes with in 
 #'   resulting data.frame.
 #' 
-#' @return a data.frame with one row per sample and columns for id, strata, 
+#' @return a data frame with one row per sample and columns for id, strata, 
 #'   and haplotype, suitable for use in \link{df2gtypes}.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}

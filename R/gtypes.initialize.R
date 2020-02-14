@@ -43,9 +43,8 @@
 #  \link{gtypes2genind}, \link{gtypes2loci}
 #'
 #' @aliases gtypes.initialize initialize.gtypes new
-#' @importFrom methods setMethod
 #' 
-setMethod(
+methods::setMethod(
   "initialize", 
   "gtypes",
   function(.Object, gen.data, ploidy, ind.names = NULL,

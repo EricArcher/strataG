@@ -31,7 +31,8 @@ fscCleanup(label, folder = ".")
 fscTutorial()
 }
 \arguments{
-\item{p}{list of fastsimcoal input parameters and output.}
+\item{p}{list of fastsimcoal input parameters and output produced by 
+\link{fscWrite}.}
 
 \item{num.sims}{number of simulation replicates to run.}
 
@@ -95,8 +96,7 @@ input files and output resides}
  }
 }
 \description{
-Run a fastsimcoal simulation and load results into a 
-  \linkS4class{gtypes} object.
+Run a fastsimcoal simulation.
 }
 \note{
 \code{fastsimcoal2} is not included with `strataG` and must be

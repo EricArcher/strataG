@@ -4,9 +4,9 @@
 #' @param g a \linkS4class{gtypes} object.
 #' @param by.strata logical - return results grouped by strata?
 #' 
-#' @return the allelic richness of each locus calculated as the number of 
-#'   alleles divided by the number of samples without missing data at 
-#'   that locus.
+#' @return a data frame with the allelic richness of each locus calculated
+#'   as the number of alleles divided by the number of samples without
+#'   missing data at that locus.
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #'

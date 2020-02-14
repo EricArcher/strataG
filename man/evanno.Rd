@@ -12,11 +12,10 @@ evanno(sr, plot = TRUE)
 \item{plot}{logical. Generate a plot of Evanno metrics?}
 }
 \value{
-a list with:
-\describe{
-  \item{\code{df}}{data.frame with Evanno log-likelihood metrics for each
-    value of K.}
-  \item{\code{plots}}{list of four ggplot objects for later plotting.}
+a list with: \tabular{ll}{
+  \code{df} \tab data.frame with Evanno log-likelihood metrics for each
+    value of K.\cr
+  \code{plots} \tab list of four ggplot objects for later plotting.\cr
 }
 }
 \description{

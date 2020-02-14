@@ -20,7 +20,6 @@
 #' gtype.mdna <- as.multidna(dloop.g)
 #' gtype.mdna
 #' 
-#' @importFrom methods new
 #' @export
 #' 
 as.multidna <- function(x) {
@@ -36,7 +35,7 @@ as.multidna <- function(x) {
   }
   
   # a DNAbin
-  if(inherits(x, "DNAbin")) return(new("multidna", list(as.matrix(x))))
+  if(inherits(x, "DNAbin")) return(methods::new("multidna", list(as.matrix(x))))
   
   # character matrix or list of character vectors
   if(is.character(x) | (is.list(x) & all(sapply(x, is.character)))) {
@@ -47,7 +46,7 @@ as.multidna <- function(x) {
   if(is.list(x) & all(sapply(x, function(elem) inherits(elem, "DNAbin")))) {
     x <- sapply(x, as.matrix, simplify = FALSE)
     if(is.null(names(x))) names(x) <- paste("gene", 1:length(x), sep = "")
-    return(new("multidna", x))
+    return(methods::new("multidna", x))
   }
   
   stop("'x' must be a valid set of sequences")

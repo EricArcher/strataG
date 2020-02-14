@@ -25,7 +25,7 @@
 #'   major allele at each SNP is used as the reference.
 #' @param ... additional arguments to be passed to or from methods.
 #'   
-#' @return A \code{data.frame} or \code{matrix} with one row per sample.
+#' @return A \code{data.frame} or \code{matrix} with one row per individual.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
@@ -51,11 +51,10 @@
 #' str(genotypes.mat)
 #' 
 #' @aliases as.data.frame,gtypes-method as.data.frame.gtypes as.data.frame
-#' @importFrom methods setMethod
 #'
 #' @export
 #' 
-setMethod(
+methods::setMethod(
   "as.data.frame", 
   "gtypes",
   function(x, one.col = FALSE, sep = "/", ids = TRUE, 
@@ -149,11 +148,10 @@ setMethod(
 
 #' @rdname as.data.frame.gtypes
 #' @aliases as.matrix,gtypes-method as.matrix.gtypes as.matrix
-#' @importFrom methods setMethod
 #' 
 #' @export
 #' 
-setMethod(
+methods::setMethod(
   "as.matrix", 
   "gtypes",
   function(x, one.col = FALSE, sep = "/", ids = TRUE, strata = TRUE, 
