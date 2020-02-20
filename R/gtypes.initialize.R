@@ -196,12 +196,8 @@ methods::setMethod(
     gen.data
   ) %>% 
     as.data.frame(stringsAsFactors = FALSE) %>% 
-    reshape2::melt(
-      id.vars = c("id", "stratum"), 
-      variable.name = "locus", 
-      value.name = "allele"
-    )
-  gen.data$locus <- locus.names.lookup[as.character(gen.data$locus)]
+    tidyr::gather("locus", "allele", -.data$id, -.data$stratum) %>% 
+    dplyr::mutate(locus = locus.names.lookup[as.character(.data$locus)])
   
   data.table::setDT(gen.data, key = c("id", "stratum", "locus"))
   

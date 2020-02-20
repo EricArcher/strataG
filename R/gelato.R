@@ -82,26 +82,26 @@ gelato <- function(g, unknown.strata, nrep = 1000,
       #   unknown.ids = unknown.ids, g = g, known.g = known.g
       # ))
       
-      fst.dist <- if(num.cores == 1) {
-        lapply(
-          1:nrep, .gelatoPermFunc, known.ids = known.ids, 
-          unknown.ids = unknown.ids, g = g, known.g = known.g
-        )
-      } else {
-        cl <- .setupClusters(num.cores)
-        tryCatch({
+      cl <- swfscMisc::setupClusters(num.cores)
+      fst.dist <- tryCatch({
+        if(is.null(cl)) {
+          lapply(
+            1:nrep, .gelatoPermFunc, known.ids = known.ids, 
+            unknown.ids = unknown.ids, g = g, known.g = known.g
+          )
+        } else {
           parallel::clusterEvalQ(cl, require(strataG))
           parallel::clusterExport(
             cl, 
             c("known.ids", "unknown.ids", "g", "known.g"), 
             environment()
           )
-          parallel::parLapply(
+          parallel::parLapplyLB(
             cl, 1:nrep, .gelatoPermFunc, known.ids = known.ids, 
             unknown.ids = unknown.ids, g = g, known.g = known.g
           )
-        }, finally = parallel::stopCluster(cl))
-      }
+        }
+      }, finally = if(!is.null(cl)) parallel::stopCluster(cl) else NULL)
       fst.dist <- do.call(rbind, fst.dist)
       fst.dist <- fst.dist[apply(fst.dist, 1, function(x) all(!is.na(x))), ]
       

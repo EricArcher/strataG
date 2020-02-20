@@ -55,7 +55,7 @@
 #' 
 #' @examples
 #' # write test microsat data .arp file
-#' f <- arlequinWrite(msats.g, tempfile())
+#' f <- arlequinWrite(msats.g, file.path(tempdir(), tempfile()))
 #' 
 #' # read .arp file and show structure
 #' msats.arp <- arlequinRead(f)

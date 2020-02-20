@@ -181,9 +181,6 @@ overallTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE,
   # check requested stats
   stats <- .checkStats(stats, getPloidy(g))
   
-  # get number of cores
-  num.cores <- .getNumCores(length(stats), max.cores)
-  
   # check replicates
   if(is.null(nrep)) nrep <- 0
   if(!is.numeric(nrep) & length(nrep) != 1) {
@@ -203,16 +200,16 @@ overallTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE,
     cat("\n<<<", desc, ">>>\n"),
     format(Sys.time()), ": Overall test :", nrep, "permutations\n"
   )
-  result <- if(num.cores == 1) {
-    lapply(stats, .runStatFunc, input = input)
-  } else {
-    cl <- .setupClusters(num.cores)
-    tryCatch({
+  cl <- swfscMisc::setupClusters(length(stats), max.cores)
+  result <- tryCatch({
+    if(is.null(cl)) {
+      lapply(stats, .runStatFunc, input = input)
+    } else {
       parallel::clusterEvalQ(cl, require(strataG))
       parallel::clusterExport(cl, "input", environment())
       parallel::parLapplyLB(cl, stats, .runStatFunc, input = input)
-    }, finally = parallel::stopCluster(cl))
-  }
+    }
+  }, finally = if(!is.null(cl)) parallel::stopCluster(cl) else NULL)
   
   # create matrix of estimates and p-values
   result.mat <- t(sapply(result, function(x) x$result))

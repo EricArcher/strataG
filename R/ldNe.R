@@ -83,15 +83,17 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95,
   .calcRsqMissing <- function(mat) {
     # calculate correlation r-squared (rsq) between all pairs of loci
     loc.pairs <- utils::combn(ncol(mat), 2)
-    cl <- .setupClusters(num.cores)
+    cl <- swfscMisc::setupClusters(num.cores)
     loc.comp.mat <- tryCatch({
-      if(!is.null(cl)) {
+      if(is.null(cl)) {
+        lapply(1:ncol(loc.pairs), .compLoc, loc.pairs = loc.pairs, mat = mat)
+      } else {
+        parallel::clusterEvalQ(cl, require(strataG))
+        parallel::clusterExport(cl, c("loc.pairs", "mat"), environment())
         parallel::parLapply(
           cl, 1:ncol(loc.pairs), .compLoc, loc.pairs = loc.pairs, mat = mat
         )
-      } else {
-        lapply(1:ncol(loc.pairs), .compLoc, loc.pairs = loc.pairs, mat = mat)
-      }
+      } 
     }, finally = if(!is.null(cl)) parallel::stopCluster(cl))
     do.call(cbind, loc.comp.mat)
     # to.keep <- apply(loc.comp.mat, 2, function(x) all(!is.na(x)))
