@@ -6,7 +6,7 @@ Description: A toolkit for analyzing stratified population genetic data.
   calculating most population subdivision metrics, and running external programs 
   such as structure and fastsimcoal. The package is further described in 
   Archer et al (2016) <doi:10.1111/1755-0998.12559>.
-Version: 2.4.903
+Version: 2.4.904
 License: GNU General Public License
 Authors@R: c(
   EA = person("Eric", "Archer", email = "eric.archer@noaa.gov", role = c("aut", "cre")),
@@ -90,8 +90,7 @@ Collate:
     sequence2gtypes.R
     baseFreqs.R
     createConsensus.R
-    iupacCode.R
-    validIupacCodes.R
+    iupac.R
     expandHaplotypes.R
     trimNs.R
     fasta.R
