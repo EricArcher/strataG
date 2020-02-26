@@ -3,7 +3,7 @@
 #'   .arp data into \code{gtypes} object. Write an input file from a 
 #'   \code{gtypes} object.
 #' 
-#' @param file filename of an input arlequin project (.arp) file. See
+#' @param file filename of an arlequin project (.arp) file. See
 #'   \code{Notes} for details on how .arp files are parsed.
 #' @param arp a list of arlequin profile information and data as returned from 
 #'   \code{arlequinRead}.
@@ -12,8 +12,6 @@
 #'   \code{FALSE}, ids will be left unchanged, but an error will be thrown
 #'   when the \code{gtypes} object is created if duplicated ids are found.
 #' @param g a \linkS4class{gtypes} object.
-#' @param label label for Arlequin project filename (.arp). If \code{NULL}, the 
-#'   gtypes description is used.
 #' @param locus numeric or character designation of which locus to write for 
 #'   haploid data.
 #'   
@@ -55,7 +53,7 @@
 #' 
 #' @examples
 #' # write test microsat data .arp file
-#' f <- arlequinWrite(msats.g, file.path(tempdir(), tempfile()))
+#' f <- arlequinWrite(msats.g, tempfile())
 #' 
 #' # read .arp file and show structure
 #' msats.arp <- arlequinRead(f)
@@ -238,10 +236,13 @@ arp2gtypes <- function(arp, avoid.dups = FALSE) {
 #' @rdname arlequin
 #' @export
 #' 
-arlequinWrite <- function(g, label = NULL, locus = 1) {
-  label <- .getFileLabel(g, label)
+arlequinWrite <- function(g, file = NULL, locus = 1) {
+  folder <- if(is.null(file)) "." else dirname(file)
+  if(!is.null(file)) file <- basename(file)
+  file <- .getFileLabel(g, file)
+  if(!grepl("(\\.arp)$", tolower(file))) file <- paste0(file, ".arp")
+  file <- file.path(folder, file)
   if(is.numeric(locus)) locus <- getLociNames(g)[locus]
-  file <- paste0(label, ".arp")
   
   # Header
   write("[Profile]", file = file)
@@ -591,7 +592,7 @@ read.arlequin <- function(file) {
 #' @rdname arlequin
 #' @export
 #' 
-write.arlequin <- function(file, label = NULL, locus = 1) {
+write.arlequin <- function(g, file = NULL, locus = 1) {
   warning("'write.arlequin()' has been deprecated. use 'arlequinWrite()' instead.")
-  arlequinWrite(file, label, locus)
+  arlequinWrite(g, file, locus)
 }

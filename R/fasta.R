@@ -39,7 +39,11 @@ write.fasta <- function(x, file = NULL) {
     f
   }
   
-  if(is.gtypes(x)) file <- .getFileLabel(x, file)
+  folder <- if(is.null(file)) "." else dirname(file)
+  if(is.gtypes(x)) {
+    if(!is.null(file)) file <- basename(file)
+    file <- .getFileLabel(x, file)
+  }
   if(is.null(file)) file <- "sequences.fasta"
   if(!grepl("((\\.fas)$)|((\\.fasta)$)", tolower(file))) {
     file <- paste0(file, ".fasta")
@@ -48,11 +52,11 @@ write.fasta <- function(x, file = NULL) {
   fname <- if(inherits(x, "multidna") | is.gtypes(x)) {
     x <- apex::getSequences(as.multidna(x), simplify = TRUE)
     sapply(names(x), function(gene) {
-      fasta.func(x[[gene]], paste0(gene, " ", file))
+      fasta.func(x[[gene]], file.path(folder, paste0(gene, " ", file)))
     })
   } else {
     x <- if(inherits(x, "DNAbin")) as.character(x) else ape::as.DNAbin(x)
-    fasta.func(x, file)
+    fasta.func(x, file.path(folder, file))
   }
   invisible(fname)
 }

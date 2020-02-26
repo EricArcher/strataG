@@ -13,14 +13,14 @@ arlequinRead(file)
 
 arp2gtypes(arp, avoid.dups = FALSE)
 
-arlequinWrite(g, label = NULL, locus = 1)
+arlequinWrite(g, file = NULL, locus = 1)
 
 read.arlequin(file)
 
-write.arlequin(file, label = NULL, locus = 1)
+write.arlequin(g, file = NULL, locus = 1)
 }
 \arguments{
-\item{file}{filename of an input arlequin project (.arp) file. See
+\item{file}{filename of an arlequin project (.arp) file. See
 \code{Notes} for details on how .arp files are parsed.}
 
 \item{arp}{a list of arlequin profile information and data as returned from 
@@ -32,9 +32,6 @@ strata names to avoid duplicate identifiers between strata? If set to
 when the \code{gtypes} object is created if duplicated ids are found.}
 
 \item{g}{a \linkS4class{gtypes} object.}
-
-\item{label}{label for Arlequin project filename (.arp). If \code{NULL}, the 
-gtypes description is used.}
 
 \item{locus}{numeric or character designation of which locus to write for 
 haploid data.}
@@ -76,7 +73,7 @@ Read an Arlequin-formatted project input file (.arp). Convert
 }
 \examples{
 # write test microsat data .arp file
-f <- arlequinWrite(msats.g, file.path(tempdir(), tempfile()))
+f <- arlequinWrite(msats.g, tempfile())
 
 # read .arp file and show structure
 msats.arp <- arlequinRead(f)

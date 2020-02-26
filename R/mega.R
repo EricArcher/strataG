@@ -59,7 +59,10 @@ write.mega <- function(
   as.haplotypes = TRUE
 ) {
   
-  label <- .getFileLabel(g, label)
+  folder <- if(is.null(file)) "." else dirname(file)
+  if(!is.null(file)) file <- basename(file)
+  file <- file.path(folder, .getFileLabel(g, file))
+  
   dna <- getSequences(g, as.haplotypes = as.haplotypes, simplify = FALSE)
   dna <- dna[[locus]] %>% 
     as.matrix() %>% 

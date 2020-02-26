@@ -34,7 +34,8 @@
 #' @export
 #' 
 writeGtypes <- function(g, label = NULL, folder = NULL, by.strata = TRUE,
-                         as.frequency = FALSE, freq.type = c("freq", "prop"), ...) {
+                        as.frequency = FALSE, freq.type = c("freq", "prop"),
+                        ...) {
   label <- .getFileLabel(g, label)
   
   g.mats <- if(getPloidy(g) == 1 & as.frequency) {
