@@ -67,11 +67,10 @@ structurePlot <- function(
   pop.cntr <- tapply(qm$x, qm[, 1], mean)
   pop.div <- rev(tapply(qm$x, qm[, 1], min))[-1] - 0.5
   
-  # Create data.frame for plotting
-  df <- melt(qm[, c("x", colnames(qm)[-ncol(qm)])], id.vars = c(1, 2),
-             variable.name = "Group", value.name = "probability")
-  colnames(df)[1:2] <- c("x", "population")
-  df <- df[order(-as.numeric(df$Group), df$probability), ]
+  df <- qm %>% 
+    tidyr::gather("Group", "probability", -.data$x, -.data$orig.pop) %>% 
+    dplyr::rename(population = "orig.pop") %>% 
+    dplyr::arrange(.data$Group, .data$probability)
   
   type <- if(is.null(type)) {
     if(nrow(df) <= 100) "bar" else "area"

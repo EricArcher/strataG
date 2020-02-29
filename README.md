@@ -68,7 +68,10 @@ Archer, F. 2016. *strataG*: An *R* package for manipulating, summarizing and ana
 * send a pull request: <https://github.com/ericarcher/strataG/>
 * e-mail: <eric.archer@noaa.gov>
 
-## version 2.4.9 (devel)
+## version 2.4.91
+* removed melt from structurePlot
+
+## version 2.4.905 (devel)
 * Deleted functions: `alleleFreqFormat`, `as.array.gtypes`
 * Changed structure of `gtypes` object, making it __no longer compatible with previous versions__
 * Fixed and enhanced `arlequinRead()` so that it will read and parse all .arp files. Added `arp2gtypes()` to create `gtypes` object from parsed .arp files.
