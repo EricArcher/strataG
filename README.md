@@ -68,10 +68,10 @@ Archer, F. 2016. *strataG*: An *R* package for manipulating, summarizing and ana
 * send a pull request: <https://github.com/ericarcher/strataG/>
 * e-mail: <eric.archer@noaa.gov>
 
-## version 2.4.91
+## version 2.4.91 (devel)
 * removed melt from structurePlot
 
-## version 2.4.905 (devel)
+## version 2.4.905 (on CRAN)
 * Deleted functions: `alleleFreqFormat`, `as.array.gtypes`
 * Changed structure of `gtypes` object, making it __no longer compatible with previous versions__
 * Fixed and enhanced `arlequinRead()` so that it will read and parse all .arp files. Added `arp2gtypes()` to create `gtypes` object from parsed .arp files.
@@ -85,7 +85,7 @@ Archer, F. 2016. *strataG*: An *R* package for manipulating, summarizing and ana
 * added `na.rm = TRUE` to calculation of mean locus summaries by strata in `summary.gtypes`. This avoids `NaN`s when there is a locus with genotypes missing for all samples.
 * explicitly convert `x` to a `data.frame` in `df2gtypes` in case it is a `data.table` or `tibble`.
 
-## version 2.0.2 (current on GitHub)
+## version 2.0.2
 
 * NOTE: In order to speed up indexing the data in large data sets, this version changes the underlying structure of the `gtypes` object by replacing the `@loci` data.frame slot with a `@data` data.table slot. The data.table has a `id` character column, a `strata` character column, and every column afterwards represents one locus. The `@strata` slot has been removed.
 * The `loci` accessor has been removed. 
