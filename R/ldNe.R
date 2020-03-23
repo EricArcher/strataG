@@ -130,7 +130,7 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95,
   
   # calculate Ne by strata
   ne.smry <- tapply(1:nrow(mat), st, function(i) {
-    mat.st <- mat[i, ]
+    mat.st <- mat[i, , drop = FALSE]
     
     # remove loci below MAF threshold
     if(maf.threshold > 0) {
@@ -145,7 +145,7 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95,
         )
         return(NULL)
       }
-      mat.st <- mat.st[, above.thresh]
+      mat.st <- mat.st[, above.thresh, drop = FALSE]
     }
     
     # keep only polymorphic loci
