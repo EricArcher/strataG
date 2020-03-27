@@ -4,7 +4,6 @@
 #' @param x a list or a matrix of DNA sequences 
 #'   (see \code{\link[ape]{write.dna}}).
 #' @param run.label label for output alignment FASTA file.
-#' @param delete.output logical. Delete output alignment FASTA file?
 #' @param op gap opening penalty.
 #' @param ep offset value, which works like gap extension penalty.
 #' @param maxiterate number cycles of iterative refinement are performed.
@@ -40,12 +39,15 @@
 #' 
 #' @export
 #' 
-mafft <- function(x, run.label = "align.mafft", delete.output = TRUE, 
+mafft <- function(x, run.label = "align.mafft", 
                   op = 3, ep = 0.123, maxiterate = 0, quiet = FALSE, 
                   num.cores = 1, opts = "--auto", simplify = TRUE) {
-  dna <- write.fasta(x, file = run.label) %>% 
+  dna <- write.fasta(x, file = tempfile(run.label)) %>% 
     purrr::map(function(f) {
-      aligned.fasta <- paste0("mafft.aligned", "_", f)
+      aligned.fasta <- file.path(
+        dirname(f), 
+        paste0("mafft.aligned", "_", basename(f))
+      )
       mafft.cmd <- paste(
         "mafft", 
         opts, 
@@ -53,14 +55,13 @@ mafft <- function(x, run.label = "align.mafft", delete.output = TRUE,
         "--ep", ep,
         "--maxiterate", maxiterate,
         ifelse(quiet, "--quiet", ""),
-        "--thread", num.cores,
+        "--thread", if(is.null(num.cores)) parallel::detectCores() - 1 else num.cores,
         f, ">", aligned.fasta
       )
       err.code <- system(mafft.cmd, intern = FALSE)
       if(!err.code == 0) return(NA)
       aligned <- read.fasta(aligned.fasta)
-      file.remove(f)
-      if(delete.output) file.remove(aligned.fasta)
+      file.remove(f, aligned.fasta)
       aligned
     })
   if(length(dna) == 1 & simplify) dna[[1]] else dna

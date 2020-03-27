@@ -7,7 +7,6 @@
 mafft(
   x,
   run.label = "align.mafft",
-  delete.output = TRUE,
   op = 3,
   ep = 0.123,
   maxiterate = 0,
@@ -22,8 +21,6 @@ mafft(
 (see \code{\link[ape]{write.dna}}).}
 
 \item{run.label}{label for output alignment FASTA file.}
-
-\item{delete.output}{logical. Delete output alignment FASTA file?}
 
 \item{op}{gap opening penalty.}
 

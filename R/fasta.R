@@ -44,7 +44,7 @@ write.fasta <- function(x, file = NULL) {
     if(!is.null(file)) file <- basename(file)
     file <- .getFileLabel(x, file)
   }
-  if(is.null(file)) file <- "sequences.fasta"
+  file <- if(is.null(file)) "sequences.fasta" else basename(file)
   if(!grepl("((\\.fas)$)|((\\.fasta)$)", tolower(file))) {
     file <- paste0(file, ".fasta")
   }
