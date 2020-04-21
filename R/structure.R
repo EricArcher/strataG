@@ -404,11 +404,11 @@ structureRead <- function(file, pops = NULL) {
     # Create population probability matrix for samples with priors and add to end of base table
     prob.mat <- t(sapply(1:nrow(df), function(i) {
       pop.probs <- rowSums(prior.anc[[i]])
-      pop.probs[is.na(pop.probs)] <- df$prob.1[i]
+      pop.probs[is.na(pop.probs)] <- df$Group.1[i]
       pop.probs
     }))
-    colnames(prob.mat) <- paste("prob", 1:ncol(prob.mat), sep = ".")
-    df$prob.1 <- NULL
+    colnames(prob.mat) <- paste("Group", 1:ncol(prob.mat), sep = ".")
+    df$Group.1 <- NULL
     df <- cbind(df, prob.mat)
     
     list(df = df, prior.anc = prior.anc)
