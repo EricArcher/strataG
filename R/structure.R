@@ -407,8 +407,8 @@ structureRead <- function(file, pops = NULL) {
       pop.probs[is.na(pop.probs)] <- df$Group.1[i]
       pop.probs
     }))
-    colnames(prob.mat) <- paste("prob", 1:ncol(prob.mat), sep = ".")
-    df$prob.1 <- NULL
+    colnames(prob.mat) <- paste("Group", 1:ncol(prob.mat), sep = ".")
+    df$Group.1 <- NULL
     df <- cbind(df, prob.mat)
     
     list(df = df, prior.anc = prior.anc)
