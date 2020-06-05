@@ -34,18 +34,15 @@ Imports:
     purrr (>= 0.2.5),
     data.table (>= 1.11.4),
     copula,
-    DT,
     genepop (>= 1.0.5),
     ggplot2,
     graphics,
     grid,
     gridExtra,
-    Hmisc (>= 4.1),
     magrittr (>= 1.5),
     methods,
     pegas (>= 0.11),
     phangorn (>= 2.4.0),
-    RColorBrewer,
     Rcpp,
     readr,
     rlang (>= 0.3.0.1),
@@ -146,4 +143,4 @@ LazyData: TRUE
 VignetteBuilder: knitr
 LinkingTo: Rcpp
 Encoding: UTF-8
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0

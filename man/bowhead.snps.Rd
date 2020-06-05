@@ -4,7 +4,9 @@
 \name{bowhead.snps}
 \alias{bowhead.snps}
 \title{Bowhead Whale SNP Genotypes}
-\format{data.frame}
+\format{
+data.frame
+}
 \usage{
 data(bowhead.snps)
 }

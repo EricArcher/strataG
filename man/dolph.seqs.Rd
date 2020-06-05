@@ -4,7 +4,9 @@
 \name{dolph.seqs}
 \alias{dolph.seqs}
 \title{Dolphin mtDNA D-loop Sequences}
-\format{list}
+\format{
+list
+}
 \usage{
 data(dolph.seqs)
 }

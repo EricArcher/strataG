@@ -13,14 +13,22 @@
 #' @export
 #' 
 readGenData <- function(file, 
-                        na.strings = c(NA, "NA", "", " ", "?", "."), ...) {
+                        na.strings = c("NA", "", "?", "."), ...) {
+  .replaceNA <- function(x, na.strings) {
+    ifelse(x %in% na.strings, NA, x)
+  }
+  
   df <- data.table::fread(
     file = file, 
     header = TRUE,
-    na.strings = na.strings,
+    strip.white = TRUE,
     colClasses = "character",
     ...
-  ) 
+  ) %>% 
+    as.data.frame() %>% 
+    dplyr::mutate(
+      dplyr::across(dplyr::everything(), .replaceNA, na.strings = na.strings)
+    )
   all.nas <- is.na(df)
   all.empty <- df == ""
   dplyr::filter(df, rowSums(all.nas | all.empty) != ncol(df))

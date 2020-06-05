@@ -4,7 +4,7 @@
 \alias{readGenData}
 \title{Read Genetic Data}
 \usage{
-readGenData(file, na.strings = c(NA, "NA", "", " ", "?", "."), ...)
+readGenData(file, na.strings = c("NA", "", "?", "."), ...)
 }
 \arguments{
 \item{file}{filename of .csv file.}

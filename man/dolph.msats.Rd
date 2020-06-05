@@ -4,7 +4,9 @@
 \name{dolph.msats}
 \alias{dolph.msats}
 \title{Dolphin Microsatellite Genotypes}
-\format{data.frame}
+\format{
+data.frame
+}
 \usage{
 data(dolph.msats)
 }

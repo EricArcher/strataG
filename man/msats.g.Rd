@@ -4,7 +4,9 @@
 \name{msats.g}
 \alias{msats.g}
 \title{Dolphin Microsatellite gtypes Object}
-\format{gtypes}
+\format{
+gtypes
+}
 \usage{
 data(msats.g)
 }

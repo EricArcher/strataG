@@ -4,7 +4,9 @@
 \name{dolph.strata}
 \alias{dolph.strata}
 \title{Dolphin Genetic Stratification and Haplotypes}
-\format{data.frame}
+\format{
+data.frame
+}
 \usage{
 data(dolph.strata)
 }

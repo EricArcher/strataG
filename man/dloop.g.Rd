@@ -4,7 +4,9 @@
 \name{dloop.g}
 \alias{dloop.g}
 \title{Dolphin dLoop gtypes Object}
-\format{gtypes}
+\format{
+gtypes
+}
 \usage{
 data(dloop.g)
 }

@@ -6,11 +6,10 @@
 \usage{
 mafft(
   x,
-  run.label = "align.mafft",
   op = 3,
   ep = 0.123,
   maxiterate = 0,
-  quiet = FALSE,
+  quiet = TRUE,
   num.cores = 1,
   opts = "--auto",
   simplify = TRUE
@@ -19,8 +18,6 @@ mafft(
 \arguments{
 \item{x}{a list or a matrix of DNA sequences 
 (see \code{\link[ape]{write.dna}}).}
-
-\item{run.label}{label for output alignment FASTA file.}
 
 \item{op}{gap opening penalty.}
 

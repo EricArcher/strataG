@@ -4,7 +4,9 @@
 \name{dolph.haps}
 \alias{dolph.haps}
 \title{Dolphin mtDNA Haplotype Sequences}
-\format{list}
+\format{
+list
+}
 \usage{
 data(dolph.haps)
 }

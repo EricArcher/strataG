@@ -77,31 +77,31 @@ gelato <- function(g, unknown.strata, nrep = 1000,
       known.g <- g[known.ids, , , drop = TRUE]
       
       # run permutations to collect Fst distributions 
-      # fst.dist <- do.call(rbind, lapply(
-      #   1:nrep, .gelatoPermFunc, known.ids = known.ids, 
-      #   unknown.ids = unknown.ids, g = g, known.g = known.g
-      # ))
+      fst.dist <- do.call(rbind, lapply(
+        1:nrep, .gelatoPermFunc, known.ids = known.ids,
+        unknown.ids = unknown.ids, g = g, known.g = known.g
+      ))
       
-      cl <- swfscMisc::setupClusters(num.cores)
-      fst.dist <- tryCatch({
-        if(is.null(cl)) {
-          lapply(
-            1:nrep, .gelatoPermFunc, known.ids = known.ids, 
-            unknown.ids = unknown.ids, g = g, known.g = known.g
-          )
-        } else {
-          parallel::clusterEvalQ(cl, require(strataG))
-          parallel::clusterExport(
-            cl, 
-            c("known.ids", "unknown.ids", "g", "known.g"), 
-            environment()
-          )
-          parallel::parLapplyLB(
-            cl, 1:nrep, .gelatoPermFunc, known.ids = known.ids, 
-            unknown.ids = unknown.ids, g = g, known.g = known.g
-          )
-        }
-      }, finally = if(!is.null(cl)) parallel::stopCluster(cl) else NULL)
+      # cl <- swfscMisc::setupClusters(num.cores)
+      # fst.dist <- tryCatch({
+      #   if(is.null(cl)) {
+      #     lapply(
+      #       1:nrep, .gelatoPermFunc, known.ids = known.ids, 
+      #       unknown.ids = unknown.ids, g = g, known.g = known.g
+      #     )
+      #   } else {
+      #     parallel::clusterEvalQ(cl, require(strataG))
+      #     parallel::clusterExport(
+      #       cl, 
+      #       c("known.ids", "unknown.ids", "g", "known.g"), 
+      #       environment()
+      #     )
+      #     parallel::parLapplyLB(
+      #       cl, 1:nrep, .gelatoPermFunc, known.ids = known.ids, 
+      #       unknown.ids = unknown.ids, g = g, known.g = known.g
+      #     )
+      #   }
+      # }, finally = if(!is.null(cl)) parallel::stopCluster(cl) else NULL)
       fst.dist <- do.call(rbind, fst.dist)
       fst.dist <- fst.dist[apply(fst.dist, 1, function(x) all(!is.na(x))), ]
       
