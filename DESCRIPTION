@@ -6,7 +6,7 @@ Description: A toolkit for analyzing stratified population genetic data.
   calculating most population subdivision metrics, and running external programs 
   such as structure and fastsimcoal. The package is further described in 
   Archer et al (2016) <doi:10.1111/1755-0998.12559>.
-Version: 2.4.91
+Version: 2.4.910
 License: GNU General Public License
 Authors@R: c(
   EA = person("Eric", "Archer", email = "eric.archer@noaa.gov", role = c("aut", "cre")),
@@ -28,11 +28,11 @@ Imports:
     ape,
     apex (>= 1.0.3),
     adegenet,
-    dplyr (>= 0.7.6),
-    tibble (>= 1.4.2),
-    tidyr (>= 0.8.1),
-    purrr (>= 0.2.5),
-    data.table (>= 1.11.4),
+    dplyr (>= 1.0),
+    tibble (>= 3.0),
+    tidyr (>= 1.0),
+    purrr (>= 0.3),
+    data.table (>= 1.12),
     copula,
     genepop (>= 1.0.5),
     ggplot2,
@@ -44,7 +44,6 @@ Imports:
     pegas (>= 0.11),
     phangorn (>= 2.4.0),
     Rcpp,
-    readr,
     rlang (>= 0.3.0.1),
     rmetasim,
     stats,

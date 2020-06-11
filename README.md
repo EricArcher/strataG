@@ -68,7 +68,7 @@ Archer, F. 2016. *strataG*: An *R* package for manipulating, summarizing and ana
 * send a pull request: <https://github.com/ericarcher/strataG/>
 * e-mail: <eric.archer@noaa.gov>
 
-## version 2.4.91 (devel)
+## version 2.4.910 (devel)
 * removed melt from structurePlot
 * fixed ldNe error when one individual is present
 * fixed mafft error and now have mafft .fasta files written to temporary file rather than working directory

@@ -101,7 +101,7 @@ methods::setMethod(
         dplyr::group_by(.data$id, .data$stratum, .data$locus) %>% 
         dplyr::summarize(code = sum(.data$allele == .data$ref)) %>% 
         dplyr::ungroup() %>% 
-        tidyr::spread(.data$locus, .data$code) %>% 
+        tidyr::pivot_wider(names_from = "locus", values_from = "code") %>% 
         as.data.frame
       
       # remove ids or strata if requested
@@ -117,7 +117,7 @@ methods::setMethod(
           genotype = .combineLoci(.data$allele, sep = sep, sort = sort.alleles)
         ) %>% 
         dplyr::ungroup() %>% 
-        tidyr::spread("locus", "genotype") 
+        tidyr::pivot_wider(names_from = "locus", values_from = "genotype") 
       
       if(getPloidy(x) == 1) one.col <- TRUE
       # if loci are to be split into separate columns, use alleleSplit
@@ -139,7 +139,7 @@ methods::setMethod(
       if(!strata) x.df$stratum <- NULL
       
       x.df %>% 
-        dplyr::mutate_all(dplyr::funs("as.character")) %>% 
+        dplyr::mutate(dplyr::across(.fns = as.character)) %>% 
         as.data.frame()
     }
   })
