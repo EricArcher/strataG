@@ -19,19 +19,19 @@
 #' 
 summarizeSeqs <- function(x) {
   if(!inherits(x, "DNAbin")) stop("'x' must be a DNAbin object")
-  
-  x <- sapply(
-    x, 
-    function(dna) {
-      dna %>% 
-        as.list() %>% 
-        as.character() %>% 
-        unlist()
-    },
-    simplify = FALSE
-  )
+  # 
+  # x <- sapply(
+  #   x, 
+  #   function(dna) {
+  #     dna %>% 
+  #       as.list() %>% 
+  #       as.character() %>% 
+  #       unlist()
+  #   },
+  #   simplify = FALSE
+  # )
 
-  t(sapply(x, function(this.seq) {
+  t(sapply(as.character(as.list(x)), function(this.seq) {
     seq.rle <- rle(this.seq)
     start <- ifelse(seq.rle$values[1] == "-", seq.rle$lengths[1] + 1, 1)
     start <- unname(start)
