@@ -100,6 +100,7 @@ Collate:
     popGenEqns.R
     freq2GenData.R
     gtypes2genind.R
+    gtypes2genlight.R
     gtypes2loci.R
     gtypes2phyDat.R
     theta.R
