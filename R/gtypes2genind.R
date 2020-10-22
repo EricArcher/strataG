@@ -35,7 +35,7 @@ gtypes2genind <- function(x, type = c("codom", "PA")) {
     as.data.frame()
   colnames(df) <- gsub("[.]", "_", colnames(df))
   
-  adegenet::df2genind(
+  gi <- adegenet::df2genind(
     X = df,
     sep = "/", 
     pop =  getStrata(x)[rownames(df)],
@@ -43,6 +43,8 @@ gtypes2genind <- function(x, type = c("codom", "PA")) {
     ploidy = getPloidy(x),
     type = match.arg(type)
   )
+  adegenet::other(gi) <- getOther(x)
+  gi
 }
 
 
@@ -53,8 +55,6 @@ genind2gtypes <- function(x) {
   gen.mat <- adegenet::genind2df(x, usepop = TRUE, oneColPerAll = TRUE)
   gen.mat[gen.mat == "NA"] <- NA
   has.pop <- !is.null(x@pop)
-  # other <- 
-  # if(!is.null(other)) other <- list(genind = other)
   df2gtypes(
     x = gen.mat,
     ploidy = x@ploidy[1],
