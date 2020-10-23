@@ -64,9 +64,16 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1),
   within <- g@data %>% 
     dplyr::group_by(.data$locus, .data$stratum) %>% 
     dplyr::do(smry = {
-      haps <- utils::combn(.data$allele, 2)
-      loc <- unique(.data$locus)
-      .pair.dist.smry(haps, hap.dist[[loc]], probs)
+      if(nrow(.data) == 1) {
+        as.numeric(c(
+          mean = NA,
+          stats::setNames(rep(NA, length(probs)), paste0("q.", probs))
+        ))
+      } else {
+        haps <- utils::combn(.data$allele, 2)
+        loc <- unique(.data$locus)
+        .pair.dist.smry(haps, hap.dist[[loc]], probs)
+      }
     }) 
   within <- .expand.smry.cols(within)
       
