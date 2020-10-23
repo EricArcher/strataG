@@ -83,6 +83,7 @@ arlequinRead <- function(file) {
   # read file
   arp <- scan(file, what = "character", sep = "\n", quiet = TRUE)
   arp <- stringi::stri_trim_both(arp)
+  arp <- gsub("[[:space:]]*=[[:space:]]*", "=", arp)
   arp <- arp[arp != ""]
   
   # collect Profile information
@@ -108,6 +109,7 @@ arlequinRead <- function(file) {
     frequency.threshold = ifelse(is.na(frequency.threshold), 1e-5, frequency.threshold),
     epsilon.value = ifelse(is.na(epsilon.value), 1e-7, epsilon.value)
   )
+  if(profile.info$title == "") profile.info$title <- file
   
   # collect Data information
   data.info <- list()
@@ -156,7 +158,7 @@ arlequinRead <- function(file) {
   
   # Samples
   samples.i <- which(arp == "[[Samples]]")
-  if(length(samples.i) == 1) {
+  if(length(samples.i) > 0) {
     sample.name <- .getValues("SampleName", arp)
     sample.data <- lapply(.getLine("SampleData", arp), function(i) {
       sample.data.i <- .extractDataBlock(i, arp)
