@@ -13,7 +13,7 @@ arlequinRead(file)
 
 arp2gtypes(arp, avoid.dups = FALSE)
 
-arlequinWrite(g, file = NULL, locus = 1)
+arlequinWrite(g, file = NULL, locus = 1, haploid.microsat = FALSE)
 
 read.arlequin(file)
 
@@ -35,6 +35,12 @@ when the \code{gtypes} object is created if duplicated ids are found.}
 
 \item{locus}{numeric or character designation of which locus to write for 
 haploid data.}
+
+\item{haploid.microsat}{logical. If \code{g} is a haploid object (ploidy = 1),
+but a DataType=MICROSAT .arp file should be written, set this to 
+\code{TRUE}. If \code{FALSE} (default) all haploid objects will be written 
+as DataType=FREQUENCY if no sequences are present or DataType=DNA if 
+sequences are present.}
 }
 \value{
 \describe{

@@ -14,6 +14,11 @@
 #' @param g a \linkS4class{gtypes} object.
 #' @param locus numeric or character designation of which locus to write for 
 #'   haploid data.
+#' @param haploid.microsat logical. If \code{g} is a haploid object (ploidy = 1),
+#'   but a DataType=MICROSAT .arp file should be written, set this to 
+#'   \code{TRUE}. If \code{FALSE} (default) all haploid objects will be written 
+#'   as DataType=FREQUENCY if no sequences are present or DataType=DNA if 
+#'   sequences are present.
 #'   
 #' @note \code{arp2gtypes()} will not create a \code{gtypes} object for 
 #'   Arlequin projects with relative frequency data (\code{DataType=FREQUENCY}
@@ -236,7 +241,7 @@ arp2gtypes <- function(arp, avoid.dups = FALSE) {
 #' @rdname arlequin
 #' @export
 #' 
-arlequinWrite <- function(g, file = NULL, locus = 1) {
+arlequinWrite <- function(g, file = NULL, locus = 1, haploid.microsat = FALSE) {
   folder <- if(is.null(file)) "." else dirname(file)
   if(!is.null(file)) file <- basename(file)
   file <- .getFileLabel(g, file)
@@ -248,7 +253,7 @@ arlequinWrite <- function(g, file = NULL, locus = 1) {
   write("[Profile]", file = file)
   write(paste0("Title=\"", getDescription(g), "\""), file = file, append = TRUE)
   write(paste0("NbSamples=", getNumStrata(g)), file = file, append = TRUE)
-  data.type <- if(getPloidy(g) > 1) {
+  data.type <- if(getPloidy(g) > 1 | haploid.microsat) {
     "MICROSAT"
   } else if(is.null(getSequences(g)[[locus]])) {
     "FREQUENCY"
@@ -279,9 +284,10 @@ arlequinWrite <- function(g, file = NULL, locus = 1) {
     )
     write(paste0("SampleSize=", getNumInd(st)), file = file, append = TRUE)
     write("SampleData={", file = file, append = TRUE)
-    if(getPloidy(g) == 1) { # Sequences
+    if(data.type != "MICROSAT") { # Sequences
       hap.df <- as.data.frame(alleleFreqs(st)[[locus]])
       colnames(hap.df)[1] <- locus
+      hap.df[[locus]] <- as.character(hap.df[[locus]])
       dna <- getSequences(st)[[locus]]
       if(!is.null(dna)) {
         dna <- dna %>% 
@@ -289,8 +295,8 @@ arlequinWrite <- function(g, file = NULL, locus = 1) {
           as.character() %>% 
           toupper()
         dna <- apply(dna, 1, paste, collapse = "")[hap.df[[locus]]]
+        hap.df <- cbind(hap.df, dna)
       }
-      hap.df <- cbind(hap.df, dna)
       write(
         t(hap.df), 
         ncolumns = ncol(hap.df), 
