@@ -34,6 +34,12 @@ structureWrite(
   migrprior = 0.05,
   pfrompopflagonly = TRUE,
   popflag = NULL,
+  inferalpha = FALSE,
+  alpha = 1,
+  unifprioralpha = TRUE,
+  alphamax = 20,
+  alphapriora = 0.05,
+  alphapriorb = 0.001,
   ...
 )
 
@@ -42,9 +48,9 @@ structureRead(file, pops = NULL)
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
 
-\item{k.range}{vector of values to for \code{maxpop} in multiple runs. 
-If set to \code{NULL}, a single STRUCTURE run is conducted with 
-\code{maxpops} groups. If specified, do not also specify \code{maxpops}.}
+\item{k.range}{vector of values to for \code{maxpop} in multiple runs. If set
+to \code{NULL}, a single STRUCTURE run is conducted with \code{maxpops}
+groups. If specified, do not also specify \code{maxpops}.}
 
 \item{num.k.rep}{number of replicates for each value in \code{k.range}.}
 
@@ -70,61 +76,76 @@ If set to \code{NULL}, a single STRUCTURE run is conducted with
 
 \item{seed}{set random seed.}
 
-\item{pop.prior}{a character specifying which population prior model to 
-use: "locprior" or "usepopinfo".}
+\item{pop.prior}{a character specifying which population prior model to use:
+"locprior" or "usepopinfo".}
 
-\item{locpriorinit}{parameterizes locprior parameter \emph{r} - how 
-informative the populations are. Only used when 
-\code{pop.prior} = "locprior".}
+\item{locpriorinit}{parameterizes locprior parameter \emph{r} - how
+informative the populations are. Only used when \code{pop.prior} =
+"locprior".}
 
-\item{maxlocprior}{specifies range of locprior parameter \emph{r}. Only used 
+\item{maxlocprior}{specifies range of locprior parameter \emph{r}. Only used
 when \code{pop.prior} = "locprior".}
 
-\item{gensback}{integer defining the number of generations back to test 
-for immigrant ancestry. Only used when \code{pop.prior} = "usepopinfo".}
+\item{gensback}{integer defining the number of generations back to test for
+immigrant ancestry. Only used when \code{pop.prior} = "usepopinfo".}
 
-\item{migrprior}{numeric between 0 and 1 listing migration prior. Only used 
+\item{migrprior}{numeric between 0 and 1 listing migration prior. Only used
 when \code{pop.prior} = "usepopinfo".}
 
-\item{pfrompopflagonly}{logical. update allele frequencies from individuals 
-specified by \code{popflag}. Only used when \code{pop.prior} = 
+\item{pfrompopflagonly}{logical. update allele frequencies from individuals
+specified by \code{popflag}. Only used when \code{pop.prior} =
 "usepopinfo".}
 
-\item{popflag}{a vector of integers (0, 1) or logicals identifiying whether 
-or not to use strata information. Only used when \code{pop.prior} 
-= "usepopinfo".}
+\item{popflag}{a vector of integers (0, 1) or logicals identifiying whether
+or not to use strata information. Only used when \code{pop.prior} =
+"usepopinfo".}
+
+\item{inferalpha}{logical. Infer the value of the model parameter # from the
+data; otherwise is fixed at the value \code{alpha} which is chosen by the
+user. This option is ignored under the NOADMIX model. Small \code{alpha}
+implies that most individuals are essentially from one population or
+another, while \code{alpha} > 1 implies that most individuals are admixed.)}
+
+\item{alpha}{Dirichlet parameter for degree of admixture. This is the initial
+value if \code{inferalpha = TRUE}.}
+
+\item{unifprioralpha}{logical. Assume a uniform prior for \code{alpha} which
+runs between 0 and \code{alphamax}. This model seems to work fine; the
+alternative model (when \code{unfprioralpha = 0}) is to take \code{alpha}
+as having a Gamma prior, with mean \code{alphapriora × alphapriorb}, and
+variance \code{alphapriora × alphapriorb^2}.}
+
+\item{alphamax}{maximum for uniform prior on \code{alpha} when
+\code{unifprioralpha = TRUE}.}
+
+\item{alphapriora, alphapriorb}{parameters of Gamma prior on \code{alpha} when
+\code{unifprioralpha = FALSE}.}
 
 \item{file}{name of the output file from STRUCTURE.}
 
-\item{pops}{vector of population labels to be used in place of numbers in 
+\item{pops}{vector of population labels to be used in place of numbers in
 STRUCTURE file.}
 }
 \value{
-\describe{
- \item{\code{structureRun}}{a list where each element is a list with results 
-   from \code{structureRead} and a vector of the filenames used}
- \item{\code{structureWrite}}{a vector of the filenames used by STRUCTURE}
- \item{\code{structureRead}}{a list containing:
-   \describe{
-     \item{\code{summary}}{new locus name, which is a combination of loci in
-       group}
-     \item{\code{q.mat}}{data.frame of assignment probabilities for each id}
-     \item{\code{prior.anc}}{list of prior ancestry estimates for each 
-       individual where population priors were used}
-     \item{\code{files}}{vector of input and output files used by STRUCTURE}
-     \item{\code{label}}{label for the run}
-   }
- }
-}
+\describe{ \item{\code{structureRun}}{a list where each element is a
+list with results from \code{structureRead} and a vector of the filenames
+used} \item{\code{structureWrite}}{a vector of the filenames used by
+STRUCTURE} \item{\code{structureRead}}{a list containing: \describe{
+\item{\code{summary}}{new locus name, which is a combination of loci in
+group} \item{\code{q.mat}}{data.frame of assignment probabilities for each
+id} \item{\code{prior.anc}}{list of prior ancestry estimates for each
+individual where population priors were used} \item{\code{files}}{vector of
+input and output files used by STRUCTURE} \item{\code{label}}{label for the
+run} } } }
 }
 \description{
 Run STRUCTURE to assess group membership of samples.
 }
 \note{
-STRUCTURE is not included with \code{strataG} and must be downloaded 
-  separately. Additionally, it must be installed such that it can be run from 
-  the command line in the current working directory. See the vignette 
-  for \code{external.programs} for installation instructions.
+STRUCTURE is not included with \code{strataG} and must be downloaded
+  separately. Additionally, it must be installed such that it can be run from
+  the command line in the current working directory. See the vignette for
+  \code{external.programs} for installation instructions.
 }
 \examples{
 \dontrun{
@@ -147,12 +168,13 @@ structurePlot(q.mat)
 
 }
 \references{
-Pritchard, J.K., M. Stephens, P. Donnelly. 2000. Inference of 
-  population structure using multilocus genotype data. Genetics 155:945-959.\cr 
+Pritchard, J.K., M. Stephens, P. Donnelly. 2000. Inference of
+  population structure using multilocus genotype data. Genetics
+  155:945-959.\cr
   \url{http://web.stanford.edu/group/pritchardlab/structure.html}
 }
 \seealso{
-\code{\link{structurePlot}}, \code{\link{evanno}}, 
+\code{\link{structurePlot}}, \code{\link{evanno}},
   \code{\link{clumpp}}
 }
 \author{

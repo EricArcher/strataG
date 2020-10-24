@@ -1,11 +1,11 @@
 
 #' @title STRUCTURE
 #' @description Run STRUCTURE to assess group membership of samples.
-#' 
+#'
 #' @param g a \linkS4class{gtypes} object.
-#' @param k.range vector of values to for \code{maxpop} in multiple runs. 
-#'   If set to \code{NULL}, a single STRUCTURE run is conducted with 
-#'   \code{maxpops} groups. If specified, do not also specify \code{maxpops}.
+#' @param k.range vector of values to for \code{maxpop} in multiple runs. If set
+#'   to \code{NULL}, a single STRUCTURE run is conducted with \code{maxpops}
+#'   groups. If specified, do not also specify \code{maxpops}.
 #' @param num.k.rep number of replicates for each value in \code{k.range}.
 #' @param label label to use for input and output files
 #' @param delete.files logical. Delete all files when STRUCTURE is finished?
@@ -18,80 +18,90 @@
 #' @param freqscorr logical. Correlated frequencies?
 #' @param randomize randomize.
 #' @param seed set random seed.
-#' @param pop.prior a character specifying which population prior model to 
-#'   use: "locprior" or "usepopinfo".
-#' @param locpriorinit parameterizes locprior parameter \emph{r} - how 
-#'   informative the populations are. Only used when 
-#'   \code{pop.prior} = "locprior".
-#' @param maxlocprior specifies range of locprior parameter \emph{r}. Only used 
+#' @param pop.prior a character specifying which population prior model to use:
+#'   "locprior" or "usepopinfo".
+#' @param locpriorinit parameterizes locprior parameter \emph{r} - how
+#'   informative the populations are. Only used when \code{pop.prior} =
+#'   "locprior".
+#' @param maxlocprior specifies range of locprior parameter \emph{r}. Only used
 #'   when \code{pop.prior} = "locprior".
-#' @param gensback integer defining the number of generations back to test 
-#'   for immigrant ancestry. Only used when \code{pop.prior} = "usepopinfo".
-#' @param migrprior numeric between 0 and 1 listing migration prior. Only used 
+#' @param gensback integer defining the number of generations back to test for
+#'   immigrant ancestry. Only used when \code{pop.prior} = "usepopinfo".
+#' @param migrprior numeric between 0 and 1 listing migration prior. Only used
 #'   when \code{pop.prior} = "usepopinfo".
-#' @param pfrompopflagonly logical. update allele frequencies from individuals 
-#'   specified by \code{popflag}. Only used when \code{pop.prior} = 
+#' @param pfrompopflagonly logical. update allele frequencies from individuals
+#'   specified by \code{popflag}. Only used when \code{pop.prior} =
 #'   "usepopinfo".
-#' @param popflag a vector of integers (0, 1) or logicals identifiying whether 
-#'   or not to use strata information. Only used when \code{pop.prior} 
-#'   = "usepopinfo".
+#' @param popflag a vector of integers (0, 1) or logicals identifiying whether
+#'   or not to use strata information. Only used when \code{pop.prior} =
+#'   "usepopinfo".
+#' @param inferalpha logical. Infer the value of the model parameter # from the
+#'   data; otherwise is fixed at the value \code{alpha} which is chosen by the
+#'   user. This option is ignored under the NOADMIX model. Small \code{alpha}
+#'   implies that most individuals are essentially from one population or
+#'   another, while \code{alpha} > 1 implies that most individuals are admixed.)
+#' @param alpha Dirichlet parameter for degree of admixture. This is the initial
+#'   value if \code{inferalpha = TRUE}.
+#' @param unifprioralpha logical. Assume a uniform prior for \code{alpha} which
+#'   runs between 0 and \code{alphamax}. This model seems to work fine; the
+#'   alternative model (when \code{unfprioralpha = 0}) is to take \code{alpha}
+#'   as having a Gamma prior, with mean \code{alphapriora × alphapriorb}, and
+#'   variance \code{alphapriora × alphapriorb^2}.
+#' @param alphamax maximum for uniform prior on \code{alpha} when
+#'   \code{unifprioralpha = TRUE}.
+#' @param alphapriora,alphapriorb parameters of Gamma prior on \code{alpha} when
+#'   \code{unifprioralpha = FALSE}.
 #' @param file name of the output file from STRUCTURE.
-#' @param pops vector of population labels to be used in place of numbers in 
+#' @param pops vector of population labels to be used in place of numbers in
 #'   STRUCTURE file.
-#'    
-#' @return
-#' \describe{
-#'  \item{\code{structureRun}}{a list where each element is a list with results 
-#'    from \code{structureRead} and a vector of the filenames used}
-#'  \item{\code{structureWrite}}{a vector of the filenames used by STRUCTURE}
-#'  \item{\code{structureRead}}{a list containing:
-#'    \describe{
-#'      \item{\code{summary}}{new locus name, which is a combination of loci in
-#'        group}
-#'      \item{\code{q.mat}}{data.frame of assignment probabilities for each id}
-#'      \item{\code{prior.anc}}{list of prior ancestry estimates for each 
-#'        individual where population priors were used}
-#'      \item{\code{files}}{vector of input and output files used by STRUCTURE}
-#'      \item{\code{label}}{label for the run}
-#'    }
-#'  }
-#' }
-#' 
-#' @note STRUCTURE is not included with \code{strataG} and must be downloaded 
-#'   separately. Additionally, it must be installed such that it can be run from 
-#'   the command line in the current working directory. See the vignette 
-#'   for \code{external.programs} for installation instructions.
-#' 
+#'
+#' @return \describe{ \item{\code{structureRun}}{a list where each element is a
+#' list with results from \code{structureRead} and a vector of the filenames
+#' used} \item{\code{structureWrite}}{a vector of the filenames used by
+#' STRUCTURE} \item{\code{structureRead}}{a list containing: \describe{
+#' \item{\code{summary}}{new locus name, which is a combination of loci in
+#' group} \item{\code{q.mat}}{data.frame of assignment probabilities for each
+#' id} \item{\code{prior.anc}}{list of prior ancestry estimates for each
+#' individual where population priors were used} \item{\code{files}}{vector of
+#' input and output files used by STRUCTURE} \item{\code{label}}{label for the
+#' run} } } }
+#'
+#' @note STRUCTURE is not included with \code{strataG} and must be downloaded
+#'   separately. Additionally, it must be installed such that it can be run from
+#'   the command line in the current working directory. See the vignette for
+#'   \code{external.programs} for installation instructions.
+#'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
-#' 
-#' @references Pritchard, J.K., M. Stephens, P. Donnelly. 2000. Inference of 
-#'   population structure using multilocus genotype data. Genetics 155:945-959.\cr 
+#'
+#' @references Pritchard, J.K., M. Stephens, P. Donnelly. 2000. Inference of
+#'   population structure using multilocus genotype data. Genetics
+#'   155:945-959.\cr
 #'   \url{http://web.stanford.edu/group/pritchardlab/structure.html}
-#' 
-#' @seealso \code{\link{structurePlot}}, \code{\link{evanno}}, 
-#'   \code{\link{clumpp}} 
-#' 
+#'
+#' @seealso \code{\link{structurePlot}}, \code{\link{evanno}},
+#'   \code{\link{clumpp}}
+#'
 #' @examples
 #' \dontrun{
 #' data(msats.g)
-#' 
+#'
 #' # Run STRUCTURE
 #' sr <- structureRun(msats.g, k.range = 1:4, num.k.rep = 10)
-#' 
+#'
 #' # Calculate Evanno metrics
 #' evno <- evanno(sr)
 #' evno
-#' 
+#'
 #' # Run CLUMPP to combine runs for K = 2
 #' q.mat <- clumpp(sr, k = 3)
 #' q.mat
-#' 
+#'
 #' # Plot CLUMPP results
 #' structurePlot(q.mat)
 #' }
-#' 
+#'
 #' @name structure
-#' 
+#'   
 NULL
 
 #' @rdname structure
@@ -188,6 +198,12 @@ structureWrite <- function(
   migrprior = 0.05,
   pfrompopflagonly = TRUE, 
   popflag = NULL, 
+  inferalpha = FALSE,
+  alpha = 1.0,
+  unifprioralpha = TRUE,
+  alphamax = 20,
+  alphapriora = 0.05,
+  alphapriorb = 0.001,
   ...
 ) {
   
@@ -268,15 +284,15 @@ structureWrite <- function(
   extra.params <- c(
     paste("NOADMIX", as.integer(noadmix)),
     paste("FREQSCORR", as.integer(freqscorr)),
-    "INFERALPHA 1",
-    "ALPHA 1.0",
+    paste("INFERALPHA", as.integer(inferalpha)),
+    paste("ALPHA", as.numeric(alpha)),
     "FPRIORMEAN 0.01",
     "FPRIORSD 0.05",
     "LAMBDA 1.0",
-    "UNIFPRIORALPHA 1", 
-    "ALPHAMAX 20.0",
-    "ALPHAPRIORA 0.05",
-    "ALPHAPRIORB 0.001",
+    paste("UNIFPRIORALPHA", as.integer(unifprioralpha)),
+    paste("ALPHAMAX", as.numeric(alphamax)),
+    paste("ALPHAPRIORA", as.numeric(alphapriora)),
+    paste("ALPHAPRIORB", as.numeric(alphapriorb)),
     "COMPUTEPROB 1",
     paste("ADMBURNIN", max(0, as.integer(burnin / 2))),
     "ALPHAPROPSD 0.025",
