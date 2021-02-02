@@ -25,7 +25,7 @@
 #' 
 expandHaplotypes <- function(g) {
   if(getPloidy(g) != 1) stop("'g' must be a haploid gtypes object")
-  dna.seqs <- getSequences(g, as.haplotypes = FALSE)
+  dna.seqs <- getSequences(g, as.haplotypes = FALSE, simplify = FALSE)
   if(is.null(dna.seqs)) stop("'g' must have associated sequences")
   gen.data <- as.data.frame(g)
   for(x in names(dna.seqs)) {

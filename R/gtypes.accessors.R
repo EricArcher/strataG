@@ -10,6 +10,8 @@
 #'   individual is returned.
 #' @param as.multidna return sequences as a \linkS4class{multidna} object? If
 #'   \code{FALSE}, sequences are returned as a list.
+#' @param simplify if `getSequences()` would return a single locus, return it 
+#'   as a `DNAbin` object (`TRUE`), or a single element named list (`FALSE`).
 #' @param i,j,k subsetting slots for individuals (\code{i}), loci (\code{j}), or
 #'   strata (\code{k}). See Details for more information.
 #' @param quiet suppress warnings about unmatched requested individuals, loci,
@@ -314,7 +316,7 @@ methods::setGeneric("getSequences", function(x, ...) standardGeneric("getSequenc
 methods::setMethod(
   "getSequences", 
   "gtypes", 
-  function(x, as.haplotypes = TRUE, seqName = NULL, as.multidna = FALSE, ...) {
+  function(x, as.haplotypes = TRUE, seqName = NULL, as.multidna = FALSE, simplify = TRUE, ...) {
     if(is.null(x@sequences)) return(NULL)
     dna <- apex::getSequences(x@sequences, simplify = FALSE)
     if(!as.haplotypes) {
@@ -328,7 +330,11 @@ methods::setMethod(
       )
     }
     if(!is.null(seqName)) dna <- dna[seqName]
-    if(as.multidna) as.multidna(dna) else dna
+    if(as.multidna) {
+      as.multidna(dna) 
+    } else if(length(dna) == 1 & simplify) {
+      dna[[1]] 
+    } else dna
 })
 
 
@@ -469,6 +475,6 @@ methods::setMethod(
   # Check for samples missing data for all loci
   x <- .removeIdsMissingAllLoci(x)
   
-  if(drop) x <- removeSequences(x)
+  if(drop) x <- removeUnusedSequences(x)
   return(x)
 })

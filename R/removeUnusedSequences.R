@@ -1,4 +1,4 @@
-#' @title Remove Sequences
+#' @title Remove Unused Sequences
 #' @description Remove sequences not used by samples.
 #'   
 #' @param g a \linkS4class{gtypes} object.
@@ -9,12 +9,14 @@
 #' 
 #' @export
 #' 
-removeSequences <- function(g) {
+removeUnusedSequences <- function(g) {
   if(is.null(getSequences(g))) return(g)
   haps <- getAlleleNames(g)
   g@sequences <- g %>% 
     getLociNames() %>% 
-    purrr::map(function(x) getSequences(g)[[x]][haps[[x]]]) %>% 
+    purrr::map(function(x) {
+      getSequences(g, seqName = x, simplify = TRUE)[haps[[x]]]
+    }) %>% 
     stats::setNames(names(haps)) %>% 
     as.multidna()
   g

@@ -58,7 +58,7 @@ stratify <- function(g, scheme = NULL, drop = TRUE) {
     g@data <- g@data %>% 
       dplyr::filter(!is.na(.data$stratum)) %>% 
       data.table::as.data.table()
-    g <- removeSequences(g)
+    g <- removeUnusedSequences(g)
   } 
   g
 }

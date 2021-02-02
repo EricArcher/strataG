@@ -92,7 +92,14 @@ setSchemes(x) <- value
 
 getSequences(x, ...)
 
-\S4method{getSequences}{gtypes}(x, as.haplotypes = TRUE, seqName = NULL, as.multidna = FALSE, ...)
+\S4method{getSequences}{gtypes}(
+  x,
+  as.haplotypes = TRUE,
+  seqName = NULL,
+  as.multidna = FALSE,
+  simplify = TRUE,
+  ...
+)
 
 getDescription(x, ...)
 
@@ -130,6 +137,9 @@ individual is returned.}
 
 \item{as.multidna}{return sequences as a \linkS4class{multidna} object? If
 \code{FALSE}, sequences are returned as a list.}
+
+\item{simplify}{if `getSequences()` would return a single locus, return it 
+as a `DNAbin` object (`TRUE`), or a single element named list (`FALSE`).}
 
 \item{name}{name of the value going into the \code{other} list.}
 

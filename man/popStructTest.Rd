@@ -4,25 +4,15 @@
 \alias{popStructTest}
 \alias{overallTest}
 \alias{pairwiseTest}
-\title{Population Differentiation Tests}
+\alias{pairwiseMatrix}
+\alias{pairwiseSummary}
+\title{Population Structure Tests}
 \usage{
-popStructTest(
-  g,
-  nrep = 1000,
-  stats = "all",
-  type = c("both", "overall", "pairwise"),
-  keep.null = FALSE,
-  quietly = FALSE,
-  max.cores = 1,
-  write.output = FALSE,
-  ...
-)
-
 overallTest(
   g,
   nrep = 1000,
-  stats = "all",
-  keep.null = FALSE,
+  by.locus = FALSE,
+  hap.locus = 1,
   quietly = FALSE,
   max.cores = 1,
   ...
@@ -31,12 +21,16 @@ overallTest(
 pairwiseTest(
   g,
   nrep = 1000,
-  stats = "all",
-  keep.null = FALSE,
+  by.locus = FALSE,
+  hap.locus = 1,
   quietly = FALSE,
   max.cores = 1,
   ...
 )
+
+pairwiseMatrix(pws, stat, locus = "All")
+
+pairwiseSummary(pws, locus = "All")
 }
 \arguments{
 \item{g}{a \code{\link{gtypes}} object.}
@@ -44,83 +38,117 @@ pairwiseTest(
 \item{nrep}{number specifying number of permutation replicates to use for 
 permutation test.}
 
-\item{stats}{a character vector or list of functions specifying which
-anlayses to conduct. If characters, then valid possible choices are:
-"phist", "fst", "fst.prime", "fis", "gst", "gst.prime", "gst.dbl.prime",
-"d", or "chi2", or "all". If a list, then functions must be a valid
-population structure function (see \code{\link{popStructStat}}) taking a
-\linkS4class{gtypes} object and returning a named statistic estimate.}
+\item{by.locus}{return by-locus values of statistics? If \code{TRUE} the overall 
+value will be contained in the first row, labelled \code{"All"}. Only applies 
+if the ploidy of \code{g} is > 1 (non-haploid).}
 
-\item{type}{character determining type of test to conduct. Can be "overall", 
-"pairwise", or "both". If "pairwise" or "both" are chosen and there are 
-only two strata, then only an overall test will be conducted.}
+\item{hap.locus}{which locus to use if \code{g} is haploid. Can be specified 
+by number or name.}
 
-\item{keep.null}{logical. Keep the null distribution from the 
-permutation test?}
+\item{quietly}{logical. print progress to screen?}
 
-\item{quietly}{logical. Print progress and results?}
+\item{max.cores}{the maximum number of cores to use to distribute replicates
+for permutation tests over. If set to \code{NULL}, the value will be what is 
+reported by \code{\link[parallel]{detectCores} - 1}. If \code{detectCores} 
+reports \code{NA}, \code{max.cores} will be set to 1 and parallel 
+processing will not be done.}
 
-\item{max.cores}{The maximum number of cores to use to distribute separate 
-statistics over. The number of cores to use to distribute separate
-statistics over. If set to \code{NULL}, the value will be what is 
-reported by \code{\link[parallel]{detectCores} - 1}. 
-If \code{detectCores} reports \code{NA}, 
-\code{max.cores} will be set to 1.}
+\item{...}{parameters passed to \code{\link[ape]{dist.dna}} for 
+computation of pairwise distance matrix for AMOVA PHIst statistic.}
 
-\item{write.output}{logical. Write a .csv file with results?}
+\item{pws}{a list returned from a call to \code{pairwiseTest()}.}
 
-\item{...}{other parameters to be passed to population 
-differentiation functions.}
+\item{stat}{the name of a statistic in the \code{$result} element for pairwise
+comparisons returned by \code{pairwiseTest()}.}
+
+\item{locus}{the name of a single locus. If \code{"All"}, the overall result
+from all loci is returned. See \code{by.locus}.}
 }
 \value{
 \describe{
- \item{overall}{a list containing: \describe{
-   \item{\code{strata.freq}}{a vector of the sample sizes for each stratum}
-   \item{\code{result}}{a matrix with the statistic estimate and p-value 
-     for each statistic}
-   \item{\code{null.dist}}{a matrix with the null distributions for 
-     each statistic}
+ \item{\code{overallTest()}}{a list containing: \describe{
+   \item{\code{strata.freq}}{a table of the sample sizes for each stratum}
+   \item{\code{result}}{an array with the statistic estimate and p-value 
+     for each statistic. If \code{by.locus = FALSE} or \code{g} is a haploid dataset, 
+     this is a two-dimensional array, with one row per statistic, 
+     statistic estimate in the first column and permutation test p-value 
+     in the second column. If \code{by.locus = TRUE} and \code{g} has ploidy > 1,
+     then this is a three-dimensional array where the first dimension 
+     is loci, second dimension is statistics, and third dimension is 
+     statistic estimate and p-value.}
  }}
- \item{pairwise}{a list containing: \describe{
-   \item{\code{result}}{a data.frame with the result of each pairwise 
-     comparison on each row}
-   \item{\code{pair.mat}}{a list with a pairwise matrix for each statistic.
-     Values in lower left are the statistic estimate, and upper right are
-     p-values}
-   \item{\code{null.dist}}{a matrix with the null distributions for 
-     each statistic}
- }} 
+ \item{\code{pairwiseTest()}}{a list containing a list of results as described above 
+   for \code{overallTest()} for each pairwise comparison.}
+ \item{\code{pairwiseMatrix()}}{a matrix summarizing a chosen statistic 
+   (\code{stat}) for a chosen locus (\code{locus}) between pairs of strata 
+   with the statistic estimate in the lower left and the p-value in the upper right.}
+ \item{\code{pairwiseSummary()}}{a data frame summarizing all pairwise 
+   statistics and p-values along with strata sample sizes.}  
 }
 }
 \description{
-Conduct overall and/or pairwise tests of 
-  population differentiation.
+Conduct multiple tests of population structure / differentiation. 
+  Overall tests can be conducted for the current stratification scheme 
+  (\code{overallTest()}), or can be conducted for all unique 
+  pairs of strata (\code{pairwiseTest()}). All statistics appropriate to 
+  the ploidy of the data are estimated at once. See \code{Note} for a 
+  description of each statistic.
 }
 \note{
-On multi-core systems, runs of separate statistics are automatically 
-  distributed over as many cores as available (minus one). This can be 
-  controlled by the \code{max.cores} argument if less core usage is 
-  desired.
+The computed statistics are:\tabular{ll}{
+  \code{CHIsq} \tab chi-squared estimate measuring random allele frequency
+    distribution distributed across strata (haploid and diploid) \cr
+  \code{Ho, Hs, Ht} \tab Nei and Kumar 2002 : 
+    observed heterozygosity (\code{Ho}), 
+    within population diversity (\code{Hs}), overall diversity (\code{Ht}) 
+    \cr
+  \code{Ht_prime} \tab description \cr
+  \code{Dst} \tab description \cr
+  \code{Dst_prime} \tab description \cr
+  \code{Fst} \tab For haploid data, equivalent to PHIst with pairwise 
+    distances set to 1. For diploid data,  \cr
+  \code{Fst_prime} \tab description \cr
+  \code{Fis} \tab description \cr
+  \code{Gst_prime} \tab description \cr
+  \code{Gst_dbl_prime} \tab description \cr
+  \code{Dest, Dest_Chao} \tab population differentiation (Jost 2008) \cr 
+  \code{wcFit, wcFst, wcFit} \tab (Weir and Cockerham 1984) \cr
+  \code{PHIst} \tab Haploid AMOVA estimate of differentiation derived 
+    from matrix of pairwise distances between sequences. 
+    See \code{\link[ape]{dist.dna}} for details on distance computation. 
+    (Excoffier et al 1992) \cr
+}
 }
 \examples{
+# An overall test with microsatellite data
 data(msats.g)
-msats.g <- stratify(msats.g, "fine")
-
-# Just an overall Chi-squared test
-ovl <- overallTest(msats.g, stats = "chi2", nrep = 100)
+ovl <- overallTest(msats.g, nrep = 100)
 ovl
 
-#' Just a pairwise test for Gst
-pws <- pairwiseTest(msats.g, stats = "gst", nrep = 100)
+#' A pairwise test with control region sequences
+data(dloop.g)
+pws <- pairwiseTest(dloop.g, nrep = 100)
 pws
 
-\dontrun{
-#' Both overall and pairwise tests for Fst and F'st
-full <- popStructTest(msats.g, stats = c("fst", "fst.prime"))
-print(full$overall)
-print(full$pairwise)
 }
-
+\references{
+Excoffier, L., Smouse, P.E. and Quattro, J.M. 1992. Analysis of 
+  molecular variance inferred from metric distances among DNA haplotypes: 
+  application to human mitochondrial DNA restriction data. 
+  Genetics 131:479–491.
+Jost, L. 2008. GST and its relatives do not measure differentiation. 
+  Molecular Ecology 17:4015-4026.
+Nei M. and Chesser R. 1983. Estimation of fixation indexes and gene 
+  diversities. Annals of Human Genetics 47:253-259.
+Nei M. 1987. Molecular Evolutionary Genetics. Columbia University Press
+Weir, B.S. and Cockerham, C.C. 1984. Estimating F-statistics for 
+  the analysis of population structure. Evolution 38:1358–1370.
+Weir, B.S. and Hill, W.G. 2002. Estimating F-statistics. 
+  Annual Review of Genetics 36:721–750.
+}
+\seealso{
+\code{\link[hierfstat]{basic.stats}}, \code{\link[pegas]{Fst}},
+  \code{\link[pegas]{amova}}
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}

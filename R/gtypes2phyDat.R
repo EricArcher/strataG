@@ -27,7 +27,7 @@
 #' 
 gtypes2phyDat <- function(x, locus = 1) {
   if(getPloidy(x) != 1) stop("conversion can only be done with haploid gtypes.")
-  getSequences(x)[[locus]] %>% 
+  getSequences(x, seqName = locus) %>% 
     as.matrix() %>% 
     phangorn::as.phyDat()
 }

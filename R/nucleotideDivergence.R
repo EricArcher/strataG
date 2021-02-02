@@ -53,7 +53,7 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1),
   
   g <- g[, , getStrataNames(g)]
   hap.dist <- sapply(
-    getSequences(g), 
+    getSequences(g, simplify = FALSE), 
     ape::dist.dna, 
     model = model, 
     as.matrix = TRUE, 

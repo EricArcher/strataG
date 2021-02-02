@@ -2,6 +2,7 @@
 #' @description Convert a \code{gtypes} object to a \code{\link[pegas]{loci}} object.
 #' 
 #' @param x a \linkS4class{gtypes} or \code{loci} formatted object.
+#' @param sep character used to separate alleles at a locus.
 #' @param description a label for the \code{gtypes} object (optional).
 #'  
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
@@ -14,8 +15,8 @@
 #' data(msats.g)
 #' 
 #' # Convert to loci
-#' lc <- gtypes2loci(msats.g)
-#' lc
+#' lc <- gtypes2loci(msats.g)  
+#' lc  
 #' 
 #' # Convert to gtypes
 #' gt <- loci2gtypes(lc)
@@ -24,7 +25,7 @@
 #' @name gtypes2loci 
 #' @export
 #' 
-gtypes2loci <- function(x) {
+gtypes2loci <- function(x, sep = "/") {
   if(!is.gtypes(x)) stop("'x' must be a gtypes object")
   as.data.frame(x, one.col = TRUE, sep = "/") %>% 
     dplyr::filter(!is.na(.data$stratum)) %>% 
@@ -32,21 +33,22 @@ gtypes2loci <- function(x) {
     dplyr::mutate_all(factor) %>% 
     tibble::column_to_rownames("id") %>% 
     as.data.frame() %>% 
-    pegas::as.loci(allele.sep = "/", col.pop = 1)
+    pegas::as.loci(allele.sep = sep, col.pop = 1)
 }
 
 #' @rdname gtypes2loci
 #' @export
 #' 
-loci2gtypes <- function(x, description = NULL) {
+loci2gtypes <- function(x, description = NULL, sep = "/") {
   if(!inherits(x, "loci")) stop("'x' must be a loci object")
-  mat <- as.data.frame(x) %>% 
+  x <- as.data.frame(x)
+  mat <- x %>% 
     dplyr::mutate_all(as.character) %>% 
     dplyr::select(attr(x, "locicol")) %>% 
-    alleleSplit(sep = "/")
+    alleleSplit(sep = sep)
   cbind(
     id = rownames(x),
-    pop = as.character(x$population),
+    pop = as.character(x[, 1]),
     mat
   ) %>% 
     df2gtypes(ploidy = 2, description = description)

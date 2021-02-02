@@ -1,326 +1,416 @@
 #' @name popStructTest 
-#' @title Population Differentiation Tests
-#' @description Conduct overall and/or pairwise tests of 
-#'   population differentiation.
+#' @title Population Structure Tests
+#' @description Conduct multiple tests of population structure / differentiation. 
+#'   Overall tests can be conducted for the current stratification scheme 
+#'   (\code{overallTest()}), or can be conducted for all unique 
+#'   pairs of strata (\code{pairwiseTest()}). All statistics appropriate to 
+#'   the ploidy of the data are estimated at once. See \code{Note} for a 
+#'   description of each statistic.
 #' 
 #' @param g a \code{\link{gtypes}} object.
 #' @param nrep number specifying number of permutation replicates to use for 
 #'   permutation test.
-#' @param stats a character vector or list of functions specifying which
-#'   anlayses to conduct. If characters, then valid possible choices are:
-#'   "phist", "fst", "fst.prime", "fis", "gst", "gst.prime", "gst.dbl.prime",
-#'   "d", or "chi2", or "all". If a list, then functions must be a valid
-#'   population structure function (see \code{\link{popStructStat}}) taking a
-#'   \linkS4class{gtypes} object and returning a named statistic estimate.
-#' @param type character determining type of test to conduct. Can be "overall", 
-#'   "pairwise", or "both". If "pairwise" or "both" are chosen and there are 
-#'   only two strata, then only an overall test will be conducted.
-#' @param max.cores The maximum number of cores to use to distribute separate 
-#'   statistics over. The number of cores to use to distribute separate
-#'   statistics over. If set to \code{NULL}, the value will be what is 
-#'   reported by \code{\link[parallel]{detectCores} - 1}. 
-#'   If \code{detectCores} reports \code{NA}, 
-#'   \code{max.cores} will be set to 1.
-#' @param keep.null logical. Keep the null distribution from the 
-#'   permutation test?
-#' @param quietly logical. Print progress and results?
-#' @param write.output logical. Write a .csv file with results?
-#' @param ... other parameters to be passed to population 
-#'   differentiation functions.
+#' @param by.locus return by-locus values of statistics? If \code{TRUE} the overall 
+#'   value will be contained in the first row, labelled \code{"All"}. Only applies 
+#'   if the ploidy of \code{g} is > 1 (non-haploid).
+#' @param hap.locus which locus to use if \code{g} is haploid. Can be specified 
+#'   by number or name. 
+#' @param max.cores the maximum number of cores to use to distribute replicates
+#'   for permutation tests over. If set to \code{NULL}, the value will be what is 
+#'   reported by \code{\link[parallel]{detectCores} - 1}. If \code{detectCores} 
+#'   reports \code{NA}, \code{max.cores} will be set to 1 and parallel 
+#'   processing will not be done. 
+#' @param quietly logical. print progress to screen?
+#' @param ... parameters passed to \code{\link[ape]{dist.dna}} for 
+#'  computation of pairwise distance matrix for AMOVA PHIst statistic.
+#' @param pws a list returned from a call to \code{pairwiseTest()}.
+#' @param stat the name of a statistic in the \code{$result} element for pairwise
+#'   comparisons returned by \code{pairwiseTest()}.
+#' @param locus the name of a single locus. If \code{"All"}, the overall result
+#'   from all loci is returned. See \code{by.locus}.
 #' 
 #' @return \describe{
-#'  \item{overall}{a list containing: \describe{
-#'    \item{\code{strata.freq}}{a vector of the sample sizes for each stratum}
-#'    \item{\code{result}}{a matrix with the statistic estimate and p-value 
-#'      for each statistic}
-#'    \item{\code{null.dist}}{a matrix with the null distributions for 
-#'      each statistic}
+#'  \item{\code{overallTest()}}{a list containing: \describe{
+#'    \item{\code{strata.freq}}{a table of the sample sizes for each stratum}
+#'    \item{\code{result}}{an array with the statistic estimate and p-value 
+#'      for each statistic. If \code{by.locus = FALSE} or \code{g} is a haploid dataset, 
+#'      this is a two-dimensional array, with one row per statistic, 
+#'      statistic estimate in the first column and permutation test p-value 
+#'      in the second column. If \code{by.locus = TRUE} and \code{g} has ploidy > 1,
+#'      then this is a three-dimensional array where the first dimension 
+#'      is loci, second dimension is statistics, and third dimension is 
+#'      statistic estimate and p-value.}
 #'  }}
-#'  \item{pairwise}{a list containing: \describe{
-#'    \item{\code{result}}{a data.frame with the result of each pairwise 
-#'      comparison on each row}
-#'    \item{\code{pair.mat}}{a list with a pairwise matrix for each statistic.
-#'      Values in lower left are the statistic estimate, and upper right are
-#'      p-values}
-#'    \item{\code{null.dist}}{a matrix with the null distributions for 
-#'      each statistic}
-#'  }} 
+#'  \item{\code{pairwiseTest()}}{a list containing a list of results as described above 
+#'    for \code{overallTest()} for each pairwise comparison.}
+#'  \item{\code{pairwiseMatrix()}}{a matrix summarizing a chosen statistic 
+#'    (\code{stat}) for a chosen locus (\code{locus}) between pairs of strata 
+#'    with the statistic estimate in the lower left and the p-value in the upper right.}
+#'  \item{\code{pairwiseSummary()}}{a data frame summarizing all pairwise 
+#'    statistics and p-values along with strata sample sizes.}  
 #' }
 #' 
-#' @note On multi-core systems, runs of separate statistics are automatically 
-#'   distributed over as many cores as available (minus one). This can be 
-#'   controlled by the \code{max.cores} argument if less core usage is 
-#'   desired. 
+#' @note The computed statistics are:\tabular{ll}{
+#'   \code{CHIsq} \tab chi-squared estimate measuring random allele frequency
+#'     distribution distributed across strata (haploid and diploid) \cr
+#'   \code{Ho, Hs, Ht} \tab Nei and Kumar 2002 : 
+#'     observed heterozygosity (\code{Ho}), 
+#'     within population diversity (\code{Hs}), overall diversity (\code{Ht}) 
+#'     \cr
+#'   \code{Ht_prime} \tab description \cr
+#'   \code{Dst} \tab description \cr
+#'   \code{Dst_prime} \tab description \cr
+#'   \code{Fst} \tab For haploid data, equivalent to PHIst with pairwise 
+#'     distances set to 1. For diploid data,  \cr
+#'   \code{Fst_prime} \tab description \cr
+#'   \code{Fis} \tab description \cr
+#'   \code{Gst_prime} \tab description \cr
+#'   \code{Gst_dbl_prime} \tab description \cr
+#'   \code{Dest, Dest_Chao} \tab population differentiation (Jost 2008) \cr 
+#'   \code{wcFit, wcFst, wcFit} \tab (Weir and Cockerham 1984) \cr
+#'   \code{PHIst} \tab Haploid AMOVA estimate of differentiation derived 
+#'     from matrix of pairwise distances between sequences. 
+#'     See \code{\link[ape]{dist.dna}} for details on distance computation. 
+#'     (Excoffier et al 1992) \cr
+#' }
+#'   
+#' @seealso \code{\link[hierfstat]{basic.stats}}, \code{\link[pegas]{Fst}},
+#'   \code{\link[pegas]{amova}}
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
-#' @examples 
-#' data(msats.g)
-#' msats.g <- stratify(msats.g, "fine")
+#' @references
+#' Excoffier, L., Smouse, P.E. and Quattro, J.M. 1992. Analysis of 
+#'   molecular variance inferred from metric distances among DNA haplotypes: 
+#'   application to human mitochondrial DNA restriction data. 
+#'   Genetics 131:479–491.
+#' Jost, L. 2008. GST and its relatives do not measure differentiation. 
+#'   Molecular Ecology 17:4015-4026.
+#' Nei M. and Chesser R. 1983. Estimation of fixation indexes and gene 
+#'   diversities. Annals of Human Genetics 47:253-259.
+#' Nei M. 1987. Molecular Evolutionary Genetics. Columbia University Press
+#' Weir, B.S. and Cockerham, C.C. 1984. Estimating F-statistics for 
+#'   the analysis of population structure. Evolution 38:1358–1370.
+#' Weir, B.S. and Hill, W.G. 2002. Estimating F-statistics. 
+#'   Annual Review of Genetics 36:721–750.
 #' 
-#' # Just an overall Chi-squared test
-#' ovl <- overallTest(msats.g, stats = "chi2", nrep = 100)
+#' @examples 
+#' # An overall test with microsatellite data
+#' data(msats.g)
+#' ovl <- overallTest(msats.g, nrep = 100)
 #' ovl
 #' 
-#' #' Just a pairwise test for Gst
-#' pws <- pairwiseTest(msats.g, stats = "gst", nrep = 100)
+#' #' A pairwise test with control region sequences
+#' data(dloop.g)
+#' pws <- pairwiseTest(dloop.g, nrep = 100)
 #' pws
-#' 
-#' \dontrun{
-#' #' Both overall and pairwise tests for Fst and F'st
-#' full <- popStructTest(msats.g, stats = c("fst", "fst.prime"))
-#' print(full$overall)
-#' print(full$pairwise)
-#' }
-#' 
-#' @export
-#' 
-popStructTest <- function(g, nrep = 1000, stats = "all", 
-                          type = c("both", "overall", "pairwise"),
-                          keep.null = FALSE, quietly = FALSE, 
-                          max.cores = 1, write.output = FALSE, ...) {
-  # check arguments
-  type <- match.arg(type)
-    
-  # conduct overall test
-  overall <- NULL
-  if(type %in% c("both", "overall")) {
-    overall <- overallTest(
-      g = g, nrep = nrep, stats = stats, keep.null = keep.null, 
-      quietly = quietly, max.cores = max.cores, ...
-    )    
-  }
-  
-  # conduct pairwise test
-  pairwise <- NULL
-  if(type %in% c("both", "pairwise") & getNumStrata(g) > 2) {
-    pairwise <- pairwiseTest(
-      g = g, nrep = nrep, stats = stats, keep.null = keep.null, 
-      quietly = quietly, max.cores = max.cores, ...
-    )
-  }
-
-  if(write.output) {
-    if(!is.null(overall)) {
-      out.file <- gsub("[[:punct:]]", ".", 
-       paste(getDescription(g), "permutation test results.csv")
-      )
-      utils::write.csv(overall$result, out.file)
-    }
-    if(!is.null(pairwise)) {
-      for(stat in names(pairwise$pair.mat)) {
-        out.file <- gsub("[[:punct:]]", ".", 
-          paste(getDescription(g), stat, "pairwise matrix.csv")
-        )
-        utils::write.csv(pairwise$pair.mat[[stat]], out.file)
-      }
-    }    
-  }
-    
-  invisible(list(overall = overall, pairwise = pairwise))
-}
-
-
-#' @keywords internal
-#' 
-.checkStats <- function(stats, ploidy) {
-  avail.stats <- if(ploidy == 1) {
-    c("chi2", "fst", "phist")
-  } else {
-    c(
-      "chi2", "d", 
-      "fis", "fst", "fst.prime", 
-      "gst", "gst.prime", "gst.dbl.prime"
-    )
-  }
-  stats <- tolower(stats)
-  stats <- if("all" %in% stats) {
-    avail.stats 
-  } else {
-    missing <- setdiff(stats, avail.stats)
-    if(length(missing) > 0) {
-      missing <- paste(missing, collapse = ", ")
-      stop(paste("the following stats are not available:", missing))
-    }
-    unique(stats)
-  }
-  if(length(stats) == 0) stop("no stats specified.")
-  stats
-}
-
+#'
+NULL
 
 #' @noRd
 #' 
-.runStatFunc <- function(stat.name, input) {
-  stat.func <- switch(
-    tolower(stat.name),
-    chi2 = .statChi2,
-    d = .statJostD,
-    fis = .statFis,
-    fst = .statFst,
-    fst.prime = .statFstPrime,
-    gst = .statGst,
-    gst.prime = .statGstPrime,
-    gst.dbl.prime = .statGstDblPrime,
-    phist = .statPhist,
-    ... = NULL
+.dataPrep <- function(g, nrep = 0, hap.locus = 1, ...) {
+  # format data for C input
+  dt <- g@data %>% 
+    dplyr::filter(!is.na(allele) & !is.na(stratum)) %>% 
+    dplyr::transmute(
+      id = as.numeric(factor(id)),
+      stratum = factor(stratum),
+      locus = factor(locus),
+      allele = factor(paste0(locus, "_", allele))
+    )
+  ploidy <- strataG::getPloidy(g)
+  
+  # check data
+  if(nrow(dt) == 0) stop(
+    "no individuals left after removing missing genotypes ",
+    "and unstratified individuals."
   )
-  if(is.null(stat.func)) {
-    .formatResult(stat.name, NULL, input$keep.null)
-  } else {
-    stat.func(input)
+  st.freq <- table(dt$stratum) / ploidy
+  if(any(st.freq == 1)) {
+    has.one <- names(st.freq)[st.freq == 1]
+    stop(
+      "the following strata have only one individual: ", 
+      paste(has.one, collapse = ", ")
+    )
   }
+  
+  st <- makeLookupVec(dt$id, as.numeric(dt$stratum) - 1)
+  dt.list <- list(
+    n_ind = dplyr::n_distinct(dt$id),
+    n_allele = nlevels(dt$allele),
+    n_loc = nlevels(dt$locus),
+    n_st = dplyr::n_distinct(st),
+    ploidy = ploidy,
+    ind_allele_freq = table2D_int(dt$id, as.numeric(dt$allele) - 1),
+    strata = cbind(
+      st, 
+      if(nrep > 0) replicate(nrep, sample(st)) else NULL, deparse.level = 0
+    ),
+    strata_names = levels(dt$stratum)
+  )
+  
+  if(ploidy == 1) {
+    if(is.numeric(hap.locus)) hap.locus <- getLociNames(g)[hap.locus]
+    haps <- getAlleleNames(g)[[hap.locus]]
+    hap.names <- paste0(hap.locus, "_", haps)
+    
+    # format distances for Fst (all 1s, and 0s on the diagonal)
+    dt.list$unit_dist <- matrix(
+      1, nrow = length(haps), ncol = length(haps), 
+      dimnames = list(hap.names, hap.names)
+    )
+    diag(dt.list$unit_dist) <- 0    
+    
+    # get haplotype distances for PHIst
+    dt.list$hap_dist <- if(!is.null(getSequences(g))) {
+      dna.seq <- getSequences(g, as.haplotypes = TRUE, seqName = hap.locus)
+      hd <- ape::dist.dna(dna.seq, as.matrix = TRUE, ...)
+      hd <- hd[haps, haps] ^ 2
+      dimnames(hd) <- list(hap.names, hap.names)
+      hd
+    } else NULL
+  } else {
+    dt.list$locus <- makeLookupVec(
+      as.numeric(dt$allele) - 1, 
+      as.numeric(dt$locus) - 1
+    )
+    dt.list$loci_names <- levels(dt$locus)
+  }
+  
+  dt.list
 }
 
+#' @noRd
+#' 
+.statChisq <- function(dt, s) {
+  obsvd <- do.call(
+    rbind,
+    tapply(1:nrow(dt$strata), dt$strata[, s], function(i) {
+      colSums(dt$ind_allele_freq[i, ])
+    })
+  )
+  exptd <- tcrossprod(rowSums(obsvd), colSums(obsvd)) / sum(obsvd)
+  chisq <- (obsvd - exptd) ^ 2 / exptd
+  chisq <- if(dt$n_loc > 1) {
+    by_locus <- tapply(
+      1:length(dt$locus), 
+      dt$locus, 
+      function(i) sum(chisq[, i])
+    )
+    stats::setNames(
+      c(sum(by_locus), by_locus),
+      c("All", dt$loci_names)
+    )
+  } else sum(chisq)
+  
+  cbind(CHIsq = chisq)
+}
+
+#' @noRd
+#' 
+.statFstStats <- function(x, s) {
+  result <- calc_FstStats(
+    x$n_ind, x$n_allele, x$n_loc, x$n_st, x$ploidy, 
+    x$strata[, s], x$locus, x$ind_allele_freq
+  )
+  rownames(result) <- c("All", x$loci_names)
+  result
+}
+
+#' @noRd
+#' 
+.statPhist <- function(x, s) {
+  calc_Phist(
+    x$n_ind, x$n_allele, x$n_st, 
+    x$strata[, s], x$ind_allele_freq, x$unit_dist, x$hap_dist
+  )
+}
+
+#' @noRd
+#' 
+.runPopStructFuncs <- function(s, data, by.locus = TRUE) {
+  mat <- if(data$ploidy == 1) {
+    rbind(c(.statChisq(data, s)[, 1], .statPhist(data, s)))
+  } else {
+    result <- cbind(.statChisq(data, s), .statFstStats(data, s))
+    if(by.locus) result else result[1, , drop = FALSE]
+  }
+  mat[is.nan(mat)] <- NA
+  mat
+}
 
 #' @rdname popStructTest
 #' @export
 #' 
-overallTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE, 
-                        quietly = FALSE, max.cores = 1, ...) {
-  # check requested stats
-  stats <- .checkStats(stats, getPloidy(g))
-  
+overallTest <- function(g, nrep = 1000, by.locus = FALSE, hap.locus = 1,
+                        quietly = FALSE, max.cores = 1,  ...) {
   # check replicates
-  if(is.null(nrep)) nrep <- 0
   if(!is.numeric(nrep) & length(nrep) != 1) {
     stop("'nrep' must be a single-element numeric vector")
   }
-  if(nrep == 0) keep.null <- FALSE
+  if(nrep < 0) stop("'nrep' must be a positive number")
   
-  # format gtypes input
-  input <- .formatCinput(g, nrep, keep.null, hap.dist = "phist" %in% stats, ...)
-  # collect strata frequencies to named vector 
-  strata.freq <- .strataFreq(g)
+  # create input data (overwrite 'g')
   desc <- getDescription(g)
-  rm(g)
+  g <- .dataPrep(g, nrep = nrep, hap.locus = hap.locus, ...)
   
-  # run population structure tests
-  if(!quietly) cat(
-    cat("\n<<<", desc, ">>>\n"),
-    format(Sys.time()), ": Overall test :", nrep, "permutations\n"
-  )
-  cl <- swfscMisc::setupClusters(length(stats), max.cores)
-  result <- tryCatch({
-    if(is.null(cl)) {
-      lapply(stats, .runStatFunc, input = input)
-    } else {
-      parallel::clusterEvalQ(cl, require(strataG))
-      parallel::clusterExport(cl, "input", environment())
-      parallel::parLapplyLB(cl, stats, .runStatFunc, input = input)
+  # compute observed statistics
+  obs <- .runPopStructFuncs(1, g, by.locus)    
+  
+  # create permutation null distribution
+  p.val <- if(nrep == 0) {
+    x <- obs
+    x[] <- NA
+    x
+  } else {
+    # run permutation tests in parallel
+    cl <- swfscMisc::setupClusters(nrep, max.cores)
+    
+    if(!quietly) {
+      message("\n<<< ", desc, " >>>")
+      message(format(Sys.time()), " : Overall tests (", nrep, " permutations)")
     }
-  }, finally = if(!is.null(cl)) parallel::stopCluster(cl) else NULL)
-  
-  # create matrix of estimates and p-values
-  result.mat <- t(sapply(result, function(x) x$result))
-  rownames(result.mat) <- sapply(result, function(x) x$stat.name)
-  
-  # collect null distribution
-  null.dist <- if(keep.null) {
-    nd <- sapply(result, function(x) x$null.dist)
-    colnames(nd) <- rownames(result.mat)
-    nd
-  } else NULL
-  
-  if(!quietly) {
-    cat("\n")
-    print(cbind(N = strata.freq))
-    cat("\nPopulation structure results:\n")
-    print(result.mat)
-    cat("\n")
+    
+    null.dist <- tryCatch({
+      if(is.null(cl)) {
+        lapply(2:nrep, .runPopStructFuncs, data = g, by.locus = by.locus)
+      } else {
+        parallel::clusterEvalQ(cl, require(strataG))
+        parallel::clusterExport(cl, "g", environment())
+        parallel::parLapplyLB(
+          cl, 2:nrep, .runPopStructFuncs, data = g, by.locus = by.locus
+        )
+      }
+    }, finally = if(!is.null(cl)) parallel::stopCluster(cl) else NULL)
+    if(!quietly) message(format(Sys.time()), " : Done")
+    null.dist <- simplify2array(c(list(obs), null.dist))
+    apply(null.dist, c(1, 2), function(x) mean(x >= x[1], na.rm = TRUE))
   }
+  p.val[is.nan(p.val)] <- NA
+  result <- simplify2array(list(estimate = obs, p.val = p.val))
+  # simplify result if only one locus is present
+  if(g$ploidy == 1 | !by.locus) result <- result[1, , ]
   
-  invisible(
-    list(strata.freq = strata.freq, result = result.mat, null.dist = null.dist)
+  list(
+    strata.freq = table(g$strata_names[g$strata[, 1] + 1]), 
+    result = result
   )
 }
-
 
 #' @rdname popStructTest
 #' @export
 #' 
-pairwiseTest <- function(g, nrep = 1000, stats = "all", keep.null = FALSE, 
+pairwiseTest <- function(g, nrep = 1000, by.locus = FALSE, hap.locus = 1,
                          quietly = FALSE, max.cores = 1, ...) { 
   
   if(getNumStrata(g) == 1) stop("'g' must have more than one stratum defined.")
   
-  if(!quietly) cat(
-    cat("\n<<<", getDescription(g), ">>>\n"),
-    format(Sys.time()), ": Pairwise tests :", nrep, "permutations\n"
-  )
+  if(!quietly) {
+    message("\n<<< ", getDescription(g), " >>>")
+    message(format(Sys.time()), " : Pairwise tests (", nrep, " permutations)")
+  }
   
   # create strata pairs
   strata.pairs <- .strataPairs(g)
   
   # run permutation test on all pairwise gtypes subsets
-  pair.list <- vector("list", length = nrow(strata.pairs))
+  pws <- vector("list", length = nrow(strata.pairs))
   for(i in 1:nrow(strata.pairs)) {
     pair <- unlist(strata.pairs[i, ])
-    
     if(!quietly) {
-      cat("  ", format(Sys.time()), ":", paste(pair, collapse = " v. "), "\n")
+      message(format(Sys.time()), " : ", paste(pair, collapse = " v. "))
     }
-    
-    pair.list[[i]] <- overallTest(
-      g = g[ , , pair], nrep = nrep, stats = stats, keep.null = keep.null, 
+    pws[[i]] <- overallTest(
+      g[, , pair], nrep = nrep, by.locus = by.locus, hap.locus = hap.locus,
       quietly = TRUE, max.cores = max.cores, ...
     )
   }
+  if(!quietly) message(format(Sys.time()), " : Done")
   
-  # compile results in 'pair.list' into a data.frame
-  result <- do.call(rbind, lapply(pair.list, function(pair) {
-    result.vec <- as.vector(t(pair$result))
-    names(result.vec) <- paste(
-      rep(rownames(pair$result), each = 2), c("", ".p.val"), sep = ""
-    ) 
-    result.vec <- rbind(result.vec)
-    s1 <- names(pair$strata.freq)[1]
-    s2 <- names(pair$strata.freq)[2]
-    n1 <- pair$strata.freq[1]
-    n2 <- pair$strata.freq[2]
-    strata.1 <- paste(s1, " (", n1, ")", sep = "")
-    strata.2 <- paste(s2, " (", n2, ")", sep = "")
-    df <- data.frame(
-      strata.1 = s1, 
-      strata.2 = s2, 
-      n.1 = n1, 
-      n.2 = n2,
-      stringsAsFactors = FALSE
-    )
-    df <- cbind(df, result.vec) 
-    rownames(df) <- paste(strata.1, " v. ", strata.2, sep = "")
-    df
-  }))
+  pws
+}
+
+#' @rdname popStructTest
+#' @export
+#' 
+pairwiseMatrix <- function(pws, stat, locus = "All") {
+  res <- pws[[1]]$result
   
-  # create pairwise matrices - lower left is estimate, upper right is p-value 
-  stat.cols <- seq(5, ncol(result), 2)
-  strata <- getStrataNames(g)
-  mat <- matrix(nrow = length(strata), ncol = length(strata), 
-    dimnames = list(strata, strata)
-  )
-  pair.mat <- lapply(stat.cols, function(i) {
-    for(j in 1:nrow(result)) {
-      strata.1 <- as.character(result$strata.1[j])
-      strata.2 <- as.character(result$strata.2[j])
-      mat[strata.2, strata.1] <- result[j, i]
-      mat[strata.1, strata.2] <- result[j, i + 1]
-    }
-    mat
-  })
-  names(pair.mat) <- colnames(result)[stat.cols]
-  
-  # compile null distributions into list of matrices
-  null.dist <- if(keep.null) {
-    null.mat <- lapply(pair.list, function(pair) pair$null.dist)
-    names(null.mat) <- result$pair.label
-    null.mat
-  } else NULL
-  
-  if(!quietly) {
-    cat("\nPopulation structure results:\n")
-    print(result[, 5:ncol(result)])
-    cat("\n")
+  # check that stat is present
+  stat.dim <- length(dim(res)) - 1
+  if(!stat %in% dimnames(res)[[stat.dim]]) {
+    stop("statistic '", stat, "' not present.")
   }
   
-  invisible(list(result = result, pair.mat = pair.mat, null.dist = null.dist))
+  # check that locus is present
+  locus.dim <- if(length(dim(res)) == 2) NULL else 1
+  if(!is.null(locus.dim)) {
+    if(!locus %in% dimnames(res)[[locus.dim]]) {
+      stop("locus '", locus, "' not present.")
+    }
+  }
+  
+  # extract strata names and create empty matrix                          
+  st.freqs <- do.call(
+    rbind,
+    lapply(pws, function(res) as.data.frame(res$strata.freq))
+  )
+  st.freqs <- unique(st.freqs)
+  mat <- matrix(NA, nrow = nrow(st.freqs), ncol = nrow(st.freqs))
+  rownames(mat) <- colnames(mat) <- st.freqs[, 1]
+  
+  # create and return matix
+  for(res in pws) {
+    pair <- names(res$strata.freq)
+    res <- if(stat.dim == 1) res$result else res$result[locus, , ]
+    mat[pair[2], pair[1]] <- res[stat, "estimate"]
+    mat[pair[1], pair[2]] <- res[stat, "p.val"]
+  }
+  mat
+}
+
+#' @rdname popStructTest
+#' @export
+#' 
+pairwiseSummary <- function(pws, locus = "All") {
+  res <- pws[[1]]$result
+  stat.dim <- length(dim(res)) - 1
+  stats <- dimnames(res)[[stat.dim]]
+  
+  # check that locus is present
+  locus.dim <- if(length(dim(res)) == 2) NULL else 1
+  if(!is.null(locus.dim)) {
+    if(!locus %in% dimnames(res)[[locus.dim]]) {
+      stop("locus '", locus, "' not present.")
+    }
+  }
+  
+  result <- lapply(pws, function(pws) {
+    df <- data.frame(
+      strata.1 = names(pws$strata.freq)[1],
+      strata.2 = names(pws$strata.freq)[2],
+      n.1 = pws$strata.freq[1],
+      n.2 = pws$strata.freq[2]
+    )
+    rownames(df) <- NULL
+    mat <- if(is.null(locus.dim)) {
+      t(pws$result)
+    } else {
+      t(pws$result[locus, , ])
+    }
+    cbind(
+      label = paste0(
+        df$strata.1, " (", df$n.1, ") v. ",
+        df$strata.2, " (", df$n.2, ")"
+      ),
+      df,
+      rbind(stats::setNames(
+        c(mat),
+        c(rbind(stats, paste0(stats, "_p.val")))
+      ))
+    )
+  })
+  
+  do.call(rbind, result)
 }

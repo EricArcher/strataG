@@ -42,7 +42,8 @@ object containing sequences represented by each locus.}
 
 \item{other}{other optional information to include.}
 
-\item{remove.sequences}{logical. If \code{TRUE} any sequences not referenced}
+\item{remove.sequences}{logical. If \code{TRUE} any sequences not referenced
+in the object will be removed.}
 }
 \description{
 Create a new \linkS4class{gtypes} object using 

@@ -167,8 +167,8 @@ gelato <- function(g, unknown.strata, nrep = 1000,
   st[ran.knowns] <- "<gelato.unknown>"
   setStrata(known.g) <- st
   
-  c(obs = unname(statFst(obs.g, nrep = 0)$result["estimate"]), 
-    null = unname(statFst(known.g, nrep = 0)$result["estimate"])
+  c(obs = unname(overallTest(obs.g, nrep = 0)$result["wcFst", "statistic"]), 
+    null = unname(overallTest(known.g, nrep = 0)$result["wcFst", "statistic"])
   )
 }
 

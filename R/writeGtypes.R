@@ -64,7 +64,7 @@ writeGtypes <- function(g, label = NULL, folder = NULL, by.strata = TRUE,
       fname <- paste(label, x, "fasta", sep = ".")
       if(!is.null(folder)) fname <- file.path(folder, fname)
       ape::write.dna(
-        getSequences(g)[[x]], 
+        getSequences(g, seqName = x), 
         file = fname, 
         format = "fasta", 
         nbcol = -1, 

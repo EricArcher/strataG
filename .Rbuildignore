@@ -1,6 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^devel/*
+^_devel/*
 ^README\.Rmd$
 ^README-.*\.png$
 ^NEWS\.Rmd$

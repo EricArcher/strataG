@@ -6,7 +6,7 @@ Description: A toolkit for analyzing stratified population genetic data.
   calculating most population subdivision metrics, and running external programs 
   such as structure and fastsimcoal. The package is further described in 
   Archer et al (2016) <doi:10.1111/1755-0998.12559>.
-Version: 2.4.910
+Version: 2.5.01
 License: GNU General Public License
 Authors@R: c(
   EA = person("Eric", "Archer", email = "eric.archer@noaa.gov", role = c("aut", "cre")),
@@ -17,41 +17,41 @@ Authors@R: c(
 URL: https://github.com/EricArcher/strataG
 BugReports: https://github.com/EricArcher/strataG/issues
 Depends:
-    R (>= 3.5.0)
+    R (>= 4.0.0)
 Suggests:
     knitr,
     rmarkdown,
     testthat,
-    qgraph,
-    hierfstat
+    qgraph
 Imports:
-    ape,
-    apex (>= 1.0.3),
-    adegenet,
-    dplyr (>= 1.0),
-    tibble (>= 3.0),
-    tidyr (>= 1.0),
-    purrr (>= 0.3),
-    data.table (>= 1.12),
-    copula,
-    genepop (>= 1.0.5),
-    ggplot2,
+    Rcpp (>= 1.0.5),
+    ape (>= 5.4),
+    apex (>= 1.0.4),
+    adegenet (>= 2.1.3),
+    dplyr (>= 1.0.2),
+    tibble (>= 3.0.4),
+    tidyr (>= 1.1.2),
+    purrr (>= 0.3.4),
+    data.table (>= 1.13.6),
+    copula (> 1.0),
+    genepop (>= 1.1.7),
+    ggplot2 (>= 3.3.3),
     graphics,
-    grid,
-    gridExtra,
-    magrittr (>= 1.5),
+    grid (>= 4.0.3),
+    gridExtra (>= 2.3),
+    magrittr (>= 2.0.1),
     methods,
-    pegas (>= 0.11),
-    phangorn (>= 2.4.0),
-    Rcpp,
-    rlang (>= 0.3.0.1),
-    rmetasim,
+    pegas (>= 0.14),
+    phangorn (>= 2.5.5),
+    rlang (>= 0.4.10),
+    rmetasim (>= 3.1.15),
     stats,
-    stringi,
-    swfscMisc (>= 1.3),
+    stringi (>= 1.5.3),
+    swfscMisc (>= 1.4),
     utils
 Collate:
     strataG-package.R
+    RcppExports.R
     gtypes.class.R
     gtypes.accessors.R
     is.gtypes.R
@@ -72,7 +72,7 @@ Collate:
     privateAlleles.R
     propUniqueAlleles.R
     readGenData.R
-    removeSequences.R
+    removeUnusedSequences.R
     sharedLoci.R
     strataSplit.R
     stratify.R
@@ -131,9 +131,7 @@ Collate:
     clumpp.R
     fusFs.R
     tajimasD.R
-    popStructStat.R
     popStructTest.R
-    RcppExports.R
     gelato.R
     phase.R
     maverickRun.R
@@ -141,6 +139,6 @@ Collate:
     landscape2gtypes.R
 LazyData: TRUE
 VignetteBuilder: knitr
-LinkingTo: Rcpp
+LinkingTo: Rcpp, RcppArmadillo
 Encoding: UTF-8
 RoxygenNote: 7.1.1

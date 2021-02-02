@@ -257,7 +257,7 @@ arlequinWrite <- function(g, file = NULL, locus = 1, haploid.microsat = FALSE) {
   write(paste0("NbSamples=", getNumStrata(g)), file = file, append = TRUE)
   data.type <- if(getPloidy(g) > 1 | haploid.microsat) {
     "MICROSAT"
-  } else if(is.null(getSequences(g)[[locus]])) {
+  } else if(is.null(getSequences(g, seqName = locus))) {
     "FREQUENCY"
   } else {
     "DNA"
@@ -290,7 +290,7 @@ arlequinWrite <- function(g, file = NULL, locus = 1, haploid.microsat = FALSE) {
       hap.df <- as.data.frame(alleleFreqs(st)[[locus]])
       colnames(hap.df)[1] <- locus
       hap.df[[locus]] <- as.character(hap.df[[locus]])
-      dna <- getSequences(st)[[locus]]
+      dna <- getSequences(st, seqName = locus)
       if(!is.null(dna)) {
         dna <- dna %>% 
           as.matrix() %>% 

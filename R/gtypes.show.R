@@ -38,7 +38,7 @@ methods::setMethod("show", "gtypes", function(object) {
       dplyr::rename(num.haplotypes = .data$num.alleles)
   }
   
-  g.seqs <- getSequences(g)
+  g.seqs <- getSequences(g, simplify = FALSE)
   seq.smry <- if(!is.null(g.seqs)) {
     do.call(rbind, lapply(names(g.seqs), function(gene) {
       g.seqs[[gene]] %>% 

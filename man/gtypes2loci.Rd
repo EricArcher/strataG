@@ -5,12 +5,14 @@
 \alias{loci2gtypes}
 \title{Convert Between \code{gtypes} And \code{loci} objects.}
 \usage{
-gtypes2loci(x)
+gtypes2loci(x, sep = "/")
 
-loci2gtypes(x, description = NULL)
+loci2gtypes(x, description = NULL, sep = "/")
 }
 \arguments{
 \item{x}{a \linkS4class{gtypes} or \code{loci} formatted object.}
+
+\item{sep}{character used to separate alleles at a locus.}
 
 \item{description}{a label for the \code{gtypes} object (optional).}
 }
@@ -21,8 +23,8 @@ Convert a \code{gtypes} object to a \code{\link[pegas]{loci}} object.
 data(msats.g)
 
 # Convert to loci
-lc <- gtypes2loci(msats.g)
-lc
+lc <- gtypes2loci(msats.g)  
+lc  
 
 # Convert to gtypes
 gt <- loci2gtypes(lc)

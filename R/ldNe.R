@@ -134,9 +134,7 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95,
     
     # remove loci below MAF threshold
     if(maf.threshold > 0) {
-      above.thresh <- (colMeans(mat.st) / 2) >= maf.threshold
-      which() %>% 
-        names()
+      above.thresh <- names(which(colMeans(mat.st) / 2 >= maf.threshold))
       if(length(above.thresh) < 2) {
         warning(
           "Fewer than two loci are above 'maf.threshold' in", 

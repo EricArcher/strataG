@@ -15,7 +15,8 @@
 #' @param schemes an optional data.frame of stratification schemes.
 #' @param description an optional description for the object.
 #' @param other other optional information to include.
-#' @param remove.sequences logical. If \code{TRUE} any sequences not referenced 
+#' @param remove.sequences logical. If \code{TRUE} any sequences not referenced
+#'   in the object will be removed. 
 #'
 #' @details
 #' For multi-allele loci, the \code{gen.data} argument should be 
@@ -214,7 +215,7 @@ methods::setMethod(
   g <- .removeIdsMissingAllLoci(g)
 
   # Remove unreferenced sequences
-  if(remove.sequences) g <- removeSequences(g)
+  if(remove.sequences) g <- removeUnusedSequences(g)
 
   g
 })

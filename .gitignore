@@ -10,6 +10,6 @@
 test haps.R
 *.Rcheck/
 .RData
-devel/
+_devel/
 .DS_Store
 Meta

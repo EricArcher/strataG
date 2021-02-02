@@ -11,7 +11,7 @@ test_that("a haploid data frame can be converted to gtypes", {
   
   expect_that(g, is_a("gtypes"))
   expect_equal(getPloidy(g), 1)
-  expect_equal(length(getSequences(g)), 1)
+  expect_equal(length(getSequences(g, simplify = FALSE)), 1)
 })
 
 test_that("a diploid data frame can be converted to gtypes", {
@@ -41,5 +41,5 @@ test_that("sequences can be converted to gtypes", {
   
   expect_that(g, is_a("gtypes"))
   expect_equal(getPloidy(g), 1)
-  expect_equal(length(getSequences(g)), 1)
+  expect_equal(length(getSequences(g, simplify = FALSE)), 1)
 })
