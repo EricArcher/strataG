@@ -99,8 +99,10 @@ methods::setMethod(
       x.df <- x@data %>% 
         dplyr::mutate(ref = ref.allele[.data$locus]) %>% 
         dplyr::group_by(.data$id, .data$stratum, .data$locus) %>% 
-        dplyr::summarize(code = sum(.data$allele == .data$ref)) %>% 
-        dplyr::ungroup() %>% 
+        dplyr::summarize(
+          code = sum(.data$allele == .data$ref), 
+          .groups = "drop"
+        ) %>% 
         tidyr::pivot_wider(names_from = "locus", values_from = "code") %>% 
         as.data.frame
       
@@ -114,9 +116,9 @@ methods::setMethod(
       x.df <- x@data %>% 
         dplyr::group_by(.data$id, .data$stratum, .data$locus) %>% 
         dplyr::summarize(
-          genotype = .combineLoci(.data$allele, sep = sep, sort = sort.alleles)
+          genotype = .combineLoci(.data$allele, sep = sep, sort = sort.alleles),
+          .groups = "drop"
         ) %>% 
-        dplyr::ungroup() %>% 
         tidyr::pivot_wider(names_from = "locus", values_from = "genotype") 
       
       if(getPloidy(x) == 1) one.col <- TRUE

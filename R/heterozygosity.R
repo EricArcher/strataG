@@ -34,19 +34,23 @@ heterozygosity <- function(g, by.strata = FALSE, type = c("expected", "observed"
       is.het <- if(by.strata) {
         g@data %>% 
           dplyr::group_by(.data$stratum, .data$locus, .data$id) %>% 
-          dplyr::summarize(is.het = dplyr::n_distinct(.data$allele) > 1) %>% 
-          dplyr::ungroup() %>% 
-          dplyr::group_by(.data$stratum, .data$locus)
+          dplyr::summarize(
+            is.het = dplyr::n_distinct(.data$allele) > 1, 
+            .groups = "drop_last"
+          )
       } else {        
         g@data %>% 
           dplyr::group_by(.data$locus, .data$id) %>% 
-          dplyr::summarize(is.het = dplyr::n_distinct(.data$allele) > 1) %>% 
-          dplyr::ungroup() %>% 
-          dplyr::group_by(.data$locus)
+          dplyr::summarize(
+            is.het = dplyr::n_distinct(.data$allele) > 1, 
+            .groups = "drop_last"
+          ) 
       }
       is.het %>% 
-        dplyr::summarize(obsvd.het = mean(.data$is.het, na.rm = TRUE)) %>% 
-        dplyr::ungroup() %>% 
+        dplyr::summarize(
+          obsvd.het = mean(.data$is.het, na.rm = TRUE),
+          .groups = "drop"
+        ) %>% 
         as.data.frame()
     }
   )

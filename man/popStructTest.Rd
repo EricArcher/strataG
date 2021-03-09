@@ -135,14 +135,14 @@ pws
 Excoffier, L., Smouse, P.E. and Quattro, J.M. 1992. Analysis of 
   molecular variance inferred from metric distances among DNA haplotypes: 
   application to human mitochondrial DNA restriction data. 
-  Genetics 131:479–491.
+  Genetics 131:479–491.  
 Jost, L. 2008. GST and its relatives do not measure differentiation. 
-  Molecular Ecology 17:4015-4026.
+  Molecular Ecology 17:4015-4026.  
 Nei M. and Chesser R. 1983. Estimation of fixation indexes and gene 
-  diversities. Annals of Human Genetics 47:253-259.
+  diversities. Annals of Human Genetics 47:253-259.  
 Nei M. 1987. Molecular Evolutionary Genetics. Columbia University Press
 Weir, B.S. and Cockerham, C.C. 1984. Estimating F-statistics for 
-  the analysis of population structure. Evolution 38:1358–1370.
+  the analysis of population structure. Evolution 38:1358–1370.  
 Weir, B.S. and Hill, W.G. 2002. Estimating F-statistics. 
   Annual Review of Genetics 36:721–750.
 }
