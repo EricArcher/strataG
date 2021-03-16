@@ -25,7 +25,7 @@ fscReadParamEst(p)
 fscReadSFS(p, sim = 1)
 }
 \arguments{
-\item{p}{list of fastsimcoal input parameters.}
+\item{p}{list of fastsimcoal parameters output from \code{\link{fscRun}}.}
 
 \item{sim}{one or two-element numberic vector giving the number of the
 simulation replicate (and sub-replicate) to read. For example, \code{sim =
