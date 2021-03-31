@@ -49,6 +49,8 @@ Imports:
     stringi (>= 1.5.3),
     swfscMisc (>= 1.4),
     utils
+Remotes:
+    stranda/rmetasim
 Collate:
     strataG-package.R
     RcppExports.R
