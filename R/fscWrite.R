@@ -393,8 +393,10 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
   param.df <- p$settings$est$params[is.na(p$settings$est$params$value), ]
   param.df$value <- NULL
   cmplx.df <- p$settings$est$params[!is.na(p$settings$est$params$value), ]
-  cmplx.df$name <- paste0(cmplx.df$name, " = ", cmplx.df$value)
-  cmplx.df <- cmplx.df[, c("is.int", "name", "output", "bounded", "reference")]
+  if(nrow(cmplx.df) != 0) {
+    cmplx.df$name <- paste0(cmplx.df$name, " = ", cmplx.df$value)
+    cmplx.df <- cmplx.df[, c("is.int", "name", "output", "bounded", "reference")]
+  }
   
   p$files$est <- paste0(p$label, ".est")
   f <- file(file.path(p$folder, p$files$est), open = "wt")
