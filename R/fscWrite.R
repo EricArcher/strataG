@@ -270,9 +270,10 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
   
   # ---- Check parameters
   if(!is.null(params)) {
-    if(any(duplicated(params$name))) {
-      stop("Can't have duplicated parameter names.")
-    }
+    # TODO: Allow duplicate parameter names for same type of parameter (e.g., growth rate) #####
+    # if(any(duplicated(params$name))) {
+    #   stop("Can't have duplicated parameter names.")
+    # }
     if(!is.null(p$settings$def)) {
       not.found <- setdiff(params$name, colnames(p$settings$def))
       if(length(not.found) > 0) {
