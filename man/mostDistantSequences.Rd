@@ -9,6 +9,7 @@ mostDistantSequences(
   num.seqs = NULL,
   model = "raw",
   pairwise.deletion = TRUE,
+  as.haplotypes = TRUE,
   simplify = TRUE
 )
 }
@@ -23,6 +24,10 @@ See \link{dist.dna} for more information.}
 
 \item{pairwise.deletion}{a logical indicating whether to delete sites with
 missing data. See \link{dist.dna} for more information.}
+
+\item{as.haplotypes}{treat sequences as haplotypes (\code{TRUE}) or expand
+haplotypes to one sequence per individual (\code{FALSE}). If the latter,
+individual frequencies are used in cluster formation.}
 
 \item{simplify}{if there is a single locus, return result in a simplified
 form? If \code{FALSE} a list will be returned wth one element per locus.}

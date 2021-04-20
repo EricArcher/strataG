@@ -274,6 +274,19 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
     # if(any(duplicated(params$name))) {
     #   stop("Can't have duplicated parameter names.")
     # }
+    
+    ### Konopinski solution ###
+    # times <- unique(params[grep("time", params[, 3]), 1])
+    # migrations <- unique(
+    #   c(params[grep("migrants", params[, 3]), 1], param)[params[, 2] == "migration", 1])
+    # growths <- unique(params[grep("growth", params[, 3]), 1])
+    # genetic <- params[params[, 2]=="genetics", 1]
+    # if (sum(length(times), length(migrations), length(growths), length(genetic)) > 0  & 
+    #     any(c(match(times, migrations), match(times, growths), match(migrations, growths),
+    #           match(genetic,unique(c(times,growths,migrations)))),na.rm = TRUE)==TRUE){
+    #   stop("Can't have same names for different parameter kinds (e.g. time & growth).")
+    # }
+    
     if(!is.null(p$settings$def)) {
       not.found <- setdiff(params$name, colnames(p$settings$def))
       if(length(not.found) > 0) {

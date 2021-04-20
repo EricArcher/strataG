@@ -10,6 +10,9 @@
 #'   See \link{dist.dna} for more information.
 #' @param pairwise.deletion a logical indicating whether to delete sites with
 #'   missing data. See \link{dist.dna} for more information.
+#' @param as.haplotypes treat sequences as haplotypes (\code{TRUE}) or expand
+#'   haplotypes to one sequence per individual (\code{FALSE}). If the latter,
+#'   individual frequencies are used in cluster formation.
 #' @param simplify if there is a single locus, return result in a simplified
 #'   form? If \code{FALSE} a list will be returned wth one element per locus.
 #'
@@ -26,11 +29,12 @@
 #' @export
 #' 
 mostDistantSequences <- function(
-  x, num.seqs = NULL, model = "raw", pairwise.deletion = TRUE, simplify = TRUE
+  x, num.seqs = NULL, model = "raw", pairwise.deletion = TRUE, 
+  as.haplotypes = TRUE, simplify = TRUE
 ) { 
   
   x <- if(is.gtypes(x)) {
-    getSequences(x, as.haplotypes = TRUE, as.multidna = TRUE)
+    getSequences(x, as.haplotypes = as.haplotypes, as.multidna = TRUE)
   } else {
     as.multidna(x)
   }
