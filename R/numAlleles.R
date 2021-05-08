@@ -17,11 +17,14 @@
 #' 
 numAlleles <- function(g, by.strata = FALSE) {
   g <- .checkHapsLabelled(g)
-  cols <- if(by.strata) c("locus", "stratum") else "locus"
-  as.data.frame(
-    g@data[, 
-           list(num.alleles = dplyr::n_distinct(allele, na.rm = TRUE)), 
-           by = cols
-          ]
-  )
+  cols <- if(by.strata) c("stratum", "locus") else "locus"
+  result <- g@data[, 
+                   list(num.alleles = dplyr::n_distinct(allele, na.rm = TRUE)), 
+                   by = cols]
+  result <- if(by.strata) {
+    dplyr::arrange(result, .data$stratum, .data$locus)
+  } else {
+    dplyr::arrange(result, .data$locus)
+  }
+  as.data.frame(result)
 }

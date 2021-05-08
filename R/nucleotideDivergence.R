@@ -9,8 +9,8 @@
 #'   for options.
 #' @param ... other arguments passed to \code{\link[ape]{dist.dna}}.
 #' 
-#' @return a list with summaries of the \code{within} and \code{between} strata 
-#'   pairwise distances including Nei's dA (in \code{between}). 
+#' @return a list with summaries of the \code{$within} and \code{$between} strata 
+#'   pairwise distances including Nei's dA (in \code{$between}). 
 #'   
 #' @references Nei, M., and S. Kumar (2000) Molecular Evolution and 
 #'   Phylogenetics. Oxford University Press, Oxford. (dA: pp. 256, eqn 12.67)

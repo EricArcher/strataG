@@ -25,11 +25,10 @@ heterozygosity <- function(g, by.strata = FALSE, type = c("expected", "observed"
   if(getPloidy(g) == 1) type <- "expected"
   g <- .checkHapsLabelled(g)
   
-  switch(
+  result <- switch(
     match.arg(type),
     expected = .applyPerLocus(swfscMisc::diversity, g, by.strata = by.strata) %>% 
-      dplyr::rename(exptd.het = .data$value) %>% 
-      as.data.frame(),
+      dplyr::rename(exptd.het = .data$value),
     observed = {
       is.het <- if(by.strata) {
         g@data %>% 
@@ -46,12 +45,19 @@ heterozygosity <- function(g, by.strata = FALSE, type = c("expected", "observed"
             .groups = "drop_last"
           ) 
       }
-      is.het %>% 
-        dplyr::summarize(
-          obsvd.het = mean(.data$is.het, na.rm = TRUE),
-          .groups = "drop"
-        ) %>% 
-        as.data.frame()
+      dplyr::summarize(
+        is.het,
+        obsvd.het = mean(.data$is.het, na.rm = TRUE),
+        .groups = "drop"
+      )
     }
   )
+  
+  result <- if("stratum" %in% colnames(result)) {
+    dplyr::arrange(result, .data$stratum, .data$locus)
+  } else {
+    dplyr::arrange(result, .data$locus)
+  }
+  
+  as.data.frame(result)
 }

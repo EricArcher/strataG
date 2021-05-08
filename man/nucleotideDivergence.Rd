@@ -19,8 +19,8 @@ for options.}
 \item{...}{other arguments passed to \code{\link[ape]{dist.dna}}.}
 }
 \value{
-a list with summaries of the \code{within} and \code{between} strata 
-  pairwise distances including Nei's dA (in \code{between}).
+a list with summaries of the \code{$within} and \code{$between} strata 
+  pairwise distances including Nei's dA (in \code{$between}).
 }
 \description{
 Calculate Nei's dA between strata, and distributions of 
