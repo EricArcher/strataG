@@ -47,5 +47,5 @@ test_that("variable sites are computed correctly", {
   expect_equal(ncol(vs$site.freqs), 43)
   expect_true("20" %in% colnames(vs$site.freqs))
   expect_equal(vs$site.freqs["a", "20"], 2)
-  expect_equal(vs$site.freqs["g", "20"], 31)
+  expect_equal(vs$site.freqs["g", "20"], 124)
 })

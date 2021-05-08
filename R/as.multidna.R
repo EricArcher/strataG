@@ -4,6 +4,8 @@
 #' @param x a valid set of sequences: character matrix, list of 
 #'   character vectors, \code{\link{DNAbin}} object or list of them,
 #'   \linkS4class{gtypes} object, or \linkS4class{multidna} object.
+#' @param ... arguments to pass to \code{\link{getSequences}} if \code{x} is a
+#'   \linkS4class{gtypes} object.
 #'   
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
@@ -22,7 +24,7 @@
 #' 
 #' @export
 #' 
-as.multidna <- function(x) {
+as.multidna <- function(x, ...) {
   # multidna
   if(inherits(x, "multidna")) return(x)
   
@@ -31,7 +33,7 @@ as.multidna <- function(x) {
     if(is.null(x@sequences)) {
       stop("the gtypes object does not contain sequences")
     }
-    return(getSequences(x, as.multidna = TRUE))
+    return(getSequences(x, as.multidna = TRUE, ...))
   }
   
   # a DNAbin
