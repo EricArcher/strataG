@@ -21,7 +21,7 @@
 #' 
 lowFreqSubs <- function(x, min.freq = 3, motif.length = 10, simplify = TRUE) {  
   result <- sapply(
-    apex::getSequences(as.multidna(x), simplify = FALSE), 
+    apex::getSequences(as.multidna(x, as.haplotypes = FALSE), simplify = FALSE), 
     function(dna) {
       motif.half <- max(1, round(motif.length / 2, 0))
       var.sites <- variableSites(dna)$site.freq

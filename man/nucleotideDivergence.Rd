@@ -20,11 +20,14 @@ for options.}
 }
 \value{
 a list with summaries of the \code{$within} and \code{$between} strata 
-  pairwise distances including Nei's dA (in \code{$between}).
+  pairwise distances including Nei's dA (in \code{$between}). 
+  Nei's \eqn{\pi} is the mean between-strata divergence.
 }
 \description{
-Calculate Nei's dA between strata, and distributions of 
-  between- and within-strata nucleotide divergence (sequence distance).
+Calculate distributions of between- and within-strata 
+  nucleotide divergence (sequence distance), which includes 
+  Nei's \eqn{\pi} (usually referred to as "nucleotide diversity") and 
+  Nei's dA between strata.
 }
 \examples{
 data(dloop.g)

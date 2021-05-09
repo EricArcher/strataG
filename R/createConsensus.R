@@ -22,7 +22,7 @@
 #' 
 createConsensus <- function(x, ignore.gaps = FALSE, simplify = TRUE) { 
   result <- sapply(
-    apex::getSequences(as.multidna(x), simplify = FALSE), 
+    apex::getSequences(as.multidna(x, as.haplotypes = FALSE), simplify = FALSE), 
     function(dna) {
       dna <- as.character(as.matrix(dna))
       apply(dna, 2, iupacCode, ignore.gaps = ignore.gaps)

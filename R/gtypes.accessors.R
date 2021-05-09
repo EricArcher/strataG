@@ -316,9 +316,11 @@ methods::setGeneric("getSequences", function(x, ...) standardGeneric("getSequenc
 methods::setMethod(
   "getSequences", 
   "gtypes", 
-  function(x, as.haplotypes = TRUE, seqName = NULL, as.multidna = FALSE, simplify = TRUE, ...) {
+  function(x, as.haplotypes = FALSE, seqName = NULL, as.multidna = FALSE, 
+           simplify = TRUE, drop = TRUE, ...) {
     if(is.null(x@sequences)) return(NULL)
-    dna <- apex::getSequences(x@sequences, simplify = FALSE)
+    seq.ids <- if(drop) unique(x@data$allele) else NULL
+    dna <- apex::getSequences(x@sequences, ids = seq.ids, simplify = FALSE)
     if(!as.haplotypes) {
       dna <- purrr::map(
         split(x@data, x@data$locus),

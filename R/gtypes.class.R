@@ -89,7 +89,7 @@ methods::setClass(
     # check sequences
     if(!is.null(object@sequences)) {
       # check that length of sequences equals number of loci
-      dna <- getSequences(object, as.multidna = FALSE, simplify = FALSE)
+      dna <- getSequences(object, as.haplotypes = TRUE, as.multidna = FALSE, simplify = FALSE)
       num.seqs <- length(dna)
       if(num.seqs > 0 & num.seqs != length(unique(object@data[["locus"]]))) {
         cat("the number of sets of sequences is not equal to the number of loci\n")

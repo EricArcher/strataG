@@ -11,6 +11,7 @@ writeGtypes(
   by.strata = TRUE,
   as.frequency = FALSE,
   freq.type = c("freq", "prop"),
+  as.haplotypes = TRUE,
   ...
 )
 }
@@ -30,6 +31,9 @@ as frequency tables.}
 
 \item{freq.type}{if \code{as.frequency == TRUE}, write absolute frequencies 
 (\code{"freq"}) or proportions (\code{"prop"}).}
+
+\item{as.haplotypes}{write sequences as haplotypes (\code{TRUE}) or 
+individual sequences (\code{FALSE}).}
 
 \item{...}{optional arguments controlling what information is included in the 
 genotype file and how it is formatted passed to \link[strataG]{as.matrix}.}

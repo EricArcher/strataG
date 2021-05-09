@@ -24,7 +24,7 @@
 fixedSites <- function(x, bases = c("a", "c", "g", "t", "-"), simplify = TRUE) {
   bases <- tolower(bases)
   result <- sapply(
-    apex::getSequences(as.multidna(x), simplify = FALSE), 
+    apex::getSequences(as.multidna(x, as.haplotypes = FALSE), simplify = FALSE), 
     function(dna) {
       dna <- as.character(as.matrix(dna))
       is.fixed <- apply(dna, 2, function(site) {

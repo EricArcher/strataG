@@ -240,12 +240,13 @@ labelHaplotypes.character <- function(x, ...) labelHaplotypes(ape::as.DNAbin(x),
 #'
 labelHaplotypes.gtypes <- function(x, ...) {
   # check that sequences are present
-  if(getPloidy(x) > 1 | is.null(getSequences(x, simplify = FALSE))) {
+  seqs <- getSequences(x, as.haplotypes = TRUE, simplify = FALSE)
+  if(getPloidy(x) > 1 | is.null(seqs)) {
     stop("'x' is not haploid or does not have any sequences")
   }
 
   # label haplotypes for each gene
-  new.haps <- purrr::map(getSequences(x, simplify = FALSE), labelHaplotypes, ...)
+  new.haps <- purrr::map(seqs, labelHaplotypes, ...)
   has.errors <- sapply(new.haps, is.null)
   if(sum(has.errors) > 0) {
     has.errors <- paste(names(new.haps)[has.errors], collapse = ", ")

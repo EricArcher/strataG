@@ -15,10 +15,14 @@ nucleotideDiversity(x, bases = c("a", "c", "g", "t"), simplify = TRUE)
 otherwise, a list of vectors with one element per locus will be returned.}
 }
 \value{
-Vector of nucleotide diversity by site.
+Vector of diversity of nucleotides by site.
 }
 \description{
-Calculate nucleotide diversity for set of haplotypes.
+Calculate nucleotide diversity for set of sequences. Note that 
+  this is \strong{NOT} Nei's nucleotide diversity 
+  (usually referred to as \eqn{\pi}). Nei's \eqn{\pi} is the mean number 
+  of nucleotide differences between sequences. See 
+  \code{\link{nucleotideDivergence}} for this value.
 }
 \examples{
 data(dloop.g)

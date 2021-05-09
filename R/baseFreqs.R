@@ -40,7 +40,7 @@ baseFreqs <- function(x, bases = NULL, ignore = c("n", "x", "-", "."),
   ignore <- setdiff(tolower(ignore), bases)
   
   result <- sapply(
-    apex::getSequences(as.multidna(x), simplify = FALSE),
+    apex::getSequences(as.multidna(x, as.haplotypes = FALSE), simplify = FALSE),
     function(dna) {
       dna.mat <- tolower(as.character(as.matrix(dna)))
       site.freqs <- apply(dna.mat, 2, function(site) {

@@ -11,6 +11,8 @@
 #' @param by.strata if \code{as.frequency == TRUE}, calculate frequencies by strata?
 #' @param freq.type if \code{as.frequency == TRUE}, write absolute frequencies 
 #'   (\code{"freq"}) or proportions (\code{"prop"}).
+#' @param as.haplotypes write sequences as haplotypes (\code{TRUE}) or 
+#'   individual sequences (\code{FALSE}).
 #' @param ... optional arguments controlling what information is included in the 
 #'   genotype file and how it is formatted passed to \link[strataG]{as.matrix}.
 #' 
@@ -35,7 +37,7 @@
 #' 
 writeGtypes <- function(g, label = NULL, folder = NULL, by.strata = TRUE,
                         as.frequency = FALSE, freq.type = c("freq", "prop"),
-                        ...) {
+                        as.haplotypes = TRUE, ...) {
   label <- .getFileLabel(g, label)
   
   g.mats <- if(getPloidy(g) == 1 & as.frequency) {
@@ -64,7 +66,7 @@ writeGtypes <- function(g, label = NULL, folder = NULL, by.strata = TRUE,
       fname <- paste(label, x, "fasta", sep = ".")
       if(!is.null(folder)) fname <- file.path(folder, fname)
       ape::write.dna(
-        getSequences(g, seqName = x), 
+        getSequences(g, as.haplotypes = as.haplotypes, seqName = x), 
         file = fname, 
         format = "fasta", 
         nbcol = -1, 

@@ -290,7 +290,7 @@ arlequinWrite <- function(g, file = NULL, locus = 1, haploid.microsat = FALSE) {
       hap.df <- as.data.frame(alleleFreqs(st)[[locus]])
       colnames(hap.df)[1] <- locus
       hap.df[[locus]] <- as.character(hap.df[[locus]])
-      dna <- getSequences(st, seqName = locus)
+      dna <- getSequences(st, as.haplotypes = TRUE,seqName = locus)
       if(!is.null(dna)) {
         dna <- dna %>% 
           as.matrix() %>% 

@@ -25,9 +25,8 @@
 #' 
 variableSites <- function(x, bases = c("a", "c", "g", "t", "-"), simplify = TRUE) {
   bases <- tolower(bases)
-  x <- as.multidna(x, as.haplotypes = FALSE, simplify = FALSE)
   result <- sapply(
-    apex::getSequences(x, simplify = FALSE),
+    apex::getSequences(as.multidna(x, as.haplotypes = FALSE), simplify = FALSE),
     function(dna) {
       dna <- as.matrix(dna)
       site.freqs <- baseFreqs(dna, bases)$site.freqs

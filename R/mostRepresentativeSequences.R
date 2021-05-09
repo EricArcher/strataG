@@ -40,7 +40,7 @@ mostRepresentativeSequences <- function(
   }
   
   result <- sapply(
-    apex::getSequences(x, simplify = FALSE),
+    apex::getSequences(x, as.haplotypes = FALSE, simplify = FALSE),
     function(dna) {
       k <- if(is.null(num.seqs)) length(dna) else min(num.seqs, length(dna))
       if(k == length(dna)) return(names(dna))

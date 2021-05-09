@@ -1,6 +1,8 @@
 #' @title Nucleotide Divergence
-#' @description Calculate Nei's dA between strata, and distributions of 
-#'   between- and within-strata nucleotide divergence (sequence distance).
+#' @description Calculate distributions of between- and within-strata 
+#'   nucleotide divergence (sequence distance), which includes 
+#'   Nei's \eqn{\pi} (usually referred to as "nucleotide diversity") and 
+#'   Nei's dA between strata. 
 #' 
 #' @param g a \linkS4class{gtypes} object.
 #' @param probs a numeric vector of probabilities of the pairwise distance 
@@ -11,6 +13,7 @@
 #' 
 #' @return a list with summaries of the \code{$within} and \code{$between} strata 
 #'   pairwise distances including Nei's dA (in \code{$between}). 
+#'   Nei's \eqn{\pi} is the mean between-strata divergence.
 #'   
 #' @references Nei, M., and S. Kumar (2000) Molecular Evolution and 
 #'   Phylogenetics. Oxford University Press, Oxford. (dA: pp. 256, eqn 12.67)
@@ -53,7 +56,7 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1),
   
   g <- g[, , getStrataNames(g)]
   hap.dist <- sapply(
-    getSequences(g, simplify = FALSE), 
+    getSequences(g, as.haplotypes = TRUE, simplify = FALSE), 
     ape::dist.dna, 
     model = model, 
     as.matrix = TRUE, 

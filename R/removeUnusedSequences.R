@@ -15,7 +15,7 @@ removeUnusedSequences <- function(g) {
   g@sequences <- g %>% 
     getLociNames() %>% 
     purrr::map(function(x) {
-      getSequences(g, seqName = x, simplify = TRUE)[haps[[x]]]
+      getSequences(g, as.haplotypes = TRUE, seqName = x, simplify = TRUE)[haps[[x]]]
     }) %>% 
     stats::setNames(names(haps)) %>% 
     as.multidna()

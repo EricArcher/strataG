@@ -22,11 +22,11 @@ test_that("base frequencies are computed correctly", {
   bf <- baseFreqs(dloop.g)
   
   expect_true(bf$site.freqs["a", 1] == 0)
-  expect_true(bf$site.freqs["g", 1] == 33)
-  expect_true(bf$base.freqs["a"] == 3977)
-  expect_true(bf$base.freqs["-"] == 61)
-  expect_true(bf$ind.freqs["Hap.01", "a"] == 120)
-  expect_true(bf$ind.freqs["Hap.33", "g"] == 52)
+  expect_true(bf$site.freqs["g", 1] == 126)
+  expect_true(bf$base.freqs["t"] == 17166)
+  expect_true(bf$base.freqs["-"] == 245)
+  expect_true(bf$ind.freqs["23792", "a"] == 120)
+  expect_true(bf$ind.freqs["4498", "g"] == 51)
 })
 
 test_that("fixed sites are computed correctly", {

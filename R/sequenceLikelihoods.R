@@ -37,7 +37,7 @@
 sequenceLikelihoods <- function(x, model = "N", pairwise.deletion = FALSE, 
                                 n = NULL, plot = TRUE, simplify = TRUE, ...) {
   result <- sapply(
-    apex::getSequences(as.multidna(x), simplify = FALSE),
+    apex::getSequences(as.multidna(x, as.haplotypes = FALSE), simplify = FALSE),
     function(dna) {
       # calculate distance between sequences
       seq.dist <- ape::dist.dna(

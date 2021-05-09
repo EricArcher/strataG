@@ -50,7 +50,7 @@ write.fasta <- function(x, file = NULL) {
   }
   
   fname <- if(inherits(x, "multidna") | is.gtypes(x)) {
-    x <- apex::getSequences(as.multidna(x), simplify = TRUE)
+    x <- apex::getSequences(as.multidna(x, as.haplotypes = FALSE), simplify = TRUE)
     sapply(names(x), function(gene) {
       fasta.func(x[[gene]], file.path(folder, paste0(gene, " ", file)))
     })

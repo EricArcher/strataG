@@ -1,12 +1,16 @@
 #' @title Nucleotide Diversity
-#' @description Calculate nucleotide diversity for set of haplotypes.
+#' @description Calculate nucleotide diversity for set of sequences. Note that 
+#'   this is \strong{NOT} Nei's nucleotide diversity 
+#'   (usually referred to as \eqn{\pi}). Nei's \eqn{\pi} is the mean number 
+#'   of nucleotide differences between sequences. See 
+#'   \code{\link{nucleotideDivergence}} for this value.
 #' 
 #' @param x a set of sequences or a \linkS4class{gtypes} object with sequences.
 #' @param bases nucleotides to consider when calculating diversity.
 #' @param simplify if \code{TRUE} and only one loci exists, return a vector, 
 #'   otherwise, a list of vectors with one element per locus will be returned.
 #' 
-#' @return Vector of nucleotide diversity by site. 
+#' @return Vector of diversity of nucleotides by site.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
