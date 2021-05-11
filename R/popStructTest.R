@@ -187,8 +187,8 @@ NULL
   obsvd <- do.call(
     rbind,
     tapply(1:nrow(dt$strata), dt$strata[, s], function(i) {
-      colSums(dt$ind_allele_freq[i, ])
-    })
+      colSums(dt$ind_allele_freq[i, , drop = FALSE])
+    }, simplify = FALSE)
   )
   exptd <- tcrossprod(rowSums(obsvd), colSums(obsvd)) / sum(obsvd)
   chisq <- (obsvd - exptd) ^ 2 / exptd
