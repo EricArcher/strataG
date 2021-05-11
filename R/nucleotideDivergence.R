@@ -79,13 +79,12 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1),
       }
     }) 
   within <- .expand.smry.cols(within)
-      
+  
   st.pairs <- .strataPairs(g)
-  st.pairs <- do.call(rbind, lapply(getLociNames(g), function(loc) {
-    cbind(locus = loc, st.pairs)
-  }))
   between <- if(is.null(st.pairs)) NA else {
-    result <- st.pairs %>% 
+    result <- do.call(rbind, lapply(getLociNames(g), function(loc) {
+      cbind(locus = loc, st.pairs)
+    })) %>% 
       dplyr::group_by(.data$locus, .data$strata.1, .data$strata.2) %>% 
       dplyr::do(smry = {
         st.1 <- .data$strata.1

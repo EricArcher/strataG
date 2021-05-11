@@ -163,10 +163,10 @@ NULL
     diag(dt.list$unit_dist) <- 0    
     
     # get haplotype distances for PHIst
-    dt.list$hap_dist <- if(!is.null(getSequences(g))) {
-      dna.seq <- getSequences(g, as.haplotypes = TRUE, seqName = hap.locus)
+    dna.seq <- getSequences(g, as.haplotypes = TRUE, seqName = hap.locus)
+    dt.list$hap_dist <- if(!is.null(dna.seq)) {
       hd <- ape::dist.dna(dna.seq, as.matrix = TRUE, ...)
-      hd <- hd[haps, haps] ^ 2
+      hd <- hd[haps, haps, drop = FALSE] ^ 2
       dimnames(hd) <- list(hap.names, hap.names)
       hd
     } else NULL
