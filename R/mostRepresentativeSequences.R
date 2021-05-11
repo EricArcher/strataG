@@ -52,6 +52,12 @@ mostRepresentativeSequences <- function(
         pairwise.deletion = pairwise.deletion, 
         as.matrix = TRUE
       )
+      if(any(is.nan(seq.dist) | is.infinite(seq.dist))) {
+        warning(
+          "NaN or InF returned for some pairwise distances. ",
+          "See Note in ?ape::dist.dna for an explanation."
+        )
+      }
       
       # convert distances to coordinates
       opt <- options(warn = -1)

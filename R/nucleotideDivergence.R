@@ -63,6 +63,13 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1),
     ...,
     simplify = FALSE
   )
+  bad.dists <- sapply(hap.dist, function(x) any(is.nan(x) | is.infinite(x)))
+  if(any(bad.dists)) {
+    warning(
+      "NaN or InF returned for some pairwise distances. ",
+      "See Note in ?ape::dist.dna for an explanation."
+    )
+  }
   
   within <- g@data %>% 
     dplyr::group_by(.data$locus, .data$stratum) %>% 

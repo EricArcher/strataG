@@ -166,6 +166,12 @@ NULL
     dna.seq <- getSequences(g, as.haplotypes = TRUE, seqName = hap.locus)
     dt.list$hap_dist <- if(!is.null(dna.seq)) {
       hd <- ape::dist.dna(dna.seq, as.matrix = TRUE, ...)
+      if(any(is.nan(hd) | is.infinite(hd))) {
+        warning(
+          "NaN or InF returned for some pairwise distances. ",
+          "See Note in ?ape::dist.dna for an explanation."
+        )
+      }
       hd <- hd[haps, haps, drop = FALSE] ^ 2
       dimnames(hd) <- list(hap.names, hap.names)
       hd
