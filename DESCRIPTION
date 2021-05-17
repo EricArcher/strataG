@@ -44,7 +44,7 @@ Imports:
     pegas (>= 0.14),
     phangorn (>= 2.5.5),
     rlang (>= 0.4.10),
-    rmetasim (>= 3.1.15),
+    rmetasim,
     stats,
     stringi (>= 1.5.3),
     swfscMisc (>= 1.4),

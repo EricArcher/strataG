@@ -23,6 +23,7 @@
 #'   (heterozygote), or 2 (minor allele homozygote). If this is \code{TRUE} and
 #'   \code{marker = "snp"} (or only SNPs are present) and the data is diploid,
 #'   genotypes will be returned with one column per locus.
+#' @param ... arguments to be passed to \code{fscReadArp}.
 #'   
 #' @return 
 #' \describe{
@@ -36,6 +37,8 @@
 #'  \item{fscReadSFS}{Reads site frequency spectra generated from 
 #'    \code{fastsimcoal2}. Returns a list of the marginal and joint SFS, the 
 #'    polymorphic sites, and the estimated maximum likelihood of the SFS."}
+#'  \item{fsc2gtypes}{Creates a \linkS4class{gtypes} object from fastsimcoal2
+#'    output.}
 #'  }
 #'  
 #' @note \code{fastsimcoal2} is not included with `strataG` and must be
@@ -597,3 +600,28 @@ fscReadSFS <- function(p, sim = 1) {
   f <- utils::read.table(fname, header = TRUE, sep = "\t")
   f[1, sim + 2]
 }
+
+
+# Convert to gtypes -------------------------------------------------------
+
+#' @rdname fscRead
+#' @export
+#' 
+fsc2gtypes <- function(p, marker = c("dna", "snp", "microsat"), ...) {
+  marker <- match.arg(marker)
+  if(!marker %in% c("dna", "snp", "microsat")) {
+    stop("'marker' must be 'dna', 'snp', or 'microsat'")
+  }
+  ploidy <- attr(p$settings$demes, "ploidy")
+  df <- fscReadArp(p, marker = marker, ...)
+  if(marker == "dna") {
+    seq.mat <- do.call(rbind, strsplit(df[, 3], ""))
+    rownames(seq.mat) <- 1:nrow(seq.mat)
+    haps <- labelHaplotypes(ape::as.DNAbin(seq.mat))
+    df[, 3] <- unname(as.character(haps$haps))
+    df2gtypes(df, ploidy = 1, sequences = haps$hap.seqs, description = p$label)
+  } else {
+    df2gtypes(df, ploidy = ploidy, description = p$label)
+  }
+}
+

@@ -5,6 +5,7 @@
 \alias{fscReadArp}
 \alias{fscReadParamEst}
 \alias{fscReadSFS}
+\alias{fsc2gtypes}
 \title{Read fastsimcoal output}
 \usage{
 fscReadArp(
@@ -23,6 +24,8 @@ fscReadArp(
 fscReadParamEst(p)
 
 fscReadSFS(p, sim = 1)
+
+fsc2gtypes(p, marker = c("dna", "snp", "microsat"), ...)
 }
 \arguments{
 \item{p}{list of fastsimcoal parameters output from \code{\link{fscRun}}.}
@@ -55,6 +58,8 @@ for each locus.}
 (heterozygote), or 2 (minor allele homozygote). If this is \code{TRUE} and
 \code{marker = "snp"} (or only SNPs are present) and the data is diploid,
 genotypes will be returned with one column per locus.}
+
+\item{...}{arguments to be passed to \code{fscReadArp}.}
 }
 \value{
 \describe{
@@ -68,6 +73,8 @@ genotypes will be returned with one column per locus.}
  \item{fscReadSFS}{Reads site frequency spectra generated from 
    \code{fastsimcoal2}. Returns a list of the marginal and joint SFS, the 
    polymorphic sites, and the estimated maximum likelihood of the SFS."}
+ \item{fsc2gtypes}{Creates a \linkS4class{gtypes} object from fastsimcoal2
+   output.}
  }
 }
 \description{
