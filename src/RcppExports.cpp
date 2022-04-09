@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // calc_FstStats
 NumericMatrix calc_FstStats(const int& n_ind, const int& n_allele, const int& n_loc, const int& n_st, const double& ploidy, const IntegerVector& strata, const IntegerVector& locus, const IntegerMatrix& ind_allele_freq);
 RcppExport SEXP _strataG_calc_FstStats(SEXP n_indSEXP, SEXP n_alleleSEXP, SEXP n_locSEXP, SEXP n_stSEXP, SEXP ploidySEXP, SEXP strataSEXP, SEXP locusSEXP, SEXP ind_allele_freqSEXP) {

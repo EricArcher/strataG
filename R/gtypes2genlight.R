@@ -45,11 +45,12 @@ gtypes2genlight <- function(x) {
 #' 
 genlight2gtypes <- function(x) {
   if(!inherits(x, "genlight")) stop("'x' must be a genlight object")
-  genotypes <- list(c("A", "A"), c("A", "G"), c("G", "G"))
+  genotypes <- list(c("A", "A"), c("A", "G"), c("G", "G"), as.character(c(NA, NA)))
   gen.mat <- do.call(
     cbind, 
     lapply(as.data.frame(x), function(num.alt) {
-      do.call(rbind, genotypes[num.alt + 1])
+      num.alt <- ifelse(is.na(num.alt), 4, num.alt + 1)
+      do.call(rbind, genotypes[num.alt])
     })
   )
   loci <- x@loc.names
