@@ -67,7 +67,7 @@ sequenceLikelihoods <- function(x, model = "N", pairwise.deletion = FALSE,
           sum(na.rm = TRUE)
         c(mean.dist = mean.dist, neg.log.lik = -ll)
       }, simplify = FALSE)) %>% 
-        tibble::as.tibble() %>% 
+        tibble::as_tibble() %>% 
         dplyr::mutate(
           id = rownames(seq.dist),
           min.ll = min(.data$neg.log.lik, na.rm = TRUE),

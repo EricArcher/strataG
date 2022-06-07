@@ -614,7 +614,7 @@ fsc2gtypes <- function(p, marker = c("dna", "snp", "microsat"), ...) {
   }
   ploidy <- attr(p$settings$demes, "ploidy")
   df <- fscReadArp(p, marker = marker, ...)
-  if(marker == "dna") {
+  if(ploidy == 1 & marker == "dna") {
     seq.mat <- do.call(rbind, strsplit(df[, 3], ""))
     rownames(seq.mat) <- 1:nrow(seq.mat)
     haps <- labelHaplotypes(ape::as.DNAbin(seq.mat))
