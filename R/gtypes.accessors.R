@@ -317,10 +317,9 @@ methods::setMethod(
   "getSequences", 
   "gtypes", 
   function(x, as.haplotypes = FALSE, seqName = NULL, as.multidna = FALSE, 
-           simplify = TRUE, drop = TRUE, ...) {
+           simplify = TRUE, ...) {
     if(is.null(x@sequences)) return(NULL)
-    seq.ids <- if(drop) unique(x@data$allele) else NULL
-    dna <- apex::getSequences(x@sequences, ids = seq.ids, simplify = FALSE)
+    dna <- apex::getSequences(x@sequences, simplify = FALSE)
     if(!as.haplotypes) {
       dna <- purrr::map(
         split(x@data, x@data$locus),

@@ -98,7 +98,6 @@ getSequences(x, ...)
   seqName = NULL,
   as.multidna = FALSE,
   simplify = TRUE,
-  drop = TRUE,
   ...
 )
 
@@ -142,9 +141,6 @@ individual is returned.}
 \item{simplify}{if `getSequences()` would return a single locus, return it 
 as a `DNAbin` object (`TRUE`), or a single element named list (`FALSE`).}
 
-\item{drop}{if \code{TRUE} the return object will have unused sequences
-removed.}
-
 \item{name}{name of the value going into the \code{other} list.}
 
 \item{i, j, k}{subsetting slots for individuals (\code{i}), loci (\code{j}), or
@@ -152,6 +148,9 @@ strata (\code{k}). See Details for more information.}
 
 \item{quiet}{suppress warnings about unmatched requested individuals, loci,
 or strata?}
+
+\item{drop}{if \code{TRUE} the return object will have unused sequences
+removed.}
 }
 \value{
 \describe{ \item{nInd}{number of individuals} \item{nLoc}{number of

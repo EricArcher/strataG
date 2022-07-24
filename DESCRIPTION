@@ -143,3 +143,4 @@ LazyData: TRUE
 VignetteBuilder: knitr
 LinkingTo: Rcpp, RcppArmadillo
 Encoding: UTF-8
+RoxygenNote: 7.2.0

@@ -25,7 +25,7 @@ fscReadParamEst(p)
 
 fscReadSFS(p, sim = 1)
 
-fsc2gtypes(p, marker = c("dna", "snp", "microsat"), ...)
+fsc2gtypes(p, marker = c("dna", "snp", "microsat"), concat.dna = TRUE, ...)
 }
 \arguments{
 \item{p}{list of fastsimcoal parameters output from \code{\link{fscRun}}.}
@@ -58,6 +58,9 @@ for each locus.}
 (heterozygote), or 2 (minor allele homozygote). If this is \code{TRUE} and
 \code{marker = "snp"} (or only SNPs are present) and the data is diploid,
 genotypes will be returned with one column per locus.}
+
+\item{concat.dna}{logical. concatenate multiple DNA blocks into single 
+locus?}
 
 \item{...}{arguments to be passed to \code{fscReadArp}.}
 }

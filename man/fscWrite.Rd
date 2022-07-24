@@ -51,8 +51,6 @@ Writes input files for \code{fastsimcoal2} and returns a list of
 Write files necessary to run a \code{fastsimcoal2} simulation.
 }
 \note{
-
-
 \code{fastsimcoal2} is not included with `strataG` and must be
   downloaded separately. Additionally, it must be installed such that it can
   be run from the command line in the current working directory. 

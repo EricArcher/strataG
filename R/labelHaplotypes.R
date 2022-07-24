@@ -22,7 +22,7 @@
 #'  For \code{character}, \code{list}, or \code{DNAbin}, a list with the following elements:
 #'  \describe{
 #'    \item{haps}{named vector (\code{DNAbin}) or list of named vectors
-#'      (\code{multidina}) of haplotypes for each sequence in \code{x}.}
+#'      (\code{multidna}) of haplotypes for each sequence in \code{x}.}
 #'    \item{hap.seqs}{\code{DNAbin} or \code{multidna} object containing
 #'      sequences for each haplotype.}
 #'    \item{unassigned}{\code{data.frame} listing closest matching haplotypes
@@ -215,6 +215,13 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
     rownames(df) <- rownames(mat)
     df
   } else NULL
+  
+  if(!is.null(unassigned.df)) {
+    warning(
+      "the following sequences could not be unambiguously assigned to haplotype: ",
+      paste(rownames(df), collapse = ", ")
+    )
+  }
   
   list(
     haps = hap.vec, 

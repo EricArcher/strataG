@@ -23,6 +23,8 @@
 #'   (heterozygote), or 2 (minor allele homozygote). If this is \code{TRUE} and
 #'   \code{marker = "snp"} (or only SNPs are present) and the data is diploid,
 #'   genotypes will be returned with one column per locus.
+#' @param concat.dna logical. concatenate multiple DNA blocks into single 
+#'   locus?
 #' @param ... arguments to be passed to \code{fscReadArp}.
 #'   
 #' @return 
@@ -607,7 +609,9 @@ fscReadSFS <- function(p, sim = 1) {
 #' @rdname fscRead
 #' @export
 #' 
-fsc2gtypes <- function(p, marker = c("dna", "snp", "microsat"), ...) {
+fsc2gtypes <- function(
+  p, marker = c("dna", "snp", "microsat"), concat.dna = TRUE, ...
+) {
   marker <- match.arg(marker)
   if(!marker %in% c("dna", "snp", "microsat")) {
     stop("'marker' must be 'dna', 'snp', or 'microsat'")
@@ -615,11 +619,36 @@ fsc2gtypes <- function(p, marker = c("dna", "snp", "microsat"), ...) {
   ploidy <- attr(p$settings$demes, "ploidy")
   df <- fscReadArp(p, marker = marker, ...)
   if(ploidy == 1 & marker == "dna") {
-    seq.mat <- do.call(rbind, strsplit(df[, 3], ""))
-    rownames(seq.mat) <- 1:nrow(seq.mat)
-    haps <- labelHaplotypes(ape::as.DNAbin(seq.mat))
-    df[, 3] <- unname(as.character(haps$haps))
-    df2gtypes(df, ploidy = 1, sequences = haps$hap.seqs, description = p$label)
+    if(concat.dna | ncol(df) == 3) {
+      seqs <- apply(df[, -(1:2)], 1, paste, collapse = "")
+      seq.mat <- do.call(rbind, strsplit(df[, 3], ""))
+      rownames(seq.mat) <- df[, 1]
+      haps <- labelHaplotypes(ape::as.DNAbin(seq.mat))
+      lbl <- if(ncol(df) > 3) {
+        paste0(colnames(df)[3], ":", colnames(df)[ncol(df)])
+      } else colnames(df)[3]
+      df <- cbind(df[, 1:2], haps = unname(haps$haps))
+      colnames(df)[3] <- lbl
+      df2gtypes(
+        df, ploidy = 1, sequences = haps$hap.seqs, description = p$label
+      )
+    } else {
+      seqs <- sapply(colnames(df[, -(1:2)]), function(gene) {
+        seq.mat <- do.call(rbind, strsplit(df[, gene], ""))
+        rownames(seq.mat) <- df[, 1]
+        ape::as.DNAbin(seq.mat)
+      }, simplify = FALSE)
+      
+      df[, 3:ncol(df)] <- df[, 1]
+      g <- df2gtypes(
+        df,
+        ploidy = 1,
+        sequences = seqs,
+        description = p$label
+      )  
+      
+      labelHaplotypes(g)
+    }
   } else {
     df2gtypes(df, ploidy = ploidy, description = p$label)
   }

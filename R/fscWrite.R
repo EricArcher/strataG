@@ -20,8 +20,6 @@
 #'   Note that this directory is deleted when the R session closed. See 
 #'   \code{\link{tempdir}} for more information.
 #' 
-#' @note
-#' 
 #' @return Writes input files for \code{fastsimcoal2} and returns a list of
 #'   input parameters, input file, and input filenames. This list is the primary
 #'   input to \code{\link{fscRun}}.
