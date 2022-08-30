@@ -12,4 +12,4 @@ tar.gz$
 ^Meta$
 ^doc$
 ^doc/*.html$
-.DS_Store
+^.DS_Store$

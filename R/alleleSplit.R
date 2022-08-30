@@ -40,6 +40,8 @@
 alleleSplit <- function(x, sep = NULL) {
   if(!is.null(sep)) if(sep == "") sep <- NULL
   
+  orig.rownames <- rownames(x)
+  
   locus.names <- if(is.null(colnames(x))) {
     paste("Locus", 1:ncol(x), sep = "") 
   } else {
@@ -75,6 +77,6 @@ alleleSplit <- function(x, sep = NULL) {
   })
   split.alleles <- do.call(cbind, split.alleles)
   colnames(split.alleles) <- locus.names
-  rownames(split.alleles) <- NULL
+  rownames(split.alleles) <- orig.rownames
   return(split.alleles)
 }
