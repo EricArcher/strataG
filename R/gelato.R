@@ -119,7 +119,7 @@ gelato <- function(g, unknown.strata, nrep = 1000,
           fst.dist = fst.dist, 
           log.Lik.smry = c(
             log.Lik = log.Lik, 
-            mean.nreps = log.Lik / length(log.Lik),
+            nreps = sum(!is.na(null.lik)),
             median = log(stats::dnorm(obs.median, null.mean, null.sd)), 
             mean = log(stats::dnorm(obs.mean, null.mean, null.sd))
           ),

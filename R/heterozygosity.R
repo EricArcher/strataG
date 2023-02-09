@@ -27,7 +27,7 @@ heterozygosity <- function(g, by.strata = FALSE, type = c("expected", "observed"
   
   result <- switch(
     match.arg(type),
-    expected = .applyPerLocus(swfscMisc::diversity, g, by.strata = by.strata) %>% 
+    expected = .applyPerLocus(sprex::diversity, g, by.strata = by.strata, type = "unb.gini") %>% 
       dplyr::rename(exptd.het = .data$value),
     observed = {
       is.het <- if(by.strata) {

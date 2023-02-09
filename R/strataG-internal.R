@@ -219,3 +219,11 @@
   if(is.null(y)) y <- x
   formatC(x, digits = floor(log10(max(y))), flag = "0", mode = "integer") 
 }
+
+#' 
+#' #' @noRd
+#' #' 
+#' .unbiasedDiversity <- function(x) {
+#'   n <- length(x[!is.na(x)])
+#'   n * sprex::diversity(x, type = "gini") / (n - 1)
+#' }

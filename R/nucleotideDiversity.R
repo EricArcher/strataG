@@ -37,7 +37,7 @@ nucleotideDiversity <- function(x, bases = c("a", "c", "g", "t"), simplify = TRU
       site.div <- dna %>% 
         as.matrix() %>% 
         as.character() %>% 
-        apply(2, function(b) swfscMisc::diversity(b[b %in% bases]))
+        apply(2, function(b) sprex::diversity(b[b %in% bases], type = "unb.gini"))
       stats::setNames(site.div, 1:length(site.div))
     },
     simplify = FALSE

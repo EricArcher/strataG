@@ -45,6 +45,7 @@ Imports:
     phangorn (>= 2.5.5),
     rlang (>= 0.4.10),
     rmetasim,
+    sprex (>= 1.4.2),
     stats,
     stringi (>= 1.5.3),
     swfscMisc (>= 1.4),
@@ -143,4 +144,4 @@ LazyData: TRUE
 VignetteBuilder: knitr
 LinkingTo: Rcpp, RcppArmadillo
 Encoding: UTF-8
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
