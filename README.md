@@ -15,18 +15,33 @@
 
 ## Installation
 
-To install the stable version from CRAN:
+To install the stable version using install.packages requires an extra
+repo to be made available to the install.packages function prior to
+install as the strataG is not available via CRAN:
 
 ```r
+
+options(repos = c(
+            zkamvar = 'https://zkamvar.r-universe.dev',
+            CRAN = 'https://cloud.r-project.org'))
+
 install.packages('strataG')
 ```
 
-To install the latest version from GitHub:
+NB! Make sure that you have installed the development version of the
+dependency [sprex](https://github.com/EricArcher/sprex) prior to
+installing strataG
+
+
+To install the latest version from GitHub including the development
+version of sprex:
 
 ```r
 # make sure you have Rtools installed
 if (!require('devtools')) install.packages('devtools')
-# install from GitHub
+# install sprex development version
+devtools::install_github("ericarcher/sprex")
+# install strataG latest version
 devtools::install_github('ericarcher/strataG', build_vignettes = TRUE)
 ```
 
