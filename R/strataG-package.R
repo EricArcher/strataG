@@ -5,7 +5,7 @@
 #' @aliases strataG
 #' @title Summaries and population structure analyses of DNA sequence genotypic 
 #'   data
-#' @keywords package
+"_PACKAGE"
 #' @importFrom rlang .data
 #' @importFrom magrittr %>%
 #' @importFrom Rcpp evalCpp

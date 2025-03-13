@@ -26,9 +26,11 @@ readGenData <- function(file,
     ...
   ) %>% 
     as.data.frame() %>% 
-    dplyr::mutate(
-      dplyr::across(dplyr::everything(), .replaceNA, na.strings = na.strings)
-    )
+    dplyr::mutate(dplyr::across(
+      .cols = dplyr::everything(), 
+      .fns = .replaceNA, 
+      na.strings = na.strings
+    ))
   all.nas <- is.na(df)
   all.empty <- df == ""
   dplyr::filter(df, rowSums(all.nas | all.empty) != ncol(df))

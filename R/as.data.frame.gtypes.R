@@ -141,7 +141,10 @@ methods::setMethod(
       if(!strata) x.df$stratum <- NULL
       
       x.df %>% 
-        dplyr::mutate(dplyr::across(.fns = as.character)) %>% 
+        dplyr::mutate(dplyr::across(
+          .cols = dplyr::everything(),
+          .fns = as.character
+        )) %>% 
         as.data.frame()
     }
   })

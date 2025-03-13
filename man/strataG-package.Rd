@@ -9,4 +9,23 @@
 \description{
 strataG
 }
-\keyword{package}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/EricArcher/strataG}
+  \item Report bugs at \url{https://github.com/EricArcher/strataG/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Eric Archer \email{eric.archer@noaa.gov}
+
+Authors:
+\itemize{
+  \item Paula Adams \email{peadams@crimson.ua.edu}
+  \item Brita Schneiders \email{britaschneiders@u.northwestern.edu}
+  \item Sarina Fernandez \email{sarinafernandez5@gmail.com}
+  \item Warren Asfazadour \email{wasfazad@hotmail.com}
+}
+
+}
