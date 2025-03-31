@@ -83,7 +83,11 @@ Archer, F. 2016. *strataG*: An *R* package for manipulating, summarizing and ana
 * send a pull request: <https://github.com/ericarcher/strataG/>
 * e-mail: <eric.archer@noaa.gov>
 
-## version 2.5.01 (devel)
+## version 2.5.5 (devel)
+* added `diagnosability()`
+* added `microhaplot2rubias()`
+* added `qual2prob()`
+* made `rfPermute` and `rmetasim` packages Suggested
 * removed melt from structurePlot
 * fixed ldNe error when one individual is present
 * fixed mafft error and now have mafft .fasta files written to temporary file rather than working directory
