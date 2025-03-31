@@ -187,7 +187,7 @@ fscSettingsDemes <- function(..., ploidy = 2) {
     i <- which(names(demes) == "")
     names(demes)[i] <- paste0("Deme.", i)
   }
-  demes <- do.call(rbind, demes) %>% 
+  demes <- do.call(rbind, demes) |> 
     tibble::rownames_to_column("deme.name")
   class(demes) <- c("fscSettingsDemes", class(demes))
   attr(demes, "ploidy") <- ploidy

@@ -35,38 +35,38 @@ dupGenotypes <- function(g, num.shared = 0.8) {
   #if not already, convert num.shared to %
   if(num.shared > 1) num.shared <- num.shared / getNumLoci(g) 
     
-  dup.df <- propSharedLoci(g, type = "ids") %>% 
+  dup.df <- propSharedLoci(g, type = "ids") |> 
     dplyr::filter(.data$prop.loci.shared >= num.shared)
   
   dup.df <- if(nrow(dup.df) > 0) {
     st <- getStrata(g)
     locs <- getLociNames(g)
     
-    dup.df %>% 
+    dup.df |> 
       tidyr::gather(
         "locus", "prop.shared", 
         -(.data$ids.1:.data$prop.loci.shared)
-      ) %>% 
-      dplyr::filter(.data$prop.shared < 1) %>% 
-      dplyr::group_by(.data$ids.1, .data$ids.2) %>% 
-      dplyr::summarize(mismatch.loci = paste(.data$locus, collapse = ", ")) %>% 
-      dplyr::ungroup() %>% 
+      ) |> 
+      dplyr::filter(.data$prop.shared < 1) |> 
+      dplyr::group_by(.data$ids.1, .data$ids.2) |> 
+      dplyr::summarize(mismatch.loci = paste(.data$locus, collapse = ", ")) |> 
+      dplyr::ungroup() |> 
       dplyr::right_join(
         dplyr::select(dup.df, .data$ids.1:.data$prop.loci.shared),
         by = c("ids.1", "ids.2")
-      ) %>% 
+      ) |> 
       dplyr::mutate(
         strata.1 = as.character(st[.data$ids.1]),
         strata.2 = as.character(st[.data$ids.2])
-      ) %>% 
+      ) |> 
       dplyr::arrange(
         dplyr::desc(.data$prop.loci.shared), dplyr::desc(.data$num.loci.shared),
         dplyr::desc(.data$ids.1), dplyr::desc(.data$ids.2)
-      ) %>% 
+      ) |> 
       dplyr::select(
         .data$ids.1, .data$ids.2, 
         .data$strata.1, .data$strata.2, dplyr::everything()
-      ) %>% 
+      ) |> 
       as.data.frame()
   } else NULL
   

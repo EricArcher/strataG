@@ -23,6 +23,6 @@ landscape2df <- function(Rland) {
   gen.data <- Rland$individuals[, -(1:rmetasim::landscape.democol()), drop = FALSE]
   loc.names <- paste0("Locus", 1:length(pl))
   colnames(gen.data) <- paste(rep(loc.names, each = pl[1]), 1:pl[1], sep = ".")
-  cbind(id = Rland$individuals[, 4], strata = strata, gen.data) %>% 
+  cbind(id = Rland$individuals[, 4], strata = strata, gen.data) |> 
     as.data.frame(stringsAsFactors = FALSE)
 }

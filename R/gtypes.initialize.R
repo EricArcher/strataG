@@ -195,9 +195,9 @@ methods::setMethod(
     id = rownames(gen.data), 
     stratum = as.character(strata), 
     gen.data
-  ) %>% 
-    as.data.frame(stringsAsFactors = FALSE) %>% 
-    tidyr::gather("locus", "allele", -.data$id, -.data$stratum) %>% 
+  ) |> 
+    as.data.frame(stringsAsFactors = FALSE) |> 
+    tidyr::gather("locus", "allele", -.data$id, -.data$stratum) |> 
     dplyr::mutate(locus = locus.names.lookup[as.character(.data$locus)])
   
   data.table::setDT(gen.data, key = c("id", "stratum", "locus"))

@@ -110,18 +110,18 @@ genepopWrite <- function(g, label = NULL) {
   
   # convert alleles to genotypes in GENEPOP format, substitute , for _ in
   # stratum and id labels
-  genepop.fmt <- g@data %>% 
-    dplyr::group_by(.data$locus) %>% 
-    dplyr::mutate(allele = .convertAlleles(.data$allele)) %>% 
-    dplyr::ungroup() %>% 
-    dplyr::group_by(.data$stratum, .data$id, .data$locus) %>% 
-    dplyr::summarize(genotype = paste(.data$allele, collapse = "")) %>% 
-    dplyr::ungroup() %>% 
-    tidyr::spread(.data$locus, .data$genotype) %>% 
+  genepop.fmt <- g@data |> 
+    dplyr::group_by(.data$locus) |> 
+    dplyr::mutate(allele = .convertAlleles(.data$allele)) |> 
+    dplyr::ungroup() |> 
+    dplyr::group_by(.data$stratum, .data$id, .data$locus) |> 
+    dplyr::summarize(genotype = paste(.data$allele, collapse = "")) |> 
+    dplyr::ungroup() |> 
+    tidyr::spread(.data$locus, .data$genotype) |> 
     dplyr::mutate(
       stratum = gsub(",", "_", .data$stratum),
       id = gsub(",", "_", .data$id)
-    ) %>% 
+    ) |> 
     dplyr::ungroup()
 
   # create new short locus names to replace current ones

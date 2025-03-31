@@ -63,8 +63,8 @@ write.mega <- function(
   if(!is.null(file)) file <- basename(file)
   file <- file.path(folder, .getFileLabel(g, file))
   
-  dna <- getSequences(g, as.haplotypes = as.haplotypes, seqName = locus) %>% 
-    as.matrix() %>% 
+  dna <- getSequences(g, as.haplotypes = as.haplotypes, seqName = locus) |> 
+    as.matrix() |> 
     as.character()
   
   write("#MEGA", file)

@@ -27,12 +27,12 @@
 #' 
 gtypes2loci <- function(x, sep = "/") {
   if(!is.gtypes(x)) stop("'x' must be a gtypes object")
-  as.data.frame(x, one.col = TRUE, sep = "/") %>% 
-    dplyr::filter(!is.na(.data$stratum)) %>% 
-    dplyr::mutate_all(function(x) ifelse(is.na(x), "0/0", x)) %>% 
-    dplyr::mutate_all(factor) %>% 
-    tibble::column_to_rownames("id") %>% 
-    as.data.frame() %>% 
+  as.data.frame(x, one.col = TRUE, sep = "/") |> 
+    dplyr::filter(!is.na(.data$stratum)) |> 
+    dplyr::mutate_all(function(x) ifelse(is.na(x), "0/0", x)) |> 
+    dplyr::mutate_all(factor) |> 
+    tibble::column_to_rownames("id") |> 
+    as.data.frame() |> 
     pegas::as.loci(allele.sep = sep, col.pop = 1)
 }
 
@@ -42,14 +42,14 @@ gtypes2loci <- function(x, sep = "/") {
 loci2gtypes <- function(x, description = NULL, sep = "/") {
   if(!inherits(x, "loci")) stop("'x' must be a loci object")
   x <- as.data.frame(x)
-  mat <- x %>% 
-    dplyr::mutate_all(as.character) %>% 
-    dplyr::select(attr(x, "locicol")) %>% 
+  mat <- x |> 
+    dplyr::mutate_all(as.character) |> 
+    dplyr::select(attr(x, "locicol")) |> 
     alleleSplit(sep = sep)
   cbind(
     id = rownames(x),
     pop = as.character(x[, 1]),
     mat
-  ) %>% 
+  ) |> 
     df2gtypes(ploidy = 2, description = description)
 }

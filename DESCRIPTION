@@ -17,12 +17,14 @@ Authors@R: c(
 URL: https://github.com/EricArcher/strataG
 BugReports: https://github.com/EricArcher/strataG/issues
 Depends:
-    R (>= 4.0.0)
+    R (>= 4.1.0)
 Suggests:
     knitr,
     rmarkdown,
     testthat,
-    qgraph
+    qgraph,
+    rfPermute,
+    rmetasim
 Imports:
     Rcpp (>= 1.0.5),
     ape (>= 5.4),
@@ -39,19 +41,15 @@ Imports:
     graphics,
     grid (>= 4.0.3),
     gridExtra (>= 2.3),
-    magrittr (>= 2.0.1),
     methods,
     pegas (>= 0.14),
     phangorn (>= 2.5.5),
     rlang (>= 0.4.10),
-    rmetasim,
     sprex (>= 1.4.2),
     stats,
     stringi (>= 1.5.3),
     swfscMisc (>= 1.4),
     utils
-Remotes:
-    stranda/rmetasim
 Collate:
     strataG-package.R
     RcppExports.R
@@ -140,6 +138,9 @@ Collate:
     maverickRun.R
     summarizeAll.R
     landscape2gtypes.R
+    diagnosability.R
+    microhaplot2rubias.R
+    qual2prob.R
 LazyData: TRUE
 VignetteBuilder: knitr
 LinkingTo: Rcpp, RcppArmadillo

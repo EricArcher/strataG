@@ -262,7 +262,7 @@ fscWrite <- function(demes, genetics, migration = NULL, events = NULL,
   
   params <- dplyr::bind_rows(
     demes.params, events.params, migration.params, genetics.params
-  ) %>% 
+  ) |> 
     as.data.frame()
   if(nrow(params) == 0) params <- NULL
   

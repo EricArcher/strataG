@@ -12,12 +12,12 @@
 removeUnusedSequences <- function(g) {
   if(is.null(getSequences(g))) return(g)
   haps <- getAlleleNames(g)
-  g@sequences <- g %>% 
-    getLociNames() %>% 
+  g@sequences <- g |> 
+    getLociNames() |> 
     purrr::map(function(x) {
       getSequences(g, as.haplotypes = TRUE, seqName = x, simplify = TRUE)[haps[[x]]]
-    }) %>% 
-    stats::setNames(names(haps)) %>% 
+    }) |> 
+    stats::setNames(names(haps)) |> 
     as.multidna()
   g
 }

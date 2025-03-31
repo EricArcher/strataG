@@ -41,13 +41,13 @@ writeGtypes <- function(g, label = NULL, folder = NULL, by.strata = TRUE,
   label <- .getFileLabel(g, label)
   
   g.mats <- if(getPloidy(g) == 1 & as.frequency) {
-    alleleFreqs(g, by.strata = by.strata, type = freq.type) %>% 
+    alleleFreqs(g, by.strata = by.strata, type = freq.type) |> 
       sapply(function(x) {
-        as.data.frame.matrix(x) %>% 
-          as.data.frame() %>% 
-          tibble::rownames_to_column("id") %>% 
+        as.data.frame.matrix(x) |> 
+          as.data.frame() |> 
+          tibble::rownames_to_column("id") |> 
           dplyr::select(.data$id, dplyr::everything())
-      }, simplify = FALSE) %>% 
+      }, simplify = FALSE) |> 
       stats::setNames(paste(label, names(.data)))
   } else {
     stats::setNames(list(as.matrix(g, ...)), label)

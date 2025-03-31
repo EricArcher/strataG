@@ -49,8 +49,8 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1),
     dplyr::bind_cols(
       df, 
       as.data.frame(do.call(rbind, df$smry))
-    ) %>% 
-      dplyr::select(-.data$smry) %>% 
+    ) |> 
+      dplyr::select(-.data$smry) |> 
       as.data.frame()
   }
   
@@ -71,8 +71,8 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1),
     )
   }
   
-  within <- g@data %>% 
-    dplyr::group_by(.data$locus, .data$stratum) %>% 
+  within <- g@data |> 
+    dplyr::group_by(.data$locus, .data$stratum) |> 
     dplyr::do(smry = {
       if(nrow(.data) == 1) {
         as.numeric(c(
@@ -91,23 +91,23 @@ nucleotideDivergence <- function(g, probs = c(0, 0.025, 0.5, 0.975, 1),
   between <- if(is.null(st.pairs)) NA else {
     result <- do.call(rbind, lapply(getLociNames(g), function(loc) {
       cbind(locus = loc, st.pairs)
-    })) %>% 
-      dplyr::group_by(.data$locus, .data$strata.1, .data$strata.2) %>% 
+    })) |> 
+      dplyr::group_by(.data$locus, .data$strata.1, .data$strata.2) |> 
       dplyr::do(smry = {
         st.1 <- .data$strata.1
         st.2 <- .data$strata.2
         loc <- unique(.data$locus)
-        h1 <- g@data %>% 
-          dplyr::filter(.data$stratum == st.1) %>% 
+        h1 <- g@data |> 
+          dplyr::filter(.data$stratum == st.1) |> 
           dplyr::pull(.data$allele)
-        h2 <- g@data %>% 
-          dplyr::filter(.data$stratum == st.2) %>% 
+        h2 <- g@data |> 
+          dplyr::filter(.data$stratum == st.2) |> 
           dplyr::pull(.data$allele)
         haps <- t(expand.grid(h1, h2))
         smry <- .pair.dist.smry(haps, hap.dist[[loc]], probs)
-        wthn.sum <- within %>%
-          dplyr::filter(.data$locus == loc & .data$stratum %in% c(st.1, st.2)) %>%
-          dplyr::summarize(sum = sum(.data$mean, na.rm = TRUE)) %>%
+        wthn.sum <- within |>
+          dplyr::filter(.data$locus == loc & .data$stratum %in% c(st.1, st.2)) |>
+          dplyr::summarize(sum = sum(.data$mean, na.rm = TRUE)) |>
           dplyr::pull("sum")
         dA <- unname(smry["mean"] - (wthn.sum / 2))
         c(dA = dA, smry)

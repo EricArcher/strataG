@@ -27,19 +27,19 @@ heterozygosity <- function(g, by.strata = FALSE, type = c("expected", "observed"
   
   result <- switch(
     match.arg(type),
-    expected = .applyPerLocus(sprex::diversity, g, by.strata = by.strata, type = "unb.gini") %>% 
+    expected = .applyPerLocus(sprex::diversity, g, by.strata = by.strata, type = "unb.gini") |> 
       dplyr::rename(exptd.het = .data$value),
     observed = {
       is.het <- if(by.strata) {
-        g@data %>% 
-          dplyr::group_by(.data$stratum, .data$locus, .data$id) %>% 
+        g@data |> 
+          dplyr::group_by(.data$stratum, .data$locus, .data$id) |> 
           dplyr::summarize(
             is.het = dplyr::n_distinct(.data$allele) > 1, 
             .groups = "drop_last"
           )
       } else {        
-        g@data %>% 
-          dplyr::group_by(.data$locus, .data$id) %>% 
+        g@data |> 
+          dplyr::group_by(.data$locus, .data$id) |> 
           dplyr::summarize(
             is.het = dplyr::n_distinct(.data$allele) > 1, 
             .groups = "drop_last"

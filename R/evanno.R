@@ -112,7 +112,7 @@ evanno <- function(sr, plot = TRUE) {
   }
 
   if(plot) {
-    p <- plot.list %>% 
+    p <- plot.list |> 
       purrr::map(function(x) {
         ggplot2::ggplot_gtable(ggplot2::ggplot_build(x))
       })

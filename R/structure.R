@@ -238,19 +238,19 @@ structureWrite <- function(
   )
   
   # write data
-  mat <- .stackedAlleles(g, alleles2integer = T, na.val = -9) %>% 
-    dplyr::select(-.data$allele) %>% 
+  mat <- .stackedAlleles(g, alleles2integer = T, na.val = -9) |> 
+    dplyr::select(-.data$allele) |> 
     dplyr::mutate(
       id = gsub(" ", "_", .data$id),
       stratum = as.numeric(factor(.data$stratum)),
       popflag = popflag[.data$id]
-    ) %>% 
+    ) |> 
     dplyr::select(
       .data$id, 
       .data$stratum, 
       .data$popflag, 
       dplyr::everything()
-    ) %>% 
+    ) |> 
     as.matrix()
   
   write(paste(getLociNames(g), collapse = " "), file = in.file)
@@ -414,7 +414,7 @@ structureRead <- function(file, pops = NULL) {
         anc.mat[pop, ] <- as.numeric(x[-1, i])
       }
       anc.mat
-    }) %>% 
+    }) |> 
       stats::setNames(df$id)
     
     # Create population probability matrix for samples with priors and add to end of base table
@@ -457,19 +457,19 @@ structureRead <- function(file, pops = NULL) {
   
   cols1to4 <- c("row", "id", "pct.miss", "orig.pop")
   
-  strsplit(q.mat.txt, " ") %>% 
+  strsplit(q.mat.txt, " ") |> 
     purrr::map(function(q) {
-      q <- q[! q %in% c("", " ", ":")] %>% 
-        as.character() %>% 
-        rbind() %>% 
+      q <- q[! q %in% c("", " ", ":")] |> 
+        as.character() |> 
+        rbind() |> 
         as.data.frame(stringsAsFactors = FALSE) 
       stats::setNames(q, c(cols1to4, paste("Group", 1:(ncol(q) - 4), sep = ".")))
-    }) %>% 
-    dplyr::bind_rows() %>% 
+    }) |> 
+    dplyr::bind_rows() |> 
     dplyr::mutate_at(
       dplyr::vars("row", "pct.miss", "orig.pop", dplyr::starts_with("Group.")), 
       as.numeric
-    ) %>% 
+    ) |> 
     dplyr::mutate(orig.pop = if(!is.null(pops)) {
       pops[.data$orig.pop] 
     } else {

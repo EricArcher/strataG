@@ -140,7 +140,7 @@ clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
     q.mat <- cbind(row = 1:nrow(q.mat), q.mat)
     rownames(q.mat) <- NULL
     cbind(q.mat[, 1:4], sep = rep(":", nrow(q.mat)), q.mat[, 5:ncol(q.mat)])
-  }) %>% 
+  }) |> 
     dplyr::bind_rows()
   q.mat.df$pct.miss <- paste("(", q.mat.df$pct.miss, ")", sep = "")
   pop.fac <- factor(q.mat.df$orig.pop)

@@ -23,9 +23,9 @@ summarizeSeqs <- function(x) {
   # x <- sapply(
   #   x, 
   #   function(dna) {
-  #     dna %>% 
-  #       as.list() %>% 
-  #       as.character() %>% 
+  #     dna |> 
+  #       as.list() |> 
+  #       as.character() |> 
   #       unlist()
   #   },
   #   simplify = FALSE

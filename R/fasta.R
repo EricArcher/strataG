@@ -19,10 +19,10 @@
 read.fasta <- function(file) {
   ape::read.dna(
     file, format = "fasta", as.character = TRUE, as.matrix = FALSE
-  ) %>% 
+  ) |> 
     # replace ?s with Ns and convert to lower-case
-    purrr::map(function(x) tolower(gsub("\\?", "n", x))) %>% 
-    ape::as.DNAbin() %>% 
+    purrr::map(function(x) tolower(gsub("\\?", "n", x))) |> 
+    ape::as.DNAbin() |> 
     as.list()
 }
 

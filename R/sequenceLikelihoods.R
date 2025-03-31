@@ -61,22 +61,22 @@ sequenceLikelihoods <- function(x, model = "N", pairwise.deletion = FALSE,
         this.dist <- seq.dist[i, ]
         this.dist <- this.dist[names(this.dist) != i]
         mean.dist <- mean(this.dist, na.rm = TRUE)
-        ll <- this.dist[this.dist != 0] %>% 
-          stats::dgamma(shape = shape, scale = scale) %>% 
-          log() %>% 
+        ll <- this.dist[this.dist != 0] |> 
+          stats::dgamma(shape = shape, scale = scale) |> 
+          log() |> 
           sum(na.rm = TRUE)
         c(mean.dist = mean.dist, neg.log.lik = -ll)
-      }, simplify = FALSE)) %>% 
-        tibble::as_tibble() %>% 
+      }, simplify = FALSE)) |> 
+        tibble::as_tibble() |> 
         dplyr::mutate(
           id = rownames(seq.dist),
           min.ll = min(.data$neg.log.lik, na.rm = TRUE),
           delta.log.lik = .data$neg.log.lik - .data$min.ll
-        ) %>% 
-        dplyr::arrange(dplyr::desc(.data$delta.log.lik)) %>% 
+        ) |> 
+        dplyr::arrange(dplyr::desc(.data$delta.log.lik)) |> 
         dplyr::select(
           .data$id, .data$mean.dist, .data$neg.log.lik, .data$delta.log.lik
-        ) %>% 
+        ) |> 
         as.data.frame()
     },
     simplify = FALSE
@@ -88,8 +88,8 @@ sequenceLikelihoods <- function(x, model = "N", pairwise.deletion = FALSE,
       if(is.null(n)) n <- nrow(df)
       n <- min(n, nrow(df))
       if(n > 0) {
-        p <- df[1:n, ] %>% 
-          dplyr::mutate(id = stats::reorder(.data$id, .data$delta.log.lik)) %>% 
+        p <- df[1:n, ] |> 
+          dplyr::mutate(id = stats::reorder(.data$id, .data$delta.log.lik)) |> 
           ggplot2::ggplot(
             ggplot2::aes_string(x = "delta.log.lik", y = "id")
           ) +

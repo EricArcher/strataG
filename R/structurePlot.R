@@ -67,9 +67,9 @@ structurePlot <- function(
   pop.cntr <- tapply(qm$x, qm[, 1], mean)
   pop.div <- rev(tapply(qm$x, qm[, 1], min))[-1] - 0.5
   
-  df <- qm %>% 
-    tidyr::gather("Group", "probability", -.data$x, -.data$orig.pop) %>% 
-    dplyr::rename(population = "orig.pop") %>% 
+  df <- qm |> 
+    tidyr::gather("Group", "probability", -.data$x, -.data$orig.pop) |> 
+    dplyr::rename(population = "orig.pop") |> 
     dplyr::arrange(.data$Group, .data$probability)
   
   type <- if(is.null(type)) {

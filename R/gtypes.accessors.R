@@ -110,10 +110,10 @@ NULL
 #' 
 methods::setMethod("getNumInd", "gtypes", function(x, by.strata = FALSE, ...) {
   if(by.strata) {
-    x@data %>% 
-      dplyr::group_by(.data$stratum) %>% 
-      dplyr::summarize(num.ind = dplyr::n_distinct(.data$id)) %>% 
-      dplyr::ungroup() %>% 
+    x@data |> 
+      dplyr::group_by(.data$stratum) |> 
+      dplyr::summarize(num.ind = dplyr::n_distinct(.data$id)) |> 
+      dplyr::ungroup() |> 
       as.data.frame()
   } else {
     length(getIndNames(x))
@@ -152,12 +152,12 @@ methods::setGeneric("getIndNames", function(x, ...) standardGeneric("getIndNames
 #' 
 methods::setMethod("getIndNames", "gtypes", function(x, by.strata = FALSE, ...) {
   if(by.strata) {
-    split(x@data$stratum) %>% 
+    split(x@data$stratum) |> 
       purrr::map(function(s) {
-        s$id %>% 
-          unique() %>%
-          stats::na.omit() %>% 
-          as.character() %>% 
+        s$id |> 
+          unique() |>
+          stats::na.omit() |> 
+          as.character() |> 
           sort()
       })
   } else {
@@ -188,7 +188,7 @@ methods::setGeneric("getAlleleNames", function(x, ...) standardGeneric("getAllel
 #' @export
 #' 
 methods::setMethod("getAlleleNames", "gtypes", function(x, ...) {
-  split(x@data, x@data$locus) %>% 
+  split(x@data, x@data$locus) |> 
     purrr::map(function(s) {
       as.character(sort(stats::na.omit(unique(s$allele))))
     })
@@ -230,8 +230,8 @@ methods::setGeneric("getStrata", function(x, ...) standardGeneric("getStrata"))
 #' @export
 #' 
 methods::setMethod("getStrata", "gtypes", function(x) {
-  id.strata <- x@data %>% 
-    dplyr::select(.data$id, .data$stratum) %>% 
+  id.strata <- x@data |> 
+    dplyr::select(.data$id, .data$stratum) |> 
     dplyr::distinct()
   stats::setNames(id.strata$stratum, id.strata$id)
 })
@@ -262,13 +262,13 @@ methods::setMethod("setStrata<-", "gtypes", function(x, value) {
     )
   }
   
-  x@data <- x@data %>% 
+  x@data <- x@data |> 
     dplyr::left_join(
       tibble::tibble(id = names(value), .new = as.character(value)), 
       by = "id"
-    ) %>% 
-    dplyr::select(.data$id, .data$.new, .data$locus, .data$allele) %>% 
-    dplyr::rename(stratum = .data$.new) %>% 
+    ) |> 
+    dplyr::select(.data$id, .data$.new, .data$locus, .data$allele) |> 
+    dplyr::rename(stratum = .data$.new) |> 
     data.table::as.data.table()
   
   methods::validObject(x)

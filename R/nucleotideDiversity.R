@@ -34,9 +34,9 @@ nucleotideDiversity <- function(x, bases = c("a", "c", "g", "t"), simplify = TRU
   result <- sapply(
     apex::getSequences(x, simplify = FALSE), 
     function(dna) {  
-      site.div <- dna %>% 
-        as.matrix() %>% 
-        as.character() %>% 
+      site.div <- dna |> 
+        as.matrix() |> 
+        as.character() |> 
         apply(2, function(b) sprex::diversity(b[b %in% bases], type = "unb.gini"))
       stats::setNames(site.div, 1:length(site.div))
     },

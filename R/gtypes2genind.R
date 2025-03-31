@@ -30,8 +30,8 @@
 #' @export
 #' 
 gtypes2genind <- function(x, type = c("codom", "PA")) {
-  df <- as.data.frame(x, one.col = TRUE, sep = "/", strata = FALSE) %>% 
-    tibble::column_to_rownames("id") %>% 
+  df <- as.data.frame(x, one.col = TRUE, sep = "/", strata = FALSE) |> 
+    tibble::column_to_rownames("id") |> 
     as.data.frame()
   colnames(df) <- gsub("[.]", "_", colnames(df))
   

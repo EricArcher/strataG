@@ -275,8 +275,8 @@ fscReadArp <- function(p, sim = c(1, 1),
     chr.rows[i]
   })
   
-  poly.pos <- cbind(poly.pos, loc.info.row = loc.info.row) %>% 
-    as.data.frame() %>% 
+  poly.pos <- cbind(poly.pos, loc.info.row = loc.info.row) |> 
+    as.data.frame() |> 
     dplyr::mutate(
       name = locus.info[.data$loc.info.row, "name"],
       actual.type = locus.info[.data$loc.info.row, "actual.type"],
@@ -288,10 +288,10 @@ fscReadArp <- function(p, sim = c(1, 1),
   same.col[1] <- 1
   poly.pos$mat.col <- cumsum(same.col) + 2
   
-  poly.pos <- poly.pos %>% 
-    dplyr::group_by(.data$mat.col) %>% 
-    dplyr::mutate(dna.pos = ifelse(.data$fsc.type == "DNA", 1:dplyr::n(), NA)) %>% 
-    dplyr::ungroup() %>% 
+  poly.pos <- poly.pos |> 
+    dplyr::group_by(.data$mat.col) |> 
+    dplyr::mutate(dna.pos = ifelse(.data$fsc.type == "DNA", 1:dplyr::n(), NA)) |> 
+    dplyr::ungroup() |> 
     as.data.frame()
   
   poly.pos <- split(poly.pos, poly.pos$name)
@@ -395,7 +395,7 @@ fscReadArp <- function(p, sim = c(1, 1),
         id = paste(hap.data[i, "id"], collapse = sep), 
         deme = hap.data[i, "deme"][1]
       )
-    })) %>% 
+    })) |> 
       as.data.frame(stringsAsFactors = FALSE)
     # matrix of genotypes with one column per locus
     gen.mat <- apply(hap.data[, -(1:2), drop = FALSE], 2, function(loc) {

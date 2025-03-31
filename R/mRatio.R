@@ -50,8 +50,8 @@ mRatio <- function(g, by.strata = FALSE, rpt.size = 8:2) {
     if(all(df$Freq == 0)) return(NA)
     
     # sort alleles in numerical order
-    df <- df %>% 
-      dplyr::mutate(allele = as.integer(.data$allele)) %>% 
+    df <- df |> 
+      dplyr::mutate(allele = as.integer(.data$allele)) |> 
       dplyr::arrange(.data$allele)
     
     # find repeat sizes
@@ -76,23 +76,23 @@ mRatio <- function(g, by.strata = FALSE, rpt.size = 8:2) {
   freqs <- alleleFreqs(g, by.strata = by.strata)
   freqs <- if(by.strata) {
     purrr::imap_dfr(freqs, function(f, x) {
-      as.data.frame(f, stringsAsFactors = F) %>% 
-        dplyr::rename(allele = .data$Var1, stratum = .data$Var2) %>% 
+      as.data.frame(f, stringsAsFactors = F) |> 
+        dplyr::rename(allele = .data$Var1, stratum = .data$Var2) |> 
         dplyr::mutate(locus = x) 
-    }) %>% 
+    }) |> 
       dplyr::group_by(.data$stratum, .data$locus)
   } else {
     purrr::imap_dfr(freqs, function(f, x) {
-      as.data.frame(f, stringsAsFactors = F) %>% 
-        dplyr::rename(allele = .data$Var1) %>% 
+      as.data.frame(f, stringsAsFactors = F) |> 
+        dplyr::rename(allele = .data$Var1) |> 
         dplyr::mutate(locus = x)
-    }) %>% 
+    }) |> 
       dplyr::group_by(.data$locus)
   }
 
-  freqs %>% 
-    dplyr::do(m.ratio = .calcMratio(.data)) %>% 
-    dplyr::ungroup() %>%
-    tidyr::unnest(.data$m.ratio) %>% 
+  freqs |> 
+    dplyr::do(m.ratio = .calcMratio(.data)) |> 
+    dplyr::ungroup() |>
+    tidyr::unnest(.data$m.ratio) |> 
     as.data.frame()
 }

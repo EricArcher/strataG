@@ -20,7 +20,7 @@
 #' 
 theta <- function(g, by.strata = FALSE) {
   .thetaFunc <- function(x) pegas::theta.h(stats::na.omit(x))
-  .applyPerLocus(.thetaFunc, g, by.strata = by.strata) %>%
-    dplyr::rename(theta = .data$value) %>% 
+  .applyPerLocus(.thetaFunc, g, by.strata = by.strata) |>
+    dplyr::rename(theta = .data$value) |> 
     as.data.frame()
 }

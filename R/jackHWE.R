@@ -117,13 +117,13 @@ jackInfluential <- function(jack.result, alpha = 0.05) {
       locus = names(obs)[which.infl[, "row"]],
       obs.pval = obs[which.infl[, "row"]],
       jack.pval = apply(which.infl, 1, function(i) jack[i[1], i[2]])
-    ) %>% 
+    ) |> 
       dplyr::mutate(
         obs.odds = swfscMisc::odds(.data$obs.pval),
         jack.odds = swfscMisc::odds(.data$jack.pval),
         odds.ratio = .data$jack.odds / .data$obs.odds
-      ) %>% 
-      dplyr::arrange(dplyr::desc(.data$odds.ratio)) %>% 
+      ) |> 
+      dplyr::arrange(dplyr::desc(.data$odds.ratio)) |> 
       as.data.frame()
   } else NULL
   
@@ -132,9 +132,9 @@ jackInfluential <- function(jack.result, alpha = 0.05) {
     purrr::map(1:nrow(influential), function(i) {
       ids <- unlist(strsplit(influential$excluded[i], ", "))
       tibble::tibble(id = ids, locus = influential$locus[i])
-    }) %>% 
-      dplyr::bind_rows() %>% 
-      unique() %>% 
+    }) |> 
+      dplyr::bind_rows() |> 
+      unique() |> 
       .alleleFreqFormat(jack.result$gtypes)
   } else NULL
   
@@ -158,13 +158,13 @@ jackInfluential <- function(jack.result, alpha = 0.05) {
 #' @export
 #' 
 plot.jack.influential <- function(x, main = NULL, ...) {
-  or.tbl <- tibble::tibble(or = as.vector(x$odds.ratio)) %>% 
+  or.tbl <- tibble::tibble(or = as.vector(x$odds.ratio)) |> 
     dplyr::filter(
       !is.na(.data$or) & 
       !is.nan(.data$or) & 
       !is.infinite(.data$or)
-    ) %>% 
-    dplyr::arrange(.data$or) %>% 
+    ) |> 
+    dplyr::arrange(.data$or) |> 
     dplyr::mutate(freq = 1:dplyr::n() / dplyr::n()) 
     
   p <- ggplot2::ggplot(or.tbl, ggplot2::aes_string(x = "or", y = "freq")) + 
@@ -197,8 +197,8 @@ plot.jack.influential <- function(x, main = NULL, ...) {
   fmtd <- rep(as.character(NA), nrow(x))
   for(i in 1:length(fmtd)) {
     # get genotype of this id at this locus
-    gt <- g@data %>% 
-      dplyr::filter(.data$id ==  x[i, 1] & .data$locus == x[i, 2]) %>% 
+    gt <- g@data |> 
+      dplyr::filter(.data$id ==  x[i, 1] & .data$locus == x[i, 2]) |> 
       dplyr::pull(.data$allele) 
     # if the genotype is NA skip and leave format as NA
     if(any(is.na(gt))) next

@@ -229,14 +229,14 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = 0,
     locus.info$fsc.type == "DNA", 0, locus.info$num.markers - 1
   )
   
-  p$locus.info <- locus.info %>% 
-    dplyr::group_by(.data$chromosome) %>% 
+  p$locus.info <- locus.info |> 
+    dplyr::group_by(.data$chromosome) |> 
     dplyr::mutate( # by chromosome information
       block = 1:dplyr::n(),
       chrom.pos.end = cumsum(.data$num.markers),
       chrom.pos.start = .data$chrom.pos.end - .data$num.markers + 1
-    ) %>% 
-    dplyr::ungroup() %>% 
+    ) |> 
+    dplyr::ungroup() |> 
     dplyr::mutate(
       name = paste0( # create block names
         "C", .zeroPad(.data$chromosome),
@@ -245,8 +245,8 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = 0,
       ),
       mat.col.start = mat.col.start,
       mat.col.end = mat.col.end
-    ) %>% 
-    dplyr::group_by(.data$mat.col.start) %>% 
+    ) |> 
+    dplyr::group_by(.data$mat.col.start) |> 
     dplyr::mutate( # character positions of DNA loci
       dna.end = ifelse(
         .data$fsc.type == "DNA", 
@@ -258,15 +258,15 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = 0,
         .data$dna.end - .data$num.markers + 1, 
         NA
       )
-    ) %>% 
-    dplyr::ungroup() %>% 
+    ) |> 
+    dplyr::ungroup() |> 
     dplyr::select(
       .data$name, .data$chromosome, .data$block, 
       .data$actual.type:.data$param.6,
       .data$chrom.pos.start, .data$chrom.pos.end,
       .data$mat.col.start, .data$mat.col.end, 
       .data$dna.start, .data$dna.end
-    ) %>% 
+    ) |> 
     as.data.frame(stringsAsFactors = FALSE)
   
   if(
@@ -282,8 +282,8 @@ fscRun <- function(p, num.sims = 1, dna.to.snp = FALSE, max.snps = 0,
         split(p$locus.info, p$locus.info$mat.col.start), 
         function(data.col) {
           if(unique(data.col$fsc.type) != "DNA") return(data.col)
-          data.col %>% 
-            dplyr::slice(1) %>% 
+          data.col |> 
+            dplyr::slice(1) |> 
             dplyr::mutate(
               name = paste0(
                 "C", .zeroPad(min(data.col$chromosome), max.chrom), 

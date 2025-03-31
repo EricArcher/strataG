@@ -111,8 +111,8 @@ NULL
 #' 
 .dataPrep <- function(g, nrep = 0, hap.locus = 1, ...) {
   # format data for C input
-  dt <- g@data %>% 
-    dplyr::filter(!is.na(allele) & !is.na(stratum)) %>% 
+  dt <- g@data |> 
+    dplyr::filter(!is.na(allele) & !is.na(stratum)) |> 
     dplyr::transmute(
       id = as.numeric(factor(id)),
       stratum = factor(stratum),

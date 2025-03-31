@@ -122,10 +122,10 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
   hap.dist[hap.dist > 0] <- 1
   
   # create haplotype code out of 0s and 1s
-  hap.code <- hap.dist %>% 
-    apply(1, paste, collapse = "") %>% 
-    factor() %>% 
-    as.numeric() %>% 
+  hap.code <- hap.dist |> 
+    apply(1, paste, collapse = "") |> 
+    factor() |> 
+    as.numeric() |> 
     stats::setNames(rownames(hap.dist))
   
   # rename haplotypes
@@ -147,8 +147,8 @@ labelHaplotypes.default  <- function(x, prefix = NULL, use.indels = TRUE) {
   unique.codes <- hap.code[!duplicated(hap.code)]
   hap.seqs <- x[names(unique.codes), , drop = FALSE]
   rownames(hap.seqs) <- unique.codes
-  hap.seqs <- hap.seqs[order(rownames(hap.seqs)), , drop = FALSE] %>% 
-    as.matrix() %>% 
+  hap.seqs <- hap.seqs[order(rownames(hap.seqs)), , drop = FALSE] |> 
+    as.matrix() |> 
     as.character()
   
   # get distance of all sequences with n's to other sequences (possible matching sequences)

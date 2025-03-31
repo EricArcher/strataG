@@ -36,14 +36,14 @@ propSharedLoci <- function(g, type = c("strata", "ids")) {
   type <- match.arg(type)
   
   .formatResult <- function(type.pairs, prop.shared) {
-    as.data.frame(type.pairs, stringsAsFactors = FALSE) %>% 
-      stats::setNames(paste(type, 1:2, sep = ".")) %>% 
+    as.data.frame(type.pairs, stringsAsFactors = FALSE) |> 
+      stats::setNames(paste(type, 1:2, sep = ".")) |> 
       dplyr::mutate(
         num.loci.genotyped = rowSums(!is.na(prop.shared)),
         num.loci.shared = rowSums(prop.shared == 1, na.rm = TRUE),
         prop.loci.shared = .data$num.loci.shared / .data$num.loci.genotyped
-      ) %>% 
-      cbind(prop.shared) %>% 
+      ) |> 
+      cbind(prop.shared) |> 
       as.data.frame()
   }
   

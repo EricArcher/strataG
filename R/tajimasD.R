@@ -107,8 +107,8 @@ tajimasD <- function(x, CI = 0.95) {
       warning("error in Tajima's D integration, NA returned")
       tibble::tibble(D = NA, p.value = NA, LCI = NA, UCI = NA)
     })
-  }) %>% 
-    dplyr::bind_rows() %>% 
-    dplyr::mutate(locus = names(x)) %>% 
+  }) |> 
+    dplyr::bind_rows() |> 
+    dplyr::mutate(locus = names(x)) |> 
     as.data.frame()
 }

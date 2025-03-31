@@ -40,7 +40,7 @@
 #' 
 mafft <- function(x, op = 3, ep = 0.123, maxiterate = 0, quiet = TRUE, 
                   num.cores = 1, opts = "--auto", simplify = TRUE) {
-  dna <- write.fasta(x, file = tempfile("align.mafft")) %>% 
+  dna <- write.fasta(x, file = tempfile("align.mafft")) |> 
     purrr::map(function(f) {
       aligned.fasta <- file.path(
         dirname(f), 

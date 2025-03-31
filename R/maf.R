@@ -34,27 +34,27 @@ maf <- function(g, by.strata = FALSE, maf.within = FALSE) {
   
   if(by.strata) {
     result <- if(maf.within) {
-      g %>% 
-        alleleFreqs(by.strata = TRUE, type = "prop") %>% 
+      g |> 
+        alleleFreqs(by.strata = TRUE, type = "prop") |> 
         purrr::map(function(x) apply(x, 2, .calcMAF))
     } else {
       st.af <- alleleFreqs(g, by.strata = TRUE, type = "prop")
-      alleleFreqs(g, by.strata = FALSE, type = "prop") %>% 
+      alleleFreqs(g, by.strata = FALSE, type = "prop") |> 
         purrr::imap(function(freqs, locus) {
           allele <- names(freqs)[which.min(freqs)]
           st.af[[locus]][allele, ]
         })
     }
-    do.call(rbind, result) %>% 
-      as.data.frame %>% 
-      tibble::rownames_to_column("locus") %>% 
-      tidyr::gather("stratum", "maf", -.data$locus) %>% 
+    do.call(rbind, result) |> 
+      as.data.frame() |> 
+      tibble::rownames_to_column("locus") |> 
+      tidyr::gather("stratum", "maf", -.data$locus) |> 
       dplyr::select(.data$stratum, .data$locus, .data$maf)
   } else {
-    alleleFreqs(g, by.strata = FALSE, type = "prop") %>% 
-      purrr::map_dbl(.calcMAF) %>%  
-      utils::stack() %>% 
-      stats::setNames(c("maf", "locus")) %>% 
+    alleleFreqs(g, by.strata = FALSE, type = "prop") |> 
+      purrr::map_dbl(.calcMAF) |>  
+      utils::stack() |> 
+      stats::setNames(c("maf", "locus")) |> 
       dplyr::select(.data$locus, .data$maf)
   }
 }

@@ -30,7 +30,7 @@
 #' @export
 #' 
 TiTvRatio <- function(x) {
-  ti.tv <- baseFreqs(x, c("a", "c", "g", "t"))$site.freqs %>% 
+  ti.tv <- baseFreqs(x, c("a", "c", "g", "t"))$site.freqs |> 
     apply(2, function(freqs) {
       freqs <- freqs[freqs > 0]
       if(length(freqs) < 2) {

@@ -104,9 +104,9 @@
 .strataPairs <- function(g) {
   st <- getStrataNames(g)
   if(length(st) < 2) return(NULL)
-  utils::combn(st, 2) %>% 
-    t() %>%  
-    as.data.frame(stringsAsFactors = FALSE) %>% 
+  utils::combn(st, 2) |> 
+    t() |>  
+    as.data.frame(stringsAsFactors = FALSE) |> 
     stats::setNames(c("strata.1", "strata.2"))
 }
 
@@ -115,11 +115,11 @@
 #' @noRd
 #' 
 .removeIdsMissingAllLoci <- function(g) {
-  to.remove <- g@data %>% 
-    dplyr::group_by(.data$id) %>% 
-    dplyr::summarize(to.remove = all(is.na(.data$allele))) %>% 
-    dplyr::filter(.data$to.remove) %>% 
-    dplyr::pull(.data$id) %>% 
+  to.remove <- g@data |> 
+    dplyr::group_by(.data$id) |> 
+    dplyr::summarize(to.remove = all(is.na(.data$allele))) |> 
+    dplyr::filter(.data$to.remove) |> 
+    dplyr::pull(.data$id) |> 
     as.character()
 
   if(length(to.remove) > 0) {
@@ -128,8 +128,8 @@
       paste(to.remove, collapse = ", "),
       call. = FALSE
     )
-    g@data <- g@data %>% 
-      dplyr::filter(!.data$id %in% to.remove) %>% 
+    g@data <- g@data |> 
+      dplyr::filter(!.data$id %in% to.remove) |> 
       data.table::as.data.table()
   }
   g@data <- droplevels(g@data)
@@ -144,12 +144,12 @@
 #' 
 .applyPerLocus <- function(fun, g, by.strata = FALSE, ...) {
   result <- if(by.strata) {
-    g@data %>% 
-      dplyr::group_by(.data$stratum, .data$locus) %>%  
+    g@data |> 
+      dplyr::group_by(.data$stratum, .data$locus) |>  
       dplyr::summarize(value = fun(.data$allele, ...))
   } else {
-    g@data %>% 
-      dplyr::group_by(.data$locus) %>%  
+    g@data |> 
+      dplyr::group_by(.data$locus) |>  
       dplyr::summarize(value = fun(.data$allele, ...))
   }
   dplyr::ungroup(result)
@@ -161,9 +161,9 @@
 #' @noRd
 #' 
 .alleles2integer <- function(g, min.val = 0) {
-  g@data %>% 
-    dplyr::group_by(.data$locus) %>% 
-    dplyr::mutate(allele = min.val - 1 + as.integer(factor(.data$allele))) %>% 
+  g@data |> 
+    dplyr::group_by(.data$locus) |> 
+    dplyr::mutate(allele = min.val - 1 + as.integer(factor(.data$allele))) |> 
     dplyr::ungroup() 
 }
 
@@ -176,11 +176,11 @@
 .stackedAlleles <- function(g, alleles2integer = FALSE, na.val = NULL, ...) {
   x <- if(alleles2integer) .alleles2integer(g, ...) else g@data
   if(!is.null(na.val)) x$allele[is.na(x$allele)] <- na.val
-  x %>% 
-    dplyr::arrange(.data$id, .data$locus) %>% 
-    dplyr::mutate(a = rep(1:getPloidy(g), dplyr::n() / getPloidy(g))) %>% 
-    tidyr::spread(.data$locus, .data$allele) %>% 
-    dplyr::rename(allele = "a") %>% 
+  x |> 
+    dplyr::arrange(.data$id, .data$locus) |> 
+    dplyr::mutate(a = rep(1:getPloidy(g), dplyr::n() / getPloidy(g))) |> 
+    tidyr::spread(.data$locus, .data$allele) |> 
+    dplyr::rename(allele = "a") |> 
     dplyr::select(.data$id, .data$stratum, .data$allele, dplyr::everything())
 }
 

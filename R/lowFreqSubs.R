@@ -38,7 +38,7 @@ lowFreqSubs <- function(x, min.freq = 3, motif.length = 10, simplify = TRUE) {
         tibble::tibble(
           id = names(dna[, position])[dna[, position] %in% bases], 
           site = position
-        ) %>% 
+        ) |> 
           dplyr::mutate(
             base = dna[.data$id, position],
             freq = sapply(.data$base, function(i) var.sites[i, col]),
@@ -48,9 +48,9 @@ lowFreqSubs <- function(x, min.freq = 3, motif.length = 10, simplify = TRUE) {
               paste(dna[i, start.bp:end.bp], collapse = "")
             })
           )
-      }) %>% 
-        dplyr::bind_rows() %>% 
-        dplyr::arrange(.data$id, .data$site) %>% 
+      }) |> 
+        dplyr::bind_rows() |> 
+        dplyr::arrange(.data$id, .data$site) |> 
         as.data.frame()
       rownames(sites.to.check) <- NULL
       sites.to.check

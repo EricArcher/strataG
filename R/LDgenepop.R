@@ -69,14 +69,14 @@ LDgenepop <- function(
   }
   
   # Convert to data.frame and format columns
-  result.df <- tibble::as.tibble(result.mat) %>% 
+  result.df <- tibble::as.tibble(result.mat) |> 
     dplyr::mutate(
       Locus.1 = locus.names[.data$Locus.1],
       Locus.2 = locus.names[.data$Locus.2],
       p.value = as.numeric(.data$p.value),
       std.err = as.numeric(.data$std.err),
       switches = as.integer(.data$switches)
-    ) %>% 
+    ) |> 
     as.data.frame()
   
   if(delete.files) {

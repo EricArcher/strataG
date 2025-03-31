@@ -47,7 +47,7 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95,
                  drop.missing = FALSE, num.cores = 1) {
   if(getPloidy(g) != 2) stop("'g' must have diploid data")
   
-  mat <- as.data.frame(g, coded.snps = TRUE) %>% 
+  mat <- as.data.frame(g, coded.snps = TRUE) |> 
     tibble::column_to_rownames("id") 
   st <- mat$stratum
   mat$stratum <- NULL
@@ -57,9 +57,9 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95,
   if(maf.threshold > 0 & by.strata) {
     above.thresh <- do.call(cbind, tapply(1:nrow(mat), st, function(i) {
       colMeans(mat[i, ]) / 2
-    })) %>% 
-      apply(1, function(x) all(x >= maf.threshold)) %>% 
-      which() %>% 
+    })) |> 
+      apply(1, function(x) all(x >= maf.threshold)) |> 
+      which() |> 
       names()
     if(length(above.thresh) < 2) {
       warning(
@@ -241,8 +241,8 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95,
   
   ne.smry <- ne.smry[!sapply(ne.smry, is.null)]
   if(length(ne.smry) == 0) return(NULL)
-  do.call(rbind, ne.smry) %>% 
-    as.data.frame() %>% 
-    tibble::rownames_to_column("stratum") %>% 
+  do.call(rbind, ne.smry) |> 
+    as.data.frame() |> 
+    tibble::rownames_to_column("stratum") |> 
     dplyr::select(.data$stratum, dplyr::everything())
 }

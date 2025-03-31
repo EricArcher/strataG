@@ -7,7 +7,6 @@
 #'   data
 "_PACKAGE"
 #' @importFrom rlang .data
-#' @importFrom magrittr %>%
 #' @importFrom Rcpp evalCpp
 #' @useDynLib strataG, .registration=TRUE
 #' 

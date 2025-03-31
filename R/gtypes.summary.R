@@ -47,11 +47,11 @@ setMethod("summary", "gtypes", function(object, ...) {
   }
   
   print(cbind(
-    summarizeInds(object) %>% 
-      dplyr::select(-.data$id, -.data$stratum) %>% 
+    summarizeInds(object) |> 
+      dplyr::select(-.data$id, -.data$stratum) |> 
       .summaryStats(),
-    summarizeLoci(object) %>% 
-      dplyr::select(-.data$locus) %>% 
+    summarizeLoci(object) |> 
+      dplyr::select(-.data$locus) |> 
       .summaryStats()
   ))
 })

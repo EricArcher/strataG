@@ -178,7 +178,7 @@ arlequinRead <- function(file) {
           c("id", "freq"),
           profile.info$locus.separator,
           profile.info$data.type == "DNA"
-        ) %>% 
+        ) |> 
           dplyr::mutate(freq = as.numeric(.data$freq))
       }
     })
@@ -187,7 +187,7 @@ arlequinRead <- function(file) {
       rbind, 
       mapply(
         function(name, size, data) {
-          cbind(strata = name, data, stringsAsFactors = FALSE) %>% 
+          cbind(strata = name, data, stringsAsFactors = FALSE) |> 
             dplyr::select(.data$id, dplyr::everything())
         },
         name = sample.name, data = sample.data,
@@ -292,9 +292,9 @@ arlequinWrite <- function(g, file = NULL, locus = 1, haploid.microsat = FALSE) {
       hap.df[[locus]] <- as.character(hap.df[[locus]])
       dna <- getSequences(st, as.haplotypes = TRUE,seqName = locus)
       if(!is.null(dna)) {
-        dna <- dna %>% 
-          as.matrix() %>% 
-          as.character() %>% 
+        dna <- dna |> 
+          as.matrix() |> 
+          as.character() |> 
           toupper()
         dna <- apply(dna, 1, paste, collapse = "")[hap.df[[locus]]]
         hap.df <- cbind(hap.df, dna)
@@ -307,7 +307,7 @@ arlequinWrite <- function(g, file = NULL, locus = 1, haploid.microsat = FALSE) {
         append = TRUE
       )
     } else { # Microsats
-      loc.mat <- .stackedAlleles(st, na.val = "?") %>% 
+      loc.mat <- .stackedAlleles(st, na.val = "?") |> 
         dplyr::mutate(
           id = ifelse(
             .data$allele == 1, 
@@ -317,9 +317,9 @@ arlequinWrite <- function(g, file = NULL, locus = 1, haploid.microsat = FALSE) {
             })
           ),
           allele = ifelse(.data$allele == 1, "1", " ")
-        ) %>% 
-        dplyr::select(-.data$stratum) %>% 
-        dplyr::select(.data$id, .data$allele, dplyr::everything()) %>% 
+        ) |> 
+        dplyr::select(-.data$stratum) |> 
+        dplyr::select(.data$id, .data$allele, dplyr::everything()) |> 
         as.matrix()
       
       write(
@@ -405,13 +405,13 @@ arlequinWrite <- function(g, file = NULL, locus = 1, haploid.microsat = FALSE) {
 #' @noRd
 #'
 .parseFrequencyData <- function(sample.data) {
-  data.df <- do.call(rbind, sample.data) %>% 
+  data.df <- do.call(rbind, sample.data) |> 
     as.data.frame(stringsAsFactors = FALSE)
   if(ncol(data.df) != 2) {
     stop("'SampleData' must be 2 columns if 'DataType=FREQUENCY'")
   }
-  data.df %>% 
-    stats::setNames(c("id", "freq")) %>% 
+  data.df |> 
+    stats::setNames(c("id", "freq")) |> 
     dplyr::mutate(freq = as.numeric(.data$freq))
 }
 
@@ -464,8 +464,8 @@ arlequinWrite <- function(g, file = NULL, locus = 1, haploid.microsat = FALSE) {
   data.df <- rbind(
     cbind(id.freq, allele = 1, allele.1),
     cbind(id.freq, allele = 2, allele.2)
-  ) %>% 
-    as.data.frame(stringsAsFactors = FALSE) %>% 
+  ) |> 
+    as.data.frame(stringsAsFactors = FALSE) |> 
     dplyr::mutate(
       freq = as.numeric(.data$freq),
       allele = as.numeric(.data$allele)
@@ -501,25 +501,25 @@ arlequinWrite <- function(g, file = NULL, locus = 1, haploid.microsat = FALSE) {
 #' @noRd
 #'
 .diploid2gtype <- function(arp, avoid.dups) {    
-  sample.data <- arp$data.info$sample.data %>% 
-    tidyr::gather("locus", "value", dplyr::starts_with("locus_")) %>% 
-    dplyr::mutate(locus = paste0(.data$locus, ".", .data$allele)) %>% 
-    dplyr::select(-.data$allele) %>% 
+  sample.data <- arp$data.info$sample.data |> 
+    tidyr::gather("locus", "value", dplyr::starts_with("locus_")) |> 
+    dplyr::mutate(locus = paste0(.data$locus, ".", .data$allele)) |> 
+    dplyr::select(-.data$allele) |> 
     tidyr::spread(.data$locus, .data$value)
   if(any(sample.data$freq > 1)) sample.data <- .expandByFreq(sample.data)
-  sample.data %>% 
-    dplyr::select(-.data$freq) %>% 
-    .avoidDups(avoid.dups) %>% 
+  sample.data |> 
+    dplyr::select(-.data$freq) |> 
+    .avoidDups(avoid.dups) |> 
     df2gtypes(ploidy = 2, description = arp$profile.info$title)
 }
 
 #' @noRd
 #'
 .freq2gtype <- function(arp, avoid.dups) {      
-  g <- .expandByFreq(arp$data.info$sample.data) %>% 
-    dplyr::select(-.data$freq) %>% 
-    dplyr::mutate(hap = .data$id) %>% 
-    .avoidDups(avoid.dups) %>% 
+  g <- .expandByFreq(arp$data.info$sample.data) |> 
+    dplyr::select(-.data$freq) |> 
+    dplyr::mutate(hap = .data$id) |> 
+    .avoidDups(avoid.dups) |> 
     df2gtypes(ploidy = 1, description = arp$profile.info$title)
   dist.mat <- arp$data.info$distance.matrix$data
   if(!is.null(dist.mat)) setOther(g, "dist.mat") <- dist.mat
@@ -533,10 +533,10 @@ arlequinWrite <- function(g, file = NULL, locus = 1, haploid.microsat = FALSE) {
   haps <- arp$data.info$haplotype.definition$list
   if(is.null(haps)) haps <- sample.data[, c("id", "locus_1")]
   sample.data$locus_1 <- sample.data$id
-  g <- sample.data %>% 
-    .expandByFreq() %>% 
-    dplyr::select(.data$id, .data$strata, .data$locus_1) %>%
-    .avoidDups(avoid.dups) %>% 
+  g <- sample.data |> 
+    .expandByFreq() |> 
+    dplyr::select(.data$id, .data$strata, .data$locus_1) |>
+    .avoidDups(avoid.dups) |> 
     df2gtypes(
       ploidy = 1,
       sequences = ape::as.DNAbin(
@@ -576,10 +576,10 @@ arlequinWrite <- function(g, file = NULL, locus = 1, haploid.microsat = FALSE) {
     sample.data$hap <- sample.data$id
   }
   
-  g <- sample.data %>% 
-    .expandByFreq() %>% 
-    dplyr::select(.data$id, .data$strata, .data$hap) %>% 
-    .avoidDups(avoid.dups) %>% 
+  g <- sample.data |> 
+    .expandByFreq() |> 
+    dplyr::select(.data$id, .data$strata, .data$hap) |> 
+    .avoidDups(avoid.dups) |> 
     df2gtypes(ploidy = 1, description = arp$profile.info$title)
   dist.mat <- arp$data.info$distance.matrix$data
   if(!is.null(dist.mat)) setOther(g, "dist.mat") <- dist.mat

@@ -96,15 +96,15 @@ methods::setMethod(
       }
       
       # matrix of genotypes with one column per locus
-      x.df <- x@data %>% 
-        dplyr::mutate(ref = ref.allele[.data$locus]) %>% 
-        dplyr::group_by(.data$id, .data$stratum, .data$locus) %>% 
+      x.df <- x@data |> 
+        dplyr::mutate(ref = ref.allele[.data$locus]) |> 
+        dplyr::group_by(.data$id, .data$stratum, .data$locus) |> 
         dplyr::summarize(
           code = sum(.data$allele == .data$ref), 
           .groups = "drop"
-        ) %>% 
-        tidyr::pivot_wider(names_from = "locus", values_from = "code") %>% 
-        as.data.frame
+        ) |> 
+        tidyr::pivot_wider(names_from = "locus", values_from = "code") |> 
+        as.data.frame()
       
       # remove ids or strata if requested
       if(!ids) x.df$id <- NULL
@@ -113,12 +113,12 @@ methods::setMethod(
       x.df
     } else {
       # create data.frame of one column per locus
-      x.df <- x@data %>% 
-        dplyr::group_by(.data$id, .data$stratum, .data$locus) %>% 
+      x.df <- x@data |> 
+        dplyr::group_by(.data$id, .data$stratum, .data$locus) |> 
         dplyr::summarize(
           genotype = .combineLoci(.data$allele, sep = sep, sort = sort.alleles),
           .groups = "drop"
-        ) %>% 
+        ) |> 
         tidyr::pivot_wider(names_from = "locus", values_from = "genotype") 
       
       if(getPloidy(x) == 1) one.col <- TRUE
@@ -126,9 +126,9 @@ methods::setMethod(
       if(!one.col) {
         x.df <- cbind(
           x.df[, c("id", "stratum")],
-          x.df %>% 
-            dplyr::select(-.data$id, -.data$stratum) %>% 
-            as.data.frame() %>% 
+          x.df |> 
+            dplyr::select(-.data$id, -.data$stratum) |> 
+            as.data.frame() |> 
             alleleSplit(sep = sep),
           stringsAsFactors = FALSE
         )
@@ -140,11 +140,11 @@ methods::setMethod(
       if(!ids) x.df$id <- NULL
       if(!strata) x.df$stratum <- NULL
       
-      x.df %>% 
+      x.df |> 
         dplyr::mutate(dplyr::across(
           .cols = dplyr::everything(),
           .fns = as.character
-        )) %>% 
+        )) |> 
         as.data.frame()
     }
   })

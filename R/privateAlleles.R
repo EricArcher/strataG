@@ -26,9 +26,9 @@ privateAlleles <- function(g) {
         f[f > 0] <- 1
         apply(f, 1, function(x) {
           if(sum(x > 0) == 1) x else rep(0, length(x))
-        }) %>% 
-          rbind() %>% 
-          rowSums() %>% 
+        }) |> 
+          rbind() |> 
+          rowSums() |> 
           stats::setNames(dimnames(f)[[2]])
       },
       simplify = FALSE

@@ -24,8 +24,8 @@ readGenData <- function(file,
     strip.white = TRUE,
     colClasses = "character",
     ...
-  ) %>% 
-    as.data.frame() %>% 
+  ) |> 
+    as.data.frame() |> 
     dplyr::mutate(dplyr::across(
       .cols = dplyr::everything(), 
       .fns = .replaceNA, 

@@ -39,9 +39,9 @@ summarizeAll <- function(g, write.files = FALSE, label = NULL, ...) {
   by.sample <- summarizeInds(g)
   
   cat(format(Sys.time()), ": Locus summaries\n")
-  by.locus <- summarizeLoci(g) %>% 
-    dplyr::mutate(stratum = "All") %>% 
-    dplyr::select(.data$stratum, dplyr::everything()) %>% 
+  by.locus <- summarizeLoci(g) |> 
+    dplyr::mutate(stratum = "All") |> 
+    dplyr::select(.data$stratum, dplyr::everything()) |> 
     dplyr::bind_rows(summarizeLoci(g, TRUE))
   
   cat(format(Sys.time()), ": Duplicate genotypes\n")

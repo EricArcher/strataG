@@ -27,14 +27,14 @@ neiDa <- function(g) {
   .DaFunc <- function(st1, st2, freqs) {    
     loc.sum <- purrr::map_dbl(freqs, function(loc.freqs) {
       freqs.st <- prop.table(loc.freqs[, c(st1, st2), drop = FALSE])
-      apply(freqs.st, 1, function(f) if(all(f == 0)) NA else sqrt(prod(f))) %>% 
+      apply(freqs.st, 1, function(f) if(all(f == 0)) NA else sqrt(prod(f))) |> 
         sum(na.rm = TRUE)
     }) 
     1 - sum(loc.sum, na.rm = TRUE) / sum(!is.na(loc.sum))
   }
   
-  .strataPairs(g) %>% 
-    dplyr::rowwise() %>% 
-    dplyr::mutate(Da = .DaFunc(.data$strata.1, .data$strata.2, freqs)) %>% 
+  .strataPairs(g) |> 
+    dplyr::rowwise() |> 
+    dplyr::mutate(Da = .DaFunc(.data$strata.1, .data$strata.2, freqs)) |> 
     as.data.frame()
 }
