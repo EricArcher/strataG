@@ -8,9 +8,21 @@
 #' @param pairwise do analysis on all pairwise combinations of strata?
 #' @param conf.level confidence level for the \code{\link{binom.test}} 
 #'   confidence interval.
+#' @param replace sample with replacement in Random Forest trees? 
+#'    (see \code{\link[randomForest]{randomForest}}).
+#' @param sampsize sample size for each Random Forest tree? 
+#'    (see \code{\link[randomForest]{randomForest}}). If \code{NULL} a 
+#'    balanced sample size is chosen 
+#'    (see \code{\link[rfPermute]{balancedSampsize}}).
+#' @param train.pct if \code{sampsize} is \code{NULL}, the percent of the 
+#'    minimum strata size to use for \code{sampsize}.
+#' @param min.n minimum sample size across all strata.
+#' @param min.votes.pct numeric vector giving the minimum percent of votes for  
+#'    the assigned strata for a sample to be considered correctly assigned.
+#' @param rp.nrep number of replicates for \code{rfPermute} computation of 
+#'    significance of site importance scores.
 #' @param unk vector of strata to be treated as "unknowns" for prediction with 
 #'   Random Forest model.
-#' @param ... arguments passed to \code{\link[randomForest]{randomForest}}.
 #' 
 #' @return a list containing a data.frame of summary statistics (\code{smry}), 
 #'   and the \code{randomForest} object (\code{rf}). If \code{pairwise} 
@@ -24,35 +36,28 @@
 #' library(strataG)
 #' data(dloop.g)
 #' 
-#' diagnosability(dloop.g, pairwise = TRUE)
+#' pd <- diagnosability(dloop.g, pairwise = TRUE)
+#' 
+#' lapply(pd, function(x) x$rf.confusion.mat)
 #' }
 #' 
 #' @export
 #' 
+#' 
 diagnosability <- function(g, gene = 1, pairwise = FALSE, conf.level = 0.95, 
-                     unk = NULL, ...) {
-  # check for and set names to sampsize
-  args <- list(...)
-  ss.match <- which(pmatch(names(args), "sampsize") == 1)
-  if(length(ss.match) == 1) {
-    temp.ss <- args[[ss.match]]
-    if(is.null(names(temp.ss))) {
-      names(temp.ss) <- getStrataNames(g)
-      args[[ss.match]] <- temp.ss
-      names(args)[ss.match] <- "sampsize"
-    }
-  }
+                           replace = FALSE, sampsize = NULL, train.pct = 0.5,
+                           min.n = 2, min.votes.pct = c(0.8, 0.9, 0.95), rp.nrep = 0,
+                           unk = NULL) {
+
+  arg.list <- as.list(environment())
   
   if(pairwise) {
     sp <- .strataPairs(g)
-    result <- lapply(1:nrow(sp), function(i) {
-      pair.g <- g[, , unlist(sp[i, ])]
-      do.call(diagnosability, c(list(g = pair.g, pairwise = FALSE), args))
+    arg.list$pairwise <- FALSE
+    lapply(1:nrow(sp), function(i) {
+      arg.list$g <- g[, , unlist(sp[i, ])]
+      do.call(diagnosability, arg.list)
     })
-    list(
-      smry = cbind(sp, do.call(rbind, lapply(result, function(x) x$smry))),
-      rp = lapply(result, function(x) x$rp)
-    )
   } else {
     seq.df <- .gtypes2rfDF(g, gene = gene)
     rf.df <- if(!is.null(unk)) {
@@ -60,9 +65,9 @@ diagnosability <- function(g, gene = 1, pairwise = FALSE, conf.level = 0.95,
       df$stratum <- droplevels(df$stratum)
       df
     } else seq.df
-    args <- c(list(x = rf.df), args)
-    result <- do.call(.sequenceRF, args)
-    result$seq.df <- seq.df
+    arg.list[c('g', 'gene', 'pairwise', 'unk')] <- NULL
+    result <- do.call(.sequenceRF, c(list(x = rf.df), arg.list))
+    result$rf.df <- rf.df
     result$unk <- if(!is.null(unk) & !is.null(result$rp)) {
       unk.df <- seq.df[seq.df$stratum %in% unk, ]
       pred <- data.frame(stats::predict(result$rp, unk.df, type = "prob"))
@@ -75,8 +80,9 @@ diagnosability <- function(g, gene = 1, pairwise = FALSE, conf.level = 0.95,
 
 
 #' @keywords internal
+#' @noRd
 #'
-.gtypes2rfDF <- function(g, gene = 1, label = NULL) {
+.gtypes2rfDF <- function(g, gene = 1) {
   rf.df <- if(getPloidy(g) == 1) {
     if(is.null(getSequences(g))) stop("'g' must have aligned sequences")
     
@@ -97,24 +103,18 @@ diagnosability <- function(g, gene = 1, pairwise = FALSE, conf.level = 0.95,
       all(x %in% c("a", "c", "g", "t", "-", "."))
     })
     if(sum(to.keep) == 0) return(NULL)
-    var.seq.mat <- stats::setNames(
-      cbind(var.seq.mat[, to.keep]),
-      sites[to.keep]
-    )
+    var.seq.mat <- cbind(var.seq.mat[, to.keep])
+    colnames(var.seq.mat) <- sites[to.keep]
+    rownames(var.seq.mat) <- df$id
     
-    # create factors of variable site columns
-    seq.df <- do.call(
-      data.frame, 
-      lapply(colnames(var.seq.mat), function(x) factor(var.seq.mat[, x]))
-    ) |> 
-      stats::setNames(var.seq.mat)
-    
-    # add strata and ids
-    cbind(
-      df[, c('id', 'stratum')], 
-      seq.df[df$id, ]
-    ) |>
-      tibble::column_to_rownames('id')
+    # create factors of variable site columns, add strata and ids, and return data frame
+    var.seq.mat |> 
+      as.data.frame() |> 
+      dplyr::mutate(
+        dplyr::across(dplyr::everything(), factor),
+        stratum = df$stratum
+      ) |>
+      dplyr::select(stratum, dplyr::everything())
   } else {
     snp.df <- as.data.frame(g, one.col = TRUE, ids = TRUE, strata = TRUE) |> 
       tibble::column_to_rownames('id')
@@ -125,8 +125,10 @@ diagnosability <- function(g, gene = 1, pairwise = FALSE, conf.level = 0.95,
     snp.df
   }
   
-  # add strata and remove any rows with missing data
-  rf.df <- stats::na.omit(rf.df)
+  # remove any rows with missing data
+  rf.df <- rf.df |> 
+    stats::na.omit() |> 
+    dplyr::mutate(dplyr::across(dplyr::everything(), factor))
   
   # remove columns where substitutions are represented by only one individual
   preds <- rf.df[, -1, drop = FALSE]
@@ -137,43 +139,46 @@ diagnosability <- function(g, gene = 1, pairwise = FALSE, conf.level = 0.95,
   }
   
   # format and return data frame
-  st <- if(is.null(label)) rf.df$stratum else paste(label, rf.df$stratum)
-  do.call(
-    data.frame, 
-    lapply(preds[, to.keep, drop = FALSE], factor)
-  ) |> 
-    dplyr::mutate(
-      id = rownames(rf.df),
-      stratum = factor(st)
-    ) |> 
-    tibble::column_to_rownames('id') |> 
+  preds[, to.keep, drop = FALSE] |> 
+    dplyr::mutate(stratum = rf.df$stratum) |>  
     dplyr::select('stratum', dplyr::everything()) 
 }
 
 
 #' @keywords internal
+#' @noRd
 #'
 .sequenceRF <- function(x, replace = FALSE, sampsize = NULL, 
-                       train.pct = 0.5, min.n = 2, nrep = 0, 
-                       conf.level = 0.95, ...) {
+                        train.pct = 0.5, min.n = 2, rp.nrep = 0, 
+                        conf.level = 0.95, min.votes.pct = 0.95) {
   if(is.null(x)) return(NULL)
   strata <- x$stratum
   if(length(unique(strata)) < 2) return(NULL)
   
-  if(is.null(sampsize)) sampsize <- rfPermute::balancedSampsize(strata)
+  if(is.null(sampsize)) sampsize <- rfPermute::balancedSampsize(strata, train.pct)
   sampsize <- ifelse(sampsize < min.n, min.n, sampsize)
   rp <- rfPermute::rfPermute(
     stratum ~ ., data = x, replace = replace, 
-    sampsize = sampsize, nrep = nrep, ...
+    sampsize = sampsize, nrep = rp.nrep,
+    num.cores = ifelse(rp.nrep == 0, 1, parallel::detectCores() - 1)
   )
   
+  # Random Forest classifier
   rf <- rfPermute::as.randomForest(rp)
-  overall.accuracy <- 1 - as.vector(rf$err.rate[nrow(rf$err.rate), "OOB"])
-  ci <- rfPermute::confusionMatrix(rp, conf.level = conf.level)
-  ci <- ci[, (length(rf$classes) + 1):(length(rf$classes) + 3)]
-  min.diag <- which.min(ci[-nrow(ci), 1])
-  diag.strata <- rownames(ci)[min.diag]
+  predicted <- apply(rf$votes, 1, function(x) colnames(rf$votes)[which.max(x)])
+  min.votes.pct <- min.votes.pct[min.votes.pct >= 1 / nlevels(rf$y)]
+  if(length(min.votes.pct) == 0) min.votes.pct <- 0.95
+  min.votes.pct <- stats::setNames(min.votes.pct, paste("pd",  min.votes.pct, sep = "."))
+  strata.pd <- sapply(colnames(rf$votes), function(y) {
+    y.i <- which(rf$y == y)
+    votes <- rf$votes[y.i, y]
+    is.correct = predicted[y.i] == rf$y[y.i]
+    sapply(min.votes.pct, function(p) {
+      100 * mean(is.correct & votes >= p)
+    })
+  })
   
+  # Haplotype frequency classifier
   dna.seq <- apply(x[, -1, drop = FALSE], 1, paste, collapse = "")
   most.freq <- sort(table(dna.seq), decreasing = T)
   haps <- as.numeric(factor(dna.seq, levels = names(most.freq)))
@@ -181,48 +186,21 @@ diagnosability <- function(g, gene = 1, pairwise = FALSE, conf.level = 0.95,
   pred <- sapply(haps, function(i) {
     colnames(hap.freq)[which.max(hap.freq[as.character(i), ])]
   })
-  
-  class.tbl <- table(
+  hap.class.tbl <- table(
     factor(strata), 
-    factor(pred, levels = unique(strata))
+    factor(pred, levels = sort(unique(strata)))
   )
-  overall.diag <- sum(diag(class.tbl)) / sum(class.tbl)
-  class.tbl <- cbind(
-    class.tbl, 
-    diagnosability = diag(class.tbl) / rowSums(class.tbl)
+  overall.diag <- 100 * sum(diag(hap.class.tbl)) / sum(hap.class.tbl)
+  hap.class.tbl <- cbind(
+    hap.class.tbl, 
+    pct.correct = 100 * diag(hap.class.tbl) / rowSums(hap.class.tbl)
   )
   
-  predicted <- apply(rf$votes, 1, function(x) colnames(rf$votes)[which.max(x)])
-  vote.dfs <- sapply(colnames(rf$votes), function(y) {
-    y.i <- which(rf$y == y)
-    votes <- rf$votes[y.i, y]
-    df <- data.frame(votes = votes, is.correct = predicted[y.i] == rf$y[y.i])
-  }, simplify = F)
-  min.p <-  1 / nlevels(rf$y)
-  pd.vec <- if(is.null(pd.vec)) min.p else c(min.p, pd.vec)
-  pd.vec <- pd.vec[pd.vec >= min.p]
-  pd95 <- sapply(pd.vec, function(p) {
-    strata.pd <- sapply(vote.dfs, function(df) {
-      mean(df$is.correct & df$votes >= p)
-    })
-    unname(strata.pd[which.min(strata.pd)])
-  }) |> 
-    stats::setNames(paste("pd",  pd.vec, sep = "."))
-  
-  smry <- data.frame(
-    overall.accuracy = overall.accuracy * 100,
-    diag.strata = diag.strata,
-    diagnosability = ci[min.diag, 1],
-    diag.lci = ci[min.diag, 2],
-    diag.uci = ci[min.diag, 3],
-    shared.hap.diag = class.tbl[diag.strata, "diagnosability"],
-    pd95 = pd95[2],
+  list(
+    rf.confusion.mat = rfPermute::confusionMatrix(rp, conf.level = conf.level),
+    strata.pd = strata.pd,
+    hap.freq.confusion.mat = hap.class.tbl,
     num.vs = ncol(x) - 1,
-    num.haps = length(unique(haps)),
-    hap.div = sprex::diversity(haps, type = "unb.gini"),
-    eff.num.haps = sprex::diversity(haps, type = "effective.number")
+    rp = rp
   )
-  rownames(smry) <- NULL
-  
-  list(smry = smry, rp = rp)
 }

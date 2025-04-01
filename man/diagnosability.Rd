@@ -9,8 +9,13 @@ diagnosability(
   gene = 1,
   pairwise = FALSE,
   conf.level = 0.95,
-  unk = NULL,
-  ...
+  replace = FALSE,
+  sampsize = NULL,
+  train.pct = 0.5,
+  min.n = 2,
+  min.votes.pct = c(0.8, 0.9, 0.95),
+  rp.nrep = 0,
+  unk = NULL
 )
 }
 \arguments{
@@ -24,10 +29,27 @@ slot. Defaults to the first gene in the object.}
 \item{conf.level}{confidence level for the \code{\link{binom.test}} 
 confidence interval.}
 
+\item{replace}{sample with replacement in Random Forest trees? 
+(see \code{\link[randomForest]{randomForest}}).}
+
+\item{sampsize}{sample size for each Random Forest tree? 
+(see \code{\link[randomForest]{randomForest}}). If \code{NULL} a 
+balanced sample size is chosen 
+(see \code{\link[rfPermute]{balancedSampsize}}).}
+
+\item{train.pct}{if \code{sampsize} is \code{NULL}, the percent of the 
+minimum strata size to use for \code{sampsize}.}
+
+\item{min.n}{minimum sample size across all strata.}
+
+\item{min.votes.pct}{numeric vector giving the minimum percent of votes for
+the assigned strata for a sample to be considered correctly assigned.}
+
+\item{rp.nrep}{number of replicates for \code{rfPermute} computation of 
+significance of site importance scores.}
+
 \item{unk}{vector of strata to be treated as "unknowns" for prediction with 
 Random Forest model.}
-
-\item{...}{arguments passed to \code{\link[randomForest]{randomForest}}.}
 }
 \value{
 a list containing a data.frame of summary statistics (\code{smry}), 
@@ -44,7 +66,9 @@ Conduct Random Forest on a gtypes object to compute the
 library(strataG)
 data(dloop.g)
 
-diagnosability(dloop.g, pairwise = TRUE)
+pd <- diagnosability(dloop.g, pairwise = TRUE)
+
+lapply(pd, function(x) x$rf.confusion.mat)
 }
 
 }
