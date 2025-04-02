@@ -9,7 +9,7 @@ setClassUnion("dnaSequences", c("multidna", "NULL"))
 #'   (\code{strata}). The third column to the end contains the allelic data as 
 #'   one column per locus. Alleles are on multiple rows per column with sample 
 #'   IDs duplicated for all alleles. Column names are unique locus names.
-#' @slot sequences a \linkS4class{multidna} object.
+#' @slot sequences a \code{multidna} object from the \code{apex} package.
 #' @slot ploidy integer representing the ploidy of the data. There are
 #'   ploidy * the number of individuals rows in 'data'.
 #' @slot schemes a data.frame with stratification schemes in each column.

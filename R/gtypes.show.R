@@ -16,6 +16,7 @@ methods::setMethod("show", "gtypes", function(object) {
 #' @keywords internal
 #' 
 .baseSmry <- function(object) {
+  # object is a gtypes object
   strata.smry <- getNumInd(object, TRUE) |> 
     dplyr::left_join(
       numMissing(object, TRUE) |> 
@@ -69,10 +70,10 @@ methods::setMethod("show", "gtypes", function(object) {
 }
 
 
-#' @param x list from .baseSmry
 #' @keywords internal
 #' 
 .printSmryHeader <- function(x) {
+  # x is the output from .baseSmry()
   ind.txt <- paste(x$num.ind, " sample", 
                    ifelse(x$num.ind > 1, "s", ""), sep = "")
   loc.txt <- paste(x$num.loc, " loc", 
@@ -87,10 +88,10 @@ methods::setMethod("show", "gtypes", function(object) {
 }
 
 
-#' @param x list from .baseSmry
 #' @keywords internal
 #' 
 .printBaseSmry <- function(x) {
+  # x is the output from .baseSmry()
   .printSmryHeader(x)
   if(!is.null(x$schemes)) {
     cat("\nStratification schemes:", paste(x$schemes, collapse = ", "))

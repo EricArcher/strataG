@@ -135,7 +135,7 @@ individual is returned.}
 \item{seqName}{the name (or number) of a set of sequences from the
 \code{@sequences} slot to return.}
 
-\item{as.multidna}{return sequences as a \linkS4class{multidna} object? If
+\item{as.multidna}{return sequences as a \code{multidna} object? If
 \code{FALSE}, sequences are returned as a list.}
 
 \item{simplify}{if `getSequences()` would return a single locus, return it 
@@ -161,7 +161,7 @@ individual/sample names} \item{locNames}{vector of locus names}
 \code{@other} slot} \item{strata}{return or modify the current
 stratification} \item{schemes}{return or modify the current stratification
 schemes} \item{alleleNames}{return a list of alleles at each locus}
-\item{sequences}{return the \linkS4class{multidna} object in the
+\item{sequences}{return the \code{multidna} object in the
 \code{@sequences} slot. See \code{\link[apex]{getSequences}} to extract
 individual genes or sequences from this object} \item{description}{return the
 object's description} }

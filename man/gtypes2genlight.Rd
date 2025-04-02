@@ -10,7 +10,7 @@ gtypes2genlight(x)
 genlight2gtypes(x)
 }
 \arguments{
-\item{x}{either a \linkS4class{gtypes} or \linkS4class{genlight} object
+\item{x}{either a \linkS4class{gtypes} or \code{genlight} object
 to convert from.}
 }
 \description{

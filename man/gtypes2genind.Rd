@@ -10,11 +10,11 @@ gtypes2genind(x, type = c("codom", "PA"))
 genind2gtypes(x)
 }
 \arguments{
-\item{x}{either a \linkS4class{gtypes} or \linkS4class{genind} object
+\item{x}{either a \linkS4class{gtypes} or \code{genind} object
 to convert from.}
 
 \item{type}{a character string indicating the type of marker for 
-\linkS4class{genind} objects: 'codom' stands for 'codominant' 
+\code{genind} objects: 'codom' stands for 'codominant' 
 (e.g. microstallites, allozymes); 'PA' stands for 'presence/absence' 
 markers (e.g. AFLP, RAPD).}
 }

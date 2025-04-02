@@ -17,6 +17,5 @@ Converts a reference or mixture file from the MicroHaplot
   package to the proper format for the rubias package
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov} Converted from code by
-  John Horne (\url{https://johnbhorne.wordpress.com/2019/03/22/snp-haplotypes-for-mixed-stock-fishery-analysis-microhaplot-to-rubias-conversion-in-r/})
+Eric Archer \email{eric.archer@noaa.gov}
 }

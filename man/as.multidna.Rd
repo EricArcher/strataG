@@ -8,8 +8,8 @@ as.multidna(x, ...)
 }
 \arguments{
 \item{x}{a valid set of sequences: character matrix, list of 
-character vectors, \code{\link{DNAbin}} object or list of them,
-\linkS4class{gtypes} object, or \linkS4class{multidna} object.}
+character vectors, \code{DNAbin} object or list of them,
+\linkS4class{gtypes} object, or \code{multidna} object.}
 
 \item{...}{arguments to pass to \code{\link{getSequences}} if \code{x} is a
 \linkS4class{gtypes} object.}

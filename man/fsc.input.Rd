@@ -252,7 +252,7 @@ Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time
   Excoffier, L., Dupanloup, I., Huerta-Sánchez, E., Sousa, V.C., 
   and M. Foll (2013) Robust demographic inference from genomic and SNP data. 
   PLOS Genetics, 9(10):e1003905. \cr
-  \url{http://cmpg.unibe.ch/software/fastsimcoal2/}
+  \url{https://cmpg.unibe.ch/software/fastsimcoal2/}
 }
 \seealso{
 \code{\link{fscWrite}}, \code{\link{fscRun}}, \code{\link{fscRead}}

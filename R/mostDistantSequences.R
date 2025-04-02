@@ -7,9 +7,9 @@
 #' @param num.seqs number of sequences to return. If \code{NULL} (default), all
 #'   sequences are returned from most to least distant.
 #' @param model a character string specifying the evolutionary model to be used.
-#'   See \link{dist.dna} for more information.
+#'   See \code{\link[ape]{dist.dna}} for more information.
 #' @param pairwise.deletion a logical indicating whether to delete sites with
-#'   missing data. See \link{dist.dna} for more information.
+#'   missing data. See \code{\link[ape]{dist.dna}} for more information.
 #' @param as.haplotypes treat sequences as haplotypes (\code{TRUE}) or expand
 #'   haplotypes to one sequence per individual (\code{FALSE}). If the latter,
 #'   individual frequencies are used in cluster formation.

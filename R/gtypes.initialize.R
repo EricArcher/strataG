@@ -9,7 +9,7 @@
 #'   at each locus. See below for more details.
 #' @param ploidy ploidy of the loci.
 #' @param ind.names an optional vector of individual sample names.
-#' @param sequences an optional \linkS4class{multidna} 
+#' @param sequences an optional \code{multidna} 
 #'   object containing sequences represented by each locus.
 #' @param strata an optional stratification scheme from \code{schemes}.
 #' @param schemes an optional data.frame of stratification schemes.
@@ -35,7 +35,7 @@
 #' \code{schemes}, a column named '\code{id}' will be created from them.
 #' If sequences are provided in \code{sequences}, then they should be named 
 #' and match values in the haplotype column in \code{gen.data}. If multiple 
-#' genes are given as a \linkS4class{multidna} object, it is assumed that they
+#' genes are given as a \code{multidna} object, it is assumed that they
 #' are in the same order as the columns in \code{gen.data}.
 #'
 #' @author Eric Archer \email{eric.archer@@noaa.gov}

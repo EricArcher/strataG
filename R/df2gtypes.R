@@ -11,8 +11,8 @@
 #' @param strata.col column name or number where stratification is stored. If 
 #'   \code{NULL} then all samples are in one (default) stratum.
 #' @param loc.col column number of first allele of first locus.
-#' @param sequences a list, matrix, \code{\link{DNAbin}}, or 
-#'   \linkS4class{multidna} object containing sequences. 
+#' @param sequences a list, matrix, \code{DNAbin}, or 
+#'   \code{multidna} object containing sequences. 
 #' @param schemes an optional data.frame of stratification schemes.
 #' @param description a label for the object (optional).
 #' @param other a list to carry other related information (optional).
@@ -26,7 +26,7 @@
 #' and Locus1234.2, or Locus1234_A and Locus1234_B).\cr 
 #' If sequences are provided in \code{sequences}, then they should be named 
 #' and match haplotype labels in \code{loc.col} of \code{x}. If multiple 
-#' genes are given as a \linkS4class{multidna}, then they should have the 
+#' genes are given as a \code{multidna}, then they should have the 
 #' same names as column names in \code{x} from \code{loc.col} to the end.
 #' 
 #' @return a \linkS4class{gtypes} object.

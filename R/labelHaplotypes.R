@@ -2,7 +2,7 @@
 #' @description Identify and group sequences that share the same haplotype.
 #'
 #' @param x sequences in a \code{character matrix}, \code{list},
-#'   or \code{\link{DNAbin}} object, or a haploid \linkS4class{gtypes} object
+#'   or \code{DNAbin} object, or a haploid \linkS4class{gtypes} object
 #'   with sequences.
 #' @param prefix a character string giving prefix to be applied to numbered
 #'   haplotypes. If NULL, haplotypes will be labeled with the first label

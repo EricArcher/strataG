@@ -18,7 +18,7 @@ An S4 class storing multi-allelic locus or sequence data along
 one column per locus. Alleles are on multiple rows per column with sample 
 IDs duplicated for all alleles. Column names are unique locus names.}
 
-\item{\code{sequences}}{a \linkS4class{multidna} object.}
+\item{\code{sequences}}{a \code{multidna} object from the \code{apex} package.}
 
 \item{\code{ploidy}}{integer representing the ploidy of the data. There are
 ploidy * the number of individuals rows in 'data'.}

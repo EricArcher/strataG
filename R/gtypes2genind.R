@@ -2,10 +2,10 @@
 #' @description Convert a \code{gtypes} object to a \code{genind} object 
 #'   and vice-versa.
 #' 
-#' @param x either a \linkS4class{gtypes} or \linkS4class{genind} object
+#' @param x either a \linkS4class{gtypes} or \code{genind} object
 #'   to convert from.
 #' @param type a character string indicating the type of marker for 
-#'   \linkS4class{genind} objects: 'codom' stands for 'codominant' 
+#'   \code{genind} objects: 'codom' stands for 'codominant' 
 #'   (e.g. microstallites, allozymes); 'PA' stands for 'presence/absence' 
 #'   markers (e.g. AFLP, RAPD).
 #' 

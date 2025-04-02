@@ -2,13 +2,13 @@
 #' @description Finds the set of sequences that represent the requested 
 #'   number of clusters.
 #' 
-#' @param x a \code{\link[ape]{DNAbin}} object.
+#' @param x a \code{DNAbin} object.
 #' @param num.seqs number of sequences to return. If \code{NULL} (default), all
 #'   sequences are returned.
 #' @param model a character string specifying the evolutionary model to be used. 
-#'   See \link{dist.dna} for more information.
+#'   See \code{\link[ape]{dist.dna}} for more information.
 #' @param pairwise.deletion a logical indicating whether to delete sites 
-#'   with missing data. See \link{dist.dna} for more information.
+#'   with missing data. See \code{\link[ape]{dist.dna}} for more information.
 #' @param as.haplotypes treat sequences as haplotypes (\code{TRUE}) or expand
 #'   haplotypes to one sequence per individual (\code{FALSE}). If the latter,
 #'   individual frequencies are used in cluster formation.

@@ -1,13 +1,13 @@
 citHeader("To cite strataG in publications use:")
 
-citEntry(
-  entry = "Article", 
+bibentry(
+  bibtype = "Article", 
   title = "strataG: An R package for manipulating, summarizing and analysing population genetic data",
   year = "2016",
-  author = personList(
-    as.person("Frederick Archer"), 
-    as.person("Paula Adams"),
-    as.person("Brita Schneiders")
+  author = c(
+    person("Frederick Archer"), 
+    person("Paula Adams"),
+    person("Brita Schneiders")
   ),
   journal = "Molecular Ecology Resources",
   doi = "10.1111/1755-0998.12559",

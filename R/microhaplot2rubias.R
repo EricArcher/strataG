@@ -6,8 +6,7 @@
 #' @param sample.type determines type of MicroHaplot sample. Can be any 
 #'   unambiguous substring of \code{"reference"} or \code{"mixture"}.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov} Converted from code by
-#'   John Horne (\url{https://johnbhorne.wordpress.com/2019/03/22/snp-haplotypes-for-mixed-stock-fishery-analysis-microhaplot-to-rubias-conversion-in-r/})
+#' @author Eric Archer \email{eric.archer@@noaa.gov} 
 #'
 #' @export
 #' 

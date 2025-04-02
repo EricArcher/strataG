@@ -8,7 +8,7 @@
 #' @param as.haplotypes return sequences as haplotypes? If \code{TRUE}, contents
 #'   of \code{@@sequences} slot are returned. If \code{FALSE}, one sequence per
 #'   individual is returned.
-#' @param as.multidna return sequences as a \linkS4class{multidna} object? If
+#' @param as.multidna return sequences as a \code{multidna} object? If
 #'   \code{FALSE}, sequences are returned as a list.
 #' @param simplify if `getSequences()` would return a single locus, return it 
 #'   as a `DNAbin` object (`TRUE`), or a single element named list (`FALSE`).
@@ -39,7 +39,7 @@
 #' \code{@@other} slot} \item{strata}{return or modify the current
 #' stratification} \item{schemes}{return or modify the current stratification
 #' schemes} \item{alleleNames}{return a list of alleles at each locus}
-#' \item{sequences}{return the \linkS4class{multidna} object in the
+#' \item{sequences}{return the \code{multidna} object in the
 #' \code{@@sequences} slot. See \code{\link[apex]{getSequences}} to extract
 #' individual genes or sequences from this object} \item{description}{return the
 #' object's description} }

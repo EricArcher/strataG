@@ -20,7 +20,7 @@ labelHaplotypes(x, prefix = NULL, use.indels = TRUE)
 }
 \arguments{
 \item{x}{sequences in a \code{character matrix}, \code{list},
-or \code{\link{DNAbin}} object, or a haploid \linkS4class{gtypes} object
+or \code{DNAbin} object, or a haploid \linkS4class{gtypes} object
 with sequences.}
 
 \item{prefix}{a character string giving prefix to be applied to numbered

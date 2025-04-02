@@ -2,7 +2,7 @@
 #' @description Convert a \code{gtypes} object to a \code{genlight} object 
 #'   and vice-versa.
 #' 
-#' @param x either a \linkS4class{gtypes} or \linkS4class{genlight} object
+#' @param x either a \linkS4class{gtypes} or \code{genlight} object
 #'   to convert from.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}

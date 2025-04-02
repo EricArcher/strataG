@@ -36,7 +36,7 @@ Run MavericK clustering algorithm
 }
 \note{
 MavericK is not included with \code{strataG} and must be downloaded 
-  separately. It can be obtained from \url{http://www.bobverity.com/}. 
+  separately. It can be obtained from \url{https://github.com/bobverity/MavericK}. 
   Additionally, it must be installed such that it can be run from 
   the command line in the current working directory. See the vignette 
   for \code{external.programs} for OS-specific installation instructions.

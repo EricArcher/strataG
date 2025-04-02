@@ -14,8 +14,8 @@ sequence2gtypes(
 )
 }
 \arguments{
-\item{x}{DNA sequences as a character matrix, a \code{\link{DNAbin}} object, 
-or \linkS4class{multidna} object.}
+\item{x}{DNA sequences as a character matrix, a \code{DNAbin} object, 
+or \code{multidna} object.}
 
 \item{strata}{a vector or factor giving stratification for each sequence. If 
 not provided all individuals are assigned to the same stratum (Default).}

@@ -31,8 +31,8 @@ samples are labelled with consecutive numbers.}
 
 \item{loc.col}{column number of first allele of first locus.}
 
-\item{sequences}{a list, matrix, \code{\link{DNAbin}}, or 
-\linkS4class{multidna} object containing sequences.}
+\item{sequences}{a list, matrix, \code{DNAbin}, or 
+\code{multidna} object containing sequences.}
 
 \item{schemes}{an optional data.frame of stratification schemes.}
 
@@ -56,7 +56,7 @@ unique suffixes representing allels (e.g., for Locus1234: Locus1234.1
 and Locus1234.2, or Locus1234_A and Locus1234_B).\cr 
 If sequences are provided in \code{sequences}, then they should be named 
 and match haplotype labels in \code{loc.col} of \code{x}. If multiple 
-genes are given as a \linkS4class{multidna}, then they should have the 
+genes are given as a \code{multidna}, then they should have the 
 same names as column names in \code{x} from \code{loc.col} to the end.
 }
 \examples{

@@ -31,7 +31,7 @@ at each locus. See below for more details.}
 
 \item{ind.names}{an optional vector of individual sample names.}
 
-\item{sequences}{an optional \linkS4class{multidna} 
+\item{sequences}{an optional \code{multidna} 
 object containing sequences represented by each locus.}
 
 \item{strata}{an optional stratification scheme from \code{schemes}.}
@@ -67,7 +67,7 @@ to sample names in \code{gen.data}. Otherwise, if rownames are present in
 \code{schemes}, a column named '\code{id}' will be created from them.
 If sequences are provided in \code{sequences}, then they should be named 
 and match values in the haplotype column in \code{gen.data}. If multiple 
-genes are given as a \linkS4class{multidna} object, it is assumed that they
+genes are given as a \code{multidna} object, it is assumed that they
 are in the same order as the columns in \code{gen.data}.
 }
 \seealso{
