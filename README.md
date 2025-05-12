@@ -15,17 +15,6 @@
 
 ## Installation
 
-To install the stable version using install.packages requires an extra
-repo to be made available to the install.packages function prior to
-install as `strataG` is not available via CRAN:
-
-```r
-options(repos = c(
-            zkamvar = 'https://zkamvar.r-universe.dev',
-            CRAN = 'https://cloud.r-project.org'))
-```
-
-
 To install the latest version from GitHub:
 
 ```r
@@ -101,7 +90,11 @@ F77 = /usr/local/gfortran/bin/gfortran
 ```
 
 5. Search in the same `gfortran` directory for `gcc`, perhaps in `lib`. 
+<<<<<<< HEAD
 Update `FLIBS` to match the paths for the libraries as below:
+=======
+Update `FLIBS` to match the paths for gcc as below:
+>>>>>>> 5c2853a54abab19340e391f2fca9fae3802a0ddb
 
 ```
 FLIBS =  -L/usr/local/gfortran/lib/gcc/aarch64-apple-darwin23/14.1.0 -L/usr/local/gfortran/lib -lgfortran -lemutls_w -lquadmath
