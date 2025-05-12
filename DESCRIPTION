@@ -9,7 +9,7 @@ Description: A toolkit for analyzing stratified population genetic data.
 Version: 2.5.5
 License: GNU General Public License
 Authors@R: c(
-  EA = person("Eric", "Archer", email = "eric.archer@noaa.gov", role = c("aut", "cre")),
+  EA = person("Eric", "Archer", email = "eric.ivan.archer@gmail.com", role = c("aut", "cre")),
   PA = person("Paula", "Adams", email = "peadams@crimson.ua.edu", role = c("aut")),
   BS = person("Brita", "Schneiders", email = "britaschneiders@u.northwestern.edu", role = c("aut")),
   SF = person("Sarina", "Fernandez", email = "sarinafernandez5@gmail.com", role = c("aut")),
