@@ -27,29 +27,29 @@ heterozygosity <- function(g, by.strata = FALSE, type = c("expected", "observed"
   
   result <- switch(
     match.arg(type),
-    expected = .applyPerLocus(sprex::diversity, g, by.strata = by.strata, type = "unb.gini") |> 
+    expected = .applyPerLocus(
+      sprex::diversity, 
+      g, 
+      by.strata = by.strata, 
+      type = "unb.gini"
+    ) |> 
       dplyr::rename(exptd.het = .data$value),
+    
     observed = {
-      is.het <- if(by.strata) {
-        g@data |> 
-          dplyr::group_by(.data$stratum, .data$locus, .data$id) |> 
-          dplyr::summarize(
-            is.het = dplyr::n_distinct(.data$allele) > 1, 
-            .groups = "drop_last"
-          )
-      } else {        
-        g@data |> 
-          dplyr::group_by(.data$locus, .data$id) |> 
-          dplyr::summarize(
-            is.het = dplyr::n_distinct(.data$allele) > 1, 
-            .groups = "drop_last"
-          ) 
-      }
-      dplyr::summarize(
-        is.het,
-        obsvd.het = mean(.data$is.het, na.rm = TRUE),
-        .groups = "drop"
-      )
+      zyg.df <- zygosity(g)
+      
+      zyg.df <- if(by.strata) {
+        zyg.df |> 
+          dplyr::mutate(stratum = getStrata(g)[.data$id]) |> 
+          dplyr::group_by(.data$stratum, .data$locus)
+      } else dplyr::group_by(zyg.df, .data$locus)
+      
+      zyg.df |> 
+        dplyr::summarize(
+          obsvd.het = sum(!is.na(.data$zyg) & .data$zyg == 'het') / 
+            sum(!is.na(.data$zyg)),
+          .groups = 'drop'
+        ) 
     }
   )
   

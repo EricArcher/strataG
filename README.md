@@ -150,6 +150,11 @@ Zenodo. http://doi.org/10.5281/zenodo.60416
 ## Versions
 
 ## 2.5.5 (devel)
+* IMPORTANT: There was an error in computing observed hetrozygosity 
+(in `heterozygosity` and `summarizeLoci()`) where the number of genotypes
+missing data were not being taken into account. This would lead to an overestimate
+in heterozygosity that was directly proportional to the amount of missing data.
+* added `zygosity()`
 * added `diagnosability()`
 * added `microhaplot2rubias()`
 * added `qual2prob()`
