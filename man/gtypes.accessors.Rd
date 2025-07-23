@@ -178,6 +178,9 @@ respectively. If unstratified samples are present, they can be selected as a
 group either by including \code{NA} in the character or numeric vector of the
 \code{k} slot, or by providing a logical vector based on
 \code{is.na(strata(g))} to the \code{i} slot.
+When setting stratification schemes with \code{setSchemes() <- value}, the
+data frame being assigned must have the individual ids in a column named 
+'\code{id}' and that column must be the first column in the data frame.
 }
 \examples{
 #--- create a diploid (microsatellite) gtypes object

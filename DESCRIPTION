@@ -143,6 +143,7 @@ Collate:
     diagnosability.R
     microhaplot2rubias.R
     qual2prob.R
+    zygosity.R
 LazyData: TRUE
 VignetteBuilder: knitr
 LinkingTo: Rcpp, RcppArmadillo
