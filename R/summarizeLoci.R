@@ -47,5 +47,5 @@ summarizeLoci <- function(g, by.strata = FALSE) {
       dplyr::select(-.data$exptd.het.y)
   }
   
-  smry
+  as.data.frame(smry)
 }
