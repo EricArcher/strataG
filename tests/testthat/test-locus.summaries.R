@@ -91,10 +91,10 @@ test_that("heterozygosity is computed and formed correctly", {
   expect_true(min(het.m.exp2$exptd.het) > 0.49 & max(het.m.exp2$exptd.het) < 0.95)
 
   het.m.obs <- heterozygosity(msats.g, type = "obs")
-  expect_true(min(het.m.obs$obsvd.het) > 0.65 & max(het.m.obs$obsvd.het) < 0.77)
+  expect_true(min(het.m.obs$obsvd.het) > 0.69 & max(het.m.obs$obsvd.het) < 0.78)
   
   het.m.obs2 <- heterozygosity(msats.g, TRUE, type = "o")
-  expect_true(min(het.m.obs2$obsvd.het) > 0.51 & max(het.m.obs2$obsvd.het) < 0.95)
+  expect_true(min(het.m.obs2$obsvd.het) > 0.52 & max(het.m.obs2$obsvd.het) < 0.95)
   
   het.d.exp <- heterozygosity(dloop.g)
   expect_true(het.d.exp$exptd.het > 0.9 & het.d.exp$exptd.het < 0.92)

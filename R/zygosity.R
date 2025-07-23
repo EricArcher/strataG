@@ -19,13 +19,13 @@
 #' @export
 #' 
 zygosity <- function(x) {
-  x@data |> 
+  x@data |>
     dplyr::group_by(id, locus) |> 
     dplyr::summarize(
       zyg = dplyr::case_when(
-        all(is.na(allele)) ~ NA,
-        dplyr::n_distinct(allele) > 1 ~ 'het',
-        dplyr::n_distinct(allele) == 1 ~ 'hom'
+        all(is.na(.data$allele)) ~ NA,
+        dplyr::n_distinct(.data$allele) > 1 ~ 'het',
+        dplyr::n_distinct(.data$allele) == 1 ~ 'hom'
       ),
       .groups = 'drop'
     )
