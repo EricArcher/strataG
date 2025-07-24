@@ -20,13 +20,13 @@
 #' 
 zygosity <- function(x) {
   x@data |>
-    dplyr::group_by(id, locus) |> 
+    dplyr::group_by(.data$id, .data$locus) |> 
     dplyr::summarize(
       zyg = ifelse(
-        any(is.na(allele)),
+        any(is.na(.data$allele)),
         NA,
         ifelse(
-          dplyr::n_distinct(allele, na.rm = TRUE) > 1,
+          dplyr::n_distinct(.data$allele, na.rm = TRUE) > 1,
           'het',
           'hom'
         )

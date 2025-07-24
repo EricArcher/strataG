@@ -30,7 +30,10 @@ summarizeLoci <- function(g, by.strata = FALSE) {
   by.cols <- if(by.strata) c("stratum", "locus") else "locus"
   smry <- numGenotyped(g, by.strata) |> 
     dplyr::left_join(numMissing(g, by.strata), by = by.cols) |> 
-    dplyr::mutate(prop.genotyped = .data$num.genotyped / (.data$num.genotyped + .data$num.missing)) |> 
+    dplyr::mutate(
+      prop.genotyped = .data$num.genotyped / 
+        (.data$num.genotyped + .data$num.missing)
+    ) |> 
     dplyr::left_join(numAlleles(g, by.strata), by = by.cols) |> 
     dplyr::left_join(allelicRichness(g, by.strata), by = by.cols) |> 
     dplyr::left_join(propUniqueAlleles(g, by.strata), by = by.cols) |> 
