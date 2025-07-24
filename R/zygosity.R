@@ -22,10 +22,14 @@ zygosity <- function(x) {
   x@data |>
     dplyr::group_by(id, locus) |> 
     dplyr::summarize(
-      zyg = dplyr::case_when(
-        all(is.na(.data$allele)) ~ NA,
-        dplyr::n_distinct(.data$allele) > 1 ~ 'het',
-        dplyr::n_distinct(.data$allele) == 1 ~ 'hom'
+      zyg = ifelse(
+        any(is.na(allele)),
+        NA,
+        ifelse(
+          dplyr::n_distinct(allele, na.rm = TRUE) > 1,
+          'het',
+          'hom'
+        )
       ),
       .groups = 'drop'
     )
