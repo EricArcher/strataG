@@ -144,8 +144,11 @@ Collate:
     microhaplot2rubias.R
     qual2prob.R
     zygosity.R
+    gtypes2rfDF.R
+    gtypesRF.R
+    sequenceRF.R
 LazyData: TRUE
 VignetteBuilder: knitr
 LinkingTo: Rcpp, RcppArmadillo
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3

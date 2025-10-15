@@ -164,6 +164,7 @@ in heterozygosity that was directly proportional to the amount of missing data.
 * fixed mafft error and now have mafft .fasta files written to temporary file rather than working directory
 * fixed error with `readGenData()` not recognizing `NA`s.
 * fixed error with `fs2gtypes()` not formatting multi-block DNA sequence data as gtypes properly
+* added `gtypesRF()`, `sequenceRF()`, and `gtypes2rfDF()`.
 
 ## 2.4.905
 * Deleted functions: `alleleFreqFormat`, `as.array.gtypes`
