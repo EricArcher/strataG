@@ -8,6 +8,7 @@
 #' @param pairwise do analysis on all pairwise combinations of strata?
 #' @param conf.level confidence level for the \code{\link{binom.test}} 
 #'   confidence interval.
+#' @param ntree number of trees to build each Random Forest.
 #' @param replace sample with replacement in Random Forest trees? 
 #'    (see \code{\link[randomForest]{randomForest}}).
 #' @param sampsize sample size for each Random Forest tree? 
@@ -45,8 +46,9 @@
 #' 
 #' 
 diagnosability <- function(g, gene = 1, pairwise = FALSE, conf.level = 0.95, 
-                           replace = FALSE, sampsize = NULL, train.pct = 0.5,
-                           min.n = 2, min.votes.pct = c(0.8, 0.9, 0.95), rp.nrep = 0,
+                           ntree = 500, replace = FALSE, sampsize = NULL, 
+                           train.pct = 0.5, min.n = 2, 
+                           min.votes.pct = c(0.8, 0.9, 0.95), rp.nrep = 0,
                            unk = NULL) {
 
   arg.list <- as.list(environment())
@@ -148,7 +150,7 @@ diagnosability <- function(g, gene = 1, pairwise = FALSE, conf.level = 0.95,
 #' @keywords internal
 #' @noRd
 #'
-.sequenceRF <- function(x, replace = FALSE, sampsize = NULL, 
+.sequenceRF <- function(x, ntree = 500, replace = FALSE, sampsize = NULL, 
                         train.pct = 0.5, min.n = 2, rp.nrep = 0, 
                         conf.level = 0.95, min.votes.pct = 0.95) {
   if(is.null(x)) return(NULL)
@@ -158,8 +160,12 @@ diagnosability <- function(g, gene = 1, pairwise = FALSE, conf.level = 0.95,
   if(is.null(sampsize)) sampsize <- rfPermute::balancedSampsize(strata, train.pct)
   sampsize <- ifelse(sampsize < min.n, min.n, sampsize)
   rp <- rfPermute::rfPermute(
-    stratum ~ ., data = x, replace = replace, 
-    sampsize = sampsize, nrep = rp.nrep,
+    stratum ~ ., 
+    data = x, 
+    ntree = ntree,
+    replace = replace, 
+    sampsize = sampsize, 
+    nrep = rp.nrep,
     num.cores = ifelse(rp.nrep == 0, 1, parallel::detectCores() - 1)
   )
   

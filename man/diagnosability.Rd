@@ -9,6 +9,7 @@ diagnosability(
   gene = 1,
   pairwise = FALSE,
   conf.level = 0.95,
+  ntree = 500,
   replace = FALSE,
   sampsize = NULL,
   train.pct = 0.5,
@@ -28,6 +29,8 @@ slot. Defaults to the first gene in the object.}
 
 \item{conf.level}{confidence level for the \code{\link{binom.test}} 
 confidence interval.}
+
+\item{ntree}{number of trees to build each Random Forest.}
 
 \item{replace}{sample with replacement in Random Forest trees? 
 (see \code{\link[randomForest]{randomForest}}).}
