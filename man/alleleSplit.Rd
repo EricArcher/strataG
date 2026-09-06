@@ -9,7 +9,6 @@ alleleSplit(x, sep = NULL)
 \arguments{
 \item{x}{a matrix or data.frame containing diploid data. Every column 
 represents one locus with two alleles.}
-
 \item{sep}{separator used between alleles of a locus. If \code{NULL}, then 
 alleles should be of equal length (e.g., 145095 = 145 and 095, or 
 AG = A and G).}
@@ -22,6 +21,13 @@ matrix with alleles for each locus in one column split into
 Split loci stored in one column to two columns for each allele 
   in a matrix of diploid data.
 }
+\details{
+Separators are interpreted literally. Non-missing separated genotypes must
+contain exactly two non-empty alleles. Unseparated genotypes must have even
+width after removing spaces. In this legacy unseparated encoding, zero-valued
+allele codes and the string NA denote missing alleles; separated zero alleles
+are retained. Actual NA genotypes return two missing alleles.
+}
 \examples{
 # A sample SNP data set with no separators between nucleotides in a genotype
 snps <- do.call(cbind, lapply(1:3, function(i) {
@@ -32,7 +38,6 @@ snps <- do.call(cbind, lapply(1:3, function(i) {
 colnames(snps) <- paste("Loc", LETTERS[1:3], sep = "_")
 snps
 alleleSplit(snps)
-
 # A sample microsatellie data set with alleles separated by "/"
 alleles <- seq(100, 150, 2)
 msats <- do.call(cbind, lapply(1:3, function(i) {
@@ -43,7 +48,6 @@ msats <- do.call(cbind, lapply(1:3, function(i) {
 colnames(msats) <- paste("Loc", LETTERS[1:3], sep = "_")
 msats
 alleleSplit(msats, sep = "/")
-
 }
 \author{
 Eric Archer \email{eric.archer@noaa.gov}
