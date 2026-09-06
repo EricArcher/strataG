@@ -1,4 +1,4 @@
-#' @title Linkage Disequlibrium 
+#' @title Linkage Disequilibrium
 #' @description Calculate linkage disequilibrium p-values using GENEPOP.
 #' 
 #' @param g a \linkS4class{gtypes} object.
@@ -8,6 +8,10 @@
 #' @param label character string to use to label GENEPOP input and output files.
 #' 
 #' @return data.frame of disequilibrium estimates between pairs of loci
+#' @details Samples are pooled into a single population before testing;
+#'   existing strata are not tested separately. At least two loci are required.
+#'   Pairs reported by GENEPOP as having no contingency table receive
+#'   \code{NA} for the p-value, standard error, and number of switches.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
@@ -30,6 +34,10 @@ LDgenepop <- function(
   label = NULL
 ) {
     
+  if(getNumLoci(g) < 2L) {
+    stop("At least two loci are required for linkage disequilibrium testing.",
+         call. = FALSE)
+  }
   # Run Genepop
   g <- stratify(g)
   in.file <- genepopWrite(g, label)
@@ -41,7 +49,12 @@ LDgenepop <- function(
     iterations = iterations,
     verbose = FALSE
   )
-  result <- scan(output, what = "character", quiet = TRUE)
+  # Keep three result fields for untestable pairs without coercion warnings.
+  lines <- readLines(output, warn = FALSE)
+  lines <- gsub("No[[:space:]]+contingency[[:space:]]+table",
+                "NA NA NA", lines)
+  result <- scan(text = paste(lines, collapse = "\n"),
+                 what = "character", quiet = TRUE)
   
   # Create empty matrix
   locus.names <- in.file$locus.names
@@ -69,7 +82,8 @@ LDgenepop <- function(
   }
   
   # Convert to data.frame and format columns
-  result.df <- tibble::as.tibble(result.mat) |> 
+  result.mat[result.mat == "NA"] <- NA_character_
+  result.df <- tibble::as_tibble(result.mat) |> 
     dplyr::mutate(
       Locus.1 = locus.names[.data$Locus.1],
       Locus.2 = locus.names[.data$Locus.2],
