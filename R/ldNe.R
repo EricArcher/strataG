@@ -11,7 +11,8 @@
 #'   from the calculation of Ne for all strata. Loci below `maf.threshold` 
 #'   within a stratum are always removed for calculations of Ne for that 
 #'   stratum.
-#' @param ci central confidence interval.
+#' @param ci central confidence level: a single finite number strictly
+#'   between 0 and 1.
 #' @param drop.missing drop loci with missing genotypes? If `FALSE`, a slower 
 #'   procedure is used where individuals with missing genotypes are removed 
 #'   in a pairwise fashion. 
@@ -45,6 +46,11 @@
 #' 
 ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95, 
                  drop.missing = FALSE, num.cores = 1) {
+  if(!is.numeric(ci) || length(ci) != 1L || !is.finite(ci) ||
+     ci <= 0 || ci >= 1) {
+    stop("'ci' must be a single finite number strictly between 0 and 1.",
+         call. = FALSE)
+  }
   if(getPloidy(g) != 2) stop("'g' must have diploid data")
   
   mat <- as.data.frame(g, coded.snps = TRUE) |> 
