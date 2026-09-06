@@ -20,31 +20,34 @@ hweTest(
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
-
 \item{use.genepop}{logical. Use GENEPOP to calculate HWE p-values? 
 If \code{FALSE} then \code{\link[pegas]{hw.test}} is used.}
-
 \item{which, enumeration, dememorization, batches}{parameters for GENEPOP MCMC
 HWE procedure as defined in \code{\link[genepop]{test_HW}}.}
-
 \item{num.rep}{the number of replicates for the Monte Carlo procedure for
 \code{\link[pegas]{hw.test}} or number of iterations for
 \code{\link[genepop]{test_HW}}.}
-
 \item{delete.files}{logical. Delete GENEPOP files when done?}
-
 \item{label}{character string to use to label GENEPOP files.}
 }
 \value{
-a vector of p-values for each locus.
+A named vector of p-values in input locus order, with
+\code{NA} for entirely missing loci.
 }
 \description{
 Calculate Hardy-Weinberg equilibrium p-values.
 }
+\details{
+Samples are pooled across strata for both engines; this function does not
+perform separate tests within each stratum. Subset the object first for
+population-specific tests. Entirely missing loci return NA. Other untestable
+or monomorphic cases retain the selected engine's behaviour, so the engines
+need not return identical results. GENEPOP-specific options, including which,
+are not used by the default pegas engine.
+}
 \examples{
 data(msats.g)
 hweTest(msats.g)
-
 }
 \seealso{
 \code{\link{genepop}}, \code{\link[pegas]{hw.test}}
