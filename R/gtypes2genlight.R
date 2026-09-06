@@ -30,12 +30,14 @@
 #' @export
 #' 
 gtypes2genlight <- function(x) {
-  gl <- adegenet::as.genlight(
-    as.data.frame(x, ids = FALSE, strata = FALSE, coded.snps = TRUE)
-  )
-  adegenet::locNames(gl) <- getLociNames(x)
-  adegenet::indNames(gl) <- getIndNames(x)
-  adegenet::pop(gl) <- getStrata(x)
+  data <- as.data.frame(x, coded.snps = TRUE)
+  ids <- data$id
+  strata <- data$stratum
+  data$id <- data$stratum <- NULL
+  gl <- adegenet::as.genlight(data)
+  adegenet::locNames(gl) <- names(data)
+  adegenet::indNames(gl) <- ids
+  adegenet::pop(gl) <- strata
   adegenet::other(gl) <- getOther(x)
   gl
 }
