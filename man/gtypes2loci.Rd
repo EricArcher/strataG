@@ -6,30 +6,39 @@
 \title{Convert Between \code{gtypes} And \code{loci} objects.}
 \usage{
 gtypes2loci(x, sep = "/")
-
 loci2gtypes(x, description = NULL, sep = "/")
 }
 \arguments{
 \item{x}{a \linkS4class{gtypes} or \code{loci} formatted object.}
-
-\item{sep}{character used to separate alleles at a locus.}
-
+\item{sep}{a single literal character separating alleles. Forward conversion
+returns canonical slash-separated pegas genotypes. Reverse conversion
+accepts canonical slash/pipe separators or the supplied separator.}
 \item{description}{a label for the \code{gtypes} object (optional).}
 }
 \description{
 Convert a \code{gtypes} object to a \code{\link[pegas]{loci}} object.
 }
+\details{
+Only diploid data are supported. Missing genotypes remain actual NA values;
+zero is not used as a missing-data sentinel. Partially missing calls become
+missing genotypes during forward conversion. Missing population labels do
+not cause samples to be removed. Reverse conversion uses the population
+column, wherever it occurs, or the default stratum when it is absent.
+The gtypes constructor may remove samples missing every genotype, with a
+warning. Haploid and other non-diploid calls are rejected; ploidy cannot be
+inferred from an entirely missing locus.
+}
+\value{
+A loci or gtypes object, respectively.
+}
 \examples{
 data(msats.g)
-
 # Convert to loci
 lc <- gtypes2loci(msats.g)  
 lc  
-
 # Convert to gtypes
 gt <- loci2gtypes(lc)
 gt 
-
 }
 \seealso{
 \link{initialize.gtypes}, \link{df2gtypes}, 
