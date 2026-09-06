@@ -2,7 +2,7 @@
 % Please edit documentation in R/LDgenepop.R
 \name{LDgenepop}
 \alias{LDgenepop}
-\title{Linkage Disequlibrium}
+\title{Linkage Disequilibrium}
 \usage{
 LDgenepop(
   g,
@@ -15,12 +15,9 @@ LDgenepop(
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
-
 \item{dememorization, batches, iterations}{parameters for GENEPOP MCMC
 LD procedure as defined in \code{\link[genepop]{test_LD}}.}
-
 \item{delete.files}{logical. Delete GENEPOP input and output files when done?}
-
 \item{label}{character string to use to label GENEPOP input and output files.}
 }
 \value{
@@ -35,7 +32,12 @@ data(msats.g)
 msats.ld <- LDgenepop(msats.g)
 head(msats.ld)
 }
-
+}
+\details{
+Samples are pooled into a single population before testing;
+existing strata are not tested separately. At least two loci are required.
+Pairs reported by GENEPOP as having no contingency table receive
+\code{NA} for the p-value, standard error, and number of switches.
 }
 \seealso{
 \link{genepop}
