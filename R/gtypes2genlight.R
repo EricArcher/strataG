@@ -57,8 +57,10 @@ genlight2gtypes <- function(x) {
   if(is.null(loci)) loci <- paste0("L", 1:adegenet::nLoc(x))
   colnames(gen.mat) <- paste0(rep(loci, each = 2), ".", 1:2)
   has.pop <- !is.null(x@pop)
+  ids <- adegenet::indNames(x)
+  if(is.null(ids)) ids <- as.character(seq_len(nrow(gen.mat)))
   gen.mat <- cbind(
-    id = 1:nrow(gen.mat),
+    id = ids,
     strata = if(has.pop) x@pop else "Default",
     as.data.frame(gen.mat)
   )
