@@ -12,8 +12,14 @@
 #' @param iter integer giving number of MCMC iterations.
 #' @param other.settings character string of optional GENEPOP command line 
 #'   arguments.
-#' @param input.fname character string to use for input file name.
+#' @param input.fname character string to use for input file name. For
+#'   \code{genepopWrite}, \code{NULL} generates a filename from \code{label}.
+#'   An explicit filename is used unchanged.
 #' @param exec name of Genepop executable
+#'
+#' @details Commas in population and sample labels are replaced by underscores.
+#'   If this produces ambiguous population or formatted sample labels, writing
+#'   stops with an error before the output file is created or overwritten.
 #' 
 #' @note GENEPOP is not included with \code{strataG} and must be downloaded 
 #'   separately. Additionally, it must be installed such that it can be run from 
@@ -52,7 +58,9 @@ genepop <- function(g, output.ext = "", show.output = F, label = "genepop.run",
                     other.settings = "", input.fname = "loc_data.txt",
                     exec = "Genepop") {
   
-  locus.names <- genepopWrite(g, label)
+  written <- genepopWrite(g, label, input.fname = input.fname)
+  input.fname <- written$fname
+  locus.names <- written$locus.names
   
   # Write settings file
   settings.fname <- "settings.txt"
@@ -98,8 +106,26 @@ genepop <- function(g, output.ext = "", show.output = F, label = "genepop.run",
 #' @rdname genepop
 #' @export
 #' 
-genepopWrite <- function(g, label = NULL) {
+genepopWrite <- function(g, label = NULL, input.fname = NULL) {
   if(getPloidy(g) != 2) stop("'g' must be a diploid object")
+  if(!is.null(input.fname) &&
+     (!is.character(input.fname) || length(input.fname) != 1L ||
+      is.na(input.fname) || !nzchar(input.fname))) {
+    stop("'input.fname' must be a single nonempty filename.", call. = FALSE)
+  }
+  # Reject ambiguous sanitized labels before creating or overwriting a file.
+  strata <- unique(as.character(g@data$stratum))
+  if(anyDuplicated(gsub(",", "_", strata))) {
+    stop("Population labels are not unique after replacing commas with underscores.",
+         call. = FALSE)
+  }
+  samples <- unique(as.data.frame(g@data[, c("stratum", "id")]))
+  labels <- paste(gsub(",", "_", samples$stratum),
+                  gsub(",", "_", samples$id))
+  if(anyDuplicated(labels)) {
+    stop("Sample labels are not unique after formatting for GENEPOP.",
+         call. = FALSE)
+  }
 
   # convert alleles to equal spaced, zero-padded numbers
   .convertAlleles <- function(x) {
@@ -131,8 +157,11 @@ genepopWrite <- function(g, label = NULL) {
   )
   
   # write header and locus names
-  fname <- paste0(.getFileLabel(g, label), "_loc_data.txt")
-  fname <- gsub(" ", "_", fname)
+  fname <- input.fname
+  if(is.null(fname)) {
+    fname <- paste0(.getFileLabel(g, label), "_loc_data.txt")
+    fname <- gsub(" ", "_", fname)
+  }
   write(getDescription(g), file = fname)
   write(
     paste(names(locus.names), collapse = ", "),
