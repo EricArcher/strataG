@@ -52,13 +52,19 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95,
   st <- mat$stratum
   mat$stratum <- NULL
   mat <- as.matrix(mat)
+
+  # Dosage orientation is global; identify the minor allele within each stratum.
+  .aboveMaf <- function(x) {
+    p <- colMeans(x) / 2
+    pmin(p, 1 - p) >= maf.threshold
+  }
   
   # remove loci if below maf threshold for any stratum
   if(maf.threshold > 0 & by.strata) {
     above.thresh <- do.call(cbind, tapply(1:nrow(mat), st, function(i) {
-      colMeans(mat[i, ]) / 2
+      .aboveMaf(mat[i, , drop = FALSE])
     })) |> 
-      apply(1, function(x) all(x >= maf.threshold)) |> 
+      apply(1, all) |>
       which() |> 
       names()
     if(length(above.thresh) < 2) {
@@ -68,7 +74,7 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95,
       )
       return(NULL)
     }
-    mat <- mat[, above.thresh, ]
+    mat <- mat[, above.thresh, drop = FALSE]
   }
   
   # calculate Pearson r-squared between a pair of loci
@@ -134,7 +140,7 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95,
     
     # remove loci below MAF threshold
     if(maf.threshold > 0) {
-      above.thresh <- names(which(colMeans(mat.st) / 2 >= maf.threshold))
+      above.thresh <- names(which(.aboveMaf(mat.st)))
       if(length(above.thresh) < 2) {
         warning(
           "Fewer than two loci are above 'maf.threshold' in", 
