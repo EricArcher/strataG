@@ -13,9 +13,11 @@
 #'   stratum.
 #' @param ci central confidence level: a single finite number strictly
 #'   between 0 and 1.
-#' @param drop.missing drop loci with missing genotypes? If `FALSE`, a slower 
-#'   procedure is used where individuals with missing genotypes are removed 
-#'   in a pairwise fashion. 
+#' @param drop.missing drop loci with missing genotypes? If \code{TRUE}, loci
+#'   with any missing genotypes among individuals in a stratum are removed
+#'   before calculating LD for that stratum. At least two loci must remain.
+#'   If \code{FALSE} and missing genotypes remain after locus filtering, a
+#'   warning is issued and no estimate is returned for that stratum.
 #' @param num.cores The number of cores to use to distribute computations over.
 #'   If set to \code{NULL}, the value will be what is reported 
 #'   by \code{\link[parallel]{detectCores} - 1}.
@@ -32,7 +34,16 @@
 #'  \item{\code{param.lci, param.uci}}{parametric lower and upper CIs}
 #' }
 #' 
-#' @references Waples, R.S. 2006. A bias correction for estimates of effective
+#' @details Missing genotypes are not imputed. The pairwise missing-data
+#'   correction described by Peel et al. (2013) is not implemented.
+#'   Strata for which no estimate can be calculated are omitted from the
+#'   result; if none can be calculated, the function returns \code{NULL}.
+#'
+#' @references Peel D, Waples RS, Macbeth GM, Do C, and Ovenden JR. 2013.
+#'   Accounting for missing data in the estimation of contemporary genetic
+#'   effective population size (Ne). Molecular Ecology Resources 13:243-253.
+#'   \doi{10.1111/1755-0998.12049} \cr
+#'   Waples, R.S. 2006. A bias correction for estimates of effective
 #'   population size based on linkage disequilibrium at unlinked gene loci.
 #'   Conservation Genetics 7:167-184. \cr
 #'   Waples RK, Larson WA, and Waples RS. 2016. Estimating contemporary 
@@ -179,7 +190,8 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95,
       } else {
         warning(
           "Can't compute ldNe in '", unique(st[i]), "' ",
-          "because fewer than 2 loci are missing genotypes. NULL returned.", 
+          "because fewer than 2 loci remain after removing loci with ",
+          "missing genotypes. NULL returned.",
           call. = FALSE
         )
         return(NULL)
