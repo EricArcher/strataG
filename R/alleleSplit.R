@@ -8,6 +8,13 @@
 #'  alleles should be of equal length (e.g., 145095 = 145 and 095, or 
 #'  AG = A and G).
 #' 
+#' @details
+#' Separators are interpreted literally. Non-missing separated genotypes must
+#' contain exactly two non-empty alleles. Unseparated genotypes must have even
+#' width after removing spaces. In this legacy unseparated encoding, zero-valued
+#' allele codes and the string NA denote missing alleles; separated zero alleles
+#' are retained. Actual NA genotypes return two missing alleles.
+#'
 #' @return matrix with alleles for each locus in one column split into 
 #'   separate columns.
 #' 
@@ -38,45 +45,48 @@
 #' @export
 #' 
 alleleSplit <- function(x, sep = NULL) {
-  if(!is.null(sep)) if(sep == "") sep <- NULL
-  
-  orig.rownames <- rownames(x)
-  
-  locus.names <- if(is.null(colnames(x))) {
-    paste("Locus", 1:ncol(x), sep = "") 
-  } else {
-    colnames(x)
+  if(!is.matrix(x) && !is.data.frame(x)) {
+    stop("'x' must be a matrix or data.frame.", call. = FALSE)
   }
-  locus.names <- paste(rep(locus.names, each = 2), c(1, 2), sep = ".")
-  
-  x <- do.call(cbind, lapply(1:ncol(x), function(col) as.character(x[, col])))
-
-  split.alleles <- lapply(1:ncol(x), function(i) {
-    if(!is.null(sep)) {
-      do.call(rbind, strsplit(x[, i], split = sep))
-    } else {
-      t(sapply(x[, i], function(a) {
-        a <- sub(" ", "", a)
-        if (is.na(a)) return(c(NA, NA))
-        end <- nchar(a)
-        half <- end / 2
-        
-        a1 <- substr(a, 1, half)
-        a1.num <- suppressWarnings(as.numeric(a1))
-        a1 <- if(is.na(a1.num)) a1 else if(a1.num == 0) NA else a1
-        a1 <- if((a1 == "NA") | (a1 == "")) NA else a1
-        
-        a2 <- substr(a, half + 1, end)
-        a2.num <- suppressWarnings(as.numeric(a2))
-        a2 <- if(is.na(a2.num)) a2 else if(a2.num == 0) NA else a2
-        a2 <- if((a2 == "NA") | (a2 == "")) NA else a2
-        
-        c(a1, a2)
-      }))
+  if(!is.null(sep)) {
+    if(!is.character(sep) || length(sep) != 1L || is.na(sep)) {
+      stop("'sep' must be NULL or a single non-missing string.", call. = FALSE)
     }
-  })
-  split.alleles <- do.call(cbind, split.alleles)
-  colnames(split.alleles) <- locus.names
-  rownames(split.alleles) <- orig.rownames
-  return(split.alleles)
+    if(sep == "") sep <- NULL
+  }
+  locus.names <- colnames(x)
+  if(is.null(locus.names)) locus.names <- if(ncol(x)) paste0("Locus", seq_len(ncol(x))) else character()
+  result <- matrix(NA_character_, nrow(x), 2L * ncol(x),
+    dimnames = list(rownames(x),
+      if(ncol(x)) paste(rep(locus.names, each = 2L), rep(1:2, ncol(x)), sep = ".") else character()))
+  missing.code <- function(a) {
+    numeric <- suppressWarnings(as.numeric(a))
+    if(a == "NA" || a == "" || (!is.na(numeric) && numeric == 0)) NA_character_ else a
+  }
+  for(i in seq_len(ncol(x))) {
+    values <- as.character(x[, i])
+    for(j in which(!is.na(values))) {
+      value <- values[j]
+      if(is.null(sep)) {
+        value <- gsub(" ", "", value, fixed = TRUE)
+        if(value == "") next
+        if(nchar(value) %% 2L != 0L) {
+          stop("Unseparated genotypes must have even width (row ", j,
+               ", locus ", locus.names[i], ").", call. = FALSE)
+        }
+        half <- nchar(value) / 2L
+        alleles <- c(missing.code(substr(value, 1L, half)),
+                     missing.code(substr(value, half + 1L, nchar(value))))
+      } else {
+        alleles <- strsplit(value, sep, fixed = TRUE)[[1]]
+        if(length(alleles) != 2L || any(!nzchar(alleles)) ||
+           startsWith(value, sep) || endsWith(value, sep)) {
+          stop("Expected two non-empty alleles (row ", j,
+               ", locus ", locus.names[i], ").", call. = FALSE)
+        }
+      }
+      result[j, c(2L * i - 1L, 2L * i)] <- alleles
+    }
+  }
+  result
 }
