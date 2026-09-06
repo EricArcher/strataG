@@ -207,7 +207,8 @@ ldNe <- function(g, maf.threshold = 0, by.strata = FALSE, ci = 0.95,
     Rsq.drift.0 <- sum(Rsq.drift * w) / W
     # harmonic mean of S
     N <- rsq.list$N
-    S.harm.mean <- N / sum(1 / S)
+    # Complete data use a common scalar S; pairwise results use a vector.
+    S.harm.mean <- 1 / mean(1 / S)
     # initial Ne.0
     ne0 <- .calcNe(S.harm.mean, Rsq.drift.0)
     
