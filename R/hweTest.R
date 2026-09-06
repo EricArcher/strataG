@@ -12,7 +12,16 @@
 #' @param delete.files logical. Delete GENEPOP files when done?
 #' @param label character string to use to label GENEPOP files.
 #'   
-#' @return a vector of p-values for each locus.
+#' @return A named vector of p-values in input locus order, with
+#'   \code{NA} for entirely missing loci.
+#'
+#' @details
+#' Samples are pooled across strata for both engines; this function does not
+#' perform separate tests within each stratum. Subset the object first for
+#' population-specific tests. Entirely missing loci return NA. Other untestable
+#' or monomorphic cases retain the selected engine's behaviour, so the engines
+#' need not return identical results. GENEPOP-specific options, including which,
+#' are not used by the default pegas engine.
 #' 
 #' @author Eric Archer \email{eric.archer@@noaa.gov}
 #' 
@@ -67,7 +76,15 @@ hweTest <- function(
     
     hwe.p
   } else {
-    hwe <- pegas::hw.test(gtypes2genind(g), B = num.rep)
-    hwe[, ncol(hwe)]
+    loci <- getLociNames(g)
+    p <- stats::setNames(rep(NA_real_, length(loci)), loci)
+    counts <- numAlleles(g)
+    retained <- loci[loci %in% counts$locus[counts$num.alleles > 0]]
+    if(length(retained) == 0L) return(p)
+    hwe <- pegas::hw.test(gtypes2genind(g[, retained, ]), B = num.rep)
+    # Conversion to genind replaces dots in locus names with underscores.
+    index <- match(retained[match(rownames(hwe), gsub("[.]", "_", retained))], loci)
+    p[index] <- hwe[, ncol(hwe), drop = TRUE]
+    p
   }
 }
