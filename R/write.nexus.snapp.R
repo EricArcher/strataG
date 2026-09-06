@@ -14,10 +14,18 @@ write.nexus.snapp <- function(g, file = "snapp.data.nex") {
   id <- gsub("[ _]", ".", result$id)
   result$id <- result$stratum <- NULL
   
-  result <- lapply(1:nrow(result), function(i) result[i, -(1:2)])
+  result <- lapply(seq_len(nrow(result)), function(i) {
+    unlist(result[i, , drop = FALSE], use.names = TRUE)
+  })
   names(result) <- paste(strata, id, sep = "_")
   
-  ape::write.nexus.data(result, file = file)
+  file.data <- lapply(result, function(x) {
+    x <- as.character(x)
+    x[is.na(x)] <- "?"
+    x
+  })
+  ape::write.nexus.data(file.data, file = file, format = "standard",
+                        interleaved = FALSE)
   
   snapp.file <- scan(file, what = "character", sep = "\n", quiet = TRUE)
   bgn <- grep("BEGIN", snapp.file)
