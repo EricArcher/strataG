@@ -15,22 +15,20 @@ ldNe(
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
-
 \item{maf.threshold}{smallest minimum allele frequency permitted to include 
 a locus in calculation of Ne.}
-
 \item{by.strata}{apply the `maf.threshold` by strata. If `TRUE`
 then loci that are below this threshold in any strata will be removed 
 from the calculation of Ne for all strata. Loci below `maf.threshold` 
 within a stratum are always removed for calculations of Ne for that 
 stratum.}
-
-\item{ci}{central confidence interval.}
-
-\item{drop.missing}{drop loci with missing genotypes? If `FALSE`, a slower 
-procedure is used where individuals with missing genotypes are removed 
-in a pairwise fashion.}
-
+\item{ci}{central confidence level: a single finite number strictly
+between 0 and 1.}
+\item{drop.missing}{drop loci with missing genotypes? If \code{TRUE}, loci
+with any missing genotypes among individuals in a stratum are removed
+before calculating LD for that stratum. At least two loci must remain.
+If \code{FALSE} and missing genotypes remain after locus filtering, a
+warning is issued and no estimate is returned for that stratum.}
 \item{num.cores}{The number of cores to use to distribute computations over.
 If set to \code{NULL}, the value will be what is reported 
 by \code{\link[parallel]{detectCores} - 1}.}
@@ -53,8 +51,18 @@ Estimate Ne from linkage disequilibrium based on Pearson
   correlation approximation following Waples et al 2016. Adapted from code 
   by R. Waples and W. Larson.
 }
+\details{
+Missing genotypes are not imputed. The pairwise missing-data
+  correction described by Peel et al. (2013) is not implemented.
+  Strata for which no estimate can be calculated are omitted from the
+  result; if none can be calculated, the function returns \code{NULL}.
+}
 \references{
-Waples, R.S. 2006. A bias correction for estimates of effective
+Peel D, Waples RS, Macbeth GM, Do C, and Ovenden JR. 2013.
+  Accounting for missing data in the estimation of contemporary genetic
+  effective population size (Ne). Molecular Ecology Resources 13:243-253.
+  \doi{10.1111/1755-0998.12049} \cr
+  Waples, R.S. 2006. A bias correction for estimates of effective
   population size based on linkage disequilibrium at unlinked gene loci.
   Conservation Genetics 7:167-184. \cr
   Waples RK, Larson WA, and Waples RS. 2016. Estimating contemporary 
