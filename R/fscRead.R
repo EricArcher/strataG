@@ -196,14 +196,15 @@ fscReadArp <- function(p, sim = c(1, 1),
   end <- sapply(start, function(x) end[which.max(end > x)])
   pos <- cbind(start = start + 1, end = end - 1)
   
-  data.mat <- if(any((pos[, "end"] - pos[, "start"]) > 0)) {
+  nonempty <- which(pos[, "end"] >= pos[, "start"])
+  data.mat <- if(length(nonempty) > 0) {
     # extract matrix for each data block
-    data.mat <- do.call(rbind, lapply(1:nrow(pos), function(i) {
+    data.mat <- do.call(rbind, lapply(nonempty, function(i) {
       f.line <- f[pos[i, "start"]:pos[i, "end"]]
-      # make matrix and remove remove frequency column
-      result <- do.call(rbind, strsplit(f.line, "[[:space:]]+"))[, -2]
+      # make matrix and remove frequency column without dropping dimensions
+      result <- do.call(rbind, strsplit(f.line, "[[:space:]]+"))[, -2, drop = FALSE]
       # return id, deme number (i), and data columns
-      cbind(result[, 1], rep(i, nrow(result)), result[, -1])
+      cbind(result[, 1], rep(i, nrow(result)), result[, -1, drop = FALSE])
     }))
     colnames(data.mat) <- c("id", "deme", paste0("col", 3:ncol(data.mat)))
     data.mat
@@ -653,4 +654,3 @@ fsc2gtypes <- function(
     df2gtypes(df, ploidy = ploidy, description = p$label)
   }
 }
-
