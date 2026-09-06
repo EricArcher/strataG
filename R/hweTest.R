@@ -82,8 +82,11 @@ hweTest <- function(
     retained <- loci[loci %in% counts$locus[counts$num.alleles > 0]]
     if(length(retained) == 0L) return(p)
     hwe <- pegas::hw.test(gtypes2genind(g[, retained, ]), B = num.rep)
-    # Conversion to genind replaces dots in locus names with underscores.
-    index <- match(retained[match(rownames(hwe), gsub("[.]", "_", retained))], loci)
+    # Support both preserved names and the older underscore normalization.
+    matched <- match(rownames(hwe), retained)
+    missing <- is.na(matched)
+    matched[missing] <- match(rownames(hwe)[missing], gsub("[.]", "_", retained))
+    index <- match(retained[matched], loci)
     p[index] <- hwe[, ncol(hwe), drop = TRUE]
     p
   }
