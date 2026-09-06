@@ -100,7 +100,7 @@ methods::setMethod(
         dplyr::mutate(ref = ref.allele[.data$locus]) |> 
         dplyr::group_by(.data$id, .data$stratum, .data$locus) |> 
         dplyr::summarize(
-          code = sum(.data$allele == .data$ref), 
+          code = sum(.data$allele != .data$ref), 
           .groups = "drop"
         ) |> 
         tidyr::pivot_wider(names_from = "locus", values_from = "code") |> 
