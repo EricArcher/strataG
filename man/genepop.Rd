@@ -17,29 +17,21 @@ genepop(
   input.fname = "loc_data.txt",
   exec = "Genepop"
 )
-
-genepopWrite(g, label = NULL)
+genepopWrite(g, label = NULL, input.fname = NULL)
 }
 \arguments{
 \item{g}{a \code{\link{gtypes}} object.}
-
 \item{output.ext}{character string to use as extension for output files.}
-
 \item{show.output}{logical. Show GENEPOP output on console?}
-
 \item{label}{character string to use to label GENEPOP input and output files.}
-
 \item{dem}{integer giving the number of MCMC dememorisation or burnin steps.}
-
 \item{batches}{integer giving number of MCMC batches.}
-
 \item{iter}{integer giving number of MCMC iterations.}
-
 \item{other.settings}{character string of optional GENEPOP command line 
 arguments.}
-
-\item{input.fname}{character string to use for input file name.}
-
+\item{input.fname}{character string to use for input file name. For
+\code{genepopWrite}, \code{NULL} generates a filename from \code{label}.
+An explicit filename is used unchanged.}
 \item{exec}{name of Genepop executable}
 }
 \value{
@@ -71,7 +63,11 @@ results
 # Show contents of output file
 file.show(results$files["output.fname"])
 }
-
+}
+\details{
+Commas in population and sample labels are replaced by underscores.
+If this produces ambiguous population or formatted sample labels, writing
+stops with an error before the output file is created or overwritten.
 }
 \references{
 GENEPOP 4.3 (08 July 2014; Rousset, 2008)\cr
