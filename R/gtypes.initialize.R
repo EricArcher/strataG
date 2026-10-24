@@ -38,7 +38,7 @@
 #' genes are given as a \code{multidna} object, it is assumed that they
 #' are in the same order as the columns in \code{gen.data}.
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #'
 #' @seealso \link{df2gtypes}, \link{sequence2gtypes}
 #  \link{gtypes2genind}, \link{gtypes2loci}
@@ -196,8 +196,12 @@ methods::setMethod(
     stratum = as.character(strata), 
     gen.data
   ) |> 
-    as.data.frame(stringsAsFactors = FALSE) |> 
-    tidyr::gather("locus", "allele", -.data$id, -.data$stratum) |> 
+    as.data.frame(stringsAsFactors = FALSE) |>   
+    tidyr::pivot_longer(
+      cols = dplyr::all_of(colnames(gen.data)),
+      names_to = 'locus',
+      values_to = 'allele'
+    ) |> 
     dplyr::mutate(locus = locus.names.lookup[as.character(.data$locus)])
   
   data.table::setDT(gen.data, key = c("id", "stratum", "locus"))

@@ -29,7 +29,7 @@
 #'   The genetic ecology and population origins of the beluga whales of 
 #'   Yakutat Bay. Marine Fisheries Review 77(1):47-58
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples \dontrun{
 #' data(msats.g)

@@ -11,63 +11,55 @@ clumpp(
   sim.stat = "g",
   greedy.option = "ran.order",
   repeats = 100,
-  order.by.run = 0,
-  label = NULL,
-  delete.files = TRUE
+  order.by.run = 0
 )
 }
 \arguments{
-\item{sr}{result from \code{\link{structure}} or folder name containing 
-STRUCTURE output files.}
+\item{sr}{result from \code{structureRun()} (class
+\code{structure.result}).}
 
 \item{k}{choice of \emph{k} in \code{sr} to combine.}
 
-\item{align.algorithm}{algorithm to be used for aligning the runs. Can be 
+\item{align.algorithm}{algorithm to be used for aligning the runs. Can be
 "full.search", "greedy", or "large.k".}
 
-\item{sim.stat}{pairwise matrix similarity statistic to be used. Can be 
+\item{sim.stat}{pairwise matrix similarity statistic to be used. Can be
 "g" or "g.prime".}
 
-\item{greedy.option}{input order of runs to be tested. Required if 
-\code{align.algorithm} is "greedy" or "large.k". Valid choices are:
-\tabular{ll}{
-  \code{all} \tab test all possible input orders of runs (note that this 
-    option increases the run-time sub-stantially unless R is small).\cr
-  \code{ran.order} \tab test a specified number of random input orders of 
-    runs set by the \code{repeats} parameter.\cr
-}}
+\item{greedy.option}{input order of runs to be tested. Required if
+\code{align.algorithm} is "greedy" or "large.k". Valid choices are
+"all" (all R! input orders) or "ran.order" (\code{repeats} random
+input orders).}
 
-\item{repeats}{the number of input orders of runs to be tested. Only used if 
-\code{align.algorithm} is "greedy" or "large.k", and \code{greedy.option} 
-  is "ran.order".}
+\item{repeats}{the number of input orders of runs to be tested. Only used
+if \code{align.algorithm} is "greedy" or "large.k", and
+\code{greedy.option} is "ran.order".}
 
-\item{order.by.run}{permute the clusters according to the cluster order of 
-a specific run. Set this parameter to a number from 1 to the number of 
-runs in \code{sr}.}
-
-\item{label}{label to use for input and output files.}
-
-\item{delete.files}{logical. Delete all files when CLUMPP is finished?}
+\item{order.by.run}{permute the clusters according to the cluster order of
+a specific run. Set this parameter to a number from 1 to the number of
+runs at \code{k} in \code{sr}. 0 keeps the cluster order of the first
+run in the input order that maximized H.}
+}
+\value{
+a data.frame with columns \code{id}, \code{pct.miss},
+  \code{orig.pop}, \code{Group.1} ... \code{Group.k} holding the mean of
+  the aligned Q-matrices, as returned by \code{strataG::clumpp()}. The
+  attribute \code{"clumpp"} additionally holds H, the column permutation
+  applied to each run, and the settings used.
 }
 \description{
-Run CLUMPP to aggregate multiple STRUCTURE runs.
-}
-\note{
-CLUMPP is not included with \code{strataG} and must be downloaded 
-  separately. Additionally, it must be installed such that it can be run from 
-  the command line in the current working directory. See the vignette 
-  for \code{external.programs}.
+Native R implementation of CLUMPP (Jakobsson & Rosenberg 2007)
+  to align and aggregate multiple STRUCTURE runs from \code{structureRun()}.
 }
 \references{
-Mattias Jakobsson and Noah A. Rosenberg. 2007. CLUMPP: a cluster 
-  matching and permutation program for dealing with label switching and 
-  multimodality in analysis of population structure. 
-  Bioinformatics 23(14):1801-1806. Available at 
-  \url{http://web.stanford.edu/group/rosenberglab/clumppDownload.html}
+Jakobsson, M. and N. A. Rosenberg. 2007. CLUMPP: a cluster
+  matching and permutation program for dealing with label switching and
+  multimodality in analysis of population structure.
+  Bioinformatics 23(14):1801-1806.
 }
 \seealso{
 \code{\link{structure}}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

@@ -10,7 +10,7 @@
 #'
 #' @return Frequency table of haplotypes.
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #'
 #' @examples
 #' haps <- simGammaHaps(1000, 15, 1, 2.5)

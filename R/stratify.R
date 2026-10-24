@@ -18,7 +18,7 @@
 #'   
 #' @return A new \linkS4class{gtypes} object with an updated \code{strata} slot.
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \link{getSchemes}
 #'
@@ -44,14 +44,14 @@ stratify <- function(g, scheme = NULL, drop = TRUE) {
     stop(paste("scheme '", scheme, "' cannot be found", sep = ""))
   } else {
     getSchemes(g) |> 
-      dplyr::rename(.new = scheme) |> 
-      dplyr::select(.data$id, .data$.new)
+      dplyr::rename(.new = dplyr::all_of(scheme)) |> 
+      dplyr::select(dplyr::all_of(c('id', '.new')))
   }
       
   g@data <- g@data |> 
     dplyr::left_join(scheme, by = "id") |> 
-    dplyr::select(.data$id, .data$.new, .data$locus, .data$allele) |> 
-    dplyr::rename(stratum = .data$.new) |> 
+    dplyr::select(dplyr::all_of(c('id', '.new', 'locus', 'allele'))) |>  
+    dplyr::rename(stratum = '.new') |> 
     data.table::as.data.table()
 
   if(drop) {

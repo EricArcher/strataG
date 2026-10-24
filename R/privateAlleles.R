@@ -6,7 +6,7 @@
 #' @return matrix with the number of private alleles in each strata at each 
 #'   locus. This is the number of alleles only present in one stratum.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \link{propUniqueAlleles}
 #' 

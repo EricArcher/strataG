@@ -32,5 +32,5 @@ a list with the following elements:
 Generate a summary of a \code{gtypes} object.
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

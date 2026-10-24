@@ -12,7 +12,7 @@
 #'   \item{site.freqs}{a matrix of base pair frequencies by site.}
 #' }
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples
 #' data(dolph.haps)

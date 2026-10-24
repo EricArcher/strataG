@@ -12,7 +12,7 @@
 #' @references Tajima, F. 1989. Statistical method for testing the neutral 
 #'   mutation hypothesis by DNA polymorphism. Genetics 123:585-595.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples
 #' data(dolph.seqs)

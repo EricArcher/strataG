@@ -15,7 +15,7 @@
 #'   \code{x} was correctly called. List has one element for each set of 
 #'   quality scores in \code{x}.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples 
 #' # each element is a single quality score

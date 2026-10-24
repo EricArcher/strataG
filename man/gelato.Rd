@@ -64,5 +64,5 @@ O'Corry-Crowe, G., W. Lucey, F.I. Archer, and B. Mahoney. 2015.
   Yakutat Bay. Marine Fisheries Review 77(1):47-58
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

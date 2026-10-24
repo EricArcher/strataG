@@ -32,11 +32,11 @@ Conduct Random Forest on a gtypes object.
 library(strataG)
 data(dloop.g)
 
-rf.result <- gtypesRF(dloop.g, pairwise = TRUE)
+rf.result <- gtypesRF(dloop.g)
 
 rf.result
 
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

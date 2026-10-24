@@ -37,5 +37,5 @@ maf(msats.g, by.strata = TRUE, maf.within = TRUE)
 \link{alleleFreqs}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

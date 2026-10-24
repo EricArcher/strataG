@@ -14,7 +14,7 @@
 #' \code{isTi} and \code{isTv}: a logical identifying whether 
 #'   the \code{b1} to \code{b2} is a transition or transversion.
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples
 #' data(dolph.seqs)

@@ -8,7 +8,7 @@
 #'   as the number of alleles divided by the number of samples without
 #'   missing data at that locus.
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #'
 #' @examples 
 #' data(msats.g)

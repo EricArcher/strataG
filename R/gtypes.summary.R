@@ -18,7 +18,7 @@
 #'   \item{\code{seq.smry}}{a summary of the sequence length and base frequencies}
 #' }
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @name summary,gtypes-method
 #' @aliases summary summary.gtypes

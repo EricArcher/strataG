@@ -14,7 +14,7 @@
 #'   haplotype. The \code{gtypes} object used with haplotype assignments and 
 #'   unassigned individuals will be stored in \code{attr(*, "gtypes")}.
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #'
 #' @examples
 #' data(msats.g)

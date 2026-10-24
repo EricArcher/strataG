@@ -77,7 +77,7 @@
 #' @seealso \code{\link[hierfstat]{basic.stats}}, \code{\link[pegas]{Fst}},
 #'   \code{\link[pegas]{amova}}
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @references
 #' Excoffier, L., Smouse, P.E. and Quattro, J.M. 1992. Analysis of 

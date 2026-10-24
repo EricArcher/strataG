@@ -25,7 +25,7 @@
 #' @return vector of delta(log-Likelihoods) for each sequence, sorted from 
 #'   smallest to largest, and a plot of their distributions.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #'
 #' @examples
 #' data(dolph.haps)

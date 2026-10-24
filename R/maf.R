@@ -9,7 +9,7 @@
 #'
 #' @return A vector or matrix of minor allele frequencies at each locus.
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #'
 #' @seealso \link{alleleFreqs}
 #'

@@ -42,5 +42,5 @@ a list containing a data.frame of summary statistics (\code{smry}),
 Conduct Random Forest on stratified data.frame of sequences.
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

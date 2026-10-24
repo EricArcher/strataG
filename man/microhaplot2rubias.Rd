@@ -17,5 +17,5 @@ Converts a reference or mixture file from the MicroHaplot
   package to the proper format for the rubias package
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

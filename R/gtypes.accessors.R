@@ -47,7 +47,7 @@
 #' individual genes or sequences from this object} \item{description}{return the
 #' object's description} }
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #'
 #' @examples
 #' #--- create a diploid (microsatellite) gtypes object
@@ -234,7 +234,7 @@ methods::setGeneric("getStrata", function(x, ...) standardGeneric("getStrata"))
 #' 
 methods::setMethod("getStrata", "gtypes", function(x) {
   id.strata <- x@data |> 
-    dplyr::select(.data$id, .data$stratum) |> 
+    dplyr::select(dplyr::all_of(c('id', 'stratum'))) |> 
     dplyr::distinct()
   stats::setNames(id.strata$stratum, id.strata$id)
 })
@@ -270,7 +270,7 @@ methods::setMethod("setStrata<-", "gtypes", function(x, value) {
       tibble::tibble(id = names(value), .new = as.character(value)), 
       by = "id"
     ) |> 
-    dplyr::select(.data$id, .data$.new, .data$locus, .data$allele) |> 
+    dplyr::select(dplyr::all_of(c('id', '.new', 'locus', 'allele'))) |> 
     dplyr::rename(stratum = .data$.new) |> 
     data.table::as.data.table()
   

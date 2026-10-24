@@ -8,7 +8,7 @@
 #' @return a vector of loci with number (or, if \code{prop = TRUE},
 #'   the proportion) of individuals missing data for at least one allele.
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #'
 #' @examples
 #' data(msats.g)

@@ -15,7 +15,7 @@
 #'   number of clusters of individuals using the software STRUCTURE: a 
 #'   simulation study. Molecular Ecology 14:2611-2620.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \code{\link{structure}} \code{\link{clumpp}}
 #' 

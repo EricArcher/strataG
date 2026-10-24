@@ -93,5 +93,5 @@ str(genotypes.mat)
 \link{df2gtypes} \link[strataG]{as.matrix}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

@@ -25,7 +25,7 @@
 #'     likelihoods for each gene}
 #' }
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \code{\link{summarizeInds}}, \code{\link{summarizeLoci}}, 
 #'   \code{\link{dupGenotypes}}, \code{\link{lowFreqSubs}}, 

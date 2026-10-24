@@ -16,5 +16,5 @@ a new \linkS4class{gtypes} object with unused sequences removed.
 Remove sequences not used by samples.
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

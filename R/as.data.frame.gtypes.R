@@ -27,7 +27,7 @@
 #'   
 #' @return A \code{data.frame} or \code{matrix} with one row per individual.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \link{df2gtypes} \link[strataG]{as.matrix}
 #' 
@@ -134,7 +134,7 @@ methods::setMethod(
         )
       }
       
-      x.df <- dplyr::select(x.df, .data$id, .data$stratum, dplyr::everything())
+      x.df <- dplyr::select(x.df, dplyr::all_of(c('id', 'stratum')), dplyr::everything())
       
       # remove ids or strata if requested
       if(!ids) x.df$id <- NULL

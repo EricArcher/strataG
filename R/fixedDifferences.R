@@ -12,7 +12,7 @@
 #'   fixed differences for each pair of strata} \item{num.fixed}{data.frame of
 #'   number of sites fixed between each pair of strata} }
 #'   
-#' @author Eric Archer <eric.archer@@noaa.gov>
+#' @author Eric Archer <eric.ivan.archer@@gmail.com>
 #' 
 #' @seealso \code{\link{fixedSites}}, \code{\link{variableSites}}
 #' 

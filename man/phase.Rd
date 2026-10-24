@@ -158,5 +158,5 @@ Stephens, M., and Donnelly, P. (2003). A comparison of Bayesian
   \url{http://stephenslab.uchicago.edu/software.html#phase}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

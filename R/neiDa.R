@@ -5,7 +5,7 @@
 #' 
 #' @details Returns Nei's Da for each pair of strata.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @references Nei et al 1983 Accuracy of Estimated Phylogenetic Trees from 
 #'   Molecular Data. J Mol Evol 19:153-170 (eqn 7)\cr

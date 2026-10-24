@@ -4,7 +4,7 @@
 #' @param g a \linkS4class{gtypes} object.
 #' @param file the filename the NEXUS file to output.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @export
 #' 

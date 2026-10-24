@@ -72,7 +72,7 @@
 #'   American Journal of Human Genetics 73:1162-1169. Available at:
 #'   \url{http://stephenslab.uchicago.edu/software.html#phase}
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples \dontrun{
 #' data(bowhead.snps)

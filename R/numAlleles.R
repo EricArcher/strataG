@@ -6,7 +6,7 @@
 #'
 #' @return vector of number of alleles per locus.
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #'
 #' @examples
 #' data(msats.g)

@@ -6,14 +6,20 @@
 \title{Convert Between \code{gtypes} And \code{loci} objects.}
 \usage{
 gtypes2loci(x, sep = "/")
+
 loci2gtypes(x, description = NULL, sep = "/")
 }
 \arguments{
 \item{x}{a \linkS4class{gtypes} or \code{loci} formatted object.}
+
 \item{sep}{a single literal character separating alleles. Forward conversion
 returns canonical slash-separated pegas genotypes. Reverse conversion
 accepts canonical slash/pipe separators or the supplied separator.}
+
 \item{description}{a label for the \code{gtypes} object (optional).}
+}
+\value{
+A loci or gtypes object, respectively.
 }
 \description{
 Convert a \code{gtypes} object to a \code{\link[pegas]{loci}} object.
@@ -28,17 +34,17 @@ The gtypes constructor may remove samples missing every genotype, with a
 warning. Haploid and other non-diploid calls are rejected; ploidy cannot be
 inferred from an entirely missing locus.
 }
-\value{
-A loci or gtypes object, respectively.
-}
 \examples{
 data(msats.g)
+
 # Convert to loci
 lc <- gtypes2loci(msats.g)  
 lc  
+
 # Convert to gtypes
 gt <- loci2gtypes(lc)
 gt 
+
 }
 \seealso{
 \link{initialize.gtypes}, \link{df2gtypes}, 
@@ -46,5 +52,5 @@ gt
   \link{gtypes2genind}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

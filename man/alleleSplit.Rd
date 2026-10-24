@@ -9,6 +9,7 @@ alleleSplit(x, sep = NULL)
 \arguments{
 \item{x}{a matrix or data.frame containing diploid data. Every column 
 represents one locus with two alleles.}
+
 \item{sep}{separator used between alleles of a locus. If \code{NULL}, then 
 alleles should be of equal length (e.g., 145095 = 145 and 095, or 
 AG = A and G).}
@@ -38,6 +39,7 @@ snps <- do.call(cbind, lapply(1:3, function(i) {
 colnames(snps) <- paste("Loc", LETTERS[1:3], sep = "_")
 snps
 alleleSplit(snps)
+
 # A sample microsatellie data set with alleles separated by "/"
 alleles <- seq(100, 150, 2)
 msats <- do.call(cbind, lapply(1:3, function(i) {
@@ -48,7 +50,8 @@ msats <- do.call(cbind, lapply(1:3, function(i) {
 colnames(msats) <- paste("Loc", LETTERS[1:3], sep = "_")
 msats
 alleleSplit(msats, sep = "/")
+
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

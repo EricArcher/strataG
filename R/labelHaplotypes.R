@@ -35,7 +35,7 @@
 #'  stored in the @@other slot in an element named \code{'haps.unassigned'} (see
 #'  \code{\link{getOther}}).
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \code{\link{expandHaplotypes}}
 #'

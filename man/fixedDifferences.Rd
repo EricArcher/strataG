@@ -40,5 +40,5 @@ fd
 \code{\link{fixedSites}}, \code{\link{variableSites}}
 }
 \author{
-Eric Archer <eric.archer@noaa.gov>
+Eric Archer <eric.ivan.archer@gmail.com>
 }

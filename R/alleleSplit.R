@@ -18,7 +18,7 @@
 #' @return matrix with alleles for each locus in one column split into 
 #'   separate columns.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples
 #' # A sample SNP data set with no separators between nucleotides in a genotype

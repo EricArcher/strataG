@@ -10,7 +10,7 @@
 #' @return A named list where each element is a \code{gtypes} object 
 #'   for a single stratum in \code{g}.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples
 #' data(msats.g)

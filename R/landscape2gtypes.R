@@ -6,7 +6,7 @@
 #' 
 #' @param Rland rmetasim landscape object
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @export
 #' 

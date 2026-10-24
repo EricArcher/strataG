@@ -6,23 +6,25 @@
 \title{Convert Between \code{gtypes} And \code{genind} objects.}
 \usage{
 gtypes2genind(x, type = c("codom", "PA"))
+
 genind2gtypes(x)
 }
 \arguments{
 \item{x}{either a \linkS4class{gtypes} or \code{genind} object
 to convert from.}
+
 \item{type}{a character string indicating the type of marker for 
 \code{genind} objects: 'codom' stands for 'codominant' 
 (e.g. microstallites, allozymes); 'PA' stands for 'presence/absence' 
 markers (e.g. AFLP, RAPD). Only \code{codom} is supported; \code{PA}
 is rejected rather than treating marker states as codominant alleles.}
 }
+\value{
+A genind or gtypes object, respectively.
+}
 \description{
 Convert a \code{gtypes} object to a \code{genind} object 
   and vice-versa.
-}
-\value{
-A genind or gtypes object, respectively.
 }
 \details{
 Conversions require a single positive ploidy. Mixed-ploidy and
@@ -34,12 +36,15 @@ are not lossless for partially missing calls. Allele order is not phase.
 }
 \examples{
 data(msats.g)
+
 # Convert to genind
 gi <- gtypes2genind(msats.g)
 gi
+
 # Convert to gtypes
 gt <- genind2gtypes(gi)
 gt
+
 }
 \seealso{
 \link{initialize.gtypes}, \link{df2gtypes}, 
@@ -47,5 +52,5 @@ gt
   \link{gtypes2loci}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

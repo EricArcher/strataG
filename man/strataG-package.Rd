@@ -22,6 +22,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Eric Archer \email{eric.ivan.archer@gmail.com}
   \item Paula Adams \email{peadams@crimson.ua.edu}
   \item Brita Schneiders \email{britaschneiders@u.northwestern.edu}
   \item Sarina Fernandez \email{sarinafernandez5@gmail.com}

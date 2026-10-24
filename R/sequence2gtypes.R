@@ -13,7 +13,7 @@
 #' 
 #' @return a \linkS4class{gtypes} object.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \link{gtypes.initialize}, \link{as.matrix.gtypes}, 
 #'   \link{as.data.frame.gtypes}, \link{gtypes2genind}, \link{gtypes2loci},

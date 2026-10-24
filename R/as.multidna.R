@@ -7,7 +7,7 @@
 #' @param ... arguments to pass to \code{\link{getSequences}} if \code{x} is a
 #'   \linkS4class{gtypes} object.
 #'   
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \link{getSequences}
 #' 

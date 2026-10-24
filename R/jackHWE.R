@@ -42,7 +42,7 @@
 #'   from Hardy-Weinberg equilibirum caused by low levels of microsatellite 
 #'   genotyping errors. Molecular Ecology Resources 9:498-504.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \code{\link{hweTest}}
 #' 

@@ -19,7 +19,7 @@ setClassUnion("dnaSequences", c("multidna", "NULL"))
 #' @slot other a slot to carry other related information - currently unused in 
 #'   analyses (optional).
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #'
 #' @seealso \code{\link{df2gtypes}}, \code{\link{sequence2gtypes}},
 #'   \code{\link{gtypes.accessors}}, \code{\link{gtypes.initialize}}

@@ -18,7 +18,7 @@
 #' @references Nei, M., and S. Kumar (2000) Molecular Evolution and 
 #'   Phylogenetics. Oxford University Press, Oxford. (dA: pp. 256, eqn 12.67)
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples
 #' data(dloop.g)

@@ -258,5 +258,5 @@ Excoffier, L. and Foll, M (2011) fastsimcoal: a continuous-time
 \code{\link{fscWrite}}, \code{\link{fscRun}}, \code{\link{fscRead}}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

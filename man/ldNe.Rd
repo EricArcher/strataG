@@ -15,20 +15,25 @@ ldNe(
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
+
 \item{maf.threshold}{smallest minimum allele frequency permitted to include 
 a locus in calculation of Ne.}
+
 \item{by.strata}{apply the `maf.threshold` by strata. If `TRUE`
 then loci that are below this threshold in any strata will be removed 
 from the calculation of Ne for all strata. Loci below `maf.threshold` 
 within a stratum are always removed for calculations of Ne for that 
 stratum.}
+
 \item{ci}{central confidence level: a single finite number strictly
 between 0 and 1.}
+
 \item{drop.missing}{drop loci with missing genotypes? If \code{TRUE}, loci
 with any missing genotypes among individuals in a stratum are removed
 before calculating LD for that stratum. At least two loci must remain.
 If \code{FALSE} and missing genotypes remain after locus filtering, a
 warning is issued and no estimate is returned for that stratum.}
+
 \item{num.cores}{The number of cores to use to distribute computations over.
 If set to \code{NULL}, the value will be what is reported 
 by \code{\link[parallel]{detectCores} - 1}.}
@@ -71,5 +76,5 @@ Peel D, Waples RS, Macbeth GM, Do C, and Ovenden JR. 2013.
   doi:10.1038/hdy.2016.60
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

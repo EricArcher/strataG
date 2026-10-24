@@ -31,7 +31,7 @@
 #' @references Ewens, W. 1972. The sampling theory of selectively neutral
 #'   alleles. Theoretical Population Biology 3:87-112. Eqns. 11 and 24.
 #'   
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples 
 #' dispersal <- seq(0.05, 0.8, by = 0.05)

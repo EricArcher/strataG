@@ -48,5 +48,5 @@ Robert Verity and Richard Nichols. (2016) Documentation for MavericK
 software: Version 1.0
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

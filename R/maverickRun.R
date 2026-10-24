@@ -20,7 +20,7 @@
 #'   the command line in the current working directory. See the vignette 
 #'   for \code{external.programs} for OS-specific installation instructions.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @references 
 #' Robert Verity and Richard Nichols. (2016) Estimating the number of 

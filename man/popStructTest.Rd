@@ -151,5 +151,5 @@ Weir, B.S. and Hill, W.G. 2002. Estimating F-statistics.
   \code{\link[pegas]{amova}}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

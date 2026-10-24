@@ -18,7 +18,7 @@
 #'     that are shared.\cr
 #' }
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples
 #' data(msats.g)

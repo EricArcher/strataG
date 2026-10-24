@@ -7,7 +7,7 @@
 #'   (excluding beginning and trailing N's), the length, the number of N's, 
 #'   and the number of indels.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples
 #' library(apex)

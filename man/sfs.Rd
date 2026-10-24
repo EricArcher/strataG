@@ -44,5 +44,5 @@ A list of the marginal (1D) and joint (2D) site frequency spectra.
 Calculate the SFS from a data frame of SNP genotypes
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

@@ -39,5 +39,5 @@ gl2
   \link{gtypes2loci}, \link{gtypes2genind}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

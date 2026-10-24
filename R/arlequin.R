@@ -54,7 +54,7 @@
 #'   data analysis. Evolutionary Bioinformatics Online 1:47-50.\cr
 #'   Available at \url{https://cmpg.unibe.ch/software/arlequin3/}
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples
 #' # write test microsat data .arp file

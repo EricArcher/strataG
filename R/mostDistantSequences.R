@@ -19,7 +19,7 @@
 #' @return a vector of the \code{num.seqs} sequence names that are the most
 #'   divergent sorted from greatest to least distant.
 #'   
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples
 #' data(dolph.haps)

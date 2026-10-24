@@ -21,5 +21,5 @@ A wrapper for \code{\link[data.table]{fread}} that sets
   common values for missing data and removes blank lines.
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

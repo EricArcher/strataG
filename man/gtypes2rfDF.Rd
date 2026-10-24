@@ -22,5 +22,5 @@ a \code{data.frame} where the first column lists the (\code{strata})
 Create data.frame of variable sites from gtypes object.
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

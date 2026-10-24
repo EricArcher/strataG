@@ -6,7 +6,7 @@
 #' @param sample.type determines type of MicroHaplot sample. Can be any 
 #'   unambiguous substring of \code{"reference"} or \code{"mixture"}.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov} 
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com} 
 #'
 #' @export
 #' 

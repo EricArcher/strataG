@@ -32,5 +32,5 @@ Fu, Y-X. 1997. Statistical tests of neutrality of mutations
   Genetics 147:915-925.
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

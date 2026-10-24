@@ -16,7 +16,7 @@
 #'   \code{base.freqs} \tab a vector of overall base proportion composition.\cr 
 #' }
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #'
 #' @examples
 #' data(dloop.g)

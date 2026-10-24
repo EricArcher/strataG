@@ -100,5 +100,5 @@ Excoffier, L.G. Laval, and S. Schneider (2005)
   Available at \url{https://cmpg.unibe.ch/software/arlequin3/}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

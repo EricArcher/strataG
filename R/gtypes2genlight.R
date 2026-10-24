@@ -5,7 +5,7 @@
 #' @param x either a \linkS4class{gtypes} or \code{genlight} object
 #'   to convert from.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \link{initialize.gtypes}, \link{df2gtypes}, 
 #'   \link{sequence2gtypes}, \link{as.data.frame.gtypes}, 

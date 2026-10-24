@@ -23,7 +23,7 @@
 #' need not return identical results. GENEPOP-specific options, including which,
 #' are not used by the default pegas engine.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \code{\link{genepop}}, \code{\link[pegas]{hw.test}}
 #' 

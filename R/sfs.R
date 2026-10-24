@@ -21,7 +21,7 @@
 #' @return A list of the marginal (1D) and joint (2D) site frequency spectra. 
 #'   If only one stratum is present, then \code{$marginal} will be  \code{NULL}.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @export
 #' 

@@ -10,7 +10,7 @@
 #' @return a vector of fixed sites. Element names are site positions in the
 #'   original sequence.
 #' 
-#' @author Eric Archer <eric.archer@@noaa.gov>
+#' @author Eric Archer <eric.ivan.archer@@gmail.com>
 #' 
 #' @examples
 #' data(dolph.haps)

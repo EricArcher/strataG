@@ -21,7 +21,7 @@
 #'   is \code{TRUE}, then frequency tables for each locus are written to 
 #'   separate files.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples \dontrun{
 #' # Write microsatellites with one column per locus

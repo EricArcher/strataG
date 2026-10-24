@@ -74,5 +74,5 @@ are in the same order as the columns in \code{gen.data}.
 \link{df2gtypes}, \link{sequence2gtypes}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

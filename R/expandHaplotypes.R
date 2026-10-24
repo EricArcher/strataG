@@ -7,7 +7,7 @@
 #'   is one sequence per individual. Sequence names are set to individual sample
 #'   IDs.
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \code{\link{labelHaplotypes}}
 #'

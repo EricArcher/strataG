@@ -52,5 +52,5 @@ Sudhir Kumar, Glen Stecher, and Koichiro Tamura (2015)
   Available at: \url{http://www.megasoftware.net}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

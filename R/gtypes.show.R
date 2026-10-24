@@ -3,7 +3,7 @@
 #' 
 #' @param object a \linkS4class{gtypes} object.
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @export
 #' 

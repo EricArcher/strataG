@@ -22,7 +22,7 @@
 #'   Molecular Biology and Evolution (submitted).
 #'   Available at: \url{http://www.megasoftware.net}
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @name mega
 #' @aliases mega, MEGA

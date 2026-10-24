@@ -64,5 +64,5 @@ Katoh, M., Kumar, M. 2002. MAFFT: a novel method for rapid multiple sequence
   Available at: \url{https://mafft.cbrc.jp/alignment/software/}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

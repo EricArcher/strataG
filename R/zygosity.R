@@ -8,7 +8,7 @@
 #'   homozygote (\code{hom}) or missing (\code{NA}). Note that if haploid, 
 #'   all non-missing values will be \code{hom}.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples
 #' data(msats.g)

@@ -16,7 +16,7 @@
 #'   \code{iupacMat} \tab a logical matrix identifying valid IUPAC codes.\cr
 #' }
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #'
 #' @seealso \code{\link{validIupacCodes}}
 #' 

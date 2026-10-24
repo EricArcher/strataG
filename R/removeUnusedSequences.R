@@ -5,7 +5,7 @@
 #' 
 #' @return a new \linkS4class{gtypes} object with unused sequences removed.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @export
 #' 

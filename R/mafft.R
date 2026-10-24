@@ -23,7 +23,7 @@
 #' 
 #' @return a \code{\link[ape]{DNAbin}} object with aligned sequences.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @references 
 #' Katoh, M., Kumar, M. 2002. MAFFT: a novel method for rapid multiple sequence 

@@ -36,7 +36,7 @@
 #' @references GENEPOP 4.3 (08 July 2014; Rousset, 2008)\cr
 #'   \url{https://kimura.univ-montp2.fr/~rousset/Genepop.htm}
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \link{hweTest}, \link{LDgenepop}
 #' 

@@ -8,7 +8,7 @@
 #' @note If \code{g} is a haploid object with sequences, the value for 
 #'   expected heterozygosity (= haplotpyic diversity) will be returned.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples
 #' data(msats.g)

@@ -30,7 +30,7 @@
 #'   is \code{TRUE} then the \code{rf} element is a list of 
 #'   \code{randomForest} results for each row in \code{smry}.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples 
 #' \dontrun{
@@ -164,6 +164,7 @@ diagnosability <- function(g, gene = 1, pairwise = FALSE, conf.level = 0.95,
     data = x, 
     ntree = ntree,
     replace = replace, 
+    proximity = TRUE,
     sampsize = sampsize, 
     nrep = rp.nrep,
     num.cores = ifelse(rp.nrep == 0, 1, parallel::detectCores() - 1)

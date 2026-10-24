@@ -1,12 +1,17 @@
 context("GENEPOP LD edge cases")
 
 ld_genepop_fixture <- function() {
-  df2gtypes(data.frame(id = paste0("s", 1:20), pop = rep(c("A", "B"), 10),
-                      L1.1 = 1, L1.2 = 1,
-                      L2.1 = rep(c(1,1,2,2),5),
-                      L2.2 = rep(c(1,2,1,2),5),
-                      L3.1 = rep(c(1,2,1,1,2),4),
-                      L3.2 = rep(c(2,2,1,1,2),4)), ploidy = 2)
+  data.frame(
+    id = paste0("s", 1:20), 
+    pop = rep(c("A", "B"), 10),
+    L1.1 = 1, 
+    L1.2 = 1,
+    L2.1 = rep(c(1,1,2,2),5),
+    L2.2 = rep(c(1,2,1,2),5),
+    L3.1 = rep(c(1,2,1,1,2),4),
+    L3.2 = rep(c(2,2,1,1,2),4)
+  ) |> 
+  df2gtypes(ploidy = 2)
 }
 
 test_that("one locus is rejected before any files are written", {
@@ -15,7 +20,7 @@ test_that("one locus is rejected before any files are written", {
   old <- setwd(folder)
   on.exit({setwd(old); unlink(folder, recursive = TRUE)})
   g <- ld_genepop_fixture()[, "L1", ]
-  expect_error(LDgenepop(g), "At least two loci are required", fixed = TRUE)
+  expect_error(LDgenepop(g), "At least two loci are required")
   expect_length(list.files(), 0L)
 })
 

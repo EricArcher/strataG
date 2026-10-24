@@ -15,5 +15,5 @@ write.nexus.snapp(g, file = "snapp.data.nex")
 Write NEXUS File for SNAPP
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

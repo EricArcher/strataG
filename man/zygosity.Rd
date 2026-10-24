@@ -26,5 +26,5 @@ head(msats.zyg, 10)
 
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

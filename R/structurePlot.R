@@ -23,7 +23,7 @@
 #' 
 #' @return invisibly, the ggplot object
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \code{\link{structure}}, \code{\link{clumpp}}
 #'

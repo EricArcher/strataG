@@ -28,5 +28,5 @@ Nei et al 1983 Accuracy of Estimated Phylogenetic Trees from
   Oxford University Press, Oxford. (pp. 268, eqn 13.6)
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

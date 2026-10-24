@@ -12,7 +12,7 @@
 #' 
 #' @return Vector of diversity of nucleotides by site.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples
 #' data(dloop.g)

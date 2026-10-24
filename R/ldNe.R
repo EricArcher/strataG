@@ -51,7 +51,7 @@
 #'   disequilibrium across thousands of loci. Heredity 117:233-240; 
 #'   doi:10.1038/hdy.2016.60
 #'
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @export
 #' 

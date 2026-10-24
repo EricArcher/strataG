@@ -60,5 +60,5 @@ labelHaplotypes(dloop.g, "Hap.")
   \code{\link{gtypes.accessors}}, \code{\link{gtypes.initialize}}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

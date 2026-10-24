@@ -13,13 +13,13 @@
 #'   the \code{rf} element is a list of \code{randomForest} results for each row in
 #'   \code{smry}.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples 
 #' library(strataG)
 #' data(dloop.g)
 #' 
-#' rf.result <- gtypesRF(dloop.g, pairwise = TRUE)
+#' rf.result <- gtypesRF(dloop.g)
 #' 
 #' rf.result
 #' 

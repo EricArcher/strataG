@@ -9,7 +9,7 @@
 #' @return a \code{data.frame} where the first column lists the (\code{strata}) 
 #'   and every column afterwards is a variable site. All columns are factors.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov} 
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com} 
 #' 
 #' @export
 #' 

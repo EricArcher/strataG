@@ -13,7 +13,7 @@
 #'   Pairs reported by GENEPOP as having no contingency table receive
 #'   \code{NA} for the p-value, standard error, and number of switches.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \link{genepop}
 #' 
@@ -35,8 +35,10 @@ LDgenepop <- function(
 ) {
     
   if(getNumLoci(g) < 2L) {
-    stop("At least two loci are required for linkage disequilibrium testing.",
-         call. = FALSE)
+    stop(
+      "At least two loci are required for linkage disequilibrium testing.",
+      call. = FALSE
+    )
   }
   # Run Genepop
   g <- stratify(g)

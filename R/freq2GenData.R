@@ -17,7 +17,7 @@
 #' @return a data frame with one row per sample and columns for id, strata, 
 #'   and haplotype, suitable for use in \link{df2gtypes}.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples
 #' hap.freqs <- data.frame(

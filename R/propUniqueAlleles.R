@@ -7,7 +7,7 @@
 #' @return a vector of the proportion of unique (occuring only in one individual) 
 #'   alleles for each locus.
 #'   
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \link{privateAlleles}
 #' 

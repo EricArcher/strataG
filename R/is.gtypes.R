@@ -5,7 +5,7 @@
 #' 
 #' @return Logical stating if 'x' is a \code{\linkS4class{gtypes}} object.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples
 #' data(msats.g)

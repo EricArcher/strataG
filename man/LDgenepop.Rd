@@ -15,9 +15,12 @@ LDgenepop(
 }
 \arguments{
 \item{g}{a \linkS4class{gtypes} object.}
+
 \item{dememorization, batches, iterations}{parameters for GENEPOP MCMC
 LD procedure as defined in \code{\link[genepop]{test_LD}}.}
+
 \item{delete.files}{logical. Delete GENEPOP input and output files when done?}
+
 \item{label}{character string to use to label GENEPOP input and output files.}
 }
 \value{
@@ -26,22 +29,23 @@ data.frame of disequilibrium estimates between pairs of loci
 \description{
 Calculate linkage disequilibrium p-values using GENEPOP.
 }
+\details{
+Samples are pooled into a single population before testing;
+  existing strata are not tested separately. At least two loci are required.
+  Pairs reported by GENEPOP as having no contingency table receive
+  \code{NA} for the p-value, standard error, and number of switches.
+}
 \examples{
 \dontrun{
 data(msats.g)
 msats.ld <- LDgenepop(msats.g)
 head(msats.ld)
 }
-}
-\details{
-Samples are pooled into a single population before testing;
-existing strata are not tested separately. At least two loci are required.
-Pairs reported by GENEPOP as having no contingency table receive
-\code{NA} for the p-value, standard error, and number of switches.
+
 }
 \seealso{
 \link{genepop}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

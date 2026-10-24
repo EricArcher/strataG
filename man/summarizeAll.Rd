@@ -44,5 +44,5 @@ Conducts a suite of data summaries. Summarizes missing data and
   \code{\link{sequenceLikelihoods}}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

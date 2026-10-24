@@ -57,5 +57,5 @@ Plot Q-matrix from a call to \code{\link{structure}} or
 \code{\link{structure}}, \code{\link{clumpp}}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

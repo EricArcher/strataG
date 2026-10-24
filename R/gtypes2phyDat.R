@@ -5,7 +5,7 @@
 #' @param locus name or number of locus to convert.
 #' @param ... optional arguments passed to \code{\link{sequence2gtypes}}.
 #'  
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \link{initialize.gtypes}, \link{df2gtypes}, \link{sequence2gtypes},
 #'   \link{as.data.frame.gtypes}, \link{as.matrix.gtypes}, \link{gtypes2genind},

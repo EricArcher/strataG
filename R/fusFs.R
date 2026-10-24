@@ -14,7 +14,7 @@
 #'   against population growth, hitchiking and background selection. 
 #'   Genetics 147:915-925.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples 
 #' data(dolph.seqs)

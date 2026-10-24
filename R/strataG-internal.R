@@ -174,14 +174,19 @@
 #' @noRd
 #' 
 .stackedAlleles <- function(g, alleles2integer = FALSE, na.val = NULL, ...) {
-  x <- if(alleles2integer) .alleles2integer(g, ...) else g@data
-  if(!is.null(na.val)) x$allele[is.na(x$allele)] <- na.val
-  x |> 
-    dplyr::arrange(.data$id, .data$locus) |> 
-    dplyr::mutate(a = rep(1:getPloidy(g), dplyr::n() / getPloidy(g))) |> 
-    tidyr::spread(.data$locus, .data$allele) |> 
-    dplyr::rename(allele = "a") |> 
-    dplyr::select(.data$id, .data$stratum, .data$allele, dplyr::everything())
+  x <- if (alleles2integer) .alleles2integer(g, ...) else g@data
+  x <- x |>
+    dplyr::as_tibble() |>
+    dplyr::arrange(id, locus) |>
+    dplyr::group_by(id, locus) |>
+    dplyr::mutate(a = dplyr::row_number()) |>
+    dplyr::ungroup() |>
+    tidyr::complete(tidyr::nesting(id, stratum), locus, a = seq_len(getPloidy(g)))
+  if (!is.null(na.val)) x$allele[is.na(x$allele)] <- na.val
+  x |>
+    tidyr::pivot_wider(names_from = locus, values_from = allele) |>
+    dplyr::rename(allele = .data$a) |>
+    dplyr::select(id, stratum, allele, dplyr::everything())
 }
 
 

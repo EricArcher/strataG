@@ -15,7 +15,7 @@
 #' @return a list containing a data.frame of summary statistics (\code{smry}), 
 #'   and the \code{rfPermute} object (\code{rp}).
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov} 
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com} 
 #' 
 #' @export
 #' 

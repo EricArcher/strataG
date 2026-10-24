@@ -91,5 +91,5 @@ hap.assign
 \code{\link{expandHaplotypes}}
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

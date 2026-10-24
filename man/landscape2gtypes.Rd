@@ -17,5 +17,5 @@ landscape2df(Rland)
   Rmetasim landscape object. `landscape2df` creates a data.frame.
 }
 \author{
-Eric Archer \email{eric.archer@noaa.gov}
+Eric Archer \email{eric.ivan.archer@gmail.com}
 }

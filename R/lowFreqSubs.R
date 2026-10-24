@@ -10,7 +10,7 @@
 #' @return data.frame listing id, site number, and motif around low frequency 
 #'   base call.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples
 #' data(dolph.haps)

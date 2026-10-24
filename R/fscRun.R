@@ -59,7 +59,7 @@
 #'   PLOS Genetics, 9(10):e1003905. \cr
 #'   \url{https://cmpg.unibe.ch/software/fastsimcoal2/}
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @seealso \code{\link{fsc.input}}, \code{\link{fscWrite}}, 
 #'  \code{\link{fscRead}}

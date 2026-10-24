@@ -6,7 +6,7 @@
 #' 
 #' @return sequences with beginning and trailing N's removed.
 #' 
-#' @author Eric Archer \email{eric.archer@@noaa.gov}
+#' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @examples
 #'  test.seqs <- list(
