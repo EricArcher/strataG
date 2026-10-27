@@ -32,7 +32,7 @@ simGammaHaps <- function(pop.size, num.haps, shape, scale,
 
   if(plot) {
     p <- tibble::tibble(Haplotypes = haplotypes) |> 
-      ggplot2::ggplot(ggplot2::aes_string("Haplotypes")) +
+      ggplot2::ggplot(ggplot2::aes(.data$Haplotypes)) +
       ggplot2::geom_histogram(binwidth = 1) +
       ggplot2::ylab("Count")
     print(p)

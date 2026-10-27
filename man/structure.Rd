@@ -14,6 +14,7 @@ structureRun(
   label = NULL,
   delete.files = TRUE,
   exec = "structure",
+  num.cores = parallel::detectCores() - 1,
   ...
 )
 
@@ -50,10 +51,11 @@ structureRead(file, pops = NULL, ids = NULL)
 
 \item{k.range}{vector of values to use for \code{maxpops} (the number of
 clusters, \emph{K}) in multiple runs. Each value is run
-\code{num.k.rep} times. If \code{NULL} (the default), \code{maxpops} is
-used if it is supplied in \code{...}, otherwise \code{1:getNumStrata(g)}.
-If both \code{k.range} and \code{maxpops} are supplied, \code{k.range} is
-used and \code{maxpops} is ignored.}
+\code{num.k.rep} times. If \code{NULL} (the default), a single value of
+\emph{K} is run, given by \code{maxpops} if it is supplied in \code{...},
+otherwise \code{1:getNumStrata(g)} is used. If both \code{k.range} and
+\code{maxpops} are supplied, \code{k.range} is used and \code{maxpops} is
+ignored.}
 
 \item{num.k.rep}{number of replicates for each value in \code{k.range}.}
 
@@ -61,11 +63,17 @@ used and \code{maxpops} is ignored.}
 
 \item{delete.files}{logical. Delete all files when STRUCTURE is finished?}
 
-\item{exec}{name or full path of executable for STRUCTURE. Defaults to "structure".}
+\item{exec}{name of executable for STRUCTURE. Defaults to "structure".}
+
+\item{num.cores}{number of cores to use. Runs are split across cores with
+\code{parallel::mclapply}, and each run's STRUCTURE output is written to
+a log file instead of the console. Because each run's seed is set before
+any runs start, results are identical to \code{num.cores = 1}. Ignored on
+Windows, where forking is not available.}
 
 \item{...}{arguments to be passed to \code{structureWrite}.}
 
-\item{maxpops}{number of clusters (\emph{K}) for a single run.}
+\item{maxpops}{number of groups.}
 
 \item{burnin}{number of iterations for MCMC burnin.}
 
@@ -114,7 +122,7 @@ when \code{pop.prior} = "usepopinfo".}
 specified by \code{popflag}. Only used when \code{pop.prior} =
 "usepopinfo".}
 
-\item{popflag}{a vector of integers (0, 1) or logicals identifying whether
+\item{popflag}{a vector of integers (0, 1) or logicals identifiying whether
 or not to use strata information. Only used when \code{pop.prior} =
 "usepopinfo".}
 
@@ -130,7 +138,7 @@ value if \code{inferalpha = TRUE}.}
 
 \item{unifprioralpha}{logical. Assume a uniform prior for \code{alpha} which
 runs between 0 and \code{alphamax}. This model seems to work fine; the
-alternative model (when \code{unifprioralpha = FALSE}) is to take \code{alpha}
+alternative model (when \code{unifprioralpha = 0}) is to take \code{alpha}
 as having a Gamma prior, with mean \code{alphapriora × alphapriorb}, and
 variance \code{alphapriora × alphapriorb^2}.}
 
@@ -149,38 +157,17 @@ STRUCTURE file.}
 numbers written as labels in the STRUCTURE input file.}
 }
 \value{
-\describe{
-  \item{\code{structureRun}}{a list of class \code{structure.result} with
-    one element per run, named by run label. Each element is the list
-    returned by \code{structureRead}, plus:
-    \describe{
-      \item{\code{files}}{named vector of the input and output files used by
-        STRUCTURE, or \code{NULL} if \code{delete.files = TRUE}}
-      \item{\code{label}}{label for the run}
-      \item{\code{seed}}{seed used by STRUCTURE for the run}
-    }}
-  \item{\code{structureWrite}}{invisibly, a list containing:
-    \describe{
-      \item{\code{files}}{named vector of the data, mainparams, extraparams,
-        and output file names}
-      \item{\code{pops}}{population labels in the order of the numeric codes
-        written to the data file, with \code{"Unknown"} appended if any
-        samples are unstratified}
-      \item{\code{ids}}{individual ids in the order of the row numbers
-        written as labels}
-    }}
-  \item{\code{structureRead}}{a list containing:
-    \describe{
-      \item{\code{summary}}{named numeric vector with \code{k} (number of
-        clusters), \code{est.ln.prob} (estimated Ln Prob of Data), and
-        \code{mean.lnL} and \code{var.lnL} (mean and variance of the log
-        likelihood)}
-      \item{\code{q.mat}}{data.frame with columns \code{id},
-        \code{pct.miss}, \code{orig.pop}, and \code{Group.1} ...
-        \code{Group.k} holding each individual's assignment probabilities}
-      \item{\code{prior.anc}}{list of prior ancestry estimates for each
-        individual where population priors were used, or \code{NULL}}
-    }}
+\describe{ 
+  \item{\code{structureRun}}{a list where each element is a list with results from \code{structureRead} and a vector of the filenames used} 
+  \item{\code{structureWrite}}{a vector of the filenames used by STRUCTURE} 
+  \item{\code{structureRead}}{a list containing: \describe{
+     \item{\code{summary}}{} 
+     \item{\code{q.mat}}{data.frame of assignment probabilities for each id} 
+     \item{\code{prior.anc}}{list of prior ancestry estimates for each individual where population priors were used} 
+     \item{\code{files}}{vector of input and output files used by STRUCTURE} 
+     \item{\code{label}}{label for the run} 
+     \item{\code{seed}}{seed used by STRUCTURE for the run}
+   } } 
 }
 }
 \description{

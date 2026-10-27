@@ -20,6 +20,10 @@
 #'   a specific run. Set this parameter to a number from 1 to the number of
 #'   runs at \code{k} in \code{sr}. 0 keeps the cluster order of the first
 #'   run in the input order that maximized H.
+#' @param num.cores number of cores to use. Input orders of runs (greedy
+#'   algorithms) or pairs of runs (full search) are split across cores with
+#'   \code{parallel::mclapply}. Results are identical to \code{num.cores = 1}.
+#'   Ignored on Windows, where forking is not available.
 #'
 #' @return a data.frame with columns \code{id}, \code{pct.miss},
 #'   \code{orig.pop}, \code{Group.1} ... \code{Group.k} holding the mean of
@@ -40,7 +44,7 @@
 #' 
 clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
                    greedy.option = "ran.order", repeats = 100,
-                   order.by.run = 0) {
+                   order.by.run = 0, num.cores = parallel::detectCores() - 1) {
   
   if(k < 2) stop("k must be greater than 1.")
   align.algorithm <- tolower(align.algorithm)
@@ -75,11 +79,11 @@ clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
   result <- if(num.runs == 1) {
     list(perms = list(seq_len(k)), H = NA_real_)
   } else if(align.algorithm == "full.search") {
-    .clumppFullSearch(q.list, sim.stat)
+    .clumppFullSearch(q.list, sim.stat, num.cores)
   } else {
     run.orders <- .clumppRunOrders(num.runs, greedy.option, repeats)
     .clumppGreedy(q.list, run.orders, sim.stat,
-                  large.k = align.algorithm == "large.k")
+                  large.k = align.algorithm == "large.k", num.cores = num.cores)
   }
   perms <- result$perms
   
@@ -202,7 +206,7 @@ clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
 
 # FullSearch: first run fixed, every combination of the K! permutations of
 # the remaining R - 1 runs, keep the combination with the highest H.
-.clumppFullSearch <- function(q.list, sim.stat) {
+.clumppFullSearch <- function(q.list, sim.stat, num.cores = 1) {
   k <- ncol(q.list[[1]])
   num.runs <- length(q.list)
   perm.mat <- .clumppPerms(k)
@@ -215,7 +219,7 @@ clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
   
   # Pairwise similarity S[[i, j]][a, b] = sim(Q_i[, P_a], Q_j[, P_b])
   pairs <- utils::combn(num.runs, 2)
-  sim.tbl <- lapply(seq_len(ncol(pairs)), function(m) {
+  sim.tbl <- .mcLapply(seq_len(ncol(pairs)), num.cores = num.cores, FUN = function(m) {
     i <- pairs[1, m]
     j <- pairs[2, m]
     rows <- if(i == 1) 1L else seq_len(num.perms)
@@ -244,7 +248,8 @@ clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
 # Greedy / LargeKGreedy: for each input order, fix the first run, then align
 # each following run to all runs already fixed. Keep the order with the
 # highest H.
-.clumppGreedy <- function(q.list, run.orders, sim.stat, large.k = FALSE) {
+.clumppGreedy <- function(q.list, run.orders, sim.stat, large.k = FALSE,
+                          num.cores = 1) {
   k <- ncol(q.list[[1]])
   num.runs <- length(q.list)
   perm.mat <- if(large.k) NULL else .clumppPerms(k)
@@ -252,9 +257,9 @@ clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
     warning("Greedy tests all ", factorial(k), " permutations per run; ",
             "consider align.algorithm = 'large.k'.")
   }
-  
-  best <- list(perms = NULL, H = -Inf)
-  for(o in seq_len(nrow(run.orders))) {
+
+  # Each input order is independent, so they can be run in parallel
+  results <- .mcLapply(seq_len(nrow(run.orders)), num.cores = num.cores, FUN = function(o) {
     run.order <- run.orders[o, ]
     perms <- vector("list", num.runs)
     aligned <- vector("list", num.runs)
@@ -277,10 +282,11 @@ clumpp <- function(sr, k, align.algorithm = "greedy", sim.stat = "g",
       fixed <- c(fixed, x)
     }
     
-    H <- .clumppH(aligned, sim.stat)
-    if(H > best$H) best <- list(perms = perms, H = H)
-  }
-  best
+    list(perms = perms, H = .clumppH(aligned, sim.stat))
+  })
+
+  # Highest H; ties go to the earliest input order, as in a serial loop
+  results[[which.max(vapply(results, `[[`, numeric(1), "H"))]]
 }
 
 # LargeKGreedy step: match columns of q to the fixed runs one pair at a time,

@@ -11,7 +11,8 @@ clumpp(
   sim.stat = "g",
   greedy.option = "ran.order",
   repeats = 100,
-  order.by.run = 0
+  order.by.run = 0,
+  num.cores = parallel::detectCores() - 1
 )
 }
 \arguments{
@@ -39,6 +40,11 @@ if \code{align.algorithm} is "greedy" or "large.k", and
 a specific run. Set this parameter to a number from 1 to the number of
 runs at \code{k} in \code{sr}. 0 keeps the cluster order of the first
 run in the input order that maximized H.}
+
+\item{num.cores}{number of cores to use. Input orders of runs (greedy
+algorithms) or pairs of runs (full search) are split across cores with
+\code{parallel::mclapply}. Results are identical to \code{num.cores = 1}.
+Ignored on Windows, where forking is not available.}
 }
 \value{
 a data.frame with columns \code{id}, \code{pct.miss},

@@ -73,32 +73,32 @@ evanno <- function(sr, plot = TRUE) {
   plot.list <- list(
     mean.ln.k = ggplot2::ggplot(
         df, 
-        ggplot2::aes_string(x = "k", y = "mean.ln.k")
+        ggplot2::aes(x = .data$k, y = .data$mean.ln.k)
       ) +
         ggplot2::ylab("mean LnP(K)") +
         ggplot2::geom_segment(
-          ggplot2::aes_string(
-            x = "k", 
-            xend = "k", 
-            y = "sd.min", 
-            yend = "sd.max"
+          ggplot2::aes(
+            x = .data$k, 
+            xend = .data$k, 
+            y = .data$sd.min, 
+            yend = .data$sd.max
           )
         ),
     ln.pk = ggplot2::ggplot(
       df[!is.na(df$ln.pk), ], 
-      ggplot2::aes_string(x = "k", y = "ln.pk")
+      ggplot2::aes(x = .data$k, y = .data$ln.pk)
     ) +
       ggplot2::ylab("LnP'(K)"),
     ln.ppk = ggplot2::ggplot(
       df[!is.na(df$ln.ppk), ], 
-      ggplot2::aes_string(x = "k", y = "ln.ppk")
+      ggplot2::aes(x = .data$k, y = .data$ln.ppk)
     ) +
       ggplot2::ylab("LnP''(K)")
   )
   if(!all(is.na(df$delta.k))) {
     plot.list$delta.k <- ggplot2::ggplot(
       df[!is.na(df$delta.k), ], 
-      ggplot2::aes_string(x = "k", y = "delta.k")
+      ggplot2::aes(x = .data$k, y = .data$delta.k)
     ) +
       ggplot2::ylab(expression(Delta(K)))
   }

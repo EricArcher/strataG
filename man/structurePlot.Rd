@@ -4,45 +4,13 @@
 \alias{structurePlot}
 \title{Plot STRUCTURE Results}
 \usage{
-structurePlot(
-  q.mat,
-  pop.col = 3,
-  prob.col = 4,
-  sort.probs = TRUE,
-  label.pops = TRUE,
-  col = NULL,
-  horiz = TRUE,
-  type = NULL,
-  legend.position = c("top", "left", "right", "bottom", "none"),
-  plot = TRUE
-)
+structurePlot(q.mat, type = NULL, plot = TRUE)
 }
 \arguments{
 \item{q.mat}{matrix or data.frame of assignment probabilities.}
 
-\item{pop.col}{column number identifying original population designations.}
-
-\item{prob.col}{column number of first assignment probabilities to first 
-group. It is assumed that the remainder of columns 
-(\code{prob.col:ncol(q.mat)}) contain all assignment probabilities.}
-
-\item{sort.probs}{logical. Sort individuals by probabilities within
-populations? If \code{FALSE} individuals will be plotted as in
-\code{q.mat}.}
-
-\item{label.pops}{logical. Label the populations on the plot?}
-
-\item{col}{colors to use for each group.}
-
-\item{horiz}{logical. Plot bars horizontally.}
-
-\item{type}{either \code{"area"} for stacked continuous area plot or
-\code{"bar"} for discrete stacked bar chart. The latter is prefered for
-small numbers of samples. If not specified, a bar chart will be used if
-there are <= 100 samples.}
-
-\item{legend.position}{the position of the legend (\code{"top", "left", 
-"right", "bottom"}, or two-element numeric vector).}
+\item{type}{the type of plot (\code{"bar"} or \code{"area"}) to create. 
+see \code{\link[swfscMisc]{plotAssignments}} for more information.}
 
 \item{plot}{display plot?}
 }

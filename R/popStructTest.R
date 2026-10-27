@@ -53,21 +53,23 @@
 #' @note The computed statistics are:\tabular{ll}{
 #'   \code{CHIsq} \tab chi-squared estimate measuring random allele frequency
 #'     distribution distributed across strata (haploid and diploid) \cr
-#'   \code{Ho, Hs, Ht} \tab Nei and Kumar 2002 : 
-#'     observed heterozygosity (\code{Ho}), 
-#'     within population diversity (\code{Hs}), overall diversity (\code{Ht}) 
-#'     \cr
+#'   \code{Ho, Hs, Ht} \tab observed heterozygosity, within population diversity, 
+#'     and overall diversity (Nei, 1973; Nei and Chesser, 1983; Nei and Kumar, 2000) \cr  
 #'   \code{Ht_prime} \tab description \cr
-#'   \code{Dst} \tab description \cr
-#'   \code{Dst_prime} \tab description \cr
+#'   \code{Dst} \tab average gene diversity between subpopulations (Nei, 1973) \cr
+#'   \code{Dst_prime} \tab absolute measure of gene differentiation corrected 
+#'     for finite subpopulations (Nei, 1986 and Nei, 1987) \cr
 #'   \code{Fst} \tab For haploid data, equivalent to PHIst with pairwise 
-#'     distances set to 1. For diploid data,  \cr
-#'   \code{Fst_prime} \tab description \cr
-#'   \code{Fis} \tab description \cr
-#'   \code{Gst_prime} \tab description \cr
-#'   \code{Gst_dbl_prime} \tab description \cr
-#'   \code{Dest, Dest_Chao} \tab population differentiation (Jost 2008) \cr 
-#'   \code{wcFit, wcFst, wcFit} \tab (Weir and Cockerham 1984) \cr
+#'     distances set to 1. For diploid data, this is Nei's Gst measuring 
+#'     gene differentiation relative to the total population (Nei, 1973)  \cr
+#'   \code{Fst_prime} \tab Fst corrected for finite subpopulations (Nei, 1986; Nei, 1987) \cr
+#'   \code{Fis} \tab correlations between gametes relative to subpopulations (Nei, 1973; Nei, 1986) \cr
+#'   \code{Gst_prime} \tab standardized Gst (Hedrick, 2005) \cr
+#'   \code{Gst_dbl_prime} \tab G'st corrected for small population size (Meirmans and Hedrick 2011) \cr
+#'   \code{Dest} \tab estimate of true differentiation (Jost 2008) \cr 
+#'   \code{Dest_Chao} \tab unbiased estimate of true differentiation (Jost 2008) \cr 
+#'   \code{wcFit, wcFst, wcFis} \tab F-statistics based on nested random-effects ANOVA 
+#'     variance components (Weir and Cockerham 1984) \cr
 #'   \code{PHIst} \tab Haploid AMOVA estimate of differentiation derived 
 #'     from matrix of pairwise distances between sequences. 
 #'     See \code{\link[ape]{dist.dna}} for details on distance computation. 
@@ -80,18 +82,29 @@
 #' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #' 
 #' @references
-#' Excoffier, L., Smouse, P.E. and Quattro, J.M. 1992. Analysis of 
+#' Excoffier, L., Smouse, P.E. and J.M. Quattro. 1992. Analysis of 
 #'   molecular variance inferred from metric distances among DNA haplotypes: 
 #'   application to human mitochondrial DNA restriction data. 
 #'   Genetics 131:479–491.  
+#' Hedrick, P.W. 2005. A standardized genetic differentiation measure. 
+#'     Evolution 59:1633–1638.
 #' Jost, L. 2008. GST and its relatives do not measure differentiation. 
 #'   Molecular Ecology 17:4015-4026.  
-#' Nei M. and Chesser R. 1983. Estimation of fixation indexes and gene 
+#' Meirmans, P.G. and P.W. Hedrick. 2011. Assessing population structure: 
+#'   FST and related measures. Molecular Ecology Resources 11:5–18.
+#' Nei, M. 1973. Analysis of gene diversity in subdivided populations. 
+#'   Proc. Nat. Acad. Sci. 70(12):3321-3323.
+#' Nei, M. and R. Chesser. 1983. Estimation of fixation indexes and gene 
 #'   diversities. Annals of Human Genetics 47:253-259.  
-#' Nei M. 1987. Molecular Evolutionary Genetics. Columbia University Press
-#' Weir, B.S. and Cockerham, C.C. 1984. Estimating F-statistics for 
+#' Nei, M. 1986. Definition and estimation of fixation indices. Evolution 40:643–645.
+#' Nei, M. 1987. Molecular Evolutionary Genetics. Columbia University Press.
+#' Nei, M. and R. Chesser. 1983. Estimation of fixation indexes and gene 
+#'   diversities. Annals of Human Genetics 47:253-259.
+#' Nei, M. and S. Kumar. 2000. Molecular Evolution and Phylogenetics. 
+#'   Oxford University Press, New York.
+#' Weir, B.S. and C.C. Cockerham. 1984. Estimating F-statistics for 
 #'   the analysis of population structure. Evolution 38:1358–1370.  
-#' Weir, B.S. and Hill, W.G. 2002. Estimating F-statistics. 
+#' Weir, B.S. and W.G. Hill. 2002. Estimating F-statistics. 
 #'   Annual Review of Genetics 36:721–750.  
 #' 
 #' @examples 

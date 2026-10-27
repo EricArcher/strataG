@@ -91,7 +91,7 @@ sequenceLikelihoods <- function(x, model = "N", pairwise.deletion = FALSE,
         p <- df[1:n, ] |> 
           dplyr::mutate(id = stats::reorder(.data$id, .data$delta.log.lik)) |> 
           ggplot2::ggplot(
-            ggplot2::aes_string(x = "delta.log.lik", y = "id")
+            ggplot2::aes(x = .data$delta.log.lik, y = .data$id)
           ) +
           ggplot2::geom_point() +
           ggplot2::labs(

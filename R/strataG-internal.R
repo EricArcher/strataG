@@ -232,3 +232,35 @@
 #'   n <- length(x[!is.na(x)])
 #'   n * sprex::diversity(x, type = "gini") / (n - 1)
 #' }
+#' 
+
+
+#' @noRd
+#' 
+.mcLapply <- function(X, FUN, num.cores = 1, ...) {
+  # lapply() run in parallel with forked processes when num.cores > 1 and
+  # forking is available (macOS, Linux); otherwise serial. Stops if any
+  # worker fails, instead of returning try-error objects. 
+  # shared by clumpp() and structureRun().
+  num.cores <- max(1L, as.integer(num.cores))
+  if(num.cores > 1 && .Platform$OS.type == "windows") {
+    warning("forking is not available on Windows; running on 1 core.")
+    num.cores <- 1L
+  }
+  if(num.cores == 1 || length(X) < 2) return(lapply(X, FUN, ...))
+  # mclapply's own "scheduled cores encountered errors" warning is redundant
+  # with the error raised below, so it is muffled
+  res <- withCallingHandlers(
+    parallel::mclapply(X, FUN, ..., mc.cores = min(num.cores, length(X))),
+    warning = function(w) {
+      if(grepl("scheduled core", conditionMessage(w))) invokeRestart("muffleWarning")
+    }
+  )
+  failed <- vapply(res, function(r) inherits(r, "try-error") || is.null(r), logical(1))
+  if(any(failed)) {
+    msg <- res[failed][[1]]
+    stop("a parallel worker failed: ",
+         if(inherits(msg, "try-error")) conditionMessage(attr(msg, "condition")) else "no result returned")
+  }
+  res
+}

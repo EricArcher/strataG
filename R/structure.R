@@ -4,16 +4,22 @@
 #' @param g a \linkS4class{gtypes} object.
 #' @param k.range vector of values to use for \code{maxpops} (the number of
 #'   clusters, \emph{K}) in multiple runs. Each value is run
-#'   \code{num.k.rep} times. If \code{NULL} (the default), \code{maxpops} is
-#'   used if it is supplied in \code{...}, otherwise \code{1:getNumStrata(g)}.
-#'   If both \code{k.range} and \code{maxpops} are supplied, \code{k.range} is
-#'   used and \code{maxpops} is ignored.
+#'   \code{num.k.rep} times. If \code{NULL} (the default), a single value of
+#'   \emph{K} is run, given by \code{maxpops} if it is supplied in \code{...},
+#'   otherwise \code{1:getNumStrata(g)} is used. If both \code{k.range} and
+#'   \code{maxpops} are supplied, \code{k.range} is used and \code{maxpops} is
+#'   ignored.
 #' @param num.k.rep number of replicates for each value in \code{k.range}.
 #' @param label label to use for input and output files
 #' @param delete.files logical. Delete all files when STRUCTURE is finished?
-#' @param exec name or full path of executable for STRUCTURE. Defaults to "structure".
+#' @param exec name of executable for STRUCTURE. Defaults to "structure".
+#' @param num.cores number of cores to use. Runs are split across cores with
+#'   \code{parallel::mclapply}, and each run's STRUCTURE output is written to
+#'   a log file instead of the console. Because each run's seed is set before
+#'   any runs start, results are identical to \code{num.cores = 1}. Ignored on
+#'   Windows, where forking is not available.
 #' @param ... arguments to be passed to \code{structureWrite}.
-#' @param maxpops number of clusters (\emph{K}) for a single run.
+#' @param maxpops number of groups.
 #' @param burnin number of iterations for MCMC burnin.
 #' @param numreps number of MCMC replicates.
 #' @param noadmix logical. Use the no-admixture model, in which each individual
@@ -49,7 +55,7 @@
 #' @param pfrompopflagonly logical. update allele frequencies from individuals
 #'   specified by \code{popflag}. Only used when \code{pop.prior} =
 #'   "usepopinfo".
-#' @param popflag a vector of integers (0, 1) or logicals identifying whether
+#' @param popflag a vector of integers (0, 1) or logicals identifiying whether
 #'   or not to use strata information. Only used when \code{pop.prior} =
 #'   "usepopinfo".
 #' @param inferalpha logical. Infer the value of the admixture parameter
@@ -62,7 +68,7 @@
 #'   value if \code{inferalpha = TRUE}.
 #' @param unifprioralpha logical. Assume a uniform prior for \code{alpha} which
 #'   runs between 0 and \code{alphamax}. This model seems to work fine; the
-#'   alternative model (when \code{unifprioralpha = FALSE}) is to take \code{alpha}
+#'   alternative model (when \code{unifprioralpha = 0}) is to take \code{alpha}
 #'   as having a Gamma prior, with mean \code{alphapriora × alphapriorb}, and
 #'   variance \code{alphapriora × alphapriorb^2}.
 #' @param alphamax maximum for uniform prior on \code{alpha} when
@@ -75,39 +81,17 @@
 #' @param ids character vector of individual ids, used in place of the row
 #'   numbers written as labels in the STRUCTURE input file.
 #'
-#' @return
-#' \describe{
-#'   \item{\code{structureRun}}{a list of class \code{structure.result} with
-#'     one element per run, named by run label. Each element is the list
-#'     returned by \code{structureRead}, plus:
-#'     \describe{
-#'       \item{\code{files}}{named vector of the input and output files used by
-#'         STRUCTURE, or \code{NULL} if \code{delete.files = TRUE}}
-#'       \item{\code{label}}{label for the run}
-#'       \item{\code{seed}}{seed used by STRUCTURE for the run}
-#'     }}
-#'   \item{\code{structureWrite}}{invisibly, a list containing:
-#'     \describe{
-#'       \item{\code{files}}{named vector of the data, mainparams, extraparams,
-#'         and output file names}
-#'       \item{\code{pops}}{population labels in the order of the numeric codes
-#'         written to the data file, with \code{"Unknown"} appended if any
-#'         samples are unstratified}
-#'       \item{\code{ids}}{individual ids in the order of the row numbers
-#'         written as labels}
-#'     }}
-#'   \item{\code{structureRead}}{a list containing:
-#'     \describe{
-#'       \item{\code{summary}}{named numeric vector with \code{k} (number of
-#'         clusters), \code{est.ln.prob} (estimated Ln Prob of Data), and
-#'         \code{mean.lnL} and \code{var.lnL} (mean and variance of the log
-#'         likelihood)}
-#'       \item{\code{q.mat}}{data.frame with columns \code{id},
-#'         \code{pct.miss}, \code{orig.pop}, and \code{Group.1} ...
-#'         \code{Group.k} holding each individual's assignment probabilities}
-#'       \item{\code{prior.anc}}{list of prior ancestry estimates for each
-#'         individual where population priors were used, or \code{NULL}}
-#'     }}
+#' @return \describe{ 
+#'   \item{\code{structureRun}}{a list where each element is a list with results from \code{structureRead} and a vector of the filenames used} 
+#'   \item{\code{structureWrite}}{a vector of the filenames used by STRUCTURE} 
+#'   \item{\code{structureRead}}{a list containing: \describe{
+#'      \item{\code{summary}}{} 
+#'      \item{\code{q.mat}}{data.frame of assignment probabilities for each id} 
+#'      \item{\code{prior.anc}}{list of prior ancestry estimates for each individual where population priors were used} 
+#'      \item{\code{files}}{vector of input and output files used by STRUCTURE} 
+#'      \item{\code{label}}{label for the run} 
+#'      \item{\code{seed}}{seed used by STRUCTURE for the run}
+#'    } } 
 #' }
 #'
 #' @note STRUCTURE is not included with \code{strataG} and must be downloaded
@@ -157,6 +141,7 @@ structureRun <- function(
   label = NULL, 
   delete.files = TRUE, 
   exec = "structure", 
+  num.cores = parallel::detectCores() - 1,
   ...
 ) {
   
@@ -181,7 +166,9 @@ structureRun <- function(
   rep.df <- expand.grid(rep = 1:num.k.rep, k = k.range)
   rownames(rep.df) <- paste(label, ".k", rep.df$k, ".r", rep.df$rep, sep = "")
   
-  # one distinct seed per run: independent replicates, reproducible with set.seed()
+  # one distinct seed per run: independent replicates, reproducible with
+  # set.seed(). Seeds are drawn here, before any parallel work, so results
+  # do not depend on num.cores.
   randomize <- isTRUE(dots$randomize)
   if(randomize) {
     warning("randomize = TRUE: STRUCTURE seeds from the clock, so replicates ",
@@ -194,7 +181,15 @@ structureRun <- function(
   }
   dots[c("maxpops", "seed", "randomize")] <- NULL
   
-  out.files <- lapply(rownames(rep.df), function(x) {
+  # With more than one core, each run's console output goes to its own log
+  # file so output from simultaneous runs is not interleaved.
+  use.log <- num.cores > 1
+  if(use.log) {
+    message("Running ", nrow(rep.df), " STRUCTURE runs on ", 
+            min(num.cores, nrow(rep.df)), " cores...")
+  }
+  
+  run.one <- function(x) {
     sw.out <- do.call(structureWrite, c(
       list(
         g, 
@@ -206,44 +201,52 @@ structureRun <- function(
       dots
     ))
     files <- sw.out$files
-    cmd <- paste0(
-      exec, 
-      " -m ", files["mainparams"], 
-      " -e ", files["extraparams"], 
-      " -i ", files["data"], 
-      " -o ", files["out"]
-    )
+    log.file <- paste(x, "log", sep = "_")
+    out.file <- paste(files["out"], "_f", sep = "")
     
-    err.code <- system(cmd)
+    err.code <- suppressWarnings(system2(
+      exec,
+      args = c(
+        "-m", shQuote(files["mainparams"]), 
+        "-e", shQuote(files["extraparams"]), 
+        "-i", shQuote(files["data"]), 
+        "-o", shQuote(files["out"])
+      ),
+      stdout = if(use.log) log.file else "",
+      stderr = if(use.log) log.file else ""
+    ))
     if(err.code == 127) {
-      stop("You do not have STRUCTURE installed.")
-    } else if(!err.code == 0) {
-      stop(paste("Error running STRUCTURE. Error code", err.code, "returned."))
+      stop("STRUCTURE could not be found. Check that '", exec, 
+           "' is installed and on the PATH, or give its full path in 'exec'.")
+    }
+    # STRUCTURE can exit with status 0 after an input error, so also check 
+    # that the output file was written
+    if(err.code != 0 || !file.exists(out.file)) {
+      log.txt <- if(use.log && file.exists(log.file)) {
+        paste(utils::tail(readLines(log.file), 20), collapse = "\n")
+      } else "See STRUCTURE's messages above."
+      stop("STRUCTURE failed for run '", basename(x), "' (exit status ", 
+           err.code, ").\n", log.txt)
     }
     
-    files["out"] <- paste(files["out"], "_f", sep = "")
-    result <- structureRead(files["out"], sw.out$pops, sw.out$ids)
-    
-    if(file.exists("seed.txt")) file.remove("seed.txt")
-    files <- if(delete.files) NULL else files
-    
-    result <- c(
+    files["out"] <- out.file
+    if(use.log) files["log"] <- log.file
+    result <- structureRead(out.file, sw.out$pops, sw.out$ids)
+    c(
       result, 
-      list(files = files, label = basename(x), seed = rep.df[x, "seed"])
+      list(
+        files = if(delete.files) NULL else files, 
+        label = basename(x), 
+        seed = rep.df[x, "seed"]
+      )
     )
-    fname <- paste(x, ".ws.rdata", sep = "")
-    save(result, file = fname)
-    fname
-  })
+  }
   
-  run.result <- lapply(out.files, function(f) {
-    result <- NULL
-    load(f)
-    result
-  })
-  names(run.result) <- sapply(run.result, function(x) x$label)
+  run.result <- .mcLapply(rownames(rep.df), run.one, num.cores = num.cores)
+  names(run.result) <- basename(rownames(rep.df))
   class(run.result) <- c("structure.result", class(run.result))
   
+  if(file.exists("seed.txt")) file.remove("seed.txt")
   if(delete.files) unlink(dirname(label), recursive = TRUE, force = TRUE)
   run.result
 }

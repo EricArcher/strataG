@@ -167,7 +167,7 @@ plot.jack.influential <- function(x, main = NULL, ...) {
     dplyr::arrange(.data$or) |> 
     dplyr::mutate(freq = 1:dplyr::n() / dplyr::n()) 
     
-  p <- ggplot2::ggplot(or.tbl, ggplot2::aes_string(x = "or", y = "freq")) + 
+  p <- ggplot2::ggplot(or.tbl, ggplot2::aes(x = .data$or, y = .data$freq)) + 
     ggplot2::geom_line() +
     ggplot2::labs(x = "Odds ratio", y = "Cumulative frequency")
   

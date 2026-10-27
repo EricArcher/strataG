@@ -154,17 +154,21 @@ Zenodo. http://doi.org/10.5281/zenodo.60416
 (in `heterozygosity`, `summarizeLoci()`, and `summarizeInds()`) where the number of genotypes
 missing data were not being taken into account. This would lead to an underestimate
 in heterozygosity that was directly proportional to the amount of missing data.
-* added `zygosity()`
-* added `diagnosability()`
-* added `microhaplot2rubias()`
-* added `qual2prob()`
-* made `rfPermute` and `rmetasim` packages Suggested
-* removed melt from structurePlot
-* fixed ldNe error when one individual is present
-* fixed mafft error and now have mafft .fasta files written to temporary file rather than working directory
+* added `zygosity()`.
+* added `diagnosability()`.
+* added `microhaplot2rubias()`.
+* added `qual2prob()`.
+* made `rfPermute` and `rmetasim` packages Suggested.
+* removed melt from `structurePlot()`.
+* fixed `ldNe()` error when one individual is present.
+* fixed `mafft()` error and now have mafft .fasta files written to temporary file rather than working directory
 * fixed error with `readGenData()` not recognizing `NA`s.
 * fixed error with `fs2gtypes()` not formatting multi-block DNA sequence data as gtypes properly
 * added `gtypesRF()`, `sequenceRF()`, and `gtypes2rfDF()`.
+* update `clumpp()` to run natively in R.
+* changed `structurePlot()` to use `swfscMisc::plotAssignments()`.
+* improved efficiency in RCPP `calc_Fstats()` code.
+* included references for population structure metrics (`overallTest()` and `pairwiseTest()`).
 
 ## 2.4.905
 * Deleted functions: `alleleFreqFormat`, `as.array.gtypes`
