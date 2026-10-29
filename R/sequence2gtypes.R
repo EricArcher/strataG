@@ -43,27 +43,49 @@ sequence2gtypes <- function(x, strata = NULL, seq.names = NULL, schemes = NULL,
     x <- apex::"setLocusNames<-"(x, seq.names)
   }
   
-  # create gen.data data.frame
+  # get individual names
   ind.names <- unique(unlist(apex::getSequenceNames(x)))
-  gen.data <- do.call(
+  
+  # check strata if provided
+  if(!is.null(strata)) {
+    # is vector named?
+    if(!is.null(names(strata))) {
+      # are all ids present?
+      if(!all(ind.names %in% names(strata))) {
+        extra <- setdiff(ind.names, names(strata))
+        extra <- stats::setNames(rep(NA, length(extra)), extra)
+        strata <- c(strata, extra)
+      }
+    } else {
+      if(length(strata) != length(ind.names)) {
+        warning("the length of 'strata' is not the same as the number of individuals. strata will be recycled.")
+        strata <- rep(strata, length.out = length(ind.names))
+      }
+    }
+  } else strata <- rep('Default', length(ind.names))
+  
+  # create and return gtypes object
+  do.call(
     data.frame, 
     lapply(apex::getSequences(x, simplify = FALSE), function(dna) {
       x.labels <- labels(dna)
       x.labels[match(ind.names, x.labels)]
     })
-  )
-  colnames(gen.data) <- apex::getLocusNames(x)
-  rownames(gen.data) <- ind.names
-  
-  # return new gtypes object
-  methods::new(
-    "gtypes", 
-    gen.data = gen.data, 
-    ploidy = 1, 
-    strata = strata,
-    schemes = schemes, 
-    sequences = x, 
-    description = description, 
-    other = if(is.null(other)) list() else other
-  )
+  ) |> 
+    stats::setNames(apex::getLocusNames(x)) |> 
+    dplyr::mutate(
+      id = ind.names, 
+      strata = strata
+    ) |> 
+    dplyr::select(
+      dplyr::all_of(c('id', 'strata')), 
+      dplyr::everything()
+    ) |> 
+    df2gtypes( 
+      ploidy = 1, 
+      schemes = schemes, 
+      sequences = x, 
+      description = description, 
+      other = if(is.null(other)) list() else other
+    )
 }
