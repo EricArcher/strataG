@@ -1,17 +1,35 @@
 ---
-title: "Working With Sequences"
+title: "3) Working with sequences"
 author: "Eric Archer"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+    number_sections: true
 vignette: >
-  %\VignetteIndexEntry{Working with sequences}
+  %\VignetteIndexEntry{3) Working with sequences}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
-```{r echo = FALSE, message = FALSE}
-options(digits = 2)
+```{r include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  comment = NA,
+  fig.height = 8,
+  fig.width = 8
+)
+options(
+  scipen = 4, 
+  digits = 2,
+  rmarkdown.html_vignette.check_title = FALSE
+)
 library(strataG)
+library(tidyverse)
 ```
+
 There are several functions for working with sequence data in strataG. They will either take a haploid _gtypes_ object that contains sequences or some format that can be converted to a _DNAbin_ (in the _ape_ package), or _multidna_ (in the _apex_ package) object.
 
 Leading and trailing N's can be removed from all sequences like this:
@@ -27,7 +45,7 @@ x.trimmed <- trimNs(as.DNAbin(x))
 as.character(as.list(x.trimmed))
 ```
 
-Base frequencies for a sequence are calculated with the _baseFreqs_ function:
+Base frequencies for a sequence are calculated with the _baseFreqs()_ function:
 ```{r}
 bf <- baseFreqs(dolph.seqs)
 bf$site.freqs[, 1:8]
@@ -43,7 +61,7 @@ vs <- variableSites(dolph.seqs)
 vs
 ```
 
-Both functions take an optional set of bases to consider when evaluating whether a site is fixed or variable. For _fixedSites_, the function will only count those sites that are fixed in the listed _bases_ argument. For _variableSites_ the site is considered variable if it has those bases and is not fixed for them:
+Both functions take an optional set of bases to consider when evaluating whether a site is fixed or variable. For _fixedSites()_, the function will only count those sites that are fixed in the listed _bases_ argument. For _variableSites()_ the site is considered variable if it has those bases and is not fixed for them:
 ```{r}
 fs <- fixedSites(dolph.seqs, bases = c("c", "t"))
 fs[1:20]
@@ -54,19 +72,19 @@ vs
 
 There are also functions to compare bases against IUPAC ambiguity codes. One can calculate the appropriate IUPAC code for a vector of nucleotides:
 ```{r}
-iupacCode(c("c", "t", "t", "c", "c"))
-iupacCode(c("c", "t", "a", "c", "c"))
-iupacCode(c("g", "t", "a", "c", "c"))
+iupacCodes(c("c", "t", "t", "c", "c"))
+iupacCodes(c("c", "t", "a", "c", "c"))
+iupacCodes(c("g", "t", "a", "c", "c"))
 ```
 
 One can also calculate all IUPAC codes that apply to a vector of nucleotides:
 ```{r}
-validIupacCodes(c("c", "t", "t", "c", "c"))
-validIupacCodes(c("c", "t", "a", "c", "c"))
-validIupacCodes(c("g", "t", "a", "c", "c"))
+iupacCodes(c("c", "t", "t", "c", "c"), all = TRUE)
+iupacCodes(c("c", "t", "a", "c", "c"), all = TRUE)
+iupacCodes(c("g", "t", "a", "c", "c"), all = TRUE)
 ```
 
-A consensus sequence can also be easily generated:
+A consensus sequence can also be generated for an alignment:
 ```{r}
 createConsensus(dolph.seqs)
 ```
@@ -77,32 +95,41 @@ nd <- nucleotideDiversity(dolph.seqs)
 head(nd)
 ```
 
-For a stratified _gtypes_ object, one can calculate net nucleotide divergence (Nei's dA), and distributions of between- and within-strata divergence:
+_summarizeSeqs()_: Produces a summary of each sequence, including the start and end points, length, number of N's, and number of indels:
 ```{r}
-# create gtypes
+library(ape)
 data(dolph.seqs)
-data(dolph.strata)
-rownames(dolph.strata) <- dolph.strata$id
-dloop <- df2gtypes(dolph.strata[, c("id", "fine", "id")], ploidy = 1,
-             schemes = dolph.strata[, c("fine", "broad")], sequences = dolph.seqs)
-dloop <- labelHaplotypes(dloop, "Hap.")
+seqs.db <- as.DNAbin(dolph.seqs)
 
-# calculate divergence
-nucleotideDivergence(dloop)
+seq.smry <- summarizeSeqs(seqs.db)
+head(seq.smry)
 ```
 
-For stratified _gtypes_, one can also identify fixed differences between strata:
+Unusual sequences can be identified with a variety of functions:
+
+_sequenceLikelihoods()_: Calculates the likelihood of sequences in an alignment based on gamma distribution of pairwise distances.
 ```{r}
-fixedDifferences(dloop)
+data(dolph.haps)
+hap.db <- as.DNAbin(dolph.haps)
+
+hap.lik <- sequenceLikelihoods(hap.db)
+
+hap.lik
 ```
 
-Two functions have been provided to select a subset of representative sequences. The first selects the most distant sequences in order to capture the full distribution of variation. For example:
+_lowFreqSubs()_: Scan a sequence alignment for low frequency substitutions. These may indicate errors in the sequencing process:
 ```{r}
-x <- as.DNAbin(dolph.seqs)
-mostDistantSequences(x, num.seqs = 5)
+low.freq <- lowFreqSubs(seqs.db, min.freq = 2)
+
+low.freq
 ```
 
-The other function selects the most representative sequences by first clustering the sequences and selecting the sequences closest to the center of each cluster:
+_mostDistantSequences()_: Uses multi-dimensional scaling to identify sequences at the margins of the multi-dimensional spatial cloud of sequences:
 ```{r}
-mostRepresentativeSequences(x, num.seqs = 5)
+mostDistantSequences(seqs.db, num.seqs = 5)
+```
+
+_mostRepresentativeSequences()_: This is kind of theThe opposite of the above, which finds the sequences closest to the center of the multi-dimensional cloud.
+```{r}
+mostRepresentativeSequences(seqs.db, num.seqs = 5)
 ```

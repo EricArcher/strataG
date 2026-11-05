@@ -1,16 +1,16 @@
 ---
-title: "Creating and Manipulating gtypes Objects"
+title: "1) Creating and Manipulating gtypes Objects"
 author: "Eric Archer"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: true
-    toc_depth: 2
+    toc_depth: 3
     number_sections: true
 vignette: >
-  %\VignetteIndexEntry{Creating and manipulating gtypes}
+  %\VignetteIndexEntry{1) Creating and Manipulating gtypes Objects}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 ```{r include=FALSE}
 knitr::opts_chunk$set(
@@ -21,7 +21,11 @@ knitr::opts_chunk$set(
   fig.height = 8,
   fig.width = 8
 )
-options(scipen = 4, digits = 2)
+options(
+  scipen = 4, 
+  digits = 2,
+  rmarkdown.html_vignette.check_title = FALSE
+)
 library(strataG)
 library(tidyverse)
 ```
@@ -43,6 +47,8 @@ str(gen.data)
 
 Genetic data should have one column per allele at a locus. Columns for multiple alleles in the same locus (e.g., diploid data) should be next to each other and have the same column name, but differ in suffix (e.g., "Locus.1", "Locus.2" or "LocA", "LocB"). A column of individual identifiers should be the first column.  
 
+[Back to contents](#TOC) 
+
 ### Sequence Data  
 
 For sequence data stored in FASTA format, the _read.fasta()_ function is available, which is a wrapper for the _read.dna()_ function in the _ape_ package with standard FASTA arguments set. This will create a DNAbin object in the workspace:
@@ -55,6 +61,8 @@ dolph.seqs
 
 For sequences stored in other formats, _read.dna()_ should be used directly.
 
+[Back to contents](#TOC) 
+
 ### Stratification schemes
 
 If desired, individuals can also be stratified to different populations. The suggested way to manage this is to create a spreadsheet that has one row per individual. The first column should contain sample identifiers. Every column thereafter specifies a stratification "scheme". The values in each of the columns identify which stratum the individual in that row belongs to in that scheme. Multiple schemes can be defined. If some individuals are not to be involved in analyses of a given scheme, that is, they are unstratified, the value for that scheme should be left blank.
@@ -65,6 +73,7 @@ str(schemes)
 head(schemes)
 tail(schemes)
 ```
+[Back to contents](#TOC) 
 
 ### Creating a _gtypes_ object (_df2gtypes_)
 
@@ -165,6 +174,7 @@ Note that since each sequence in _dolph.seqs_ is for a given individual, the _nu
 haps.g <- labelHaplotypes(seqs.g)
 haps.g
 ```
+[Back to contents](#TOC) 
 
 ### Creating a _gtypes_ object directly from sequences   (_sequence2gtypes_)
 
@@ -196,8 +206,9 @@ seqs.g <- sequence2gtypes(
 
 seqs.g
 ```
+[Back to contents](#TOC)  
 
-## Conversions from other packages.
+## Conversions from other packages
 
 There are conversion functions for data objects from several other popular packages in R, such as _adegenet_(genind), _pegas_(loci), and _phangorn_(phydat).
 ```{r}
@@ -214,6 +225,7 @@ obj
 gi.g <- genind2gtypes(obj)
 gi.g
 ```
+[Back to contents](#TOC)  
 
 ## Accessor functions
 
@@ -238,6 +250,8 @@ Some functions are available for modifying values in the object as well, such as
 * __setSchemes(g)__ Replace the data.frame of potential stratification schemes.
 * __setDescription(g)__ Replace the label describing the object.
 * __setOther(g)__ Replace the optional data stored in the \@other slot.
+
+[Back to contents](#TOC)  
 
 ## Subsetting/Indexing
 
@@ -265,6 +279,7 @@ sub.msats
 sub.msats <- msats.g[, c("Ttr11", "D11t"), "Coastal"]
 sub.msats
 ```
+[Back to contents](#TOC)  
 
 ## Stratifying samples
 
@@ -315,6 +330,8 @@ ran.msats
 ```
 NOTE: Only samples assigned to strata are permuted with _permuteStrata_. Those not assigned (NAs) remain unassigned.
 
+[Back to contents](#TOC)  
+
 ## Exporting
 
 The allelic data in a _gtypes_ object can be converted back to a matrix or data frame with _as.matrix()_ and _as.data.frame()_:
@@ -332,3 +349,5 @@ head(gen.mat)
 See other options for output in _?as.data.frame.gtypes_.  
 
 The contents of a _gtypes_ object can be written to a file with the _writeGtypes()_ function. This will write a .csv file with the allelic information and a .fasta file for any sequence data if it exists.
+
+[Back to contents](#TOC) 

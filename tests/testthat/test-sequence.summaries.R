@@ -1,12 +1,12 @@
 context("sequence summaries")
 
 test_that("IUPAC codes are computed correctly", {  
-  i1 <- iupacCode(c("a", "a", "g"))
-  i2 <- iupacCode(c("t", "c", "g"))
+  i1 <- iupacCodes(c("a", "a", "g"))
+  i2 <- iupacCodes(c("t", "c", "g"))
   
-  x1 <- validIupacCodes(c("c", "t", "c", "c"))
-  x2 <- validIupacCodes(c("c", "y", "c", "c"))
-  x3 <- validIupacCodes(c("a", "g", "t", "a"))
+  x1 <- iupacCodes(c("c", "t", "c", "c"), all = TRUE)
+  x2 <- iupacCodes(c("c", "y", "c", "c"), all = TRUE)
+  x3 <- iupacCodes(c("a", "g", "t", "a"), all = TRUE)
   
   expect_equal(i1, "r")
   expect_equal(i2, "b")

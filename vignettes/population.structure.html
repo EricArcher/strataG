@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Eric Archer" />
+
+<meta name="date" content="2026-11-05" />
+
+<title>4) Population structure</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">4) Population structure</h1>
+<h4 class="author">Eric Archer</h4>
+<h4 class="date">2026-11-05</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#population-differentiation-measures" id="toc-population-differentiation-measures"><span class="toc-section-number">1</span> Population differentiation
+measures</a></li>
+</ul>
+</div>
+
+<div id="population-differentiation-measures" class="section level2" number="1">
+<h2><span class="header-section-number">1</span> Population
+differentiation measures</h2>
+<p>For these measures, a <em>gtypes</em> object needs to be stratified.
+For example, we can use the built in example object
+<em>dloop.g</em>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>dloop.g</span></code></pre></div>
+<pre><code>
+&lt;&lt;&lt; dolphin dLoop &gt;&gt;&gt;
+
+Contents: 126 samples, 1 locus, 3 strata
+Stratification schemes: broad, fine
+Other info: haps.unassigned
+
+Strata summary:
+         stratum num.ind num.missing num.haplotypes
+1        Coastal      68           0              5
+2 Offshore.North      40           0             22
+3 Offshore.South      18           0             14
+
+Sequence summary:
+  locus num.seqs mean.length mean.num.ns mean.num.indels
+1 dLoop       33         402           0             1.8</code></pre>
+<p>For sequence data, the degree of nucleotide divergence (pairwise
+sequence difference) and Nei’s dA can be calculated with
+<em>nucleotideDivergence()</em>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">nucleotideDivergence</span>(dloop.g)</span></code></pre></div>
+<pre><code>$within
+  locus        stratum   mean q.0 q.0.025 q.0.5 q.0.975   q.1
+1 dLoop        Coastal 0.0051   0       0 0.005   0.010 0.010
+2 dLoop Offshore.North 0.0227   0       0 0.022   0.037 0.050
+3 dLoop Offshore.South 0.0187   0       0 0.018   0.038 0.043
+
+$between
+  locus       strata.1       strata.2     dA  mean    q.0 q.0.025 q.0.5 q.0.975
+1 dLoop        Coastal Offshore.North 0.0061 0.020 0.0000  0.0050 0.020   0.033
+2 dLoop        Coastal Offshore.South 0.0062 0.018 0.0075  0.0075 0.018   0.033
+3 dLoop Offshore.North Offshore.South 0.0011 0.022 0.0000  0.0000 0.022   0.040
+    q.1
+1 0.037
+2 0.037
+3 0.048</code></pre>
+<p>This returns a list with a summary of the pairwise distances
+<em><span class="math inline">\(within_ strata and Nei&#39;s dA and
+pairwise distances _\)</span>between</em> strata.</p>
+<p>For standard measures of population structure (e.g., Fst, PHIst,
+Jost’s D, etc.), there are two main functions. The first,
+<em>overallTest()</em> computes the test statistic and permutation
+p-value for the global null hypotheses that all individuals have been
+drawn at random from a single population and stratification was random
+with respect to individual genotypes. The test will compute all
+statistics and their respective permutation p-values (if <em>nrep</em>
+&gt; 0). The statistics computed will be different depending on if the
+<em>gtypes</em> object provided is haploid or diploid.</p>
+<p>Here is an example for haploid sequence data:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>ovl <span class="ot">&lt;-</span> <span class="fu">overallTest</span>(dloop.g)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>ovl</span></code></pre></div>
+<pre><code>$strata.freq
+
+       Coastal Offshore.North Offshore.South 
+            68             40             18 
+
+$result
+      estimate p.val
+CHIsq   189.67 0.001
+Fst       0.13 0.001
+PHIst     0.29 0.001</code></pre>
+<p>The result is a list with the sample size (<em><span class="math inline">\(strata.freq_) of each stratum, and a matrix with
+the values of the test statistic and p-value
+(_\)</span>result</em>).</p>
+<p>For pairwise tests, the <em>pairwiseTest()</em> function is used:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>pws <span class="ot">&lt;-</span> <span class="fu">pairwiseTest</span>(dloop.g)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="fu">str</span>(pws)</span></code></pre></div>
+<pre><code>List of 3
+ $ :List of 2
+  ..$ strata.freq: &#39;table&#39; int [1:2(1d)] 68 40
+  .. ..- attr(*, &quot;dimnames&quot;)=List of 1
+  .. .. ..$ : chr [1:2] &quot;Coastal&quot; &quot;Offshore.North&quot;
+  ..$ result     : num [1:3, 1:2] 103.871 0.147 0.341 0.001 0.001 ...
+  .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+  .. .. ..$ : chr [1:3] &quot;CHIsq&quot; &quot;Fst&quot; &quot;PHIst&quot;
+  .. .. ..$ : chr [1:2] &quot;estimate&quot; &quot;p.val&quot;
+ $ :List of 2
+  ..$ strata.freq: &#39;table&#39; int [1:2(1d)] 68 18
+  .. ..- attr(*, &quot;dimnames&quot;)=List of 1
+  .. .. ..$ : chr [1:2] &quot;Coastal&quot; &quot;Offshore.South&quot;
+  ..$ result     : num [1:3, 1:2] 86 0.16 0.52 0.001 0.001 ...
+  .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+  .. .. ..$ : chr [1:3] &quot;CHIsq&quot; &quot;Fst&quot; &quot;PHIst&quot;
+  .. .. ..$ : chr [1:2] &quot;estimate&quot; &quot;p.val&quot;
+ $ :List of 2
+  ..$ strata.freq: &#39;table&#39; int [1:2(1d)] 40 18
+  .. ..- attr(*, &quot;dimnames&quot;)=List of 1
+  .. .. ..$ : chr [1:2] &quot;Offshore.North&quot; &quot;Offshore.South&quot;
+  ..$ result     : num [1:3, 1:2] 31.52407 -0.00275 0.05915 0.235 0.543 ...
+  .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+  .. .. ..$ : chr [1:3] &quot;CHIsq&quot; &quot;Fst&quot; &quot;PHIst&quot;
+  .. .. ..$ : chr [1:2] &quot;estimate&quot; &quot;p.val&quot;</code></pre>
+<p>This produces a list where each element is a unique pair of strata.
+The results for each pair of strata are formatted the same way as the
+single result from <em>overallTest()</em>.</p>
+<p>The pairwise results can be more easily compiled into a single
+data.frame with <em>pairwiseSummary()</em>:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">pairwiseSummary</span>(pws)</span></code></pre></div>
+<pre><code>                                       label       strata.1       strata.2 n.1
+1        Coastal (68) v. Offshore.North (40)        Coastal Offshore.North  68
+2        Coastal (68) v. Offshore.South (18)        Coastal Offshore.South  68
+3 Offshore.North (40) v. Offshore.South (18) Offshore.North Offshore.South  40
+  n.2 CHIsq CHIsq_p.val     Fst Fst_p.val PHIst PHIst_p.val
+1  40   104       0.001  0.1467     0.001 0.341       0.001
+2  18    86       0.001  0.1595     0.001 0.520       0.001
+3  18    32       0.235 -0.0027     0.543 0.059       0.056</code></pre>
+<p>Here, there is one row for each pairwise test with a formatted
+<em>label</em> column that provides the strata and sample size and then
+columns following the individual strata, sample sizes, test statistics,
+and their p-values.</p>
+<p>For a given statistic, one use <em>pairwiseMatrix()</em> to produce a
+summary matrix that gives the test statistic in the lower left and
+p-value in the upper right:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">pairwiseMatrix</span>(pws, <span class="at">stat =</span> <span class="st">&#39;Fst&#39;</span>)</span></code></pre></div>
+<pre><code>               Coastal Offshore.North Offshore.South
+Coastal             NA         0.0010          0.001
+Offshore.North    0.15             NA          0.543
+Offshore.South    0.16        -0.0027             NA</code></pre>
+<p>The process is exactly the same for diploid data, but other test
+statistics are computed:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>pws.msats <span class="ot">&lt;-</span> <span class="fu">pairwiseTest</span>(msats.g)</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">pairwiseSummary</span>(pws.msats)</span></code></pre></div>
+<pre><code>                                       label       strata.1       strata.2 n.1
+1        Coastal (68) v. Offshore.North (40)        Coastal Offshore.North  68
+2        Coastal (68) v. Offshore.South (18)        Coastal Offshore.South  68
+3 Offshore.North (40) v. Offshore.South (18) Offshore.North Offshore.South  40
+  n.2 CHIsq CHIsq_p.val   Ho Ho_p.val   Hs Hs_p.val   Ht Ht_p.val Ht_prime
+1  40   477       0.001 0.71    0.001 0.75    1.000 0.81    0.001     0.86
+2  18   440       0.001 0.75    0.001 0.76    0.012 0.82    0.001     0.88
+3  18    64       0.551 0.83    0.116 0.87    0.161 0.87    0.239     0.87
+  Ht_prime_p.val     Dst Dst_p.val Dst_prime Dst_prime_p.val    Fst Fst_p.val
+1          0.001  0.0543     0.001    0.1087           0.001  0.067     0.001
+2          0.001  0.0588     0.001    0.1177           0.001  0.072     0.001
+3          0.417 -0.0017     0.795   -0.0034           0.795 -0.002     0.793
+  Fst_prime Fst_prime_p.val   Fis Fis_p.val Gst_prime Gst_prime_p.val
+1    0.1260           0.001 0.057      1.00     0.479           0.001
+2    0.1342           0.001 0.013      1.00     0.525           0.001
+3   -0.0039           0.793 0.049      0.82    -0.028           0.798
+  Gst_dbl_prime Gst_dbl_prime_p.val   Dest Dest_p.val Dest_Chao Dest_Chao_p.val
+1         0.512               0.001  0.441      0.001    0.4390           0.001
+2         0.557               0.001  0.489      0.001    0.4950           0.001
+3        -0.031               0.797 -0.026      0.798   -0.0013           0.645
+  wcFit wcFit_p.val   wcFst wcFst_p.val wcFis wcFis_p.val
+1 0.173       0.001  0.1306       0.001 0.049        1.00
+2 0.160       0.001  0.1464       0.001 0.016        1.00
+3 0.058       0.807 -0.0042       0.814 0.062        0.19</code></pre>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,6 +1,19 @@
-## ----echo = FALSE, message = FALSE--------------------------------------------
-options(digits = 2)
+## ----include=FALSE------------------------------------------------------------
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  comment = NA,
+  fig.height = 8,
+  fig.width = 8
+)
+options(
+  scipen = 4, 
+  digits = 2,
+  rmarkdown.html_vignette.check_title = FALSE
+)
 library(strataG)
+library(tidyverse)
 
 ## -----------------------------------------------------------------------------
 library(ape)
@@ -33,14 +46,14 @@ vs <- variableSites(dolph.seqs, bases = c("c", "t"))
 vs
 
 ## -----------------------------------------------------------------------------
-iupacCode(c("c", "t", "t", "c", "c"))
-iupacCode(c("c", "t", "a", "c", "c"))
-iupacCode(c("g", "t", "a", "c", "c"))
+iupacCodes(c("c", "t", "t", "c", "c"))
+iupacCodes(c("c", "t", "a", "c", "c"))
+iupacCodes(c("g", "t", "a", "c", "c"))
 
 ## -----------------------------------------------------------------------------
-validIupacCodes(c("c", "t", "t", "c", "c"))
-validIupacCodes(c("c", "t", "a", "c", "c"))
-validIupacCodes(c("g", "t", "a", "c", "c"))
+iupacCodes(c("c", "t", "t", "c", "c"), all = TRUE)
+iupacCodes(c("c", "t", "a", "c", "c"), all = TRUE)
+iupacCodes(c("g", "t", "a", "c", "c"), all = TRUE)
 
 ## -----------------------------------------------------------------------------
 createConsensus(dolph.seqs)
@@ -50,24 +63,29 @@ nd <- nucleotideDiversity(dolph.seqs)
 head(nd)
 
 ## -----------------------------------------------------------------------------
-# create gtypes
+library(ape)
 data(dolph.seqs)
-data(dolph.strata)
-rownames(dolph.strata) <- dolph.strata$id
-dloop <- df2gtypes(dolph.strata[, c("id", "fine", "id")], ploidy = 1,
-             schemes = dolph.strata[, c("fine", "broad")], sequences = dolph.seqs)
-dloop <- labelHaplotypes(dloop, "Hap.")
+seqs.db <- as.DNAbin(dolph.seqs)
 
-# calculate divergence
-nucleotideDivergence(dloop)
+seq.smry <- summarizeSeqs(seqs.db)
+head(seq.smry)
 
 ## -----------------------------------------------------------------------------
-fixedDifferences(dloop)
+data(dolph.haps)
+hap.db <- as.DNAbin(dolph.haps)
+
+hap.lik <- sequenceLikelihoods(hap.db)
+
+hap.lik
 
 ## -----------------------------------------------------------------------------
-x <- as.DNAbin(dolph.seqs)
-mostDistantSequences(x, num.seqs = 5)
+low.freq <- lowFreqSubs(seqs.db, min.freq = 2)
+
+low.freq
 
 ## -----------------------------------------------------------------------------
-mostRepresentativeSequences(x, num.seqs = 5)
+mostDistantSequences(seqs.db, num.seqs = 5)
+
+## -----------------------------------------------------------------------------
+mostRepresentativeSequences(seqs.db, num.seqs = 5)
 

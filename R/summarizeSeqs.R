@@ -19,17 +19,6 @@
 #' 
 summarizeSeqs <- function(x) {
   if(!inherits(x, "DNAbin")) stop("'x' must be a DNAbin object")
-  # 
-  # x <- sapply(
-  #   x, 
-  #   function(dna) {
-  #     dna |> 
-  #       as.list() |> 
-  #       as.character() |> 
-  #       unlist()
-  #   },
-  #   simplify = FALSE
-  # )
 
   t(sapply(as.character(as.list(x)), function(this.seq) {
     seq.rle <- rle(this.seq)
@@ -41,8 +30,12 @@ summarizeSeqs <- function(x) {
     end <- unname(end)
     num.ns <- sum(this.seq == "n")
     num.indels <- sum(this.seq[start:end] == "-")
-    c(start = start, end = end, length = end - start + 1, 
-      num.ns = num.ns, num.indels = num.indels
+    c(
+      start = start, 
+      end = end, 
+      length = end - start + 1, 
+      num.ns = num.ns, 
+      num.indels = num.indels
     )
   }))
 }

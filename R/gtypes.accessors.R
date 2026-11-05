@@ -115,11 +115,14 @@ methods::setMethod("getNumInd", "gtypes", function(x, by.strata = FALSE, ...) {
   if(by.strata) {
     x@data |> 
       dplyr::group_by(.data$stratum) |> 
-      dplyr::summarize(num.ind = dplyr::n_distinct(.data$id)) |> 
+      dplyr::summarize(num.ind = as.integer(dplyr::n_distinct(.data$id))) |> 
       dplyr::ungroup() |> 
       as.data.frame()
   } else {
-    length(getIndNames(x))
+    x |> 
+      getIndNames() |> 
+      length() |> 
+      as.integer()
   }
 })
 
@@ -128,7 +131,9 @@ methods::setMethod("getNumInd", "gtypes", function(x, by.strata = FALSE, ...) {
 #' @export
 #' 
 methods::setMethod("getNumLoci", "gtypes", function(x, ...) {
-  dplyr::n_distinct(x@data$locus, na.rm = TRUE)
+  x@data$locus |> 
+    dplyr::n_distinct(na.rm = TRUE) |> 
+    as.integer()
 })
 
 #' @rdname gtypes.accessors
@@ -141,7 +146,9 @@ methods::setGeneric("getNumStrata", function(x, ...) standardGeneric("getNumStra
 #' @export
 #' 
 methods::setMethod("getNumStrata", "gtypes", function(x, ...) {
-  dplyr::n_distinct(x@data$stratum, na.rm = TRUE)
+  x@data$stratum |> 
+    dplyr::n_distinct(na.rm = TRUE) |> 
+    as.integer()
 })
 
 #' @rdname gtypes.accessors
@@ -220,7 +227,7 @@ methods::setGeneric("getPloidy", function(x, ...) standardGeneric("getPloidy"))
 #' @aliases getPloidy
 #' @export
 #' 
-methods::setMethod("getPloidy", "gtypes", function(x, ...) x@ploidy)
+methods::setMethod("getPloidy", "gtypes", function(x, ...) as.integer(x@ploidy))
 
 
 #' @rdname gtypes.accessors

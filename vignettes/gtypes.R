@@ -1,5 +1,19 @@
-## ----echo = FALSE, message = FALSE--------------------------------------------
+## ----include=FALSE------------------------------------------------------------
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  comment = NA,
+  fig.height = 8,
+  fig.width = 8
+)
+options(
+  scipen = 4, 
+  digits = 2,
+  rmarkdown.html_vignette.check_title = FALSE
+)
 library(strataG)
+library(tidyverse)
 
 ## -----------------------------------------------------------------------------
 gen.data <- readGenData("msats.csv")
@@ -7,44 +21,112 @@ str(gen.data)
 
 ## -----------------------------------------------------------------------------
 fname <- system.file("extdata/dolph.seqs.fasta", package = "strataG")
-x <- read.fasta(fname) 
-x
+dolph.seqs <- read.fasta(fname) 
+dolph.seqs
 
 ## -----------------------------------------------------------------------------
-# create a single data.frame with the msat data and stratification
-msats.merge <- merge(dolph.strata, dolph.msats, all.y = TRUE, description = date())
-str(msats.merge)
-
-# create the gtypes object
-msats.fine <- df2gtypes(msats.merge, ploidy = 2, id.col = 1, strata.col = 3, loc.col = 5)
+schemes <- readGenData('schemes.csv')
+str(schemes)
+head(schemes)
+tail(schemes)
 
 ## -----------------------------------------------------------------------------
-data(dolph.seqs)
+schemes <- readGenData('schemes.csv')
+gen.data <- readGenData("msats.csv")
 
-seq.df <- dolph.strata[ c("id", "broad", "id")]
-colnames(seq.df)[3] <- "D-loop"
-dl.g <- df2gtypes(seq.df, ploidy = 1, sequences = dolph.seqs)
-dl.g
+gen.df <- schemes |> 
+  select(id, region) |> 
+  left_join(gen.data, by = 'id')
 
-## -----------------------------------------------------------------------------
-dl.haps <- labelHaplotypes(dl.g)
-dl.haps
+str(gen.df)
 
 ## -----------------------------------------------------------------------------
-data(dolph.haps)
+msats.g <- df2gtypes(
+  gen.df,
+  ploidy = 2
+)
 
-haps.g <- sequence2gtypes(dolph.haps)
+msats.g
+
+## -----------------------------------------------------------------------------
+msats.g <- df2gtypes(
+  gen.df,
+  ploidy = 2,
+  schemes = schemes,
+  description = "Example microsatellite data"
+)
+
+msats.g
+
+## -----------------------------------------------------------------------------
+# grab first allele of first locus to simulate haploid data
+
+#' note that we can use pipes here to read the data directly and 
+#' create a gtypes object in the same pipeline
+
+hap.g <- readGenData('schemes.csv') |> 
+  select(id, ecotype) |> 
+  left_join(
+    select(readGenData("msats.csv"), id, D11t.1), 
+    by = 'id'
+  ) |> 
+  df2gtypes(
+    ploidy = 1, 
+    description = 'haploid example'
+  )
+
+hap.g
+
+## -----------------------------------------------------------------------------
+seq.df <- schemes |> 
+  # we just need the id and strata assignments
+  select(id, region) |>  
+  # add a new column for the sequence ids
+  mutate(dLoop = id) |>
+  # remove ids without sequences
+  filter(dLoop %in% names(dolph.seqs)) 
+
+dolph.seqs <- read.fasta(
+  system.file("extdata/dolph.seqs.fasta", package = "strataG")
+) 
+
+seqs.g <- df2gtypes(
+  seq.df,
+  ploidy = 1,
+  sequences = dolph.seqs,
+  schemes = schemes,
+  description = 'Dolphin mtDNA sequences'
+)
+
+seqs.g
+
+## -----------------------------------------------------------------------------
+haps.g <- labelHaplotypes(seqs.g)
 haps.g
 
 ## -----------------------------------------------------------------------------
-# extract and name the stratification scheme
-strata <- dolph.strata$fine
-names(strata) <- dolph.strata$ids
+seqs.g <- sequence2gtypes(dolph.seqs)
+seqs.g
 
+## -----------------------------------------------------------------------------
+# extract the stratifications, remove unstratified individuals
+eco.strata <- schemes |> 
+  select(id, ecotype) |> 
+  filter(!is.na(ecotype)) |> 
+  deframe()
+
+tail(eco.strata)
+
+## -----------------------------------------------------------------------------
 # create the gtypes object
-dloop.fine <- sequence2gtypes(dolph.seqs, strata, seq.names = "dLoop",
-  description = "dLoop: fine-scale stratification")
-dloop.fine
+seqs.g <- sequence2gtypes(
+  dolph.seqs, 
+  strata = eco.strata, 
+  seq.names = "dLoop",
+  description = "dLoop: ecotype stratification"
+)
+
+seqs.g
 
 ## -----------------------------------------------------------------------------
 library(adegenet)
@@ -61,7 +143,12 @@ gi.g <- genind2gtypes(obj)
 gi.g
 
 ## -----------------------------------------------------------------------------
-sub.msats <- msats.fine[sample(getNumInd(msats.fine), 10), , ]
+# get 10 random ids
+ran.ids <- sample(getNumInd(msats.g), 5)
+head(ran.ids)
+
+# index to extract
+sub.msats <- msats.g[ran.ids, , ]
 sub.msats
 
 ## -----------------------------------------------------------------------------
@@ -69,12 +156,8 @@ sub.msats <- sub.msats[, c("D11t", "EV37", "TV7"), ]
 sub.msats
 
 ## -----------------------------------------------------------------------------
-sub.msats <- msats.fine[, c("Ttr11", "D11t"), "Coastal"]
+sub.msats <- msats.g[, c("Ttr11", "D11t"), "Coastal"]
 sub.msats
-
-## -----------------------------------------------------------------------------
-summarizeLoci(msats.fine)
-summarizeInds(msats.fine)
 
 ## -----------------------------------------------------------------------------
 # randomly stratify individuals to two populations
@@ -86,25 +169,24 @@ msats
 
 ## -----------------------------------------------------------------------------
 # choose "broad" stratification scheme
-msats <- stratify(msats, "broad")
+msats <- stratify(msats, "ecotype")
 msats
 
 ## -----------------------------------------------------------------------------
 new.schemes <- getSchemes(msats)
-new.schemes$ran.pop <- sample(c("Pop5", "Pop6"), getNumInd(msats), rep = TRUE)
+new.schemes$inner.outer <- sample(
+  c("Inner", "Outer", NA), 
+  nrow(new.schemes), 
+  rep = TRUE
+)
 setSchemes(msats) <- new.schemes
 
 ## -----------------------------------------------------------------------------
-stratify(msats, "ran.pop")
+msats.inner.outer <- stratify(msats, "inner.outer")
+msats.inner.outer
 
 ## -----------------------------------------------------------------------------
-# unstratify a random 10 samples
-x <- getStrata(msats)
-x[sample(getIndNames(msats), 10)] <- NA
-msats
-
-## -----------------------------------------------------------------------------
-msats <- stratify(msats, "fine")
+msats <- stratify(msats, "offshore")
 
 # original
 msats

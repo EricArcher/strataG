@@ -9,7 +9,8 @@ readGenData(file, na.strings = c("NA", "", "?", "."), ...)
 \arguments{
 \item{file}{filename of .csv file.}
 
-\item{na.strings}{see \code{\link[data.table]{fread}}.}
+\item{na.strings}{a vector of strings that are interpreted as missing values.
+See \code{\link[data.table]{fread}} for more information.}
 
 \item{...}{other arguments passed to \code{\link[data.table]{fread}}.}
 }

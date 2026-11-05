@@ -24,7 +24,8 @@ Suggests:
     testthat,
     qgraph,
     rfPermute,
-    rmetasim
+    rmetasim,
+    tidyverse
 Imports:
     Rcpp (>= 1.0.5),
     ape (>= 5.4),
@@ -106,7 +107,7 @@ Collate:
     gtypes2genlight.R
     gtypes2loci.R
     gtypes2phyDat.R
-    theta.R
+    thetaH.R
     maf.R
     TiTvRatio.R
     simGammaHaps.R
@@ -151,4 +152,4 @@ LazyData: TRUE
 VignetteBuilder: knitr
 LinkingTo: Rcpp, RcppArmadillo
 Encoding: UTF-8
-Config/roxygen2/version: 8.1.0
+Config/roxygen2/version: 8.1.1

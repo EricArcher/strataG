@@ -14,13 +14,16 @@ A data.frame with rows for each sample and columns containing:
 \describe{
   \item{\code{id}}{The individual id}
   \item{\code{stratum}}{The stratum of the individual}
-  \item{\code{num.loci.missing.genotypes}}{The number of genotypes missing}
-  \item{\code{pct.loci.missing.genotypes}}{The proportion of genotypes missing}
-  \item{\code{pct.loci.homozygous}}{The proportion of loci homozygous}
+  \item{\code{num.loci.genotyped}}{The number of loci with complete genotypes}
+  \item{\code{num.loci.missing.genotypes}}{The number of loci with missing genotypes }
+  \item{\code{pct.loci.missing.genotypes}}{The proportion of loci with missing genotypes }
+  \item{\code{pct.loci.homozygous}}{The proportion of loci that are homozygous}
 }
 }
 \description{
-Compile standard by-individual summaries.
+Compile standard by-individual genotyping summaries including 
+  the number of loci genotyped, the number and proportion of loci genotyped,
+  and the number of loci that are homozygous.
 }
 \examples{
 data(msats.g)

@@ -1,6 +1,26 @@
-## ----echo = FALSE, message = FALSE--------------------------------------------
-options(digits = 2)
+## ----include=FALSE------------------------------------------------------------
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  comment = NA,
+  fig.height = 8,
+  fig.width = 8
+)
+options(
+  scipen = 4, 
+  digits = 2,
+  rmarkdown.html_vignette.check_title = FALSE
+)
 library(strataG)
+library(tidyverse)
+
+## -----------------------------------------------------------------------------
+ind.smry <- summarizeInds(msats.g)
+
+head(ind.smry)
+
+tail(ind.smry)
 
 ## -----------------------------------------------------------------------------
 data(msats.g)
@@ -30,39 +50,24 @@ heterozygosity(msats, type = "expected")
 propUniqueAlleles(msats)
 
 ## -----------------------------------------------------------------------------
-theta(msats)
-
-## -----------------------------------------------------------------------------
 summarizeLoci(msats)
 summarizeLoci(msats, by.strata = TRUE)
 
 ## -----------------------------------------------------------------------------
+thetaH(msats, model = 'IAM')
+
+thetaH(msats, model = 'SMM')
+
+thetaH(msats, model = 'ZourosSMM')
+
+## -----------------------------------------------------------------------------
 alleleFreqs(msats)
-alleleFreqs(msats, by.strata = TRUE)
+
+af <- alleleFreqs(msats, by.strata = TRUE)
+str(af)
 
 ## -----------------------------------------------------------------------------
 # Find samples that share alleles at 2/3rds of the loci
-dupGenotypes(msats, num.shared = 0.66)
-
-## -----------------------------------------------------------------------------
-library(ape)
-data(dolph.seqs)
-seq.smry <- summarizeSeqs(as.DNAbin(dolph.seqs))
-head(seq.smry)
-
-## -----------------------------------------------------------------------------
-bf <- baseFreqs(as.DNAbin(dolph.seqs))
-
-# nucleotide frequencies by site
-bf$site.freq[, 1:15]
-
-# overall nucleotide frequencies
-bf$base.freqs
-
-## -----------------------------------------------------------------------------
-lowFreqSubs(as.DNAbin(dolph.seqs), min.freq = 2)
-
-## -----------------------------------------------------------------------------
-data(dolph.haps)
-sequenceLikelihoods(as.DNAbin(dolph.haps))
+dupes <- dupGenotypes(msats, num.shared = 0.66)
+head(dupes)
 

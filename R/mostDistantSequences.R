@@ -67,9 +67,7 @@ mostDistantSequences <- function(
       })
       dist.to.centroid <- (t(seq.cmd) - range.mean) |> 
         t() |> 
-        apply(1, function(p) {
-          sqrt(sum(p ^ 2, na.rm = TRUE))
-        }) |> 
+        apply(1, function(p) sqrt(sum(p ^ 2, na.rm = TRUE))) |> 
         sort(decreasing = TRUE)
       
       num.seqs <- if(is.null(num.seqs)) {

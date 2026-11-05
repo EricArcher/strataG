@@ -2,50 +2,43 @@
 % Please edit documentation in R/iupac.R
 \name{iupac}
 \alias{iupac}
-\alias{iupacCode}
-\alias{validIupacCodes}
+\alias{iupacCodes}
 \alias{iupacMat}
 \title{IUPAC Codes}
 \usage{
-iupacCode(bases, ignore.gaps = FALSE)
-
-validIupacCodes(bases)
+iupacCodes(bases, all.codes = FALSE, ignore.gaps = FALSE)
 
 iupacMat()
 }
 \arguments{
 \item{bases}{character vector containing valid nucleotides or IUPAC codes.}
 
-\item{ignore.gaps}{logical. Ignore gaps at a site when creating consensus. 
-If true, then bases with a gap are removed before consensus is calculated. 
-If false and a gap is present, then the result is a gap.}
+\item{all.codes}{logical. Return all valid codes (\code{TRUE}), or just the 
+most appropriate one (\code{FALSE}).}
+
+\item{ignore.gaps}{logical. Ignore gaps at a site when computing the IUPAC codes.}
 }
 \value{
 \tabular{ll}{
-  \code{iupacCode} \tab a character representing the correct IUPAC code 
-    \code{bases}.\cr
-  \code{validIupacCodes} \tab a character vector of all valid IUPAC 
-    codes for \code{bases}.\cr
+  \code{iupacCodes} \tab a character or vector of characters representing 
+     the correct IUPAC code(s).\cr
   \code{iupacMat} \tab a logical matrix identifying valid IUPAC codes.\cr
 }
 }
 \description{
-Calculate the correct IUPAC code for a vector of nucleotides.
+Calculate the correct IUPAC code(s) for a vector of nucleotides.
 }
 \examples{
-iupacCode(c("a", "a", "g"))
+iupacCodes(c("a", "a", "g"))
 
-iupacCode(c("t", "c", "g"))
+iupacCodes(c("t", "c", "g"))
 
-validIupacCodes(c("c", "t", "c", "c"))
+iupacCodes(c("c", "t", "c", "c"), all = TRUE)
 
-validIupacCodes(c("c", "y", "c", "c"))
+iupacCodes(c("c", "y", "c", "c"), all = TRUE)
 
-validIupacCodes(c("a", "g", "t", "a"))
+iupacCodes(c("a", "g", "t", "a"), all = TRUE)
 
-}
-\seealso{
-\code{\link{validIupacCodes}}
 }
 \author{
 Eric Archer \email{eric.ivan.archer@gmail.com}

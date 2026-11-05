@@ -1,0 +1,80 @@
+---
+title: "4) Population structure"
+author: "Eric Archer"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{4) Population structure}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  comment = NA,
+  fig.height = 8,
+  fig.width = 8
+)
+options(
+  scipen = 4, 
+  digits = 2,
+  rmarkdown.html_vignette.check_title = FALSE
+)
+library(strataG)
+library(tidyverse)
+```
+
+## Population differentiation measures
+
+For these measures, a _gtypes_ object needs to be stratified. For example, we can use the built in example object _dloop.g_:
+```{r}
+dloop.g
+```
+
+For sequence data, the degree of nucleotide divergence (pairwise sequence difference) and Nei's dA can be calculated with _nucleotideDivergence()_:
+```{r}
+nucleotideDivergence(dloop.g)
+```
+This returns a list with a summary of the pairwise distances _$within_ strata and Nei's dA and pairwise distances _$between_ strata.
+
+For standard measures of population structure (e.g., Fst, PHIst, Jost's D, etc.), there are two main functions. The first, _overallTest()_ computes the test statistic and permutation p-value for the global null hypotheses that all individuals have been drawn at random from a single population and stratification was random with respect to individual genotypes. The test will compute all statistics and their respective permutation p-values (if _nrep_ > 0). The statistics computed will be different depending on if the _gtypes_ object provided is haploid or diploid.
+
+Here is an example for haploid sequence data:
+```{r}
+ovl <- overallTest(dloop.g)
+ovl
+```
+
+The result is a list with the sample size (_$strata.freq_) of each stratum, and a matrix with the values of the test statistic and p-value (_$result_).
+
+For pairwise tests, the _pairwiseTest()_ function is used:
+```{r}
+pws <- pairwiseTest(dloop.g)
+
+str(pws)
+```
+This produces a list where each element is a unique pair of strata. The results for each pair of strata are formatted the same way as the single result from _overallTest()_.
+
+The pairwise results can be more easily compiled into a single data.frame with _pairwiseSummary()_:
+```{r}
+pairwiseSummary(pws)
+```
+Here, there is one row for each pairwise test with a formatted _label_ column that provides the strata and sample size and then columns following the individual strata, sample sizes, test statistics, and their p-values.
+
+For a given statistic, one use _pairwiseMatrix()_ to produce a summary matrix that gives the test statistic in the lower left and p-value in the upper right:
+```{r}
+pairwiseMatrix(pws, stat = 'Fst')
+```
+
+The process is exactly the same for diploid data, but other test statistics are computed:
+```{r}
+pws.msats <- pairwiseTest(msats.g)
+pairwiseSummary(pws.msats)
+```
+

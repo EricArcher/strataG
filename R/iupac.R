@@ -1,56 +1,51 @@
 #' @name iupac
 #' @title IUPAC Codes
-#' @description Calculate the correct IUPAC code for a vector of nucleotides.
+#' @description Calculate the correct IUPAC code(s) for a vector of nucleotides.
 #'
 #' @param bases character vector containing valid nucleotides or IUPAC codes.
-#' @param ignore.gaps logical. Ignore gaps at a site when creating consensus. 
-#'   If true, then bases with a gap are removed before consensus is calculated. 
-#'   If false and a gap is present, then the result is a gap.
+#' @param all.codes logical. Return all valid codes (\code{TRUE}), or just the 
+#'   most appropriate one (\code{FALSE}).
+#' @param ignore.gaps logical. Ignore gaps at a site when computing the IUPAC codes.
 #'
 #' @return 
 #' \tabular{ll}{
-#'   \code{iupacCode} \tab a character representing the correct IUPAC code 
-#'     \code{bases}.\cr
-#'   \code{validIupacCodes} \tab a character vector of all valid IUPAC 
-#'     codes for \code{bases}.\cr
+#'   \code{iupacCodes} \tab a character or vector of characters representing 
+#'      the correct IUPAC code(s).\cr
 #'   \code{iupacMat} \tab a logical matrix identifying valid IUPAC codes.\cr
 #' }
 #'
 #' @author Eric Archer \email{eric.ivan.archer@@gmail.com}
 #'
-#' @seealso \code{\link{validIupacCodes}}
-#' 
 #' @examples
-#' iupacCode(c("a", "a", "g"))
+#' iupacCodes(c("a", "a", "g"))
 #' 
-#' iupacCode(c("t", "c", "g"))
+#' iupacCodes(c("t", "c", "g"))
 #'
-#' validIupacCodes(c("c", "t", "c", "c"))
+#' iupacCodes(c("c", "t", "c", "c"), all = TRUE)
 #' 
-#' validIupacCodes(c("c", "y", "c", "c"))
+#' iupacCodes(c("c", "y", "c", "c"), all = TRUE)
 #' 
-#' validIupacCodes(c("a", "g", "t", "a"))
+#' iupacCodes(c("a", "g", "t", "a"), all = TRUE)
 #' 
 #' @export
 #' 
-iupacCode <- function(bases, ignore.gaps = FALSE) {
-  bases <- as.character(bases)
+iupacCodes <- function(bases, all.codes = FALSE, ignore.gaps = FALSE) {
+  bases <- bases |> 
+    as.character() |> 
+    tolower()
+  
   if(ignore.gaps) bases <- bases[!bases %in% c("-", ".")]
-  validIupacCodes(bases)[1]
-}
-
-#' @rdname iupac
-#' @export
-#' 
-validIupacCodes <- function(bases) {
-  bases <- tolower(bases)
+  
   base.rows <- which(rownames(iupac.mat) %in% bases)
   if(length(base.rows) == 0) stop("No valid IUPAC codes in 'bases'")
+  
   valid.codes <- sapply(
     colnames(iupac.mat), 
     function(code) all(iupac.mat[base.rows, code])
   )
-  colnames(iupac.mat)[valid.codes]
+  
+  codes <- colnames(iupac.mat)[valid.codes]
+  if(all.codes) codes else codes[1]
 }
 
 #' @rdname iupac
